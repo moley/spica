@@ -1,0 +1,29 @@
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+dependencies {
+  compile project(':smartcom-server:smartcom-server-chat')
+  compile project(':smartcom-server:smartcom-server-documents')
+  compile project(':smartcom-server:smartcom-server-project')
+  compile project(':smartcom-server:smartcom-server-user')
+
+  compile('org.springframework.boot:spring-boot-starter-web')
+  //TODO compile('org.springframework.boot:spring-boot-starter-data-jpa')
+
+  testCompile('org.springframework.boot:spring-boot-starter-test')
+  testCompile('org.springframework.security:spring-security-test')
+}
+
+springBoot {
+  mainClassName = 'org.smartcom.server.application.SmartcomApplication'
+}
+
+jar.dependsOn bootJar
+jar.onlyIf {false}
+
+
+bootRun {
+  sourceResources sourceSets.main
+}

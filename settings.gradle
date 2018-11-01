@@ -1,0 +1,9 @@
+include 'smartcom-docs'
+include 'smartcom-cli'
+include 'smartcom-client'
+
+include 'smartcom-server:smartcom-server-application'
+include 'smartcom-server:smartcom-server-chat'
+include 'smartcom-server:smartcom-server-documents'
+include 'smartcom-server:smartcom-server-project'
+include 'smartcom-server:smartcom-server-user'
