@@ -21,7 +21,7 @@ Smartcom can be used e.g by:
 * **Runtime flexibility** You choose were the backend is hosted, in a cloud datacenter or on-premise
 * **Multi platform** Smartcom provides a mobile client as well as a browser app and (for developers) a commandline interface to interact with the platform
 
-#Development
+# Development
 
 Client im Browser starten: 		    ```ionic cordova run browser```                                           
 Client in Lab starten:			     ```ionic serve -l```                                                      
