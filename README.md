@@ -1,4 +1,4 @@
-# About smartcmo
+# About smartcom
 
 ## What is smartcom
 Smartcom is an extensible, **project-oriented** communication platform. 
