@@ -14,7 +14,7 @@ buildscript {
 }
 
 allprojects {
-  group = 'org.smartcom'
+  group = 'org.spica'
 
   repositories {
     mavenCentral()

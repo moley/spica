@@ -1,12 +1,12 @@
-package org.smartcom.server.application;
+package org.spica.server.application;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SmartcomApplication {
+public class SpicaApplication {
 
   public static void main (final String [] args) {
-    SpringApplication.run(SmartcomApplication.class, args);
+    SpringApplication.run(SpicaApplication.class, args);
   }
 }
