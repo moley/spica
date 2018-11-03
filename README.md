@@ -1,7 +1,7 @@
-# About smartcom
+# About spica
 
-## What is smartcom
-Smartcom is an extensible, **project-oriented** communication platform. 
+## What is spica
+Spica is an extensible, **project-oriented** communication platform. 
 We want to cover following aspects always in the focus of a project:
 
 * **Messaging** (project or topicrelated chat as well as private chats, 1:1 or group chats)
@@ -10,7 +10,7 @@ We want to cover following aspects always in the focus of a project:
 * **Making project related work easier** (e.g for developers the setup of their environment)
 
 ## Who we target
-Smartcom can be used e.g by:
+Spica can be used e.g by:
 
 * **Companies** (e.g. insurance brokers) to handle and ease communication with customers
 * **Schools** to handle knowledge transfer, communication between school and pupils and their parents
@@ -19,7 +19,7 @@ Smartcom can be used e.g by:
 ## What are the key features
 * **Extensibility** You can easily contribute plugins for both server and client
 * **Runtime flexibility** You choose were the backend is hosted, in a cloud datacenter or on-premise
-* **Multi platform** Smartcom provides a mobile client as well as a browser app and (for developers) a commandline interface to interact with the platform
+* **Multi platform** Spica provides a mobile client as well as a browser app and (for developers) a commandline interface to interact with the platform
 
 # Development
 
