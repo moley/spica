@@ -11,7 +11,8 @@ dependencies {
   compile project(':spica-server:spica-server-user')
 
   compile('org.springframework.boot:spring-boot-starter-web')
-  //TODO compile('org.springframework.boot:spring-boot-starter-data-jpa')
+
+  runtime 'com.h2database:h2:1.4.179'
 
   testCompile('org.springframework.boot:spring-boot-starter-test')
   testCompile('org.springframework.security:spring-security-test')

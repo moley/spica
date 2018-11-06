@@ -13,7 +13,7 @@ We want to cover following aspects always in the focus of a project:
 Spica can be used e.g by:
 
 * **Companies** (e.g. insurance brokers) to handle and ease communication with customers
-* **Schools** to handle knowledge transfer, communication between school and pupils and their parents
+* **Schools** to handle knowledge transfer, communication between school, pupils and their parents
 * **Developers** to collaborate in a project and to easily handle project related infos and share the state of the project
 
 ## What are the key features

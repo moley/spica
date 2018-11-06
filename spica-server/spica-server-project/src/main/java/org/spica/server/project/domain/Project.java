@@ -19,5 +19,8 @@ public class Project {
 	@OneToOne
 	private Project parentProject;
 
-	
+	private String visibilityRules;
+
+
+
 }
