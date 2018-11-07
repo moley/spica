@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.spica.server.commons.Role;
@@ -12,9 +14,11 @@ import org.spica.server.commons.Role;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
+@Builder
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
   @Id
@@ -41,7 +45,6 @@ public class User {
 
   private Role role;
 
-  private Collection<UserGroup> userGroupsCollection;
 
   
 }
