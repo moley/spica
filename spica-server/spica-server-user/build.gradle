@@ -7,7 +7,18 @@ apply plugin: 'io.spring.dependency-management'
 
 dependencies {
   compile project(':spica-server:spica-server-commons')
-  compile("org.springframework.boot:spring-boot-starter-data-jpa")
+  compile 'org.springframework.boot:spring-boot-starter-web'
+
+  //Security
+  compile 'io.jsonwebtoken:jjwt:0.9.1'
+  compile 'org.springframework.boot:spring-boot-starter-security'
+  compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+  testCompile 'org.springframework.boot:spring-boot-starter-test'
+  testCompile 'org.springframework.boot:spring-boot-test-autoconfigure'
+  testCompile 'org.springframework.security:spring-security-test'
+
+
   compileOnly 'org.projectlombok:lombok:1.18.2'
 }
 

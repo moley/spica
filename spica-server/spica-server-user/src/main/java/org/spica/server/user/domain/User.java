@@ -36,8 +36,6 @@ public class User implements Idable {
   
   private String password;
   
-  private String token;
-  
   private String avatar;
 
   private LocalDateTime createdAt;

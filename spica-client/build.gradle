@@ -1,1 +1,38 @@
-//TODO//TODO
+plugins {
+  id "com.moowork.node" version "1.2.0"
+  id 'base'
+}
+
+
+node {
+  npmVersion = '5.5.1'
+  nodeModulesDir = file("${project.projectDir}")
+}
+
+task buildClientDev(type: NpmTask, dependsOn: 'npmInstall') {
+    group = 'build'
+    description = 'Compile client side folder for development'
+    args = ['run','buildDev']
+}
+
+task buildClient(type:NpmTask, dependsOn:'npmInstall') {
+    group = 'build'
+    description = "Compile client side folder for production"
+    args = ['run','build']
+  }
+
+//buildClient.dependsOn tasks.generateSwaggerCode
+//buildClientDev.dependsOn tasks.generateSwaggerCode
+
+tasks.build.dependsOn tasks.npmInstall
+tasks.build.mustRunAfter tasks.buildClient
+tasks.build.mustRunAfter tasks.buildClientDev
+
+tasks.clean {
+  doLast {
+    file ('node_modules').deleteDir()
+    file ('.gradle/npm/').deleteDir()
+    file ('platforms').deleteDir()
+    file ('plugins').deleteDir()
+  }
+}

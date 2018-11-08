@@ -12,6 +12,10 @@ dependencies {
 
 dependencies {
   compile project(':spica-server:spica-server-commons')
+
+  testCompile 'org.springframework.boot:spring-boot-starter-test'
+  testCompile 'org.springframework.boot:spring-boot-test-autoconfigure'
+  testCompile 'org.springframework.security:spring-security-test'
 }
 
 jar {

@@ -25,7 +25,6 @@ public class DevelopmentDemoData extends DemoDataCreator{
   private final static String ISSUE_USABILITY = "Usability ist wie Windows 95";
   private final static String ISSUE_STABILITY = "Stabilitaet ist schlecht";
 
-
   public void create () {
     LOGGER.info("Start creating development demo data");
 

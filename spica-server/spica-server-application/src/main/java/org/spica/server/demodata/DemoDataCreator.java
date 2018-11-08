@@ -13,10 +13,11 @@ import org.spica.server.commons.Role;
 import org.spica.server.project.domain.*;
 import org.spica.server.user.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 
 @Component
 public class DemoDataCreator {
@@ -48,11 +49,15 @@ public class DemoDataCreator {
   @Autowired
   private MeepContainerRepository meepContainerRepository;
 
+  private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12); //TODO inject
+
+
   protected User user (final String name, final String firstname, final Role role) {
     LOGGER.info("Create new user " + name + "," + firstname + " with role " + role.name());
-    String username = name.substring(0, 1) + firstname.substring(0,1);
+    String username = name.substring(0, 1).toLowerCase() + firstname.substring(0,1).toLowerCase();
     String mail = firstname.toLowerCase() + "." + name.toLowerCase() + "@somedomain.org";
-    User user = User.builder().name(name).firstname(firstname).username(username).createdAt(LocalDateTime.now()).email(mail).role(role).password(username).build();
+    String encodedPassword = passwordEncoder.encode(username);
+    User user = User.builder().name(name).firstname(firstname).username(username).createdAt(LocalDateTime.now()).email(mail).role(role).password(encodedPassword).build();
     userRepository.save(user);
     return user;
   }
@@ -143,7 +148,11 @@ public class DemoDataCreator {
   }
 
 
+  public PasswordEncoder getPasswordEncoder() {
+    return passwordEncoder;
+  }
 
-
-
+  public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+    this.passwordEncoder = passwordEncoder;
+  }
 }

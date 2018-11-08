@@ -2,3 +2,13 @@ apply {
   plugin 'java'
 }
 
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+dependencies {
+  compile 'org.springframework.boot:spring-boot'
+}
+
+jar {
+  enabled = true
+}

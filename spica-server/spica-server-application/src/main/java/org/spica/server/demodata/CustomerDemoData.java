@@ -26,7 +26,6 @@ public class CustomerDemoData extends DemoDataCreator{
   private final static String ISSUE_DISMISSAL = "Ich kuendige";
 
   public void create () {
-    LOGGER.info("Start creating customer demo data");
 
     User customer1 = user("Mayer", "Michael", Role.USER);
     User customer2 = user("Klein", "Karin", Role.USER);
@@ -47,8 +46,8 @@ public class CustomerDemoData extends DemoDataCreator{
     Topic topicNewCar = topic(ISSUE_NEW_CAR, customer1, projectCustomer1);
     Topic topicAnpassungVwl = topic(ISSUE_ANPASSUNG_VWL, service1, projectCustomer2);
 
-    meep(customer1, projectCustomer1, "Hallo, ich bin der Michael, und ich möchte Geld");
-    meep(customer1, topicNewCar, "Ich habe mir einen neuen Golf gekauft, könnt ihr mir bitte ein KFZ-Versicherungs Angebot machen?");
+    meep(customer1, projectCustomer1, "Hallo, ich bin der Michael, und ich moechte Geld");
+    meep(customer1, topicNewCar, "Ich habe mir einen neuen Golf gekauft, koennt ihr mir bitte ein KFZ-Versicherungs Angebot machen?");
 
     meep(customer2, topicDismissal, "Ich hab was besseres gefunden, ich kuendige");
 
