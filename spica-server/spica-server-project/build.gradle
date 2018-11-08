@@ -9,3 +9,7 @@ dependencies {
   compile("org.springframework.boot:spring-boot-starter-data-jpa")
   compileOnly 'org.projectlombok:lombok:1.18.2'
 }
+
+dependencies {
+  compile project(':spica-server:spica-server-commons')
+}

@@ -25,9 +25,7 @@ public class Meep {
   @Column(length=10000)
   private String message;
 
-  private String creatorId;
-  
-  private String type;
+  private Long creatorId;
 
   private String visibilityRules;
 

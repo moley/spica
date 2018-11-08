@@ -7,11 +7,12 @@ import javax.persistence.Id;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.spica.server.commons.Idable;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class Topic {
+public class Topic implements Idable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,6 +23,8 @@ public class Topic {
 	private Long projectID;
 
 	private String visibilityRules;
+
+	private Long creatorID;
 
 
 

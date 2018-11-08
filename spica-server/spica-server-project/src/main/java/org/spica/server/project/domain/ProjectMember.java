@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.spica.server.commons.MemberShipType;
 
 import javax.persistence.*;
 
@@ -21,7 +22,10 @@ public class ProjectMember {
   @OneToOne
   private Project project;
 
-  private String userID;
+  private Long memberID;
+
+  @Enumerated(EnumType.STRING)
+  private MemberShipType memberShipType;
 
   private boolean projectLead;
 
