@@ -23,7 +23,7 @@ public class SchoolDemoData extends DemoDataCreator {
   public void create () {
     LOGGER.info("Start creating school demo data");
 
-    User pupil = user("Müller", "Michael", Role.USER);
+    User pupil = user("Mayer", "Michael", Role.USER);
     User pupil2 = user("Klein", "Karin", Role.USER);
     User pupil3 = user("Otto", "Oskar", Role.USER);
     User guest = user("Gast", "Gregor", Role.GUEST);

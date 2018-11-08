@@ -13,3 +13,7 @@ dependencies {
 dependencies {
   compile project(':spica-server:spica-server-commons')
 }
+
+jar {
+  enabled = true
+}

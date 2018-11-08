@@ -18,7 +18,7 @@ public class CustomerDemoData extends DemoDataCreator{
     LOGGER.info("Start creating customer demo data");
 
 
-    User dev1 = user("Müller", "Michael", Role.USER);
+    User dev1 = user("Mayer", "Michael", Role.USER);
     User dev2 = user("Klein", "Karin", Role.USER);
     User guest = user("Gast", "Gregor", Role.GUEST);
     User admin = user ("Admin", "Achim", Role.ADMIN);
