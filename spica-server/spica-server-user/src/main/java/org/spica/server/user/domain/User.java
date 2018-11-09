@@ -35,7 +35,7 @@ public class User implements Idable {
   private String email;
   
   private String password;
-  
+
   private String avatar;
 
   private LocalDateTime createdAt;
