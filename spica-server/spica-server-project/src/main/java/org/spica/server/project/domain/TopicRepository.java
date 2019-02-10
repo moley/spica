@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TopicRepository extends JpaRepository<Topic, Long> {
-	
+
 	List<Topic> findAllByProjectID (final Long projectID);
 
 }

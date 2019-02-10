@@ -5,8 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MeepContainerRepository extends JpaRepository<MeepContainer, Long> {
+public interface MessagecontainerRepository extends JpaRepository<Messagecontainer, Long> {
 	
-	public MeepContainer findByReferenceTypeAndReferenceID (ReferenceType referenceType, Long referenceID);
+	public Messagecontainer findByReferenceTypeAndReferenceID (ReferenceType referenceType, Long referenceID);
 
 }

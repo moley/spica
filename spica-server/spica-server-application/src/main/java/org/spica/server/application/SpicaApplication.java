@@ -23,7 +23,7 @@ public class SpicaApplication {
 
     String demoDataType = System.getProperty("demodata");
     if (demoDataType != null) {
-      DemoDataType demoDataTypeAsEnum = DemoDataType.valueOf(demoDataType);
+      DemoDataType demoDataTypeAsEnum = DemoDataType.valueOf(demoDataType.toUpperCase());
       switch (demoDataTypeAsEnum) {
         case SCHOOL:
           schoolDemoData.create();

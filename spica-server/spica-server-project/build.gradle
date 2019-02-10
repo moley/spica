@@ -1,3 +1,7 @@
+plugins {
+  id 'org.hidetake.swagger.generator' version '2.9.0'
+}
+
 apply {
   plugin 'java'
 }
@@ -13,11 +17,34 @@ dependencies {
 dependencies {
   compile project(':spica-server:spica-server-commons')
 
+  compile('org.springframework.boot:spring-boot-starter-web')
+
   testCompile 'org.springframework.boot:spring-boot-starter-test'
   testCompile 'org.springframework.boot:spring-boot-test-autoconfigure'
   testCompile 'org.springframework.security:spring-security-test'
+
+  compile 'io.swagger:swagger-annotations:1.5.10'
+  swaggerCodegen 'io.swagger:swagger-codegen-cli:2.3.0'
+
+
 }
 
 jar {
   enabled = true
 }
+
+swaggerSources {
+  spicaServerProject {
+    inputFile = project.file('spica-server-project.yaml')
+    code {
+      language = 'spring'
+      components = ['models', 'apis']
+      additionalProperties = [interfaceOnly:'true']
+      rawOptions = ['--api-package=org.spica.server.project.api', '--model-package=org.spica.server.project.model']
+    }
+  }
+}
+
+sourceSets.main.java.srcDir "${swaggerSources.spicaServerProject.code.outputDir}/src/main/java"
+sourceSets.main.resources.srcDir "${swaggerSources.spicaServerProject.code.outputDir}/src/main/resources"
+tasks.compileJava.dependsOn tasks.generateSwaggerCode

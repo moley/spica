@@ -3,9 +3,7 @@ package org.spica.server.chat.domain;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class Chat {
 
   @Id
-  //TODO @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
   @ElementCollection

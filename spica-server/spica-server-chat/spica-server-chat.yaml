@@ -1,0 +1,69 @@
+---
+  swagger: "2.0"
+  info: 
+    version: "1.0.0"
+    title: "spica rest chat component "
+    description: "Rest API for the chat component of spica communication server"
+    termsOfService: "http://swagger.io/terms/"
+  host: "localhost"
+  basePath: "/api/v1"
+  schemes:
+    - "https"
+  produces:
+    - "application/json"
+  securityDefinitions:
+    basic:
+      type: basic
+      description: HTTP Basic Authentication.
+  paths:
+
+    /messagecontainer/{referenceType}/{referenceId}:
+      get:
+        tags:
+          - chat
+        operationId: "getMessagecontainer"
+        produces:
+        - "application/json"
+        parameters:
+        - in: path
+          name: referenceType
+          type: string
+          required: true
+        - in: path
+          name: referenceId
+          type: string
+          required: true
+        responses:
+          "200":
+            schema:
+              $ref: "#/definitions/MessagecontainerInfo"
+
+  definitions:
+    MessageInfo:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        message:
+          type: "string"
+        type:
+          type: "string"
+        creator:
+          type: "string"
+        documents:
+          type: "array"
+          items:
+            type: "string"
+
+
+    MessagecontainerInfo:
+      type: "object"
+      properties:
+        message:
+          type: "array"
+          items:
+            $ref: "#/definitions/MessageInfo"
+
+
+
+

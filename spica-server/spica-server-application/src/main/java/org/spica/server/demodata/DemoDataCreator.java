@@ -2,10 +2,10 @@ package org.spica.server.demodata;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.server.chat.domain.Meep;
-import org.spica.server.chat.domain.MeepContainer;
-import org.spica.server.chat.domain.MeepContainerRepository;
-import org.spica.server.chat.domain.MeepRepository;
+import org.spica.server.chat.domain.Message;
+import org.spica.server.chat.domain.Messagecontainer;
+import org.spica.server.chat.domain.MessagecontainerRepository;
+import org.spica.server.chat.domain.MessageRepository;
 import org.spica.server.commons.Idable;
 import org.spica.server.commons.MemberShipType;
 import org.spica.server.commons.ReferenceType;
@@ -44,10 +44,10 @@ public class DemoDataCreator {
   private ProjectMemberRepository projectMemberRepository;
 
   @Autowired
-  private MeepRepository meepRepository;
+  private MessageRepository messageRepository;
 
   @Autowired
-  private MeepContainerRepository meepContainerRepository;
+  private MessagecontainerRepository messageContainerRepository;
 
   private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12); //TODO inject
 
@@ -122,8 +122,8 @@ public class DemoDataCreator {
     return topic;
   }
 
-  protected Meep meep (final User creator, Idable reference, final String message) {
-    Meep meep = new Meep();
+  protected Message meep (final User creator, Idable reference, final String message) {
+    Message meep = new Message();
     meep.setCreationDate(LocalDateTime.now());
     meep.setCreatorId(creator.getId());
     meep.setMessage(message);
@@ -131,15 +131,15 @@ public class DemoDataCreator {
     Long referenceID = reference.getId();
     ReferenceType referenceType = ReferenceType.valueOf(reference.getClass().getSimpleName().toUpperCase());
 
-    MeepContainer container = meepContainerRepository.findByReferenceTypeAndReferenceID(referenceType, referenceID);
+    Messagecontainer container = messageContainerRepository.findByReferenceTypeAndReferenceID(referenceType, referenceID);
     if (container == null) {
-      container = new MeepContainer();
+      container = new Messagecontainer();
       container.setReferenceType(referenceType);
       container.setReferenceID(referenceID);
     }
 
-    container.getMeeps().add(meep);
-    meepContainerRepository.save(container);
+    container.getMessages().add(meep);
+    messageContainerRepository.save(container);
 
     return meep;
 

@@ -1,0 +1,133 @@
+---
+  swagger: "2.0"
+  info: 
+    version: "1.0.0"
+    title: "spica rest project component"
+    description: "Rest API for the project component of spica communication server"
+    termsOfService: "http://swagger.io/terms/"
+  host: "localhost"
+  basePath: "/api"
+  schemes:
+    - "https"
+  produces:
+    - "application/json"
+  securityDefinitions:
+    basic:
+      type: basic
+      description: HTTP Basic Authentication.
+  paths:
+    /projects:
+        get:
+          tags:
+            - project
+          operationId: "getProjects"
+          description: "returns all projects the current user is authorized to see"
+          produces:
+            - "application/json"
+          responses:
+            "200":
+              schema:
+                $ref: "#/definitions/ProjectContainerInfo"
+        post:
+          tags:
+            - project
+          operationId: "createProject"
+          description: "creates a new project"
+          produces:
+            - "application/json"
+          parameters:
+            - in: query
+              name: name
+              type: string
+              required: true
+          responses:
+            "200":
+              schema:
+                $ref: "#/definitions/ProjectInfo"
+
+    /projects/{projectId}/topics:
+        get:
+          tags:
+            - topic
+          operationId: "getTopics"
+          produces:
+            - "application/json"
+          parameters:
+            - in: path
+              name: projectId
+              type: string
+              required: true
+          responses:
+            "200":
+              schema:
+                $ref: "#/definitions/TopicContainerInfo"
+
+        post:
+          tags:
+            - topic
+          operationId: "createTopic"
+          description: "creates a new topic"
+          produces:
+            - "application/json"
+          parameters:
+            - in: path
+              name: projectId
+              type: string
+              required: true
+            - in: query
+              name: name
+              type: string
+              required: true
+          responses:
+            "200":
+              schema:
+                $ref: "#/definitions/TopicInfo"
+
+    /topics/{topicId}:
+        delete:
+          tags:
+            - topic
+          operationId: "deleteTopic"
+          produces:
+            - "application/json"
+          parameters:
+            - in: path
+              name: topicId
+              type: string
+              required: true
+
+  definitions:
+
+    ProjectInfo:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        name:
+          type: "string"
+
+    ProjectContainerInfo:
+      type: "object"
+      properties:
+        projects:
+          type: "array"
+          items:
+            $ref: "#/definitions/ProjectInfo"
+
+
+    TopicInfo:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        name:
+          type: "string"
+
+
+    TopicContainerInfo:
+      type: "object"
+      properties:
+        topics:
+          type: "array"
+          items:
+            $ref: "#/definitions/TopicInfo"

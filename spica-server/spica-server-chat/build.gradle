@@ -1,3 +1,7 @@
+plugins {
+  id 'org.hidetake.swagger.generator' version '2.9.0'
+}
+
 apply {
   plugin 'java'
 }
@@ -9,8 +13,30 @@ dependencies {
   compile project(':spica-server:spica-server-commons')
   compile ("org.springframework.boot:spring-boot-starter-data-jpa")
   compileOnly 'org.projectlombok:lombok:1.18.2'
+
+  compile('org.springframework.boot:spring-boot-starter-web')
+
+  compile 'io.swagger:swagger-annotations:1.5.10'
+  swaggerCodegen 'io.swagger:swagger-codegen-cli:2.3.0'
+
 }
 
 jar {
   enabled = true
 }
+
+swaggerSources {
+  spicaServerChat {
+    inputFile = project.file('spica-server-chat.yaml')
+    code {
+      language = 'spring'
+      components = ['models', 'apis']
+      additionalProperties = [interfaceOnly:'true']
+      rawOptions = ['--api-package=org.spica.server.chat.api', '--model-package=org.spica.server.chat.model']
+    }
+  }
+}
+
+sourceSets.main.java.srcDir "${swaggerSources.spicaServerChat.code.outputDir}/src/main/java"
+sourceSets.main.resources.srcDir "${swaggerSources.spicaServerChat.code.outputDir}/src/main/resources"
+tasks.compileJava.dependsOn tasks.generateSwaggerCode

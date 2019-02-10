@@ -27,6 +27,8 @@ public class User implements Idable {
   private Long id;
 
   private String name;
+
+  private String nummer;
   
   private String firstname;
   

@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-public class Meep {
+public class Message {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)	
@@ -30,7 +30,7 @@ public class Meep {
   private String visibilityRules;
 
   @ElementCollection
-  private List<String> documentIds = new ArrayList<String>();
+  private List<Long> documentIds = new ArrayList<Long>();
 
   
   
