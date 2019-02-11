@@ -29,9 +29,8 @@ dependencies {
 
 }
 
-jar {
-  enabled = true
-}
+jar.enabled = true
+bootJar.enabled = false
 
 swaggerSources {
   spicaServerProject {

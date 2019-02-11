@@ -9,6 +9,5 @@ dependencies {
   compile 'org.springframework.boot:spring-boot'
 }
 
-jar {
-  enabled = true
-}
+jar.enabled = true
+bootJar.enabled = false
