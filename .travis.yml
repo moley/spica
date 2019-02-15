@@ -6,6 +6,7 @@ jdk:
 
 script:
   - ./gradlew build -s
+  - ./gradlew codeCoverageReport --stacktrace
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
