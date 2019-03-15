@@ -17,9 +17,6 @@ dependencies {
   testCompile 'org.springframework.boot:spring-boot-starter-test'
   testCompile 'org.springframework.boot:spring-boot-test-autoconfigure'
   testCompile 'org.springframework.security:spring-security-test'
-
-
-  compileOnly 'org.projectlombok:lombok:1.18.2'
 }
 
 jar.enabled = true

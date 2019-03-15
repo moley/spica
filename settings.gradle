@@ -1,6 +1,8 @@
 include 'spica-docs'
 include 'spica-cli'
 include 'spica-client'
+include 'spica-devclient'
+include 'spica-javaclient'
 
 include 'spica-server:spica-server-commons'
 include 'spica-server:spica-server-application'

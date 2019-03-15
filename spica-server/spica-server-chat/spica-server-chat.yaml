@@ -6,7 +6,7 @@
     description: "Rest API for the chat component of spica communication server"
     termsOfService: "http://swagger.io/terms/"
   host: "localhost"
-  basePath: "/api/v1"
+  basePath: "/api"
   schemes:
     - "https"
   produces:

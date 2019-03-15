@@ -1,0 +1,29 @@
+plugins {
+  id 'java'
+  id 'application'
+  id "edu.sc.seis.macAppBundle" version "2.3.0"
+}
+
+dependencies {
+  compile 'com.github.tulskiy:jkeymaster:1.2'
+  compile project (':spica-javaclient')
+}
+
+application {
+  mainClassName = "org.spica.devclient.DevApplication"
+}
+
+macAppBundle {
+  mainClassName = 'org.spica.devclient.DevApplication'
+  appName = 'Spica'
+  dmgName = "Spica-${project.version}"
+}
+
+tasks.build.dependsOn tasks.createDmg
+
+task installDmg(type: Copy) {
+  from "build/macApp/${macAppBundle.appName}.app"
+  into "/Applications/${macAppBundle.appName}.app"
+  dependsOn tasks.createDmg
+  //eachFile { println "Copying " + it.name}
+}
