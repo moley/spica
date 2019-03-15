@@ -3,6 +3,7 @@
 
 # About spica
 
+
 ## What is spica
 Spica is an extensible, **project-oriented** communication platform. 
 We want to cover following aspects always in the focus of a project:
@@ -35,6 +36,7 @@ Docker Container starten:            ```docker run -p 8080:8080 -it maodialog-se
 InMemory-H2-Console-URL:             ```http://localhost:8080/h2```   
 InMemory-H2-URL:					 ```jdbc:h2:mem:testdb```    
 
+Supported JDK: 12
 
 
 

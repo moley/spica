@@ -47,6 +47,7 @@ swaggerSources {
     code {
       language = 'java'
       rawOptions = ['--api-package=org.spica.javaclient.api', '--model-package=org.spica.javaclient.model']
+      configFile = file('swagger-config.json')
     }
   }
   spicaCliChat {

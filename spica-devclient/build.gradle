@@ -6,6 +6,12 @@ plugins {
 
 dependencies {
   compile 'com.github.tulskiy:jkeymaster:1.2'
+  compile 'com.calendarfx:view:11.5.0'
+
+  runtime 'org.openjfx:javafx-controls:12'
+  runtime 'org.openjfx:javafx-graphics:12'
+  runtime 'org.openjfx:javafx-swing:12'
+
   compile project (':spica-javaclient')
 }
 
