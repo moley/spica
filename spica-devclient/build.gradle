@@ -37,6 +37,8 @@ tasks.build.dependsOn tasks.createDmg
 
 import org.apache.tools.ant.taskdefs.condition.Os
 
+println "Is Mac: " + Os.isFamily(Os.FAMILY_MAC)
+
 task installDmg(type: Copy) {
   from "build/macApp/${macAppBundle.appName}.app"
   into "/Applications/${macAppBundle.appName}.app"
