@@ -42,25 +42,42 @@ dependencies {
 
 swaggerSources {
 
-  spicaCliProject {
+  spicaProject {
     inputFile = project.rootProject.project('spica-server:spica-server-project').file('spica-server-project.yaml')
     code {
       language = 'java'
       rawOptions = ['--api-package=org.spica.javaclient.api', '--model-package=org.spica.javaclient.model']
-      configFile = file('swagger-config.json')
+      configFile = rootProject.file('swagger-config.json')
     }
   }
-  spicaCliChat {
+  spicaChat {
     inputFile = project.rootProject.project('spica-server:spica-server-chat').file('spica-server-chat.yaml')
     code {
       language = 'java'
       rawOptions = ['--api-package=org.spica.javaclient.api', '--model-package=org.spica.javaclient.model']
       components = ['models', 'apis']
+      configFile = rootProject.file('swagger-config.json')
+    }
+  }
+
+  spicaTimes {
+    inputFile = project.rootProject.project('spica-server:spica-server-times').file('spica-server-times.yaml')
+    code {
+      language = 'java'
+      rawOptions = ['--api-package=org.spica.javaclient.api', '--model-package=org.spica.javaclient.model']
+      components = ['models', 'apis']
+      configFile = rootProject.file('swagger-config.json')
     }
   }
 }
 
-sourceSets.main.java.srcDir "${swaggerSources.spicaCliProject.code.outputDir}/src/main/java"
-sourceSets.main.resources.srcDir "${swaggerSources.spicaCliProject.code.outputDir}/src/main/resources"
-tasks.compileJava.dependsOn swaggerSources.spicaCliProject.code
+sourceSets.main.java.srcDir "${swaggerSources.spicaProject.code.outputDir}/src/main/java"
+sourceSets.main.resources.srcDir "${swaggerSources.spicaProject.code.outputDir}/src/main/resources"
+tasks.compileJava.dependsOn swaggerSources.spicaProject.code
+
+sourceSets.main.java.srcDir "${swaggerSources.spicaTimes.code.outputDir}/src/main/java"
+sourceSets.main.resources.srcDir "${swaggerSources.spicaTimes.code.outputDir}/src/main/resources"
+tasks.compileJava.dependsOn swaggerSources.spicaTimes.code
+
+
 tasks.classes.dependsOn tasks.generateSwaggerCode

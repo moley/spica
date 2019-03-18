@@ -3,14 +3,22 @@ package org.spica.devclient.ui;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.view.CalendarView;
+import com.calendarfx.view.DateControl;
+import com.calendarfx.view.VirtualGrid;
+import com.calendarfx.view.page.DayPage;
+import com.calendarfx.view.popover.EntryPopOverContentPane;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
+import javafx.scene.AccessibleRole;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.devclient.DemoData;
@@ -34,43 +42,60 @@ public class MainPageController {
   private ListView<ProjectInfo> lviProjects;
 
   @FXML
-  private CalendarView cviTodayCalendar;
+  private DayPage cviDayPage;
 
 
 
 
 
   @FXML
-  private void initialize() {
-    LOGGER.info("Initialize called (" + DemoData.projectInfos.size() + "-" + DemoData.dashboardInfos.size() + ")");
+  void initialize() {
     lviProjects.setItems(FXCollections.observableArrayList(DemoData.projectInfos));
-    Calendar birthdays = new Calendar("Birthdays");
-    Calendar holidays = new Calendar("Holidays");
+    Calendar plannedCalendar = new Calendar("Planned");
+    Calendar realCalendar = new Calendar("Done");
 
-    birthdays.setStyle(Calendar.Style.STYLE1);
-    holidays.setStyle(Calendar.Style.STYLE2);
+    plannedCalendar.setStyle(Calendar.Style.STYLE1);
+    realCalendar.setStyle(Calendar.Style.STYLE2);
+
+    //TODO plannedCalendar.addEntries(DemoData.plannedEntries);
+    //TODO realCalendar.addEntries(DemoData.realEntries);
 
     CalendarSource myCalendarSource = new CalendarSource("My Calendars");
-    myCalendarSource.getCalendars().addAll(birthdays, holidays);
+    myCalendarSource.getCalendars().addAll(plannedCalendar, realCalendar);
 
-    cviTodayCalendar.getCalendarSources().addAll(myCalendarSource);
+    cviDayPage.getCalendarSources().addAll(myCalendarSource);
+    cviDayPage.setShowDayPageLayoutControls(false);
+    cviDayPage.setShowNavigation(false);
+    cviDayPage.setEntryDetailsPopOverContentCallback(new Callback<DateControl.EntryDetailsPopOverContentParameter, Node>() {
+      @Override
+      public Node call(DateControl.EntryDetailsPopOverContentParameter entryDetailsPopOverContentParameter) {
+        /**Button btn = new Button("Show"); //TODO Logic for popup
+        btn.setMinHeight(1000);
+        btn.setMinWidth(1000);**/
+        return null;
+      }
+    });
 
-    cviTodayCalendar.setRequestedTime(LocalTime.now());
+
+    cviDayPage.setDayPageLayout(DayPage.DayPageLayout.DAY_ONLY);
+    cviDayPage.setShowLayoutButton(true);
+
+    cviDayPage.setRequestedTime(LocalTime.now());
 
     Thread updateTimeThread = new Thread("Calendar: Update Time Thread") {
       @Override
       public void run() {
         while (true) {
           Platform.runLater(() -> {
-            cviTodayCalendar.setToday(LocalDate.now());
-            cviTodayCalendar.setTime(LocalTime.now());
+            cviDayPage.setToday(LocalDate.now());
+            cviDayPage.setTime(LocalTime.now());
           });
 
           try {
             // update every 10 seconds
             sleep(10000);
           } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getLocalizedMessage(), e);
           }
 
         }
@@ -95,9 +120,9 @@ public class MainPageController {
     try {
       Robot robot = new Robot();
       robot.mouseMove((int)bounds.getMinX() + 10,(int) bounds.getMinY() + 10);
-      robot.mousePress(InputEvent.BUTTON1_MASK);
+      robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
     } catch (AWTException e) {
-      e.printStackTrace();
+      LOGGER.error(e.getLocalizedMessage(), e);
     }
 
   }

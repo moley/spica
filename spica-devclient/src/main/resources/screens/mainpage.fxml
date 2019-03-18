@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.calendarfx.view.page.DayPage?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
-<?import com.calendarfx.view.CalendarView?>
 <BorderPane fx:id="border" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.spica.devclient.ui.MainPageController">
 
@@ -19,9 +19,9 @@
         </ListView>
     </left>
     <center>
-        <CalendarView fx:id="cviTodayCalendar">
+        <DayPage fx:id="cviDayPage">
 
-        </CalendarView>
+        </DayPage>
     </center>
 
 
