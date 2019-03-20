@@ -1,11 +1,11 @@
 plugins {
-  id 'org.hidetake.swagger.generator' version '2.16.0'
+  id 'org.hidetake.swagger.generator' version '2.18.1'
 }
 
 apply plugin: 'java'
 
 dependencies {
-  swaggerCodegen 'io.swagger:swagger-codegen-cli:2.3.1'
+  swaggerCodegen 'org.openapitools:openapi-generator-cli:3.3.4'
 
 
   compile 'io.swagger:swagger-annotations:1.5.17'

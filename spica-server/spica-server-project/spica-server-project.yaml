@@ -1,103 +1,105 @@
----
-  swagger: "2.0"
-  info: 
-    version: "1.0.0"
-    title: "spica rest project component"
-    description: "Rest API for the project component of spica communication server"
-    termsOfService: "http://swagger.io/terms/"
-  host: "localhost"
-  basePath: "/api"
-  schemes:
-    - "https"
-  produces:
-    - "application/json"
-  securityDefinitions:
-    basic:
-      type: basic
-      description: HTTP Basic Authentication.
-  paths:
-    /projects:
-        get:
-          tags:
-            - project
-          operationId: "getProjects"
-          description: "returns all projects the current user is authorized to see"
-          produces:
-            - "application/json"
-          responses:
-            "200":
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: "spica rest project component"
+  description: "Rest API for the time component of spica communication server"
+servers:
+  - url: http://localhost/api
+
+paths:
+  /projects:
+    get:
+      tags:
+        - project
+      operationId: "getProjects"
+      description: "returns all projects the current user is authorized to see"
+      responses:
+        '200':
+          description: list of projects
+          content:
+            application/json:
               schema:
-                $ref: "#/definitions/ProjectContainerInfo"
-        post:
-          tags:
-            - project
-          operationId: "createProject"
-          description: "creates a new project"
-          produces:
-            - "application/json"
-          parameters:
-            - in: query
-              name: name
-              type: string
-              required: true
-          responses:
-            "200":
+                $ref: "#/components/schemas/ProjectContainerInfo"
+    post:
+      tags:
+        - project
+      operationId: "createProject"
+      description: "creates a new project"
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: created project
+          content:
+            application/json:
               schema:
-                $ref: "#/definitions/ProjectInfo"
+                $ref: "#/components/schemas/ProjectInfo"
 
-    /projects/{projectId}/topics:
-        get:
-          tags:
-            - topic
-          operationId: "getTopics"
-          produces:
-            - "application/json"
-          parameters:
-            - in: path
-              name: projectId
-              type: string
-              required: true
-          responses:
-            "200":
+  /projects/{projectId}/topics:
+    get:
+      tags:
+        - topic
+      operationId: "getTopics"
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: list of topics
+          content:
+            application/json:
               schema:
-                $ref: "#/definitions/TopicContainerInfo"
+                $ref: "#/components/schemas/TopicContainerInfo"
 
-        post:
-          tags:
-            - topic
-          operationId: "createTopic"
-          description: "creates a new topic"
-          produces:
-            - "application/json"
-          parameters:
-            - in: path
-              name: projectId
-              type: string
-              required: true
-            - in: query
-              name: name
-              type: string
-              required: true
-          responses:
-            "200":
+    post:
+      tags:
+        - topic
+      operationId: "createTopic"
+      description: "creates a new topic"
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: name
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: created topic
+          content:
+            application/json:
               schema:
-                $ref: "#/definitions/TopicInfo"
+                $ref: "#/components/schemas/TopicInfo"
 
-    /topics/{topicId}:
-        delete:
-          tags:
-            - topic
-          operationId: "deleteTopic"
-          produces:
-            - "application/json"
-          parameters:
-            - in: path
-              name: topicId
-              type: string
-              required: true
+  /topics/{topicId}:
+    delete:
+      tags:
+        - topic
+      operationId: "deleteTopic"
+      parameters:
+        - in: path
+          name: topicId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Null response'
 
-  definitions:
 
+components:
+  schemas:
     ProjectInfo:
       type: "object"
       properties:
@@ -106,7 +108,7 @@
         name:
           type: "string"
         parent:
-          $ref: "#/definitions/ProjectInfo"
+          $ref: "#/components/schemas/ProjectInfo"
 
     ProjectContainerInfo:
       type: "object"
@@ -114,7 +116,7 @@
         projects:
           type: "array"
           items:
-            $ref: "#/definitions/ProjectInfo"
+            $ref: "#/components/schemas/ProjectInfo"
 
 
     TopicInfo:
@@ -124,6 +126,8 @@
           type: "string"
         name:
           type: "string"
+        project:
+          $ref: "#/components/schemas/ProjectInfo"
 
 
     TopicContainerInfo:
@@ -132,4 +136,4 @@
         topics:
           type: "array"
           items:
-            $ref: "#/definitions/TopicInfo"
+            $ref: "#/components/schemas/TopicInfo"

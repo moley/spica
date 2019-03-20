@@ -1,15 +1,11 @@
 package org.spica.devclient;
 
-import com.calendarfx.model.Entry;
-import com.calendarfx.model.Interval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.devclient.model.DashboardInfo;
 import org.spica.javaclient.model.BookingInfo;
 import org.spica.javaclient.model.ProjectInfo;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;

@@ -33,14 +33,14 @@ public class DevApplicationInternal extends Application {
     Mask<MainPageController> mainMask = mainMaskLoader.load("mainpage");
     mainMask.setStage(primaryStage);
     primaryStage.setTitle("SPICA Devclient");
+    primaryStage.setMaximized(true);
     primaryStage.setScene(mainMask.getScene());
     primaryStage.initStyle(StageStyle.UNDECORATED);
     primaryStage.show();
     primaryStage.requestFocus();
 
-
     Provider provider = Provider.getCurrentProvider(false);
-    provider.register(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.ALT_MASK | InputEvent.SHIFT_MASK), new HotKeyListener() {
+    provider.register(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), new HotKeyListener() {
       @Override
       public void onHotKey(HotKey hotKey) {
         System.out.println ("Recieved hotkey");
@@ -49,6 +49,7 @@ public class DevApplicationInternal extends Application {
           @Override
           public void run() {
             System.out.println ("Recieved hotkey");
+            primaryStage.setMaximized(true);
             primaryStage.toFront();
             mainMask.getController().toFront();
           }

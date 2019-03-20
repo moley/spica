@@ -1,5 +1,5 @@
 plugins {
-  id 'org.hidetake.swagger.generator' version '2.9.0'
+  id 'org.hidetake.swagger.generator' version '2.18.1'
 }
 
 apply {
@@ -21,8 +21,7 @@ dependencies {
   testCompile 'org.springframework.security:spring-security-test'
 
   compile 'io.swagger:swagger-annotations:1.5.10'
-  swaggerCodegen 'io.swagger:swagger-codegen-cli:2.3.0'
-
+  swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.0'  // or Swagger Codegen V3
 
 }
 

@@ -1,58 +1,67 @@
----
-  swagger: "2.0"
-  info: 
-    version: "1.0.0"
-    title: "spica rest project component"
-    description: "Rest API for the time component of spica communication server"
-    termsOfService: "http://swagger.io/terms/"
-  host: "localhost"
-  basePath: "/api"
-  schemes:
-    - "https"
-  produces:
-    - "application/json"
-  securityDefinitions:
-    basic:
-      type: basic
-      description: HTTP Basic Authentication.
-  paths:
-    /bookings:
-        get:
-          tags:
-            - times
-          operationId: "getBookings"
-          description: "returns all bookings the current user is authorized to see"
-          produces:
-            - "application/json"
-          parameters:
-            - in: query
-              name: date
-              type: string
-              format: date
-              required: true
-          responses:
-            "200":
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: "spica rest times component"
+  description: "Rest API for the time component of spica communication server"
+servers:
+  - url: http://localhost/api
+
+paths:
+  /events:
+    get:
+      tags:
+        - times
+      operationId: "getEvents"
+      description: "returns all events of the parameterized day the current user is authorized to see"
+      parameters:
+        - name: date
+          in: query
+          schema:
+            type: string
+            format: date
+          required: true
+      responses:
+        '200':
+          description: 'events'
+          content:
+            application/json:
               schema:
-                $ref: "#/definitions/BookingInfo"
-        post:
-          tags:
-            - times
-          operationId: "createBookings"
-          description: "creates new bookings"
-          produces:
-            - "application/json"
-          parameters:
-            - in: query
-              name: name
-              type: string
-              required: true
+                type: array
+                items:
+                  $ref: "#/components/schemas/EventInfo"
+
+    post:
+      tags:
+        - times
+      operationId: "createEvents"
+      description: "creates new events"
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Null response'
 
 
+components:
+  schemas:
 
+    EventContainerInfo:
+      type: "object"
+      properties:
+        plannedEvents:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/EventInfo"
+        realEvents:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/EventInfo"
 
-  definitions:
-
-    BookingInfo:
+    EventInfo:
       type: "object"
       properties:
         id:
@@ -69,3 +78,9 @@
         stop:
           type: "string"
           format: "date-time"
+
+    EventType:
+      type: string
+      enum:
+        - todo
+        - chat

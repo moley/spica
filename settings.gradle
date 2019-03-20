@@ -1,3 +1,4 @@
+include 'spica-commons'
 include 'spica-docs'
 include 'spica-cli'
 include 'spica-client'

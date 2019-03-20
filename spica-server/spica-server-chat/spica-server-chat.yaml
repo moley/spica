@@ -1,44 +1,39 @@
----
-  swagger: "2.0"
-  info: 
-    version: "1.0.0"
-    title: "spica rest chat component "
-    description: "Rest API for the chat component of spica communication server"
-    termsOfService: "http://swagger.io/terms/"
-  host: "localhost"
-  basePath: "/api"
-  schemes:
-    - "https"
-  produces:
-    - "application/json"
-  securityDefinitions:
-    basic:
-      type: basic
-      description: HTTP Basic Authentication.
-  paths:
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: "spica rest chat component"
+  description: "Rest API for the chat component of spica communication server"
+servers:
+  - url: http://localhost/api
 
-    /messagecontainer/{referenceType}/{referenceId}:
-      get:
-        tags:
-          - chat
-        operationId: "getMessagecontainer"
-        produces:
-        - "application/json"
-        parameters:
-        - in: path
-          name: referenceType
-          type: string
-          required: true
-        - in: path
-          name: referenceId
-          type: string
-          required: true
-        responses:
-          "200":
-            schema:
-              $ref: "#/definitions/MessagecontainerInfo"
+paths:
 
-  definitions:
+  /messagecontainer/{referenceType}/{referenceId}:
+    get:
+      tags:
+        - chat
+      operationId: "getMessagecontainer"
+      parameters:
+      - in: path
+        name: referenceType
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: referenceId
+        schema:
+          type: string
+        required: true
+      responses:
+          '200':
+            description: message container
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/MessagecontainerInfo"
+
+components:
+  schemas:
     MessageInfo:
       type: "object"
       properties:
@@ -62,7 +57,7 @@
         message:
           type: "array"
           items:
-            $ref: "#/definitions/MessageInfo"
+            $ref: "#/components/schemas/MessageInfo"
 
 
 
