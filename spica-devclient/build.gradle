@@ -37,12 +37,12 @@ tasks.build.dependsOn tasks.createDmg
 
 import org.apache.tools.ant.taskdefs.condition.Os
 
-println "Is Mac: " + Os.isFamily(Os.FAMILY_MAC)
+println "Is Mac: " + System.getProperty("os.name").toLowerCase().contains("mac")
 
 task installDmg(type: Copy) {
   from "build/macApp/${macAppBundle.appName}.app"
   into "/Applications/${macAppBundle.appName}.app"
   dependsOn tasks.createDmg
-  onlyIf {Os.isFamily(Os.FAMILY_MAC)}
+  onlyIf {System.getProperty("os.name").toLowerCase().contains("mac")}
   //eachFile { println "Copying " + it.name}
 }
