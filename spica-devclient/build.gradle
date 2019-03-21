@@ -33,16 +33,16 @@ macAppBundle {
   dmgName = "Spica-${project.version}"
 }
 
+boolean isMac = System.getProperty("os.name").toLowerCase().contains("mac")
+println "Is Mac: " + isMac
+
 tasks.build.dependsOn tasks.createDmg
-
-import org.apache.tools.ant.taskdefs.condition.Os
-
-println "Is Mac: " + System.getProperty("os.name").toLowerCase().contains("mac")
+tasks.createDmg.onlyIf {isMac}
 
 task installDmg(type: Copy) {
   from "build/macApp/${macAppBundle.appName}.app"
   into "/Applications/${macAppBundle.appName}.app"
   dependsOn tasks.createDmg
-  onlyIf {System.getProperty("os.name").toLowerCase().contains("mac")}
+  onlyIf {isMac}
   //eachFile { println "Copying " + it.name}
 }
