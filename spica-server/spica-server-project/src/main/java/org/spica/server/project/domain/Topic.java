@@ -1,17 +1,18 @@
 package org.spica.server.project.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.spica.server.commons.Idable;
 
 @Entity
+@Builder
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Topic implements Idable {
 
 	@Id
@@ -25,6 +26,17 @@ public class Topic implements Idable {
 	private String visibilityRules;
 
 	private Long creatorID;
+
+	private Long currentUserID;
+
+	@OneToOne
+	private Topic parentTopic;
+
+	private String externalSystemKey;
+
+	private String externalSystemID;
+
+
 
 
 

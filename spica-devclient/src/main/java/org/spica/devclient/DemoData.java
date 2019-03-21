@@ -2,7 +2,7 @@ package org.spica.devclient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.javaclient.model.BookingInfo;
+import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.ProjectInfo;
 
 import java.time.LocalDate;
@@ -17,8 +17,8 @@ public class DemoData {
 
   public static Collection<ProjectInfo> projectInfos = new ArrayList<>();
 
-  public static Collection<BookingInfo> realEntries = new ArrayList<>();
-  public static Collection<BookingInfo> plannedEntries = new ArrayList<>();
+  public static Collection<EventInfo> realEntries = new ArrayList<>();
+  public static Collection<EventInfo> plannedEntries = new ArrayList<>();
 
   public static void create () {
     createProjects();

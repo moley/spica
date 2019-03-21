@@ -16,12 +16,17 @@ dependencies {
 
   compile('org.springframework.boot:spring-boot-starter-web')
 
+  compile 'com.atlassian.jira:jira-rest-java-client-core:5.1.0'
+  compile 'io.atlassian.fugue:fugue:4.7.2' //dep for java-client
+
+
+
   testCompile 'org.springframework.boot:spring-boot-starter-test'
   testCompile 'org.springframework.boot:spring-boot-test-autoconfigure'
   testCompile 'org.springframework.security:spring-security-test'
 
-  compile 'io.swagger:swagger-annotations:1.5.10'
-  swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.0'  // or Swagger Codegen V3
+  swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.5'  // or Swagger Codegen V3
+  compile 'io.swagger:swagger-annotations:1.5.22'
 
 }
 

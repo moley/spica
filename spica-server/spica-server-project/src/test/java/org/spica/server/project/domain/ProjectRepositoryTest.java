@@ -4,15 +4,13 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(value = {SpringExtension.class})
 @DataJpaTest
-@EnableJpaRepositories(basePackages = "org.spica.server.project.domain")
-@EntityScan(basePackages = "org.spica.server.project.domain")
+@AutoConfigurationPackage
 public class ProjectRepositoryTest {
 
 
@@ -21,7 +19,7 @@ public class ProjectRepositoryTest {
 
 
   @Test
-  public void createProject () {
+  public void findAll () {
 
     Project project = Project.builder().name("Testproject").build();
     projectRepository.save(project);

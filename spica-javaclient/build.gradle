@@ -5,10 +5,9 @@ plugins {
 apply plugin: 'java'
 
 dependencies {
-  swaggerCodegen 'org.openapitools:openapi-generator-cli:3.3.4'
+  swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.5'  // or Swagger Codegen V3
+  compile 'io.swagger.core.v3:swagger-annotations:2.0.7'
 
-
-  compile 'io.swagger:swagger-annotations:1.5.17'
   compile 'com.squareup.okhttp:okhttp:2.7.5'
   compile 'com.squareup.okhttp:logging-interceptor:2.7.5'
   compile 'com.google.code.gson:gson:2.8.1'

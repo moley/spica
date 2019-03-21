@@ -11,12 +11,12 @@ apply plugin: 'io.spring.dependency-management'
 
 dependencies {
   compile project(':spica-server:spica-server-commons')
+  compile 'io.swagger:swagger-annotations:1.5.22'
   compile ("org.springframework.boot:spring-boot-starter-data-jpa")
 
   compile('org.springframework.boot:spring-boot-starter-web')
 
-  compile 'io.swagger:swagger-annotations:1.5.10'
-  swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.0'  // or Swagger Codegen V3
+  swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.5'  // or Swagger Codegen V3
 
 }
 

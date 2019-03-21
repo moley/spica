@@ -128,6 +128,8 @@ components:
           type: "string"
         project:
           $ref: "#/components/schemas/ProjectInfo"
+        parent:
+          $ref: "#/components/schemas/TopicInfo"
 
 
     TopicContainerInfo:

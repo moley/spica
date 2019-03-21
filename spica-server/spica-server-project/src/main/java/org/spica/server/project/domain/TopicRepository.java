@@ -10,4 +10,6 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
 
 	List<Topic> findAllByProjectID (final Long projectID);
 
+	List<Topic> findAllByCurrentUserIDAndExternalSystemKey (final Long userID, final String externalSystemKey);
+
 }
