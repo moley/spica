@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.spica.server.project.domain.Topic;
 import org.spica.server.project.domain.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+@Service
 public class JiraTopicImporter implements TopicImporter {
 
     public final static String EXTERNAL_SYSTEM_KEY_JIRA = "JIRA";
@@ -37,18 +39,20 @@ public class JiraTopicImporter implements TopicImporter {
         LOGGER.info("Using jira user: " + user);
         LOGGER.info("Using jira pwd: " + pwd);
 
+        //find already imported topics
+        LOGGER.info("Find all topics of user " + userID + " with external system key " + EXTERNAL_SYSTEM_KEY_JIRA);
+        List<Topic> importedTopics = topicRepository.findAllByCurrentUserIDAndExternalSystemKey(userID, EXTERNAL_SYSTEM_KEY_JIRA);
+        HashMap<String, Topic> keyAndTopic = new HashMap<String, Topic>();
+        importedTopics.forEach(topic->keyAndTopic.put(topic.getExternalSystemKey(), topic));
+
         AsynchronousJiraRestClientFactory jiraRestClientFactory = new AsynchronousJiraRestClientFactory();
         JiraRestClient jiraRestClient = jiraRestClientFactory.create(URI.create(url), new BasicHttpAuthenticationHandler(user, pwd));
 
+        LOGGER.info("Querying jira...");
         jiraRestClient.getSearchClient().searchJql("assignee = currentUser() AND resolution = Unresolved").done(new Consumer<SearchResult>() {
             @Override
             public void accept(SearchResult searchResult) {
-
-                //find already imported topics
-                List<Topic> importedTopics = topicRepository.findAllByCurrentUserIDAndExternalSystemKey(userID, EXTERNAL_SYSTEM_KEY_JIRA);
-                HashMap<String, Topic> keyAndTopic = new HashMap<String, Topic>();
-                importedTopics.forEach(topic->keyAndTopic.put(topic.getExternalSystemKey(), topic));
-
+                LOGGER.info("Stepping issues");
                 for (Issue next: searchResult.getIssues()) {
                     LOGGER.info("Found my issue " + next.getKey() + "-" + next.getSummary() + "-" + next.getStatus().getName());
 
@@ -69,10 +73,12 @@ public class JiraTopicImporter implements TopicImporter {
                     LOGGER.info("After import: " + next.getKey() + "-" + next.getValue().getName());
                 }
                 topicRepository.saveAll(keyAndTopic.values());
+
+                LOGGER.info("Finished importing topics from jira");
             }
         });
 
-        Thread.sleep(10000);
+        Thread.sleep(100000);
 
         return null;
     }
