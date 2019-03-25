@@ -21,6 +21,8 @@ public class Topic implements Idable {
 
 	private String name;
 
+	private String description;
+
 	private Long projectID;
 
 	private String visibilityRules;
