@@ -38,12 +38,6 @@ public class SpicaServerApplication {
 
   }
 
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder(12);
-  }
-
-
   public static void main (final String [] args) {
     SpringApplication.run(SpicaServerApplication.class, args);
   }

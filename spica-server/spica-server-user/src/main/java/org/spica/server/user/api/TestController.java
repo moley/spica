@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
 
+  public TestController () {
+    System.out.println ("");
+  }
   @GetMapping("/secret")
   @CrossOrigin
   public String secretService() {
