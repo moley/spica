@@ -17,12 +17,12 @@ dependencies {
   runtime 'ch.qos.logback:logback-classic:1.2.3'
 
   testCompile('org.springframework.boot:spring-boot-starter-test')
-  testCompile('org.springframework.security:spring-security-test')
+  // testCompile('org.springframework.security:spring-security-test')
 
 }
 
 springBoot {
-  mainClassName = 'org.spica.server.application.SpicaApplication'
+  mainClassName = 'org.spica.server.SpicaServerApplication'
 }
 
 jar.dependsOn bootJar

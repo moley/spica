@@ -36,12 +36,10 @@ public class JiraTopicImporter implements TopicImporter {
     private AsynchronousJiraRestClientFactory jiraRestClientFactory = new AsynchronousJiraRestClientFactory();
 
     @Override
-    public List<Topic> importTopicsOfUser(Long userID) throws InterruptedException {
+    public List<Topic> importTopicsOfUser(String userID, final String user, final String pwd) throws InterruptedException {
 
         SpicaProperties spicaProperties = new SpicaProperties();
         String url = spicaProperties.getValueNotNull(JiraConfiguration.PROPERTY_SPICA_JIRA_URL);
-        String user = spicaProperties.getValue(JiraConfiguration.PROPERTY_SPICA_JIRA_USER);
-        String pwd = spicaProperties.getValue(JiraConfiguration.PROPERTY_SPICA_JIRA_PWD);
 
         LOGGER.info("Using jira url: " + url);
         LOGGER.info("Using jira user: " + user);

@@ -41,15 +41,14 @@ public class ProjectsController implements ProjectsApi {
   @Override
   public ResponseEntity<TopicInfo> createTopic(@ApiParam(value = "",required=true) @PathVariable("projectId") String projectId, @NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "name", required = true) String name) {
 
-    Long projectIdAsLong = Long.valueOf(projectId);
 
-    Optional<Project> project = projectRepository.findById(projectIdAsLong);
+    Optional<Project> project = projectRepository.findById(projectId);
     if (! project.isPresent())
       throw new IllegalStateException("Project with id " + projectId + " not found");
 
     Topic topic = new Topic();
     topic.setName(name);
-    topic.setProjectID(projectIdAsLong);
+    topic.setProjectID(projectId);
     topicRepository.save(topic);
     return new ResponseEntity<TopicInfo>(topicsMapper.toApi(topic), HttpStatus.OK);
   }
@@ -70,9 +69,7 @@ public class ProjectsController implements ProjectsApi {
   @Override
   public ResponseEntity<TopicContainerInfo> getTopics(@ApiParam(value = "",required=true) @PathVariable("projectId") String projectId) {
 
-    Long projectIdAsLong = Long.valueOf(projectId);
-
-    List<Topic> topicsByProject = topicRepository.findAllByProjectID(projectIdAsLong);
+    List<Topic> topicsByProject = topicRepository.findAllByProjectID(projectId);
     TopicContainerInfo topicContainerInfo = new TopicContainerInfo();
     for (Topic next: topicsByProject) {
       topicContainerInfo.addTopicsItem(topicsMapper.toApi(next));

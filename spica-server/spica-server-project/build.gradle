@@ -24,7 +24,7 @@ dependencies {
 
   testCompile 'org.springframework.boot:spring-boot-starter-test'
   testCompile 'org.springframework.boot:spring-boot-test-autoconfigure'
-  testCompile 'org.springframework.security:spring-security-test'
+  //testCompile 'org.springframework.security:spring-security-test'
 
   swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.5'  // or Swagger Codegen V3
   compile 'io.swagger:swagger-annotations:1.5.22'

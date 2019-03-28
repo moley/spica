@@ -7,7 +7,7 @@ public class ProjectsMapper {
 
   ProjectInfo toApi (Project project) {
     ProjectInfo projectInfo = new ProjectInfo();
-    projectInfo.setId(Long.toString(project.getId()));
+    projectInfo.setId(project.getId());
 
     return projectInfo;
   }

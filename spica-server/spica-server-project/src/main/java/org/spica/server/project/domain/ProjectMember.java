@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import org.spica.server.commons.MemberShipType;
 
 import javax.persistence.*;
@@ -15,14 +16,14 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class ProjectMember {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+  @Id @GeneratedValue(generator="system-uuid")
+  @GenericGenerator(name="system-uuid", strategy = "uuid")
+  private String id;
 
   @OneToOne
   private Project project;
 
-  private Long memberID;
+  private String memberID;
 
   @Enumerated(EnumType.STRING)
   private MemberShipType memberShipType;

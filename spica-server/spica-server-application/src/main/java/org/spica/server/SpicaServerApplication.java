@@ -1,10 +1,9 @@
-package org.spica.server.application;
+package org.spica.server;
 
 import org.spica.server.demodata.CustomerDemoData;
 import org.spica.server.demodata.DemoDataType;
 import org.spica.server.demodata.DevelopmentDemoData;
 import org.spica.server.demodata.SchoolDemoData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -16,10 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootApplication(scanBasePackages={"org.spica.server"})
 @EntityScan(basePackages = {"org.spica.server"})
 @EnableJpaRepositories(basePackages = {"org.spica.server"})
-public class SpicaApplication {
+public class SpicaServerApplication {
 
-
-  public SpicaApplication (SchoolDemoData schoolDemoData, CustomerDemoData customerDemoData, DevelopmentDemoData developmentDemoData) {
+  public SpicaServerApplication(SchoolDemoData schoolDemoData, CustomerDemoData customerDemoData, DevelopmentDemoData developmentDemoData) {
 
     String demoDataType = System.getProperty("demodata");
     if (demoDataType != null) {
@@ -37,6 +35,7 @@ public class SpicaApplication {
         default:
       }
     }
+
   }
 
   @Bean
@@ -44,8 +43,9 @@ public class SpicaApplication {
     return new BCryptPasswordEncoder(12);
   }
 
+
   public static void main (final String [] args) {
-    SpringApplication.run(SpicaApplication.class, args);
+    SpringApplication.run(SpicaServerApplication.class, args);
   }
 
 

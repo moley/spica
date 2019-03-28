@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import org.spica.server.commons.Idable;
 
 @Entity
@@ -15,21 +16,21 @@ import org.spica.server.commons.Idable;
 @AllArgsConstructor
 public class Topic implements Idable {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+	@Id @GeneratedValue(generator="system-uuid")
+	@GenericGenerator(name="system-uuid", strategy = "uuid")
+	private String id;
 
 	private String name;
 
 	private String description;
 
-	private Long projectID;
+	private String projectID;
 
 	private String visibilityRules;
 
-	private Long creatorID;
+	private String creatorID;
 
-	private Long currentUserID;
+	private String currentUserID;
 
 	@OneToOne
 	private Topic parentTopic;

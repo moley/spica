@@ -3,6 +3,7 @@ package org.spica.server.chat.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,9 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 public class Message {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)	
-  private Long id;
+  @Id @GeneratedValue(generator="system-uuid")
+  @GenericGenerator(name="system-uuid", strategy = "uuid")
+  private String id;
 
   private LocalDateTime creationDate;
 
@@ -25,7 +26,7 @@ public class Message {
   @Column(length=10000)
   private String message;
 
-  private Long creatorId;
+  private String creatorId;
 
   private String visibilityRules;
 

@@ -31,8 +31,8 @@ Client im Browser starten: 		    ```ionic cordova run browser```                
 Client in Lab starten:			     ```ionic serve -l```                                                      
 Client auf Smartphone deployen:	 	```ionic cordova run android --device --prod```                             
 Server starten:                      ```gradle bootRun```                                                       
-DockerImage erzeugen:                TODO ```docker build -t maodialog-server . -f Dockerfile.server```   
-Docker Container starten:            ```docker run -p 8080:8080 -it maodialog-server```   
+DockerImage erzeugen:                TODO ```docker build -t spica-server . -f Dockerfile.server```   
+Docker Container starten:            ```docker run -p 8080:8080 -it spica-server```   
 InMemory-H2-Console-URL:             ```http://localhost:8080/h2```   
 InMemory-H2-URL:					 ```jdbc:h2:mem:testdb```    
 

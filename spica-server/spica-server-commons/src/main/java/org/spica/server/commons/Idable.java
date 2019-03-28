@@ -2,5 +2,5 @@ package org.spica.server.commons;
 
 public interface Idable {
 
-  public Long getId ();
+  public String getId ();
 }

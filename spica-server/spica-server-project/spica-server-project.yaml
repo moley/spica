@@ -82,6 +82,36 @@ paths:
               schema:
                 $ref: "#/components/schemas/TopicInfo"
 
+  /topics/import/{userId}:
+    post:
+      tags:
+        - topic
+      operationId: "importTopics"
+      description: "import topics for user from external system (currently only jira)"
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: usernameExternalSystem
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: passwordExternalSystem
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: created topic
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TopicContainerInfo"
+
   /topics/{topicId}:
     delete:
       tags:
@@ -125,6 +155,10 @@ components:
         id:
           type: "string"
         name:
+          type: "string"
+        description:
+          type: "string"
+        state:
           type: "string"
         project:
           $ref: "#/components/schemas/ProjectInfo"

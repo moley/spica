@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface TopicImporter {
 
-    public List<Topic> importTopicsOfUser (final Long userID) throws InterruptedException;
+    public List<Topic> importTopicsOfUser (final String userID, final String user, final String pwd) throws InterruptedException;
 }

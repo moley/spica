@@ -128,7 +128,7 @@ public class DemoDataCreator {
     meep.setCreatorId(creator.getId());
     meep.setMessage(message);
 
-    Long referenceID = reference.getId();
+    String referenceID = reference.getId();
     ReferenceType referenceType = ReferenceType.valueOf(reference.getClass().getSimpleName().toUpperCase());
 
     Messagecontainer container = messageContainerRepository.findByReferenceTypeAndReferenceID(referenceType, referenceID);

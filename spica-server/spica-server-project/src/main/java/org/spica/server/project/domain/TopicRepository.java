@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TopicRepository extends JpaRepository<Topic, Long> {
+public interface TopicRepository extends JpaRepository<Topic, String> {
 
-	List<Topic> findAllByProjectID (final Long projectID);
+	List<Topic> findAllByProjectID (final String projectID);
 
-	List<Topic> findAllByCurrentUserIDAndExternalSystemKey (final Long userID, final String externalSystemKey);
+	List<Topic> findAllByCurrentUserIDAndExternalSystemKey (final String userID, final String externalSystemKey);
 
 }

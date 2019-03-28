@@ -59,7 +59,7 @@ public class JiraTopicImporterTest {
         Mockito.when(mockedJiraRestClient.getSearchClient()).thenReturn(mockedSearchRestClient);
 
         jiraTopicImporter.setJiraRestClientFactory(mockedJiraRestClientFactory);
-        jiraTopicImporter.importTopicsOfUser(1L);
+        jiraTopicImporter.importTopicsOfUser("1", "user", "pwd");
 
     }
 

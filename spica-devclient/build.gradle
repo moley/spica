@@ -19,6 +19,7 @@ dependencies {
   runtime 'org.openjfx:javafx-swing:12-ea+8'
 
   compile project (':spica-javaclient')
+  compile project (':spica-commons')
 }
 
 

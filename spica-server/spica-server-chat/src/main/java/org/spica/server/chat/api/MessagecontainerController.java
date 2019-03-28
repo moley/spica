@@ -23,9 +23,8 @@ public class MessagecontainerController implements MessagecontainerApi {
 
   @Override
   public ResponseEntity<MessagecontainerInfo> getMessagecontainer(@ApiParam(value = "",required=true) @PathVariable("referenceType") String referenceType, @ApiParam(value = "",required=true) @PathVariable("referenceId") String referenceId) {
-    Long referenceIdAsLong = Long.valueOf(referenceId);
     ReferenceType referenceTypeAsEnum = ReferenceType.valueOf(referenceType);
-    Messagecontainer messagecontainer = messagecontainerRepository.findByReferenceTypeAndReferenceID(referenceTypeAsEnum, referenceIdAsLong);
+    Messagecontainer messagecontainer = messagecontainerRepository.findByReferenceTypeAndReferenceID(referenceTypeAsEnum, referenceId);
     return new ResponseEntity<MessagecontainerInfo>(messagecontainerMapper.toApi(messagecontainer), HttpStatus.OK);
   }
 }
