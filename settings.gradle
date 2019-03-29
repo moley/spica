@@ -4,12 +4,4 @@ include 'spica-cli'
 include 'spica-client'
 include 'spica-devclient'
 include 'spica-javaclient'
-
-include 'spica-server:spica-server-commons'
-include 'spica-server:spica-server-application'
-include 'spica-server:spica-server-chat'
-include 'spica-server:spica-server-documents'
-include 'spica-server:spica-server-project'
-include 'spica-server:spica-server-user'
-include 'spica-server:spica-server-times'
-
+include 'spica-server'

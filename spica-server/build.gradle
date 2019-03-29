@@ -1,0 +1,90 @@
+plugins {
+  id 'org.hidetake.swagger.generator' version '2.18.1'
+}
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+dependencies {
+  compile project(':spica-commons')
+  compile 'org.springframework.boot:spring-boot-starter-web'
+  compile 'org.springframework.boot:spring-boot-starter-security'
+  compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+  compile 'io.jsonwebtoken:jjwt:0.9.0'
+
+  compile 'com.atlassian.jira:jira-rest-java-client-core:5.1.0'
+  compile 'io.atlassian.fugue:fugue:4.7.2' //dep for java-client
+
+  compile ('org.apache.directory.api:apache-ldap-api:1.0.0') {
+    exclude module: 'slf4j-log4j12'
+  }
+
+  compile 'io.swagger:swagger-annotations:1.5.22'
+
+
+  runtime 'com.h2database:h2:1.4.179'
+  runtime 'ch.qos.logback:logback-core:1.2.3'
+  runtime 'ch.qos.logback:logback-classic:1.2.3'
+
+  testCompile('org.springframework.boot:spring-boot-starter-test')
+
+  swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.5'  // or Swagger Codegen V3
+
+}
+
+springBoot {
+  mainClassName = 'org.spica.server.SpicaServerApplication'
+}
+
+jar.dependsOn bootJar
+jar.onlyIf {false}
+
+
+bootRun {
+  sourceResources sourceSets.main
+}
+
+swaggerSources {
+  spicaServerChat {
+    inputFile = project.file('spica-server-chat.yaml')
+    code {
+      language = 'spring'
+      components = ['models', 'apis']
+      additionalProperties = [interfaceOnly:'true']
+      rawOptions = ['--api-package=org.spica.server.chat.api', '--model-package=org.spica.server.chat.model']
+    }
+  }
+
+  spicaServerProject {
+    inputFile = project.file('spica-server-project.yaml')
+    code {
+      language = 'spring'
+      components = ['models', 'apis']
+      additionalProperties = [interfaceOnly:'true']
+      rawOptions = ['--api-package=org.spica.server.project.api', '--model-package=org.spica.server.project.model']
+    }
+  }
+
+  spicaServerTimes {
+    inputFile = project.file('spica-server-times.yaml')
+    code {
+      language = 'spring'
+      components = ['models', 'apis']
+      additionalProperties = [interfaceOnly:'true']
+      configFile = rootProject.file('swagger-config.json')
+      rawOptions = ['--api-package=org.spica.server.times.api', '--model-package=org.spica.server.times.model']
+    }
+  }
+}
+
+sourceSets.main.java.srcDir "${swaggerSources.spicaServerChat.code.outputDir}/src/main/java"
+sourceSets.main.resources.srcDir "${swaggerSources.spicaServerChat.code.outputDir}/src/main/resources"
+sourceSets.main.java.srcDir "${swaggerSources.spicaServerProject.code.outputDir}/src/main/java"
+sourceSets.main.resources.srcDir "${swaggerSources.spicaServerProject.code.outputDir}/src/main/resources"
+sourceSets.main.java.srcDir "${swaggerSources.spicaServerTimes.code.outputDir}/src/main/java"
+sourceSets.main.resources.srcDir "${swaggerSources.spicaServerTimes.code.outputDir}/src/main/resources"
+tasks.compileJava.dependsOn tasks.generateSwaggerCode
+
+

@@ -42,7 +42,7 @@ dependencies {
 swaggerSources {
 
   spicaProject {
-    inputFile = project.rootProject.project('spica-server:spica-server-project').file('spica-server-project.yaml')
+    inputFile = project.rootProject.project('spica-server').file('spica-server-project.yaml')
     code {
       language = 'java'
       rawOptions = ['--api-package=org.spica.javaclient.api', '--model-package=org.spica.javaclient.model']
@@ -50,7 +50,7 @@ swaggerSources {
     }
   }
   spicaChat {
-    inputFile = project.rootProject.project('spica-server:spica-server-chat').file('spica-server-chat.yaml')
+    inputFile = project.rootProject.project('spica-server').file('spica-server-chat.yaml')
     code {
       language = 'java'
       rawOptions = ['--api-package=org.spica.javaclient.api', '--model-package=org.spica.javaclient.model']
@@ -60,7 +60,7 @@ swaggerSources {
   }
 
   spicaTimes {
-    inputFile = project.rootProject.project('spica-server:spica-server-times').file('spica-server-times.yaml')
+    inputFile = project.rootProject.project('spica-server').file('spica-server-times.yaml')
     code {
       language = 'java'
       rawOptions = ['--api-package=org.spica.javaclient.api', '--model-package=org.spica.javaclient.model']
