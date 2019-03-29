@@ -1,6 +1,7 @@
 package org.spica.server.security;
 
 import org.spica.server.security.auth.*;
+import org.spica.server.user.service.DefaultUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -53,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Autowired
-  private CustomUserDetailsService jwtUserDetailsService;
+  private DefaultUserDetailsService jwtUserDetailsService;
 
   @Autowired
   private RestAuthenticationEntryPoint restAuthenticationEntryPoint;

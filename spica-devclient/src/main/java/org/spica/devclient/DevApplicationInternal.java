@@ -47,7 +47,7 @@ public class DevApplicationInternal extends Application {
     try {
       topicApi.importTopics(jiraUser, jiraUser, jiraPassword);
     } catch (ApiException e) {
-      LOGGER.error("Error importing jira topics: " + e.getLocalizedMessage(), e);
+      LOGGER.error("Error importing jira topics: " + e.getResponseBody(), e);
     }
 
 

@@ -23,6 +23,10 @@ public class TopicsController implements TopicsApi {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(TopicsController.class);
 
+  public TopicsController () {
+    System.out.println ("");
+  }
+
 
   @Override
   public ResponseEntity<Void> deleteTopic(@ApiParam(value = "",required=true) @PathVariable("topicId") String topicId) {
@@ -30,7 +34,7 @@ public class TopicsController implements TopicsApi {
   }
 
   @Override
-  public ResponseEntity<TopicContainerInfo> importTopics(String userId, String usernameExternalSystem, String passwordExternalSystem)  {
+  public ResponseEntity<TopicContainerInfo> importTopics(@ApiParam(value = "",required=true) @PathVariable("userId") String userId,@ApiParam(value = "",required=true) @PathVariable("usernameExternalSystem") String usernameExternalSystem,@ApiParam(value = "",required=true) @PathVariable("passwordExternalSystem") String passwordExternalSystem) {
 
 
     List<Topic> importedTopics = null;

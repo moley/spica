@@ -3,10 +3,10 @@ package org.spica.server.security.auth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
-import org.spica.server.config.ServerConfiguration;
+import org.spica.server.user.config.UserConfiguration;
+import org.spica.server.user.domain.User;
 import org.spica.server.user.service.UserProvider;
 import org.spica.server.user.service.UserProviderFactory;
-import org.spica.server.user.domain.User;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,7 +28,7 @@ public class SpicaAuthenticationProvider implements AuthenticationProvider {
     LOGGER.info("authenticate " + authentication.getName());
 
     SpicaProperties spic = new SpicaProperties();
-    String userProviderImplementation = spic.getValueNotNull(ServerConfiguration.PROPERTY_USERPROVIDER);
+    String userProviderImplementation = spic.getValueNotNull(UserConfiguration.PROPERTY_USERPROVIDER);
 
     try {
       UserProviderFactory userProviderFactory = new UserProviderFactory();

@@ -94,12 +94,12 @@ paths:
           schema:
             type: string
           required: true
-        - in: path
+        - in: query
           name: usernameExternalSystem
           schema:
             type: string
           required: true
-        - in: path
+        - in: query
           name: passwordExternalSystem
           schema:
             type: string

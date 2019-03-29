@@ -3,7 +3,6 @@ package org.spica.server.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,7 +112,7 @@ public class TokenHelper {
     }
 
     private long getCurrentTimeMillis() {
-        return DateTime.now().getMillis();
+        return System.currentTimeMillis();
     }
 
     private Date generateCurrentDate() {
