@@ -13,6 +13,11 @@ public class TopicsMapper {
     TopicInfo topicInfo = new TopicInfo();
     topicInfo.setId(topic.getId());
     topicInfo.setName(topic.getName());
+    topicInfo.setDescription(topic.getDescription());
+    if (topic.getParentTopic() != null)
+      topicInfo.setParent(toApi(topic.getParentTopic()));
+    //topicInfo.setState();
+    //topicInfo.setProject();
 
     return topicInfo;
   }

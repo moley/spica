@@ -50,6 +50,7 @@ public class JiraTopicImporterTest {
 
         Promise<SearchResult> mockedPromise = Mockito.mock(Promise.class);
         Mockito.when(mockedPromise.claim()).thenReturn(mockedSearchResult);
+        Mockito.when(mockedPromise.done(Mockito.any())).thenReturn(mockedPromise);
 
         SearchRestClient mockedSearchRestClient = Mockito.mock(SearchRestClient.class);
         Mockito.when(mockedSearchRestClient.searchJql(Mockito.any())).thenReturn(mockedPromise);
@@ -76,6 +77,8 @@ public class JiraTopicImporterTest {
         final String DESC1 = "DESC1";
         final String DESC2 = "DESC2";
 
+        final String currentUserID = "1";
+
         Status status = Mockito.mock(Status.class);
         Mockito.when(status.getName()).thenReturn("OPEN");
         Issue issue1 = Mockito.mock(Issue.class);
@@ -93,14 +96,14 @@ public class JiraTopicImporterTest {
         //initial
         SearchResult mockedSearchResult = Mockito.mock(SearchResult.class);
         Mockito.when(mockedSearchResult.getIssues()).thenReturn(Arrays.asList(issue1, issue2));
-        Collection<Topic> topicsFirst = jiraTopicImporter.importSearchResult(keyAndTopic, mockedSearchResult);
+        Collection<Topic> topicsFirst = jiraTopicImporter.importSearchResult(keyAndTopic, mockedSearchResult, currentUserID);
 
         Assert.assertEquals (2, keyAndTopic.keySet().size());
         Assert.assertTrue (keyAndTopic.keySet().contains(KEY1));
         Assert.assertTrue (keyAndTopic.keySet().contains(KEY2));
 
         //and overwrite
-        Collection<Topic> topicsOverwritten = jiraTopicImporter.importSearchResult(keyAndTopic, mockedSearchResult);
+        Collection<Topic> topicsOverwritten = jiraTopicImporter.importSearchResult(keyAndTopic, mockedSearchResult, currentUserID);
 
         Assert.assertEquals (2, keyAndTopic.keySet().size());
         Assert.assertTrue (keyAndTopic.keySet().contains(KEY1));

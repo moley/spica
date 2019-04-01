@@ -22,6 +22,7 @@ public class Topic implements Idable {
 
 	private String name;
 
+	@Column(length = 10000)
 	private String description;
 
 	private String projectID;
@@ -35,8 +36,14 @@ public class Topic implements Idable {
 	@OneToOne
 	private Topic parentTopic;
 
+	/**
+	 * the topic key in the external system
+	 */
 	private String externalSystemKey;
 
+	/**
+	 * the ID of the external System (e.g. JIRA)
+	 */
 	private String externalSystemID;
 
 

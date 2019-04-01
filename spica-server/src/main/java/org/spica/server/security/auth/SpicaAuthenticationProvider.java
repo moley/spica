@@ -6,7 +6,7 @@ import org.spica.commons.SpicaProperties;
 import org.spica.server.user.config.UserConfiguration;
 import org.spica.server.user.domain.User;
 import org.spica.server.user.service.UserProvider;
-import org.spica.server.user.service.UserProviderFactory;
+import org.spica.server.user.service.UserProviderStrategy;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,8 +31,8 @@ public class SpicaAuthenticationProvider implements AuthenticationProvider {
     String userProviderImplementation = spic.getValueNotNull(UserConfiguration.PROPERTY_USERPROVIDER);
 
     try {
-      UserProviderFactory userProviderFactory = new UserProviderFactory();
-      UserProvider userProvider = userProviderFactory.create(userProviderImplementation);
+      UserProviderStrategy userProviderStrategy = new UserProviderStrategy();
+      UserProvider userProvider = userProviderStrategy.create(userProviderImplementation);
 
       LOGGER.info("Using user provider " + userProvider.getClass().getName());
 

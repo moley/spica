@@ -5,6 +5,7 @@ import com.atlassian.jira.rest.client.api.domain.Issue;
 import com.atlassian.jira.rest.client.api.domain.SearchResult;
 import com.atlassian.jira.rest.client.auth.BasicHttpAuthenticationHandler;
 import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
+import io.atlassian.util.concurrent.Promise;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,29 +47,32 @@ public class JiraTopicImporter implements TopicImporter {
 
         //find already imported topics
         LOGGER.info("Find all topics of user " + userID + " with external system key " + EXTERNAL_SYSTEM_KEY_JIRA);
-        List<Topic> importedTopics = topicRepository.findAllByCurrentUserIDAndExternalSystemKey(userID, EXTERNAL_SYSTEM_KEY_JIRA);
+        final Collection<Topic> existingTopics = topicRepository.findAllByCurrentUserIDAndExternalSystemID(userID, EXTERNAL_SYSTEM_KEY_JIRA);
         HashMap<String, Topic> keyAndTopic = new HashMap<String, Topic>();
-        importedTopics.forEach(topic->keyAndTopic.put(topic.getExternalSystemKey(), topic));
+        existingTopics.forEach(topic->keyAndTopic.put(topic.getExternalSystemKey(), topic));
 
         JiraRestClient jiraRestClient = jiraRestClientFactory.create(URI.create(url), new BasicHttpAuthenticationHandler(user, pwd));
 
         LOGGER.info("Querying jira...");
-        jiraRestClient.getSearchClient().searchJql("assignee = currentUser() AND resolution = Unresolved").done(new Consumer<SearchResult>() {
+        Promise<SearchResult> promise = jiraRestClient.getSearchClient().searchJql("assignee = currentUser() AND resolution = Unresolved").done(new Consumer<SearchResult>() {
             @Override
             public void accept(SearchResult searchResult) {
                 LOGGER.info("Stepping issues");
-                importSearchResult(keyAndTopic, searchResult);
-                LOGGER.info("Finished importing topics from jira");
+                Collection<Topic> importedTopics = importSearchResult(keyAndTopic, searchResult, userID);
+                LOGGER.info("Finished importing topics from jira with " + importedTopics.size() + " items");
             }
         });
 
-        Thread.sleep(1000);
+
+        promise.claim();
 
 
-        return importedTopics;
+        final List<Topic> existingTopicsAfterImport = topicRepository.findAllByCurrentUserIDAndExternalSystemID(userID, EXTERNAL_SYSTEM_KEY_JIRA);
+        LOGGER.info("Found existing topics after import: " + existingTopicsAfterImport + "(" + topicRepository.findAll().size() + ")");
+        return existingTopicsAfterImport;
     }
 
-    public Collection<Topic> importSearchResult(final HashMap<String, Topic> keyAndTopic, final SearchResult searchResult) {
+    public Collection<Topic> importSearchResult(final HashMap<String, Topic> keyAndTopic, final SearchResult searchResult, final String userID) {
         for (Issue next: searchResult.getIssues()) {
             LOGGER.info("Found my issue " + next.getKey() + "-" + next.getSummary() + "-" + next.getStatus().getName());
 
@@ -77,6 +81,7 @@ public class JiraTopicImporter implements TopicImporter {
                 currentTopic = new Topic();
                 currentTopic.setExternalSystemID(EXTERNAL_SYSTEM_KEY_JIRA);
                 currentTopic.setExternalSystemKey(next.getKey());
+                currentTopic.setCurrentUserID(userID);
                 keyAndTopic.put(currentTopic.getExternalSystemKey(), currentTopic);
                 //TODO currentTopic.setCreatorID();
             }

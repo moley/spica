@@ -77,6 +77,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
+
+    http.authorizeRequests().antMatchers("/").permitAll().and()
+        .authorizeRequests().antMatchers("/h2/**").permitAll();
+    http.headers().frameOptions().sameOrigin(); //to enable h2 console
+
     http.cors().disable().cors().and().csrf().disable() //ignoringAntMatchers("/api/login", "/api/signup").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
         .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint); //TODO .and()

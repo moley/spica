@@ -16,6 +16,7 @@ import org.spica.devclient.util.MaskLoader;
 import org.spica.javaclient.ApiException;
 import org.spica.javaclient.Configuration;
 import org.spica.javaclient.api.TopicApi;
+import org.spica.javaclient.model.TopicContainerInfo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +46,8 @@ public class DevApplicationInternal extends Application {
 
     TopicApi topicApi = new TopicApi();
     try {
-      topicApi.importTopics(jiraUser, jiraUser, jiraPassword);
+      TopicContainerInfo topicContainerInfo = topicApi.importTopics(jiraUser, jiraUser, jiraPassword);
+      LOGGER.info("Imported " + topicContainerInfo.getTopics().size() + " topics");
     } catch (ApiException e) {
       LOGGER.error("Error importing jira topics: " + e.getResponseBody(), e);
     }

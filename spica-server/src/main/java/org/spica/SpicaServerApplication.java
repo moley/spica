@@ -1,4 +1,4 @@
-package org.spica.server;
+package org.spica;
 
 import org.spica.server.demodata.CustomerDemoData;
 import org.spica.server.demodata.DemoDataType;
@@ -7,7 +7,6 @@ import org.spica.server.demodata.SchoolDemoData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
