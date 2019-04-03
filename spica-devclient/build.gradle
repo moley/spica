@@ -13,6 +13,8 @@ javafx {
 dependencies {
   compile 'com.github.tulskiy:jkeymaster:1.2'
   compile 'com.calendarfx:view:11.5.0'
+  compile 'javax.xml.bind:jaxb-api:2.3.1'
+  runtime 'org.glassfish.jaxb:jaxb-runtime:2.3.0-b170127.1453'
 
   runtime 'org.openjfx:javafx-controls:12-ea+8'
   runtime 'org.openjfx:javafx-graphics:12-ea+8'

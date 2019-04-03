@@ -160,6 +160,10 @@ components:
           type: "string"
         state:
           type: "string"
+        externalSystemKey:
+          type: "string"
+        externalSystemID:
+          type: "string"
         project:
           $ref: "#/components/schemas/ProjectInfo"
         parent:

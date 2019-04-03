@@ -10,6 +10,8 @@ import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
+import org.spica.devclient.model.ModelCache;
+import org.spica.devclient.model.ModelCacheService;
 import org.spica.devclient.ui.MainPageController;
 import org.spica.devclient.util.Mask;
 import org.spica.devclient.util.MaskLoader;
@@ -36,17 +38,19 @@ public class DevApplicationInternal extends Application {
   @Override
   public void start(Stage primaryStage) throws AWTException {
 
-
     SpicaProperties spicaProperties = new SpicaProperties();
     String jiraUser = spicaProperties.getValue("spica.jira.user");
     String jiraPassword = spicaProperties.getValue("spica.jira.password");
 
-    DemoData.create();
+    ModelCacheService modelCacheService = new ModelCacheService();
+    ModelCache modelCache = new ModelCache();
     Configuration.getDefaultApiClient().setBasePath("http://localhost:8765/api");
 
     TopicApi topicApi = new TopicApi();
     try {
       TopicContainerInfo topicContainerInfo = topicApi.importTopics(jiraUser, jiraUser, jiraPassword);
+      modelCache.setTopicInfos(topicContainerInfo.getTopics());
+      modelCacheService.set(modelCache);
       LOGGER.info("Imported " + topicContainerInfo.getTopics().size() + " topics");
     } catch (ApiException e) {
       LOGGER.error("Error importing jira topics: " + e.getResponseBody(), e);

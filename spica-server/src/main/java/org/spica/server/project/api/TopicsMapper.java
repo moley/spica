@@ -14,6 +14,9 @@ public class TopicsMapper {
     topicInfo.setId(topic.getId());
     topicInfo.setName(topic.getName());
     topicInfo.setDescription(topic.getDescription());
+    topicInfo.setExternalSystemID(topic.getExternalSystemID());
+    topicInfo.setExternalSystemKey(topic.getExternalSystemKey());
+
     if (topic.getParentTopic() != null)
       topicInfo.setParent(toApi(topic.getParentTopic()));
     //topicInfo.setState();

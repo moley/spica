@@ -2,18 +2,14 @@ package org.spica.devclient.ui;
 
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
-import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.DateControl;
-import com.calendarfx.view.VirtualGrid;
 import com.calendarfx.view.page.DayPage;
-import com.calendarfx.view.popover.EntryPopOverContentPane;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
-import javafx.scene.AccessibleRole;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
@@ -21,8 +17,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.devclient.DemoData;
-import org.spica.javaclient.model.ProjectInfo;
+import org.spica.devclient.model.ModelCache;
+import org.spica.devclient.model.ModelCacheService;
+import org.spica.javaclient.model.TopicInfo;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -39,7 +36,7 @@ public class MainPageController {
   private TextField txtSearch;
 
   @FXML
-  private ListView<ProjectInfo> lviProjects;
+  private ListView<TopicInfo> lviTopics;
 
   @FXML
   private DayPage cviDayPage;
@@ -50,15 +47,37 @@ public class MainPageController {
 
   @FXML
   void initialize() {
-    lviProjects.setItems(FXCollections.observableArrayList(DemoData.projectInfos));
+    ModelCacheService modelCacheService = new ModelCacheService();
+    ModelCache modelCache = modelCacheService.get();
+
+    lviTopics.setCellFactory(new Callback<ListView<TopicInfo>, ListCell<TopicInfo>>() {
+      @Override
+      public ListCell<TopicInfo> call(ListView<TopicInfo> studentListView) {
+        return new ListCell<TopicInfo>() {
+          @Override
+          protected void updateItem(TopicInfo topicInfo, boolean empty) {
+            super.updateItem(topicInfo, empty);
+            if (empty || topicInfo == null) {
+              setText(null);
+              setGraphic(null);
+            } else {
+              setText(topicInfo.getExternalSystemKey() + ": " + topicInfo.getName());
+            }
+
+          }
+        };
+      }
+    });
+    lviTopics.setItems(FXCollections.observableArrayList(modelCache.getTopicInfos()));
+
     Calendar plannedCalendar = new Calendar("Planned");
     Calendar realCalendar = new Calendar("Done");
 
     plannedCalendar.setStyle(Calendar.Style.STYLE1);
     realCalendar.setStyle(Calendar.Style.STYLE2);
 
-    //TODO plannedCalendar.addEntries(DemoData.plannedEntries);
-    //TODO realCalendar.addEntries(DemoData.realEntries);
+    //TODO plannedCalendar.addEntries(ModelCache.plannedEntries);
+    //TODO realCalendar.addEntries(ModelCache.realEntries);
 
     CalendarSource myCalendarSource = new CalendarSource("My Calendars");
     myCalendarSource.getCalendars().addAll(plannedCalendar, realCalendar);

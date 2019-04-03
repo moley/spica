@@ -14,7 +14,7 @@
     </top>
 
     <left>
-        <ListView fx:id="lviProjects">
+        <ListView fx:id="lviTopics" minWidth="600">
 
         </ListView>
     </left>
