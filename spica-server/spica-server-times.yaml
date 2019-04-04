@@ -70,7 +70,7 @@ components:
           type: "string"
         userId:
           type: "string"
-        projectId:
+        referenceId:
           type: "string"
         start:
           type: "string"
@@ -78,9 +78,12 @@ components:
         stop:
           type: "string"
           format: "date-time"
+        eventType:
+          $ref: "#/components/schemas/EventType"
 
     EventType:
       type: string
       enum:
-        - todo
+        - topic
         - chat
+        - pause

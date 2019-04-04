@@ -1,4 +1,4 @@
 {
   "hideGenerationTimestamp": true,
-  "dateLibrary": "java8"
+  "dateLibrary": "java8-localdatetime"
 }

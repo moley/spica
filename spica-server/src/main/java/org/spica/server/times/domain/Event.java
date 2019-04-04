@@ -2,7 +2,7 @@ package org.spica.server.times.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.spica.server.commons.ReferenceType;
+import org.spica.server.times.model.EventType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @NoArgsConstructor
-public class Booking {
+public class Event {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,7 +27,7 @@ public class Booking {
   private Long referenceID;
 
   @Enumerated(EnumType.STRING)
-  private ReferenceType referenceType;
+  private EventType eventType;
 
   private String type;
 

@@ -25,7 +25,6 @@ dependencies {
 
   compile 'org.freemarker:freemarker:2.3.28' //for creation of files
 
-  compile 'com.migesok:jaxb-java-time-adapters:1.1.3'
 
   compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.5'    //for @JsonIgnore
   runtime 'com.fasterxml.jackson.core:jackson-core:2.9.5'           //for @JsonIgnore
@@ -34,6 +33,8 @@ dependencies {
 
   runtime 'ch.qos.logback:logback-core:1.2.3'
   runtime 'ch.qos.logback:logback-classic:1.2.3'
+
+  compile project (':spica-commons')
 
 
 
