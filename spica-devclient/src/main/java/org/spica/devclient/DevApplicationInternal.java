@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
 import org.spica.devclient.model.ModelCache;
 import org.spica.devclient.model.ModelCacheService;
-import org.spica.devclient.ui.MainPageController;
+import org.spica.devclient.ui.controller.MainPageController;
 import org.spica.devclient.util.Mask;
 import org.spica.devclient.util.MaskLoader;
 import org.spica.javaclient.ApiException;

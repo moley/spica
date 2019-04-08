@@ -52,6 +52,10 @@ public class ModelCache {
     this.projectInfos = projectInfos;
   }
 
+  public TopicInfo findTopicInfo (final String id) {
+    return topicInfos.stream().filter(topicInfo -> topicInfo.getId().equals(id)).findAny().orElse(null);
+  }
+
   public List<TopicInfo> getTopicInfos() {
     return topicInfos;
   }

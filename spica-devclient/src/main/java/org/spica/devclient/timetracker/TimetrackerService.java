@@ -12,13 +12,19 @@ import java.util.List;
 
 public class TimetrackerService {
 
+    public final static String DISPLAY_START_PAUSE = "Start pause";
+    public final static String DISPLAY_FINISH_PAUSE = "Finish pause";
 
     private ModelCacheService modelCacheService;
 
-
-
     private ModelCache getModelCache () {
         return modelCacheService.get();
+    }
+
+    public boolean isPause () {
+        ModelCache modelCache = getModelCache();
+        EventInfo lastEventInfo = modelCache.findLastOpenEventFromToday();
+        return lastEventInfo != null && lastEventInfo.getEventType().equals(EventType.PAUSE);
     }
 
     public void startPause () {
@@ -27,6 +33,16 @@ public class TimetrackerService {
         pauseEvent.setStart(LocalDateTime.now());
         pauseEvent.setEventType(EventType.PAUSE);
         getModelCache().getEventInfosReal().add(pauseEvent);
+    }
+
+    public String togglePause () {
+        if (isPause()) {
+            stopPause();
+            return DISPLAY_START_PAUSE;
+        } else {
+            startPause();
+            return DISPLAY_FINISH_PAUSE;
+        }
     }
 
     private void stopLastOpenEvent() {
@@ -72,8 +88,9 @@ public class TimetrackerService {
         modelCacheService.set(modelCache);
     }
 
-    public void finishDay () {
-
+    public void stopWork() {
+        stopLastOpenEvent();
+        modelCacheService.set(getModelCache());
     }
 
     public ModelCacheService getModelCacheService() {
