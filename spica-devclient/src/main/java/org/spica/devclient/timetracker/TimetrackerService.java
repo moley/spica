@@ -62,11 +62,11 @@ public class TimetrackerService {
             throw new IllegalStateException("You cannot stop a pause with less than two events. Seems your day started with a pause, which is invalid");
 
 
-        EventInfo pauseInfo = modelCache.getEventInfosRealToday().get(modelCache.getEventInfosReal().size() - 1);
+        EventInfo pauseInfo = modelCache.getEventInfosRealToday().get(modelCache.getEventInfosRealToday().size() - 1);
         if (! pauseInfo.getEventType().equals(EventType.PAUSE))
             throw new IllegalStateException("Your last event is not a started pause. You cannot stop a pause");
 
-        EventInfo lastEventInfo = modelCache.getEventInfosRealToday().get(modelCache.getEventInfosReal().size() - 2);
+        EventInfo lastEventInfo = modelCache.getEventInfosRealToday().get(modelCache.getEventInfosRealToday().size() - 2);
         EventInfo newStartedEvent = new EventInfo();
         newStartedEvent.setStart(LocalDateTime.now());
         newStartedEvent.setEventType(lastEventInfo.getEventType());

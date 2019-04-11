@@ -31,8 +31,19 @@ public class FinishDayAction implements Action {
     }
 
     @Override
-    public void execute() {
+    public void execute(String parameterlist) {
+        LOGGER.info("Finish day called with parameter " + parameterlist);
         timetrackerService.stopWork();
+    }
+
+    @Override
+    public ActionGroup getGroup() {
+        return ActionGroup.BOOKING;
+    }
+
+    @Override
+    public Command getCommand() {
+        return new Command ("end", "e");
     }
 
     public TimetrackerService getTimetrackerService() {

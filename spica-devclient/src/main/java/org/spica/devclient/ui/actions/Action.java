@@ -8,5 +8,9 @@ public interface Action {
 
     String getDisplayname ();
 
-    void execute ();
+    void execute (String parameterList);
+
+    ActionGroup getGroup ();
+
+    Command getCommand ();
 }

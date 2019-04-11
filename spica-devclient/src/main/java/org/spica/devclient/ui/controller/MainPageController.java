@@ -18,23 +18,28 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spica.commons.SpicaProperties;
 import org.spica.devclient.model.ModelCache;
 import org.spica.devclient.model.ModelCacheService;
 import org.spica.devclient.timetracker.TimetrackerService;
-import org.spica.devclient.ui.actions.ActionHandler;
-import org.spica.devclient.ui.actions.FinishDayAction;
-import org.spica.devclient.ui.actions.StartOrStopPauseAction;
+import org.spica.devclient.ui.actions.*;
+import org.spica.javaclient.Configuration;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.model.TopicInfo;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -90,6 +95,8 @@ public class MainPageController {
 
   SimpleStringProperty propertyCurrentTime = new SimpleStringProperty();
 
+  SpicaProperties spicaProperties;
+
 
 
   private Entry toEntry (final EventInfo eventInfo) {
@@ -121,27 +128,34 @@ public class MainPageController {
     Platform.runLater(new Runnable() {
       @Override
       public void run() {
-        String currentTask = openInfo != null ? openInfo.getName() : "";
+        String currentTask = "";
+
+        if (openInfo != null) {
+          if (openInfo.getEventType().equals(EventType.PAUSE))
+            currentTask = "Pause";
+          else if (openInfo.getName() != null)
+            currentTask = openInfo.getName();
+        }
+
         propertyCurrentTask.set(currentTask);
 
         String localTime = LocalTime.now().format(DateTimeFormatter.ofPattern("H:mm"));
         propertyCurrentTime.set(localTime);
 
-        System.out.println (openInfo.getReferenceId());
-        TopicInfo topicInfo = modelCache.findTopicInfo(openInfo.getReferenceId());
-        lviTopics.getSelectionModel().select(topicInfo);
+        if (openInfo != null) {
+          TopicInfo topicInfo = modelCache.findTopicInfo(openInfo.getReferenceId());
+          lviTopics.getSelectionModel().select(topicInfo);
+        }
       }
     });
-
-
-
-
   }
 
 
 
   @FXML
   void initialize() {
+
+    spicaProperties = new SpicaProperties();
 
     pbTask.setProgress(0);
 
@@ -159,6 +173,18 @@ public class MainPageController {
       }
     });
 
+    txtSearch.setOnKeyReleased(new EventHandler<KeyEvent>() {
+      @Override
+      public void handle(KeyEvent event) {
+        if (event.getCode().equals(KeyCode.ENTER)) {
+          FoundAction foundAction = actionHandler.findAction(txtSearch.getText());
+          Action action = foundAction.getAction();
+          action.execute(foundAction.getParameter());
+        }
+
+      }
+    });
+
     lblCurrentTask.textProperty().bindBidirectional(propertyCurrentTask);
     lblTime.textProperty().bindBidirectional(propertyCurrentTime);
 
@@ -171,11 +197,14 @@ public class MainPageController {
     //Register actions
     StartOrStopPauseAction startOrStopPauseAction = new StartOrStopPauseAction();
     startOrStopPauseAction.setTimetrackerService(timetrackerService);
-    actionHandler.addAction(startOrStopPauseAction);
+    actionHandler.registerAction(startOrStopPauseAction);
 
     FinishDayAction finishDayAction = new FinishDayAction();
     finishDayAction.setTimetrackerService(timetrackerService);
-    actionHandler.addAction(finishDayAction);
+    actionHandler.registerAction(finishDayAction);
+
+    CreateTopicAction createTopicAction = new CreateTopicAction();
+    actionHandler.registerAction(createTopicAction);
 
     lviTopics.setCellFactory(new Callback<ListView<TopicInfo>, ListCell<TopicInfo>>() {
       @Override
@@ -202,12 +231,33 @@ public class MainPageController {
       public void handle(MouseEvent event) {
         // Your action here
 
-        TopicInfo newValue = lviTopics.getSelectionModel().getSelectedItem();
+        if (event.getClickCount() == 2) {
+          TopicInfo newValue = lviTopics.getSelectionModel().getSelectedItem();
+          String key = newValue.getExternalSystemKey();
+          //TODO make multi system able
+          String jiraBaseUrl = spicaProperties.getValue("spica.jira.url");
+          String jiraUrl = jiraBaseUrl + "/browse/" + key;
+          LOGGER.info("Step to " + jiraUrl);
 
-        System.out.println("Selected item: " + newValue.getId() + "-" + newValue.getName());
-        timetrackerService.startWorkOnTopic(newValue);
+          try {
+            Desktop.getDesktop().browse(new URI(jiraUrl));
+          } catch (IOException e) {
+            LOGGER.error(e.getLocalizedMessage(), e);
+          } catch (URISyntaxException e) {
+            LOGGER.error(e.getLocalizedMessage(), e);
+          }
 
-        refreshTimer(modelCache);
+
+        }
+        else if (event.getClickCount() == 1) {
+
+          TopicInfo newValue = lviTopics.getSelectionModel().getSelectedItem();
+
+          System.out.println("Selected item: " + newValue.getId() + "-" + newValue.getName());
+          timetrackerService.startWorkOnTopic(newValue);
+
+          refreshTimer(modelCache);
+        }
 
       }
     });
