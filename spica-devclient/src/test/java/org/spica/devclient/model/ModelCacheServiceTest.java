@@ -4,6 +4,8 @@ import com.google.common.io.Files;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.spica.javaclient.model.EventInfo;
+import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.model.ModelCacheService;
 import org.spica.javaclient.model.TopicInfo;
 
 import java.io.File;

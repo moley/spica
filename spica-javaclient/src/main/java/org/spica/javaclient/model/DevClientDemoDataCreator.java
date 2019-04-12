@@ -1,9 +1,7 @@
-package org.spica.devclient.model;
+package org.spica.javaclient.model;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.javaclient.model.EventInfo;
-import org.spica.javaclient.model.EventType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

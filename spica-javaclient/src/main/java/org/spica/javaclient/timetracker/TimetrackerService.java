@@ -1,12 +1,11 @@
-package org.spica.devclient.timetracker;
+package org.spica.javaclient.timetracker;
 
-import org.spica.devclient.model.ModelCache;
-import org.spica.devclient.model.ModelCacheService;
+import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.model.ModelCacheService;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.model.TopicInfo;
 
-import java.time.LocalDateTime;
 import java.time.LocalDateTime;
 import java.util.List;
 

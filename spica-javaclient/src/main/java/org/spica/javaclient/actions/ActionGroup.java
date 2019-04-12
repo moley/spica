@@ -1,9 +1,10 @@
-package org.spica.devclient.ui.actions;
+package org.spica.javaclient.actions;
 
 public enum ActionGroup {
 
     TOPIC("t"),
     PROJECT("p"),
+    GOTO ("g"),
     BOOKING("b");
 
     private String shortkey;

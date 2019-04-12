@@ -2,7 +2,7 @@ package org.spica.devclient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.devclient.model.DevClientDemoDataCreator;
+import org.spica.javaclient.model.DevClientDemoDataCreator;
 
 import java.io.File;
 

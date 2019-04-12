@@ -1,4 +1,4 @@
-package org.spica.devclient.model;
+package org.spica.javaclient.model;
 
 
 import org.slf4j.Logger;

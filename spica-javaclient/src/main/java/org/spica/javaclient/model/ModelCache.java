@@ -1,11 +1,8 @@
-package org.spica.devclient.model;
+package org.spica.javaclient.model;
 
 import com.google.gson.annotations.SerializedName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.javaclient.model.EventInfo;
-import org.spica.javaclient.model.ProjectInfo;
-import org.spica.javaclient.model.TopicInfo;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
@@ -52,7 +49,7 @@ public class ModelCache {
     this.projectInfos = projectInfos;
   }
 
-  public TopicInfo findTopicInfo (final String id) {
+  public TopicInfo findTopicInfoById (final String id) {
     return topicInfos.stream().filter(topicInfo -> topicInfo.getId().equals(id)).findAny().orElse(null);
   }
 

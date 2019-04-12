@@ -1,4 +1,4 @@
-package org.spica.devclient.model;
+package org.spica.javaclient.model;
 
 
 import lombok.Data;

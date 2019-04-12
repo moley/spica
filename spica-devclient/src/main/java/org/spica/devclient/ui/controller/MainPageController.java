@@ -26,14 +26,14 @@ import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
-import org.spica.devclient.model.ModelCache;
-import org.spica.devclient.model.ModelCacheService;
-import org.spica.devclient.timetracker.TimetrackerService;
-import org.spica.devclient.ui.actions.*;
-import org.spica.javaclient.Configuration;
-import org.spica.javaclient.model.EventInfo;
-import org.spica.javaclient.model.EventType;
-import org.spica.javaclient.model.TopicInfo;
+import org.spica.devclient.actions.FxActionContext;
+import org.spica.devclient.actions.FxActionHandler;
+import org.spica.javaclient.actions.Action;
+import org.spica.javaclient.actions.ActionHandler;
+import org.spica.javaclient.actions.FoundAction;
+import org.spica.javaclient.actions.GotoJiraAction;
+import org.spica.javaclient.model.*;
+import org.spica.javaclient.timetracker.TimetrackerService;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -97,6 +97,8 @@ public class MainPageController {
 
   SpicaProperties spicaProperties;
 
+  private FxActionContext actionContext = new FxActionContext();
+
 
 
   private Entry toEntry (final EventInfo eventInfo) {
@@ -143,7 +145,7 @@ public class MainPageController {
         propertyCurrentTime.set(localTime);
 
         if (openInfo != null) {
-          TopicInfo topicInfo = modelCache.findTopicInfo(openInfo.getReferenceId());
+          TopicInfo topicInfo = modelCache.findTopicInfoById(openInfo.getReferenceId());
           lviTopics.getSelectionModel().select(topicInfo);
         }
       }
@@ -179,7 +181,7 @@ public class MainPageController {
         if (event.getCode().equals(KeyCode.ENTER)) {
           FoundAction foundAction = actionHandler.findAction(txtSearch.getText());
           Action action = foundAction.getAction();
-          action.execute(foundAction.getParameter());
+          action.execute(actionContext, foundAction.getParameter());
         }
 
       }
@@ -192,19 +194,10 @@ public class MainPageController {
     ModelCache modelCache = modelCacheService.get();
     timetrackerService.setModelCacheService(modelCacheService);
 
-    actionHandler.setToolBar(tbaActions);
+    FxActionHandler fxActionHandler = new FxActionHandler();
+    fxActionHandler.createButtons(actionContext, tbaActions);
 
-    //Register actions
-    StartOrStopPauseAction startOrStopPauseAction = new StartOrStopPauseAction();
-    startOrStopPauseAction.setTimetrackerService(timetrackerService);
-    actionHandler.registerAction(startOrStopPauseAction);
 
-    FinishDayAction finishDayAction = new FinishDayAction();
-    finishDayAction.setTimetrackerService(timetrackerService);
-    actionHandler.registerAction(finishDayAction);
-
-    CreateTopicAction createTopicAction = new CreateTopicAction();
-    actionHandler.registerAction(createTopicAction);
 
     lviTopics.setCellFactory(new Callback<ListView<TopicInfo>, ListCell<TopicInfo>>() {
       @Override
@@ -232,22 +225,8 @@ public class MainPageController {
         // Your action here
 
         if (event.getClickCount() == 2) {
-          TopicInfo newValue = lviTopics.getSelectionModel().getSelectedItem();
-          String key = newValue.getExternalSystemKey();
-          //TODO make multi system able
-          String jiraBaseUrl = spicaProperties.getValue("spica.jira.url");
-          String jiraUrl = jiraBaseUrl + "/browse/" + key;
-          LOGGER.info("Step to " + jiraUrl);
-
-          try {
-            Desktop.getDesktop().browse(new URI(jiraUrl));
-          } catch (IOException e) {
-            LOGGER.error(e.getLocalizedMessage(), e);
-          } catch (URISyntaxException e) {
-            LOGGER.error(e.getLocalizedMessage(), e);
-          }
-
-
+          FoundAction gotoJiraAction = actionHandler.findAction(GotoJiraAction.class);
+          gotoJiraAction.getAction().execute(actionContext, "");
         }
         else if (event.getClickCount() == 1) {
 

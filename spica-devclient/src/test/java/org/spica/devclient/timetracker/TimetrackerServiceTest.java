@@ -5,10 +5,11 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.spica.devclient.model.ModelCache;
-import org.spica.devclient.model.ModelCacheService;
+import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.model.ModelCacheService;
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.model.TopicInfo;
+import org.spica.javaclient.timetracker.TimetrackerService;
 
 import java.io.File;
 

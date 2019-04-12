@@ -1,9 +1,5 @@
-package org.spica.devclient.ui.actions;
+package org.spica.javaclient.actions;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-import javafx.scene.control.ToolBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,30 +14,30 @@ public class ActionHandler {
     private Collection<Action> registeredActions = new ArrayList<Action>();
 
 
-    private ToolBar toolBar;
+    //TODO per reflection
+    public ActionHandler () {
+        //Register actions
+        registeredActions.add(new StartOrStopPauseAction());
+        registeredActions.add(new FinishDayAction());
+        registeredActions.add(new CreateTopicAction());
+        registeredActions.add(new GotoStashAction());
+        registeredActions.add(new GotoJiraAction());
+    }
 
-    public Button registerAction(final Action action) {
-        registeredActions.add(action);
-        Button btn = action.getButton();
-        if (btn != null) {
-            toolBar.getItems().add(btn);
-            btn.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    action.execute("");
-                }
-            });
+
+    public FoundAction findAction (final Class clazz) {
+        Collection<String> foundClasses = new ArrayList<String>();
+
+        for (Action next: registeredActions) {
+            if (next.getClass().equals(clazz))
+                return new FoundAction(next, "");
+            else
+                foundClasses.add(next.getClass().getSimpleName());
         }
 
-        return btn;
-    }
+        throw new IllegalStateException("No command found for class " + clazz + "(existing commands: " + foundClasses + ")");
 
-    public ToolBar getToolBar() {
-        return toolBar;
-    }
 
-    public void setToolBar(ToolBar toolBar) {
-        this.toolBar = toolBar;
     }
 
     public FoundAction findAction (final String text) {
@@ -69,5 +65,9 @@ public class ActionHandler {
 
 
 
+    }
+
+    public Collection<Action> getRegisteredActions () {
+        return registeredActions;
     }
 }

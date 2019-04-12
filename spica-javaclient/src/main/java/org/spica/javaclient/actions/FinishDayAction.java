@@ -1,9 +1,8 @@
-package org.spica.devclient.ui.actions;
+package org.spica.javaclient.actions;
 
-import javafx.scene.control.Button;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.devclient.timetracker.TimetrackerService;
+import org.spica.javaclient.timetracker.TimetrackerService;
 
 public class FinishDayAction implements Action {
 
@@ -12,17 +11,14 @@ public class FinishDayAction implements Action {
 
     public final static String DISPLAY_NAME = "Finish day";
 
-    private Button btnFinishDay = new Button();
-
-    private TimetrackerService timetrackerService;
 
 
-    public FinishDayAction () {
-        btnFinishDay.setText(DISPLAY_NAME);
-    }
+    private TimetrackerService timetrackerService = new TimetrackerService();
+
+
     @Override
-    public Button getButton() {
-        return btnFinishDay;
+    public boolean fromButton() {
+        return true;
     }
 
     @Override
@@ -31,7 +27,7 @@ public class FinishDayAction implements Action {
     }
 
     @Override
-    public void execute(String parameterlist) {
+    public void execute(ActionContext actionContext, String parameterlist) {
         LOGGER.info("Finish day called with parameter " + parameterlist);
         timetrackerService.stopWork();
     }
@@ -46,11 +42,5 @@ public class FinishDayAction implements Action {
         return new Command ("end", "e");
     }
 
-    public TimetrackerService getTimetrackerService() {
-        return timetrackerService;
-    }
 
-    public void setTimetrackerService(TimetrackerService timetrackerService) {
-        this.timetrackerService = timetrackerService;
-    }
 }

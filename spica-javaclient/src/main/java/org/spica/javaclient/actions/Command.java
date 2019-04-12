@@ -1,4 +1,4 @@
-package org.spica.devclient.ui.actions;
+package org.spica.javaclient.actions;
 
 public class Command {
 

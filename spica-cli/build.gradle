@@ -1,1 +1,33 @@
 apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'org.spica.cli.Main'
+
+
+dependencies {
+  compile project (':spica-javaclient')
+}
+
+
+tasks.build.dependsOn tasks.distZip
+
+def localCliInstallationPath = System.getProperty("user.home") + '/programs/spica-cli'
+
+task clearLocalCliInstallationPath(type: Delete) {
+  delete localCliInstallationPath
+  followSymlinks = true
+}
+
+task installLocal(type: Copy) {
+  def zipFile = project(':spica-cli').file("build/distributions/spica-cli-${version}.zip")
+  println zipFile.absolutePath
+  dependsOn 'clearLocalCliInstallationPath'
+  from zipTree(zipFile)
+  eachFile {
+    path = path.substring(path.indexOf("/"), path.length())
+  }
+  into localCliInstallationPath
+  includeEmptyDirs = false
+  dependsOn tasks.distZip
+}
+

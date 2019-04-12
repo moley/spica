@@ -1,6 +1,5 @@
-package org.spica.devclient.ui.actions;
+package org.spica.javaclient.actions;
 
-import javafx.scene.control.Button;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,8 +9,8 @@ public class CreateTopicAction implements Action {
 
 
     @Override
-    public Button getButton() {
-        return null;
+    public boolean fromButton() {
+        return true;
     }
 
     @Override
@@ -20,7 +19,7 @@ public class CreateTopicAction implements Action {
     }
 
     @Override
-    public void execute(String parameterlist) {
+    public void execute(ActionContext actionContext, String parameterlist) {
         LOGGER.info("Create topic called with parameter " + parameterlist);
 
     }

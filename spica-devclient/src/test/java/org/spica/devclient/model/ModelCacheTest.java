@@ -3,9 +3,9 @@ package org.spica.devclient.model;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.spica.javaclient.model.EventInfo;
+import org.spica.javaclient.model.ModelCache;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
