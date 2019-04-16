@@ -1,14 +1,99 @@
+.root {
+    -fx-base: rgb(200, 200, 200);
+    -fx-background: rgb(230, 230, 230);
+    -fx-control-inner-background:  rgb(180, 180, 180);
+    -fx-font-size: 20;
+}
+
+.text-input {
+  -fx-background-color: #DDDDDD;
+  -fx-background-insets: 0, 1;
+  -fx-background-radius: 3, 2;
+}
+
+.text-area .content {
+    -fx-background-color: #DDDDDD;
+      -fx-background-insets: 0, 1;
+      -fx-background-radius: 3, 2;
+}
+
+.button {
+    -fx-background-color: transparent;
+    -fx-border-color: rgb(170, 170, 140);
+    -fx-text-fill: black;
+    margin: 30px;
+    -fx-border-radius: 90%;
+}
+
+.selectlist {
+ -fx-focus-color: transparent;
+ -fx-background-color: white;
+ -fx-border-width: 0px;
+ -fx-padding: 0px;
+}
+.list-cell:even {
+    -fx-background-color: white;
+}
+.list-cell:odd > {
+    -fx-background-color: white;
+}
+.list-cell:selected {
+    -fx-background-color: lightgrey;
+}
+.list-cell:filled:hover {
+    -fx-background-color: lightgrey;
+}
+
+.selectlist .scroll-bar:vertical .increment-arrow,
+.selectlist .scroll-bar:vertical .decrement-arrow,
+.selectlist .scroll-bar:vertical .increment-button,
+.selectlist .scroll-bar:vertical .decrement-button {
+    -fx-padding: 0px;
+}
+.list-view, .split-pane { -fx-background-insets: 0; -fx-padding: 0; }
+
+.selectlist .scroll-bar:vertical {
+    -fx-scale-x: 0;
+}
+
+.selectlist .scroll-bar:horizontal {
+    -fx-scale-x: 0;
+}
+
+.listCellImage {
+    -fx-opacity: 0.4;
+}
+
+
+
+.listCellText{
+    -fx-font-size: 1.5em;
+    -fx-text-fill: #888;
+    -fx-font-family: "Museo Sans 500";
+}
+
+#header {
+    -fx-background-color: white;
+}
+
+#actionparampane {
+    -fx-background-color: white;
+}
+
 #lblTime {
     -fx-background-color: transparent;
-    -fx-text-fill: #222222;
+    -fx-text-fill: #AAAAAA;
     -fx-font-size: 60px;
     -fx-cursor: hand;
     -fx-alignment: CENTER;
 }
 
 #lblCurrentTask {
-    -fx-background-color: transparent;
     -fx-font-size: 40px;
-    -fx-text-fill: #888888;
+    -fx-text-fill: #AAAAAA;
     -fx-cursor: hand;
 }
+
+
+
+

@@ -60,6 +60,7 @@ public class DevApplicationInternal extends Application {
     MaskLoader<MainPageController> mainMaskLoader = new MaskLoader<MainPageController>();
     Mask<MainPageController> mainMask = mainMaskLoader.load("mainpage");
     mainMask.setStage(primaryStage);
+    mainMask.setSize(1600, 1200);
     primaryStage.setTitle("SPICA Devclient");
     primaryStage.setMaximized(true);
     primaryStage.setScene(mainMask.getScene());

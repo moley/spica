@@ -3,7 +3,7 @@ package org.spica.javaclient.actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
-import org.spica.javaclient.actions.params.InputParamGroup;
+import org.spica.javaclient.actions.params.InputParams;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.model.ModelCache;
@@ -13,7 +13,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 
 public class GotoJiraAction implements Action {
 
@@ -35,7 +34,7 @@ public class GotoJiraAction implements Action {
     }
 
     @Override
-    public void execute(ActionContext actionContext, List<InputParamGroup> inputParamGroups, String parameterList) {
+    public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
 
         ModelCache modelCache = actionContext.getModelCache();
         SpicaProperties spicaProperties = actionContext.getSpicaProperties();
@@ -43,19 +42,21 @@ public class GotoJiraAction implements Action {
         LOGGER.info("Found event " + eventInfo);
         if (eventInfo != null && eventInfo.getEventType().equals(EventType.TOPIC)) {
             LOGGER.info("Reference ID: " + eventInfo.getReferenceId());
-            TopicInfo newValue = modelCache.findTopicInfoById(eventInfo.getReferenceId());
-            String key = newValue.getExternalSystemKey();
-            //TODO make multi system able
-            String jiraBaseUrl = spicaProperties.getValue("spica.jira.url");
-            String jiraUrl = jiraBaseUrl + "/browse/" + key;
-            LOGGER.info("Step to " + jiraUrl);
+            if (eventInfo.getReferenceId() != null) {
+                TopicInfo newValue = modelCache.findTopicInfoById(eventInfo.getReferenceId());
+                String key = newValue.getExternalSystemKey();
+                //TODO make multi system able
+                String jiraBaseUrl = spicaProperties.getValue("spica.jira.url");
+                String jiraUrl = jiraBaseUrl + "/browse/" + key;
+                LOGGER.info("Step to " + jiraUrl);
 
-            try {
-                Desktop.getDesktop().browse(new URI(jiraUrl));
-            } catch (IOException e) {
-                LOGGER.error(e.getLocalizedMessage(), e);
-            } catch (URISyntaxException e) {
-                LOGGER.error(e.getLocalizedMessage(), e);
+                try {
+                    Desktop.getDesktop().browse(new URI(jiraUrl));
+                } catch (IOException e) {
+                    LOGGER.error(e.getLocalizedMessage(), e);
+                } catch (URISyntaxException e) {
+                    LOGGER.error(e.getLocalizedMessage(), e);
+                }
             }
         }
         else

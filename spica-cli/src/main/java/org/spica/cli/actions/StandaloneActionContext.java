@@ -11,6 +11,7 @@ public class StandaloneActionContext implements ActionContext {
 
 
     private SpicaProperties spicaProperties = new SpicaProperties();
+    ModelCacheService modelCacheService = new ModelCacheService();
 
     @Override
     public File getCurrentWorkingDir() {
@@ -19,8 +20,17 @@ public class StandaloneActionContext implements ActionContext {
 
     @Override
     public ModelCache getModelCache() {
-        ModelCacheService modelCacheService = new ModelCacheService();
         return modelCacheService.get();
+    }
+
+    @Override
+    public ModelCacheService getModelCacheService() {
+        return modelCacheService;
+    }
+
+    @Override
+    public void saveModelCache() {
+        modelCacheService.set(modelCacheService.get());
     }
 
     @Override

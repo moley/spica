@@ -27,8 +27,8 @@ public class FxActionHandler {
                             FoundAction foundAction = new FoundAction(action, "");
                             actionParamFactory.build(actionContext, foundAction);
                         }
-
-                        action.execute(actionContext, action.getInputParams(), "");
+                        else
+                          action.execute(actionContext, action.getInputParams(), "");
                     }
                 });
             }

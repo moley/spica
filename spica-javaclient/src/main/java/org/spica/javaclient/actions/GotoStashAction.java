@@ -3,7 +3,7 @@ package org.spica.javaclient.actions;
 import org.eclipse.jgit.api.Git;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.params.InputParamGroup;
+import org.spica.javaclient.actions.params.InputParams;
 
 import java.awt.*;
 import java.io.File;
@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.List;
 
 public class GotoStashAction implements Action {
 
@@ -33,7 +32,7 @@ public class GotoStashAction implements Action {
     }
 
     @Override
-    public void execute(ActionContext actionContext, List<InputParamGroup> inputParamGroups, String parameterList) {
+    public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
 
         File currentWorkingDir = actionContext.getCurrentWorkingDir();
         if (currentWorkingDir != null) {

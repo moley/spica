@@ -8,7 +8,7 @@
             fx:controller="org.spica.devclient.ui.controller.MainPageController">
 
     <top>
-        <GridPane vgap="10">
+        <GridPane vgap="10" fx:id="header">
             <padding><Insets top="25" right="25" bottom="25" left="25"/></padding>
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="80.0" prefWidth="100.0" />

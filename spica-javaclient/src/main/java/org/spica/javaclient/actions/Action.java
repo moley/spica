@@ -1,10 +1,7 @@
 package org.spica.javaclient.actions;
 
 
-import org.spica.javaclient.actions.params.InputParamGroup;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.spica.javaclient.actions.params.InputParams;
 
 public interface Action {
 
@@ -15,13 +12,13 @@ public interface Action {
 
     String getDescription ();
 
-    void execute (ActionContext actionContext, List<InputParamGroup> inputParamGroups, String parameterList);
+    void execute (ActionContext actionContext, InputParams inputParams, String parameterList);
 
     ActionGroup getGroup ();
 
     Command getCommand ();
 
-    default List<InputParamGroup> getInputParams() {
-        return new ArrayList<>();
+    default InputParams getInputParams() {
+        return new InputParams();
     }
 }

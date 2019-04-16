@@ -33,14 +33,12 @@ import org.spica.javaclient.actions.Action;
 import org.spica.javaclient.actions.ActionHandler;
 import org.spica.javaclient.actions.FoundAction;
 import org.spica.javaclient.actions.GotoJiraAction;
+import org.spica.javaclient.actions.params.InputParams;
 import org.spica.javaclient.model.*;
 import org.spica.javaclient.timetracker.TimetrackerService;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -145,7 +143,7 @@ public class MainPageController {
         String localTime = LocalTime.now().format(DateTimeFormatter.ofPattern("H:mm"));
         propertyCurrentTime.set(localTime);
 
-        if (openInfo != null) {
+        if (openInfo != null && openInfo.getReferenceId() != null) {
           TopicInfo topicInfo = modelCache.findTopicInfoById(openInfo.getReferenceId());
           lviTopics.getSelectionModel().select(topicInfo);
         }
@@ -217,7 +215,10 @@ public class MainPageController {
               setText(null);
               setGraphic(null);
             } else {
-              setText(topicInfo.getExternalSystemKey() + ": " + topicInfo.getName());
+              if (topicInfo.getExternalSystemKey() != null)
+                setText(topicInfo.getExternalSystemKey() + ": " + topicInfo.getName());
+              else
+                setText(topicInfo.getName());
             }
 
           }
@@ -233,7 +234,7 @@ public class MainPageController {
 
         if (event.getClickCount() == 2) {
           FoundAction gotoJiraAction = actionHandler.findAction(GotoJiraAction.class);
-          gotoJiraAction.getAction().execute(actionContext, new ArrayList<>(),"");
+          gotoJiraAction.getAction().execute(actionContext, new InputParams(),"");
         }
         else if (event.getClickCount() == 1) {
 

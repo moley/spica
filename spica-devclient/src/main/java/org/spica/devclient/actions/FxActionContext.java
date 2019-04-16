@@ -11,6 +11,8 @@ public class FxActionContext implements ActionContext {
 
     private SpicaProperties spicaProperties = new SpicaProperties();
 
+    private ModelCacheService modelCacheService = new ModelCacheService();
+
 
     @Override
     public File getCurrentWorkingDir() {
@@ -19,9 +21,19 @@ public class FxActionContext implements ActionContext {
 
     @Override
     public ModelCache getModelCache() {
-        ModelCacheService modelCacheService = new ModelCacheService();
         return modelCacheService.get();
     }
+
+    @Override
+    public ModelCacheService getModelCacheService() {
+        return modelCacheService;
+    }
+
+    @Override
+    public void saveModelCache() {
+        modelCacheService.set(modelCacheService.get());
+    }
+
 
     @Override
     public SpicaProperties getSpicaProperties() {

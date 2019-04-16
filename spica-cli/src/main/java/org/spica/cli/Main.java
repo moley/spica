@@ -26,16 +26,18 @@ public class Main {
         else {
 
             FoundAction foundAction = actionHandler.findAction(String.join(" ", args));
-            LOGGER.info("Found action     :" + foundAction.getAction().getClass().getName());
-            LOGGER.info("with parameter   :" + foundAction.getParameter());
+            LOGGER.info("Found action     : " + foundAction.getAction().getClass().getName());
+            LOGGER.info("with parameter   : " + foundAction.getParameter());
 
             Action action = foundAction.getAction();
 
             if (! action.getInputParams().isEmpty()) {
                 StandaloneActionParamFactory actionParamFactory = new StandaloneActionParamFactory();
-                actionParamFactory.build(action.getInputParams());
+                StandaloneActionContext actionContext = new StandaloneActionContext();
+                actionParamFactory.build(actionContext, foundAction);
             }
-            action.execute(new StandaloneActionContext(), foundAction.getParameter());
+            else
+              action.execute(new StandaloneActionContext(), action.getInputParams(),foundAction.getParameter());
         }
 
     }

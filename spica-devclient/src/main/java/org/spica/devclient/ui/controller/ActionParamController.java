@@ -6,9 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -18,6 +16,7 @@ import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.FoundAction;
 import org.spica.javaclient.actions.params.InputParam;
 import org.spica.javaclient.actions.params.InputParamGroup;
+import org.spica.javaclient.actions.params.InputParams;
 import org.spica.javaclient.actions.params.TextInputParam;
 
 import java.util.List;
@@ -36,9 +35,9 @@ public class ActionParamController {
         LOGGER.info("Use foundaction " + System.identityHashCode(foundAction));
         LOGGER.info("Use action " + System.identityHashCode(foundAction.getAction()));
         Action action = foundAction.getAction();
-        List<InputParamGroup> inputParamGroups = action.getInputParams();
+        InputParams inputParams = action.getInputParams();
         int y = 0;
-        for (InputParamGroup nextGroup : inputParamGroups) {
+        for (InputParamGroup nextGroup : inputParams.getInputParamGroups()) {
             for (InputParam nextInputParam : nextGroup.getInputParams()) {
 
                 Label label = new Label(nextInputParam.getDisplayname() + ":");
@@ -47,8 +46,14 @@ public class ActionParamController {
                 Node datanode;
 
                 if (nextInputParam instanceof TextInputParam) {
-                    datanode = new TextField();
-                    ((TextField) datanode).textProperty().addListener(new ChangeListener<String>() {
+                    TextInputParam textInputParam = (TextInputParam) nextInputParam;
+                    if (textInputParam.getNumberOfLines() > 1) {
+                        datanode = new TextArea();
+                        ((TextArea) datanode).setPrefRowCount(((TextInputParam) nextInputParam).getNumberOfLines());
+                    }
+                    else
+                      datanode = new TextField();
+                    ((TextInputControl) datanode).textProperty().addListener(new ChangeListener<String>() {
                         @Override
                         public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                             LOGGER.info("Set " + nextInputParam.getKey() + " to " + newValue + "(" + System.identityHashCode(nextInputParam));
@@ -71,7 +76,7 @@ public class ActionParamController {
             @Override
             public void handle(ActionEvent event) {
                 LOGGER.info("Use action " + System.identityHashCode(action));
-                action.execute(actionContext, inputParamGroups, foundAction.getParameter());
+                action.execute(actionContext, inputParams, foundAction.getParameter());
                 stage.close();
 
             }

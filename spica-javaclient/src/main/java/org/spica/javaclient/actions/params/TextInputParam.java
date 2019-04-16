@@ -6,8 +6,11 @@ import lombok.Data;
 @Data
 public class TextInputParam extends AbstractInputParam {
 
+    private int numberOfLines = 1;
+
     @Builder
-    public TextInputParam(String key, String displayname, Object value) {
+    public TextInputParam(int numberOfLines, String key, String displayname, Object value) {
+        this.setNumberOfLines(numberOfLines);
         this.setKey(key);
         this.setDisplayname(displayname);
         this.setValue(value);
