@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
 import org.spica.devclient.actions.FxActionContext;
 import org.spica.devclient.actions.FxActionHandler;
+import org.spica.devclient.actions.FxActionParamFactory;
 import org.spica.javaclient.actions.Action;
 import org.spica.javaclient.actions.ActionHandler;
 import org.spica.javaclient.actions.FoundAction;
@@ -181,7 +182,13 @@ public class MainPageController {
         if (event.getCode().equals(KeyCode.ENTER)) {
           FoundAction foundAction = actionHandler.findAction(txtSearch.getText());
           Action action = foundAction.getAction();
-          action.execute(actionContext, foundAction.getParameter());
+
+          if (! action.getInputParams().isEmpty()) {
+            FxActionParamFactory actionParamFactory = new FxActionParamFactory();
+            actionParamFactory.build(actionContext, foundAction);
+          }
+          else
+            action.execute(actionContext, action.getInputParams(), foundAction.getParameter());
         }
 
       }
@@ -226,7 +233,7 @@ public class MainPageController {
 
         if (event.getClickCount() == 2) {
           FoundAction gotoJiraAction = actionHandler.findAction(GotoJiraAction.class);
-          gotoJiraAction.getAction().execute(actionContext, "");
+          gotoJiraAction.getAction().execute(actionContext, new ArrayList<>(),"");
         }
         else if (event.getClickCount() == 1) {
 

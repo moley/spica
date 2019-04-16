@@ -3,6 +3,7 @@ package org.spica.cli;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.cli.actions.StandaloneActionContext;
+import org.spica.cli.actions.StandaloneActionParamFactory;
 import org.spica.javaclient.actions.Action;
 import org.spica.javaclient.actions.ActionHandler;
 import org.spica.javaclient.actions.FoundAction;
@@ -13,15 +14,29 @@ public class Main {
 
 
     public final static void main (final String [] args) {
-        LOGGER.info("Hello from cli");
 
         ActionHandler actionHandler = new ActionHandler();
-        FoundAction foundAction = actionHandler.findAction(String.join(" ", args));
-        LOGGER.info("Found action     :" + foundAction.getAction().getClass().getName());
-        LOGGER.info("with parameter   :" + foundAction.getParameter());
+        if (args.length == 0) {
+            System.out.println("");
+            for (String next: actionHandler.getHelp()) {
+                System.out.println (next);
+            }
+            System.out.println("\n");
+        }
+        else {
 
-        Action action = foundAction.getAction();
-        action.execute(new StandaloneActionContext(), foundAction.getParameter());
+            FoundAction foundAction = actionHandler.findAction(String.join(" ", args));
+            LOGGER.info("Found action     :" + foundAction.getAction().getClass().getName());
+            LOGGER.info("with parameter   :" + foundAction.getParameter());
+
+            Action action = foundAction.getAction();
+
+            if (! action.getInputParams().isEmpty()) {
+                StandaloneActionParamFactory actionParamFactory = new StandaloneActionParamFactory();
+                actionParamFactory.build(action.getInputParams());
+            }
+            action.execute(new StandaloneActionContext(), foundAction.getParameter());
+        }
 
     }
 

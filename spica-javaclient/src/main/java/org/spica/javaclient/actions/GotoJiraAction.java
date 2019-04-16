@@ -3,6 +3,7 @@ package org.spica.javaclient.actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
+import org.spica.javaclient.actions.params.InputParamGroup;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.model.ModelCache;
@@ -12,6 +13,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 public class GotoJiraAction implements Action {
 
@@ -28,7 +30,12 @@ public class GotoJiraAction implements Action {
     }
 
     @Override
-    public void execute(ActionContext actionContext, String parameterList) {
+    public String getDescription() {
+        return "Navigates to jira into details of issue, which you are working on";
+    }
+
+    @Override
+    public void execute(ActionContext actionContext, List<InputParamGroup> inputParamGroups, String parameterList) {
 
         ModelCache modelCache = actionContext.getModelCache();
         SpicaProperties spicaProperties = actionContext.getSpicaProperties();

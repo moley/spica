@@ -70,4 +70,15 @@ public class ActionHandler {
     public Collection<Action> getRegisteredActions () {
         return registeredActions;
     }
+
+    public Collection<String> getHelp () {
+        Collection<String> commands = new ArrayList<>();
+        for (Action next: registeredActions) {
+            String helpToken = String.format("     %-2s%-5s%-40s%-70s", next.getGroup().getShortkey(), next.getCommand().getShortkey(), next.getDisplayname(), next.getDescription());
+            commands.add(helpToken);
+        }
+
+        return commands;
+
+    }
 }

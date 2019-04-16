@@ -2,7 +2,11 @@ package org.spica.javaclient.actions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spica.javaclient.actions.params.InputParamGroup;
 import org.spica.javaclient.timetracker.TimetrackerService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FinishDayAction implements Action {
 
@@ -27,7 +31,12 @@ public class FinishDayAction implements Action {
     }
 
     @Override
-    public void execute(ActionContext actionContext, String parameterlist) {
+    public String getDescription() {
+        return "Finished the timetracker and closes the day";
+    }
+
+    @Override
+    public void execute(ActionContext actionContext, List<InputParamGroup> inputParamGroups, String parameterlist) {
         LOGGER.info("Finish day called with parameter " + parameterlist);
         timetrackerService.stopWork();
     }
@@ -41,6 +50,8 @@ public class FinishDayAction implements Action {
     public Command getCommand() {
         return new Command ("end", "e");
     }
+
+
 
 
 }
