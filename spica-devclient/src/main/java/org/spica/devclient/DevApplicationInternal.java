@@ -10,6 +10,7 @@ import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
+import org.spica.javaclient.ApiClient;
 import org.spica.javaclient.api.UserApi;
 import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.model.ModelCacheService;
@@ -20,11 +21,13 @@ import org.spica.javaclient.ApiException;
 import org.spica.javaclient.Configuration;
 import org.spica.javaclient.api.TopicApi;
 import org.spica.javaclient.model.TopicContainerInfo;
+import org.spica.javaclient.model.UserInfo;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.AWTException;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 public class DevApplicationInternal extends Application {
 
@@ -57,9 +60,19 @@ public class DevApplicationInternal extends Application {
       LOGGER.error("Error importing jira topics: " + e.getResponseBody(), e);
     }
 
+
+    //to refresh the users from external systems call 'curl http://localhost:8765/api/user/refresh'
     UserApi userApi = new UserApi();
     try {
-      userApi.refreshUsers();
+      ApiClient apiClient = userApi.getApiClient();
+      apiClient.setReadTimeout(100000);
+      apiClient.setConnectTimeout(100000);
+      userApi.setApiClient(apiClient);
+      List<UserInfo> userInfoList = userApi.getUsers();
+      modelCache.setUserInfos(userInfoList);
+      LOGGER.info("Imported " + userInfoList.size() + " users");
+      modelCacheService.set(modelCache);
+
     } catch (ApiException e) {
       LOGGER.error("Error importing users: " + e.getResponseBody(), e);
     }

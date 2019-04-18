@@ -10,7 +10,7 @@ public class StandaloneActionParamFactory implements ActionParamFactory {
     @Override
     public void build(ActionContext actionContext, FoundAction foundAction) {
 
-        for (InputParamGroup nextGroup: foundAction.getAction().getInputParams()) {
+        for (InputParamGroup nextGroup: foundAction.getAction().getInputParams().getInputParamGroups()) {
             for (InputParam nextInputParam: nextGroup.getInputParams()) {
                 System.out.println ("Build " + nextInputParam.getDisplayname() + "-" + nextInputParam.getKey() + "-" + nextInputParam.getValue());
             }

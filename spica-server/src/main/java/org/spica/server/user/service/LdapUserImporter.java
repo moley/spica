@@ -106,7 +106,8 @@ public class LdapUserImporter implements UserImporter {
 
                         if (username != null && surename != null && firstname != null ) {
 
-                            LOGGER.info("Import entry with (" +  usernameKey + "=" + username + ", " +
+                            if (LOGGER.isDebugEnabled())
+                            LOGGER.debug("Import entry with (" +  usernameKey + "=" + username + ", " +
                                 firstnameKey + "=" + firstname + "," +
                                 surenameKey + "=" + surename + "," +
                                 mailKey + "=" + mail + "," +
@@ -124,7 +125,7 @@ public class LdapUserImporter implements UserImporter {
                             user.setFirstname(firstname);
                             user.setName(surename);
                             user.setPhone(phone);
-
+                            users.add(user);
                             userRepository.save(user);
 
                             number++;
@@ -159,8 +160,7 @@ public class LdapUserImporter implements UserImporter {
                     }
             }
 
-            LOGGER.info("Search completed with " + number + " results in " + time + " ms:");
-            LOGGER.info(users.toString());
+            LOGGER.info("Search completed with " + number + " results in " + time + " ms");
         }
 
         return users;

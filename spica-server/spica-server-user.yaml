@@ -17,3 +17,36 @@ paths:
         '200':
           description: 'Null response'
 
+  /user/list:
+    get:
+      tags:
+        - user
+      operationId: "getUsers"
+      description: "get all users"
+      responses:
+        '200':
+          description: 'users'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserInfo"
+
+
+
+components:
+  schemas:
+    UserInfo:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        firstname:
+          type: "string"
+        email:
+          type: "string"
+        phone:
+          type: "string"
+        id:
+          type: "string"

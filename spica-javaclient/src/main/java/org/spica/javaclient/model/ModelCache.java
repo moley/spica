@@ -20,6 +20,8 @@ public class ModelCache {
   private final static Logger LOGGER = LoggerFactory.getLogger(ModelCache.class);
 
 
+  private List<UserInfo> userInfos = new ArrayList<>();
+
   private List<ProjectInfo> projectInfos = new ArrayList<>();
 
   private List<TopicInfo> topicInfos = new ArrayList<>();
@@ -105,5 +107,13 @@ public class ModelCache {
 
   public void setSomething(LocalDateTime something) {
     this.something = something;
+  }
+
+  public List<UserInfo> getUserInfos() {
+    return userInfos;
+  }
+
+  public void setUserInfos(List<UserInfo> userInfos) {
+    this.userInfos = userInfos;
   }
 }
