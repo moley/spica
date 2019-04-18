@@ -46,8 +46,6 @@ public class User implements Idable, UserDetails {
 
   private LocalDateTime createdAt;
 
-  private boolean active;
-
   private Role role;
 
   private boolean accountNonExpired;
@@ -57,6 +55,8 @@ public class User implements Idable, UserDetails {
   private boolean credentialsNonExpired;
 
   private boolean enabled;
+
+  private String phone;
 
   @Convert(converter = AuthoritiesConverter.class)
   private List<GrantedAuthority> authorities;

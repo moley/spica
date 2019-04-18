@@ -9,7 +9,7 @@ public class StartOrStopPauseAction implements Action {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(StartOrStopPauseAction.class);
 
-    private TimetrackerService timetrackerService = new TimetrackerService();
+
 
     @Override
     public boolean fromButton() {
@@ -29,7 +29,10 @@ public class StartOrStopPauseAction implements Action {
     @Override
     public void execute(ActionContext actionContext, InputParams inputParams, String parameterlist) {
         LOGGER.info("Start or stop pause called with parameter " + parameterlist);
-        //TODO register callback btnPause.setText(timetrackerService.togglePause());
+        TimetrackerService timetrackerService = new TimetrackerService();
+        timetrackerService.setModelCacheService(actionContext.getModelCacheService());
+        String newButtonText = timetrackerService.togglePause();
+        actionContext.adaptButtonText(getClass(), newButtonText);
     }
 
     @Override

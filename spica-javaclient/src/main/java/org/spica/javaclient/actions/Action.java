@@ -3,6 +3,8 @@ package org.spica.javaclient.actions;
 
 import org.spica.javaclient.actions.params.InputParams;
 
+
+
 public interface Action {
 
 

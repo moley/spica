@@ -39,6 +39,7 @@ public class SpicaProperties {
         logProperties(properties, "defaults");
 
         File customPropertiesFile = getCustomPropertiesFile();
+        LOGGER.info("Custom properties file " + customPropertiesFile.getAbsolutePath() + " exists: " + customPropertiesFile.exists());
         if (customPropertiesFile.exists()) {
           Properties customProperties = new Properties();
           customProperties.load(new FileInputStream(customPropertiesFile));
@@ -129,6 +130,11 @@ public class SpicaProperties {
     if (value == null)
       throw new IllegalStateException("Property " + key + " is null,but must be set");
     return value;
+  }
+
+  public String getValueOrDefault (final String key, final String defaultValue) {
+    String configuredValue = getValue(key);
+    return configuredValue != null ? configuredValue: defaultValue;
   }
 
   public String getValue (final String key) {

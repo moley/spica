@@ -2,10 +2,13 @@ package org.spica.javaclient.model;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spica.commons.SpicaProperties;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class DevClientDemoDataCreator {
@@ -14,6 +17,8 @@ public class DevClientDemoDataCreator {
 
 
     public final static void main (final String [] args) {
+
+        SpicaProperties.setSpicaHome(new File("").getAbsoluteFile());
         LocalDate today = LocalDate.now();
 
         ModelCacheService modelCacheService = new ModelCacheService();
@@ -24,7 +29,11 @@ public class DevClientDemoDataCreator {
         EventInfo pause2 = new EventInfo().name("Pause2").start(LocalDateTime.of(today, LocalTime.of(12,0))).stop(LocalDateTime.of(today, LocalTime.of(13,30))).eventType(EventType.PAUSE);
         EventInfo task3 = new EventInfo().name("Task 3").start(LocalDateTime.of(today, LocalTime.of(13,0))).stop(LocalDateTime.of(today, LocalTime.of(17,0))).eventType(EventType.TOPIC);
 
-        modelCache.setEventInfosReal(Arrays.asList(task1, pause1, task2, pause2, task3));
+        modelCache.setEventInfosReal(new ArrayList<>(Arrays.asList(task1, pause1, task2, pause2, task3)));
+
+        TopicInfo topicInfo1 = new TopicInfo().name("Performance Server").description("Measure and improve the performance of the server").externalSystemID("JIRA").externalSystemKey("PROJECT-123");
+        TopicInfo topicInfo2 = new TopicInfo().name("Make tests").description("Unittests, Integrationtests, and so on...").externalSystemID("JIRA").externalSystemKey("PROJECT-145");
+        modelCache.setTopicInfos(new ArrayList<>(Arrays.asList(topicInfo1, topicInfo2)));
 
 
 

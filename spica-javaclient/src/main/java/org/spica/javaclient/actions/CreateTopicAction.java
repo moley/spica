@@ -46,8 +46,6 @@ public class CreateTopicAction implements Action {
         modelCache.getTopicInfos().add(topicInfo);
 
         actionContext.saveModelCache();
-
-
     }
 
 

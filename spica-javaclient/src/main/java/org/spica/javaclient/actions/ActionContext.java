@@ -17,4 +17,9 @@ public interface ActionContext {
     void saveModelCache();
 
     SpicaProperties getSpicaProperties ();
+
+    void adaptButtonText (final Class action, String buttontext);
+
+
+
 }

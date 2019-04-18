@@ -10,6 +10,10 @@ import java.util.List;
 public class AuthoritiesConverter implements AttributeConverter<List<GrantedAuthority>, String> {
     @Override
     public String convertToDatabaseColumn(List<GrantedAuthority> attribute) {
+
+        if (attribute == null)
+            return "";
+
         List<String> roles = new ArrayList<String>();
         for (GrantedAuthority next: attribute)
           roles.add(next.getAuthority());
@@ -19,6 +23,9 @@ public class AuthoritiesConverter implements AttributeConverter<List<GrantedAuth
 
     @Override
     public List<GrantedAuthority> convertToEntityAttribute(String dbData) {
+        if (dbData == null || dbData.trim().isEmpty())
+            return new ArrayList<GrantedAuthority>();
+
         String [] dbDatas = dbData.split(",");
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         for (String next: dbDatas) {

@@ -5,7 +5,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 import org.spica.javaclient.actions.Action;
-import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.ActionHandler;
 import org.spica.javaclient.actions.FoundAction;
 
@@ -13,10 +12,12 @@ public class FxActionHandler {
 
     private ActionHandler actionHandler = new ActionHandler();
 
-    public void createButtons (final ActionContext actionContext, final ToolBar toolBar) {
+    public void createButtons (final FxActionContext actionContext, final ToolBar toolBar) {
         for (Action action: actionHandler.getRegisteredActions()) {
             if (action.fromButton()) {
                 Button btn = new Button(action.getDisplayname());
+                actionContext.registerButtonText(action.getClass(), btn.textProperty());
+
                 toolBar.getItems().add(btn);
                 btn.setOnAction(new EventHandler<ActionEvent>() {
                     @Override

@@ -225,7 +225,8 @@ public class MainPageController {
         };
       }
     });
-    lviTopics.setItems(FXCollections.observableArrayList(modelCache.getTopicInfos()));
+    actionContext.refreshTopicInfoObservableList();
+    lviTopics.setItems(actionContext.getTopicInfoObservableList());
 
     lviTopics.setOnMouseReleased(new EventHandler<MouseEvent>() {
       @Override
@@ -290,7 +291,7 @@ public class MainPageController {
 
           try {
             // update every 10 seconds
-            sleep(10000);
+            sleep(4000);
             refreshTimer(modelCache);
           } catch (InterruptedException e) {
             LOGGER.error(e.getLocalizedMessage(), e);

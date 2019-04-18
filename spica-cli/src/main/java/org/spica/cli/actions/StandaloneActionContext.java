@@ -37,4 +37,11 @@ public class StandaloneActionContext implements ActionContext {
     public SpicaProperties getSpicaProperties() {
         return spicaProperties;
     }
+
+    @Override
+    public void adaptButtonText(Class action, String buttontext) {
+
+    }
+
+
 }

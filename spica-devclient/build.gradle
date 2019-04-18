@@ -48,3 +48,30 @@ task installDmg(type: Copy) {
   onlyIf {isMac}
   //eachFile { println "Copying " + it.name}
 }
+
+task createDemoData (type: JavaExec) {
+  classpath = sourceSets.test.runtimeClasspath
+  main = 'org.spica.javaclient.model.DevClientDemoDataCreator'
+}
+
+def localCliInstallationPath = System.getProperty("user.home") + '/programs/spica-devclient'
+
+
+task clearLocalDevClientInstallationPath(type: Delete) {
+  delete localCliInstallationPath
+  followSymlinks = true
+}
+
+
+task installLocal(type: Copy) {
+  def zipFile = project(':spica-devclient').file("build/distributions/spica-devclient-${version}.zip")
+  println zipFile.absolutePath
+  dependsOn 'clearLocalDevClientInstallationPath'
+  from zipTree(zipFile)
+  eachFile {
+    path = path.substring(path.indexOf("/"), path.length())
+  }
+  into localCliInstallationPath
+  includeEmptyDirs = false
+  dependsOn tasks.distZip
+}

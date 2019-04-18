@@ -10,6 +10,7 @@ import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
+import org.spica.javaclient.api.UserApi;
 import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.model.ModelCacheService;
 import org.spica.devclient.ui.controller.MainPageController;
@@ -54,6 +55,13 @@ public class DevApplicationInternal extends Application {
       LOGGER.info("Imported " + topicContainerInfo.getTopics().size() + " topics");
     } catch (ApiException e) {
       LOGGER.error("Error importing jira topics: " + e.getResponseBody(), e);
+    }
+
+    UserApi userApi = new UserApi();
+    try {
+      userApi.refreshUsers();
+    } catch (ApiException e) {
+      LOGGER.error("Error importing users: " + e.getResponseBody(), e);
     }
 
 
