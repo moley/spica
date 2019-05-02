@@ -26,6 +26,8 @@ public class ModelCache {
 
   private List<TopicInfo> topicInfos = new ArrayList<>();
 
+  private List<MessagecontainerInfo> messagecontainerInfos = new ArrayList<MessagecontainerInfo>();
+
   private List<EventInfo> eventInfosReal = new ArrayList<>();
 
   private List<EventInfo> eventInfosPlanned = new ArrayList<>();
@@ -115,5 +117,13 @@ public class ModelCache {
 
   public void setUserInfos(List<UserInfo> userInfos) {
     this.userInfos = userInfos;
+  }
+
+  public List<MessagecontainerInfo> getMessagecontainerInfos() {
+    return messagecontainerInfos;
+  }
+
+  public void setMessagecontainerInfos(List<MessagecontainerInfo> messagecontainerInfos) {
+    this.messagecontainerInfos = messagecontainerInfos;
   }
 }

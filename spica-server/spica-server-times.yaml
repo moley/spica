@@ -85,5 +85,5 @@ components:
       type: string
       enum:
         - topic
-        - chat
+        - message
         - pause

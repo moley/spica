@@ -16,6 +16,9 @@
       -fx-background-insets: 0, 1;
       -fx-background-radius: 3, 2;
 }
+.tool-bar {
+    -fx-background-color: transparent;
+}
 
 .button {
     -fx-background-color: transparent;
@@ -82,15 +85,16 @@
 
 #lblTime {
     -fx-background-color: transparent;
-    -fx-text-fill: #AAAAAA;
-    -fx-font-size: 60px;
+    -fx-text-fill: #00000;
+    -fx-font-size: 70px;
     -fx-cursor: hand;
     -fx-alignment: CENTER;
 }
 
 #lblCurrentTask {
-    -fx-font-size: 40px;
-    -fx-text-fill: #AAAAAA;
+    -fx-font-size: 45px;
+    -fx-background-color: #d1cc98;
+    -fx-text-fill: #000000;
     -fx-cursor: hand;
 }
 

@@ -1,7 +1,7 @@
-package org.spica.server.chat.domain;
+package org.spica.server.communication.domain;
 
-import org.spica.server.chat.model.MessageInfo;
-import org.spica.server.chat.model.MessagecontainerInfo;
+import org.spica.server.communication.model.MessageInfo;
+import org.spica.server.communication.model.MessagecontainerInfo;
 
 public class MessagecontainerMapper {
 

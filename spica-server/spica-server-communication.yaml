@@ -1,8 +1,8 @@
 openapi: "3.0.0"
 info:
   version: 1.0.0
-  title: "spica rest chat component"
-  description: "Rest API for the chat component of spica communication server"
+  title: "spica rest communication component"
+  description: "Rest API for the communication component of spica communication server"
 servers:
   - url: http://localhost/api
 
@@ -11,7 +11,7 @@ paths:
   /messagecontainer/{referenceType}/{referenceId}:
     get:
       tags:
-        - chat
+        - communication
       operationId: "getMessagecontainer"
       parameters:
       - in: path
@@ -42,7 +42,7 @@ components:
         message:
           type: "string"
         type:
-          type: "string"
+          $ref: "#/components/schemas/MessageType"
         creator:
           type: "string"
         documents:
@@ -59,6 +59,11 @@ components:
           items:
             $ref: "#/components/schemas/MessageInfo"
 
-
+    MessageType:
+      type: string
+      enum:
+        - phonecall
+        - chat
+        - mail
 
 

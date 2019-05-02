@@ -1,10 +1,6 @@
 package org.spica.javaclient.timetracker;
 
-import org.spica.javaclient.model.ModelCache;
-import org.spica.javaclient.model.ModelCacheService;
-import org.spica.javaclient.model.EventInfo;
-import org.spica.javaclient.model.EventType;
-import org.spica.javaclient.model.TopicInfo;
+import org.spica.javaclient.model.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -60,10 +56,13 @@ public class TimetrackerService {
         if (eventInfoListToday.size() < 2 )
             throw new IllegalStateException("You cannot stop a pause with less than two events. Seems your day started with a pause, which is invalid");
 
+        restartLastRealEvent(modelCache, EventType.PAUSE);
+    }
 
+    private void restartLastRealEvent (final ModelCache modelCache, final EventType eventType) {
         EventInfo pauseInfo = modelCache.getEventInfosRealToday().get(modelCache.getEventInfosRealToday().size() - 1);
-        if (! pauseInfo.getEventType().equals(EventType.PAUSE))
-            throw new IllegalStateException("Your last event is not a started pause. You cannot stop a pause");
+        if (! pauseInfo.getEventType().equals(eventType))
+            throw new IllegalStateException("Your last event is not a started " + eventType.toString() + ". You cannot stop a " + pauseInfo.getEventType().toString() + " at this point");
 
         EventInfo lastEventInfo = modelCache.getEventInfosRealToday().get(modelCache.getEventInfosRealToday().size() - 2);
         EventInfo newStartedEvent = new EventInfo();
@@ -73,6 +72,7 @@ public class TimetrackerService {
         newStartedEvent.setReferenceId(lastEventInfo.getReferenceId());
         modelCache.getEventInfosReal().add(newStartedEvent);
         modelCacheService.set(modelCache);
+
     }
 
     public void startWorkOnTopic (final TopicInfo topicInfo) {
@@ -87,7 +87,37 @@ public class TimetrackerService {
         modelCacheService.set(modelCache);
     }
 
-    public void stopWork() {
+    public void startTelephoneCall () {
+        stopLastOpenEvent();
+        ModelCache modelCache = getModelCache();
+        EventInfo eventInfo = new EventInfo();
+        eventInfo.setStart(LocalDateTime.now());
+        eventInfo.setEventType(EventType.MESSAGE);
+        eventInfo.setName("Telephone call");
+
+        modelCache.getEventInfosReal().add(eventInfo);
+        modelCacheService.set(modelCache);
+    }
+
+    public void finishTelephoneCall (final MessageInfo messageInfo, UserInfo userInfo) {
+        EventInfo eventInfo = getModelCache().findLastOpenEventFromToday();
+        if (! eventInfo.getEventType().equals(EventType.MESSAGE))
+            throw new IllegalStateException("Last event is expected to be a phone call");
+        else {
+            eventInfo.setStop(LocalDateTime.now());
+            eventInfo.setName("Telephone call with " + userInfo.getName() + ", " + userInfo.getFirstname());
+        }
+
+        eventInfo.setReferenceId(messageInfo.getId());
+
+        ModelCache modelCache = getModelCache();
+
+        restartLastRealEvent(modelCache, EventType.MESSAGE);
+
+
+    }
+
+    public void finishDay() {
         stopLastOpenEvent();
         modelCacheService.set(getModelCache());
     }

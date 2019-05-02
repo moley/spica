@@ -13,8 +13,10 @@ public class FinishDayAction implements Action {
     public final static String DISPLAY_NAME = "Finish day";
 
 
-
-
+    @Override
+    public String getIcon() {
+        return "fa-POWER_OFF";
+    }
 
     @Override
     public boolean fromButton() {
@@ -36,7 +38,7 @@ public class FinishDayAction implements Action {
         LOGGER.info("Finish day called with parameter " + parameterlist);
         TimetrackerService timetrackerService = new TimetrackerService();
         timetrackerService.setModelCacheService(actionContext.getModelCacheService());
-        timetrackerService.stopWork();
+        timetrackerService.finishDay();
         System.exit(0);
     }
 

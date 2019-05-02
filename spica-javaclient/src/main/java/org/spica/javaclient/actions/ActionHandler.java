@@ -22,6 +22,7 @@ public class ActionHandler {
         registeredActions.add(new CreateTopicAction());
         registeredActions.add(new GotoStashAction());
         registeredActions.add(new GotoJiraAction());
+        registeredActions.add(new StartPhonecallAction());
     }
 
 

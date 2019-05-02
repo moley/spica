@@ -8,6 +8,8 @@ public abstract class AbstractInputParam<T> implements InputParam<T>{
 
     private T value;
 
+    private Renderer<T> renderer;
+
     @Override
     public String getKey() {
         return key;
@@ -33,5 +35,13 @@ public abstract class AbstractInputParam<T> implements InputParam<T>{
 
     public void setDisplayname(String displayname) {
         this.displayname = displayname;
+    }
+
+    public Renderer<T> getRenderer() {
+        return renderer;
+    }
+
+    public void setRenderer(Renderer<T> renderer) {
+        this.renderer = renderer;
     }
 }

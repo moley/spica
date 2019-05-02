@@ -10,6 +10,10 @@ public class StartOrStopPauseAction implements Action {
     private final static Logger LOGGER = LoggerFactory.getLogger(StartOrStopPauseAction.class);
 
 
+    @Override
+    public String getIcon() {
+        return "fa-PAUSE";
+    }
 
     @Override
     public boolean fromButton() {
@@ -32,7 +36,12 @@ public class StartOrStopPauseAction implements Action {
         TimetrackerService timetrackerService = new TimetrackerService();
         timetrackerService.setModelCacheService(actionContext.getModelCacheService());
         String newButtonText = timetrackerService.togglePause();
-        actionContext.adaptButtonText(getClass(), newButtonText);
+        if (newButtonText.equals(timetrackerService.DISPLAY_START_PAUSE)) {
+            actionContext.adaptButton(getClass(), newButtonText, "fa-PAUSE");
+        }
+        else {
+            actionContext.adaptButton(getClass(), newButtonText, "fa-PLAY");
+        }
     }
 
     @Override

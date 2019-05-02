@@ -2,7 +2,6 @@ package org.spica.javaclient.actions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.params.InputParam;
 import org.spica.javaclient.actions.params.InputParamGroup;
 import org.spica.javaclient.actions.params.InputParams;
 import org.spica.javaclient.actions.params.TextInputParam;
@@ -10,7 +9,6 @@ import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.model.TopicInfo;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class CreateTopicAction implements Action {
 
@@ -19,6 +17,10 @@ public class CreateTopicAction implements Action {
     public final static String KEY_SUMMARY = "summary";
     public final static String KEY_DESCRIPTION = "description";
 
+    @Override
+    public String getIcon() {
+        return "fa-CLIPBOARD";
+    }
 
     @Override
     public boolean fromButton() {
@@ -60,10 +62,10 @@ public class CreateTopicAction implements Action {
     }
 
     @Override
-    public InputParams getInputParams() {
+    public InputParams getInputParams(ActionContext actionContext) {
 
-        TextInputParam summary = TextInputParam.builder().key(KEY_SUMMARY).displayname("Summary").value("").build();
-        TextInputParam description = TextInputParam.builder().key(KEY_DESCRIPTION).displayname("Description").numberOfLines(5).value("").build();
+        TextInputParam summary = new TextInputParam(1, KEY_SUMMARY, "Summary", "");
+        TextInputParam description = new TextInputParam(5, KEY_DESCRIPTION, "Description", "");
 
         InputParamGroup inputParamGroup = new InputParamGroup();
         inputParamGroup.getInputParams().add(summary);

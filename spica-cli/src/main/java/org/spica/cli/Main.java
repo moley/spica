@@ -31,13 +31,15 @@ public class Main {
 
             Action action = foundAction.getAction();
 
-            if (! action.getInputParams().isEmpty()) {
+            StandaloneActionContext actionContext = new StandaloneActionContext();
+
+            if (! action.getInputParams(actionContext).isEmpty()) {
                 StandaloneActionParamFactory actionParamFactory = new StandaloneActionParamFactory();
-                StandaloneActionContext actionContext = new StandaloneActionContext();
+
                 actionParamFactory.build(actionContext, foundAction);
             }
             else
-              action.execute(new StandaloneActionContext(), action.getInputParams(),foundAction.getParameter());
+              action.execute(new StandaloneActionContext(), action.getInputParams(actionContext),foundAction.getParameter());
         }
 
     }

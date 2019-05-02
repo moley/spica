@@ -8,48 +8,48 @@
             fx:controller="org.spica.devclient.ui.controller.MainPageController">
 
     <top>
-        <GridPane vgap="10" fx:id="header">
-            <padding><Insets top="25" right="25" bottom="25" left="25"/></padding>
+        <GridPane vgap="10" fx:id="header" style="-fx-background-color:#d1cc98">
+            <padding><Insets top="5" right="5" bottom="5" left="5"/></padding>
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="80.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
             </columnConstraints>
 
+            <ToolBar fx:id="tbaActions" orientation="HORIZONTAL" GridPane.halignment="RIGHT" GridPane.fillWidth="false" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.columnSpan="2">
+            </ToolBar>
+
             <TextField fx:id="txtSearch" GridPane.columnIndex="0" GridPane.rowIndex="0">
             </TextField>
-            <HBox fx:id="hbAdditionalInfos" GridPane.columnIndex="1" GridPane.rowIndex="0">
-            </HBox>
 
 
-            <Label fx:id="lblCurrentTask" GridPane.columnIndex="0" GridPane.rowIndex="1">
-            </Label>
-            <Label fx:id="lblCurrentTaskAdditionalInfos" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label fx:id="lblCurrentTask" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2">
             </Label>
 
             <ProgressBar fx:id="pbTask" GridPane.columnIndex="0" GridPane.rowIndex="2">
             </ProgressBar>
 
-            <Label fx:id="lblTime" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Label fx:id="lblAdditionalTaskInfos" GridPane.columnIndex="0" GridPane.rowIndex="2">
+            </Label>
+
+
+            <Label fx:id="lblTime" GridPane.halignment="RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="2">
             </Label>
 
 
         </GridPane>
     </top>
     <left>
-        <ToolBar fx:id="tbaActions" orientation="VERTICAL">
-        </ToolBar>
+        <ListView fx:id="lviTopics" minWidth="650">
+
+        </ListView>
     </left>
 
     <center>
-        <ListView fx:id="lviTopics" minWidth="600">
-
-        </ListView>
-    </center>
-    <right>
         <DayPage fx:id="cviDayPage">
 
         </DayPage>
-    </right>
+    </center>
 
 
 </BorderPane>

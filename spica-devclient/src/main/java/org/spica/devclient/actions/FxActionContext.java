@@ -1,9 +1,11 @@
 package org.spica.devclient.actions;
 
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import org.spica.commons.SpicaProperties;
+import org.spica.devclient.util.UiUtils;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.model.ModelCacheService;
@@ -19,7 +21,7 @@ public class FxActionContext implements ActionContext {
     private ModelCacheService modelCacheService = new ModelCacheService();
 
 
-    private HashMap<Class, StringProperty> buttonHashMap = new HashMap<Class, StringProperty>();
+    private HashMap<Class, Button> buttonHashMap = new HashMap<Class, Button>();
 
     private ObservableList<TopicInfo> topicInfoObservableList = FXCollections.observableArrayList();
 
@@ -62,13 +64,14 @@ public class FxActionContext implements ActionContext {
     }
 
     @Override
-    public void adaptButtonText(Class action, String buttontext) {
-        StringProperty textProperty = buttonHashMap.get(action);
-        textProperty.set(buttontext);
+    public void adaptButton(Class action, String buttontext, String icon) {
+        Button btn = buttonHashMap.get(action);
+        btn.tooltipProperty().set(new Tooltip(buttontext));
+        btn.setGraphic(UiUtils.getIcon(icon));
     }
 
-    public void registerButtonText (Class action, StringProperty simpleStringProperty) {
-        this.buttonHashMap.put(action, simpleStringProperty);
+    public void registerButton(Class action, Button btn) {
+        this.buttonHashMap.put(action, btn);
     }
 
 

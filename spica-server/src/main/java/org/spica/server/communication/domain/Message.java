@@ -1,5 +1,5 @@
 
-package org.spica.server.chat.domain;
+package org.spica.server.communication.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

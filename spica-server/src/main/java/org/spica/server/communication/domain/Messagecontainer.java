@@ -1,4 +1,4 @@
-package org.spica.server.chat.domain;
+package org.spica.server.communication.domain;
 
 import java.util.ArrayList;
 import java.util.List;

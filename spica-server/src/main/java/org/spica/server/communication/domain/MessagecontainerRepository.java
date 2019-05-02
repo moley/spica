@@ -1,4 +1,4 @@
-package org.spica.server.chat.domain;
+package org.spica.server.communication.domain;
 
 import org.spica.server.commons.ReferenceType;
 import org.springframework.data.jpa.repository.JpaRepository;

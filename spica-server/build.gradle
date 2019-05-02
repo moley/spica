@@ -57,12 +57,12 @@ swaggerSources {
     }
   }
   spicaServerChat {
-    inputFile = project.file('spica-server-chat.yaml')
+    inputFile = project.file('spica-server-communication.yaml')
     code {
       language = 'spring'
       components = ['models', 'apis']
       additionalProperties = [interfaceOnly:'true']
-      rawOptions = ['--api-package=org.spica.server.chat.api', '--model-package=org.spica.server.chat.model']
+      rawOptions = ['--api-package=org.spica.server.communication.api', '--model-package=org.spica.server.communication.model']
     }
   }
 

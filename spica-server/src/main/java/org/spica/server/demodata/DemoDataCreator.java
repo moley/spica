@@ -2,10 +2,10 @@ package org.spica.server.demodata;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.server.chat.domain.Message;
-import org.spica.server.chat.domain.MessageRepository;
-import org.spica.server.chat.domain.Messagecontainer;
-import org.spica.server.chat.domain.MessagecontainerRepository;
+import org.spica.server.communication.domain.Message;
+import org.spica.server.communication.domain.MessageRepository;
+import org.spica.server.communication.domain.Messagecontainer;
+import org.spica.server.communication.domain.MessagecontainerRepository;
 import org.spica.server.commons.Idable;
 import org.spica.server.commons.MemberShipType;
 import org.spica.server.commons.ReferenceType;

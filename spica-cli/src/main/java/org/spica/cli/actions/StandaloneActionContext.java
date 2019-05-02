@@ -39,7 +39,7 @@ public class StandaloneActionContext implements ActionContext {
     }
 
     @Override
-    public void adaptButtonText(Class action, String buttontext) {
+    public void adaptButton(Class action, String buttontext, String icon) {
 
     }
 

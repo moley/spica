@@ -31,10 +31,22 @@ public class GotoStashAction implements Action {
         return "Navigates to bitbucket of your current working dir";
     }
 
+    File getNextGitProject (final File currentWorkingDir) {
+        File currentCheckedDir = currentWorkingDir;
+        do {
+            if (new File (currentCheckedDir, ".git").exists())
+                return currentCheckedDir;
+            else if (currentWorkingDir.getParentFile() != null)
+                currentCheckedDir = currentWorkingDir.getParentFile();
+
+        } while (currentWorkingDir.getParentFile() != null);
+        return null;
+    }
+
     @Override
     public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
 
-        File currentWorkingDir = actionContext.getCurrentWorkingDir();
+        File currentWorkingDir = getNextGitProject(actionContext.getCurrentWorkingDir());
         if (currentWorkingDir != null) {
             try {
                 Git git = Git.open(currentWorkingDir);

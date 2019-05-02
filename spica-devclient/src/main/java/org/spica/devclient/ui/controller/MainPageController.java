@@ -26,6 +26,7 @@ import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
+import org.spica.devclient.DurationInfoService;
 import org.spica.devclient.actions.FxActionContext;
 import org.spica.devclient.actions.FxActionHandler;
 import org.spica.devclient.actions.FxActionParamFactory;
@@ -72,7 +73,7 @@ public class MainPageController {
   private Label lblCurrentTask;
 
   @FXML
-  private Label lblCurrentTaskAdditionalInfos;
+  private Label lblAdditionalTaskInfos;
 
   @FXML
   private ProgressBar pbTask;
@@ -98,21 +99,29 @@ public class MainPageController {
 
   private FxActionContext actionContext = new FxActionContext();
 
+  private DurationInfoService durationInfoService = new DurationInfoService();
 
 
-  private Entry toEntry (final EventInfo eventInfo) {
+
+  private Entry toEntry (final EventInfo eventInfo, final Calendar calendar) {
     LocalDateTime until = eventInfo.getStop() != null ? eventInfo.getStop() : LocalDateTime.now();
+    if (eventInfo.getName() == null)
+      throw new IllegalStateException("Name must not be null for event " + eventInfo.getId());
+    if (eventInfo.getStart() == null)
+      throw new IllegalStateException("Start must not be null for event " + eventInfo.getId());
     Entry entry = new Entry(eventInfo.getName(), new Interval(eventInfo.getStart(), until));
+    entry.setCalendar(calendar);
     return entry;
   }
 
   private void refreshTimer (ModelCache modelCache) {
+    LOGGER.info("refreshTimer called");
     realCalendar.removeEntries(realEntries);
     realEntries.clear();
     for (EventInfo next: modelCache.getEventInfosReal()) {
       if (! next.getEventType().equals(EventType.PAUSE)) {
         LOGGER.info("refresh " + next.getName() + " from " + next.getStart() + " until " + next.getStop());
-        realEntries.add(toEntry(next));
+        realEntries.add(toEntry(next, realCalendar));
       }
       else
         LOGGER.info("do not refresh " + next.getName());
@@ -143,6 +152,13 @@ public class MainPageController {
         String localTime = LocalTime.now().format(DateTimeFormatter.ofPattern("H:mm"));
         propertyCurrentTime.set(localTime);
 
+        if (openInfo != null) {
+          String durationInfo = durationInfoService.getDisplaytext(openInfo);
+          lblAdditionalTaskInfos.setText(durationInfo);
+        }
+        else
+          lblAdditionalTaskInfos.setText("");
+
         if (openInfo != null && openInfo.getReferenceId() != null) {
           TopicInfo topicInfo = modelCache.findTopicInfoById(openInfo.getReferenceId());
           lviTopics.getSelectionModel().select(topicInfo);
@@ -157,6 +173,8 @@ public class MainPageController {
   void initialize() {
 
     spicaProperties = new SpicaProperties();
+
+    pbTask.setVisible(false);
 
     pbTask.setProgress(0);
 
@@ -181,12 +199,22 @@ public class MainPageController {
           FoundAction foundAction = actionHandler.findAction(txtSearch.getText());
           Action action = foundAction.getAction();
 
-          if (! action.getInputParams().isEmpty()) {
+          if (! action.getInputParams(actionContext).isEmpty()) {
             FxActionParamFactory actionParamFactory = new FxActionParamFactory();
             actionParamFactory.build(actionContext, foundAction);
           }
           else
-            action.execute(actionContext, action.getInputParams(), foundAction.getParameter());
+            action.execute(actionContext, action.getInputParams(actionContext), foundAction.getParameter());
+        }
+        else {
+          if (txtSearch.getText().startsWith(":")) {
+            //show actions
+
+          }
+          else {
+            //show searchkeys (users, topics...)
+
+          }
         }
 
       }

@@ -88,7 +88,7 @@ public class TimetrackerServiceTest {
         TopicInfo topicInfo = new TopicInfo().name("Open topic");
         ModelCache modelCache = modelCacheService.get();
         timetrackerService.startWorkOnTopic(topicInfo);
-        timetrackerService.stopWork();
+        timetrackerService.finishDay();
         Assert.assertEquals (1, modelCache.getEventInfosRealToday().size());
         Assert.assertNotNull (modelCache.getEventInfosRealToday().get(modelCache.getEventInfosRealToday().size() - 1).getStop());
     }
@@ -104,7 +104,7 @@ public class TimetrackerServiceTest {
         Assert.assertTrue ("No pause expected", timetrackerService.isPause());
         timetrackerService.stopPause();
         Assert.assertFalse ("No pause expected", timetrackerService.isPause());
-        timetrackerService.stopWork();
+        timetrackerService.finishDay();
         Assert.assertFalse ("No pause expected", timetrackerService.isPause());
     }
 }

@@ -1,11 +1,11 @@
-package org.spica.server.chat.api;
+package org.spica.server.communication.api;
 
 
 import io.swagger.annotations.ApiParam;
-import org.spica.server.chat.domain.Messagecontainer;
-import org.spica.server.chat.domain.MessagecontainerMapper;
-import org.spica.server.chat.domain.MessagecontainerRepository;
-import org.spica.server.chat.model.MessagecontainerInfo;
+import org.spica.server.communication.domain.Messagecontainer;
+import org.spica.server.communication.domain.MessagecontainerMapper;
+import org.spica.server.communication.domain.MessagecontainerRepository;
+import org.spica.server.communication.model.MessagecontainerInfo;
 import org.spica.server.commons.ReferenceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
