@@ -23,21 +23,16 @@ public class MaskLoader<T> {
       Parent root = loader.load();
       T controller = loader.getController();
 
-      Scene scene = new Scene(root, Consts.DEFAULT_WIDTH, Consts.DEFAULT_HEIGHT, true);
-      scene.getStylesheets().add("/spica-devclient.css");
-      Stage stage = new Stage();
-      stage.setScene(scene);
-      mask.setStage(stage);
-      mask.setScene(scene);
+      mask.setNode(root);
       mask.setController(controller);
-      stage.setAlwaysOnTop(true);
-      stage.setResizable(false);
-      stage.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
-        if (KeyCode.ESCAPE == event.getCode()) {
-          UiUtils.close(stage);
-        }
-      });
-      stage.initStyle(StageStyle.UNDECORATED);
+      //stage.setAlwaysOnTop(true);
+      //stage.setResizable(false);
+      //stage.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
+      //  if (KeyCode.ESCAPE == event.getCode()) {
+      //    UiUtils.close(stage);
+      //  }
+      //});
+      //stage.initStyle(StageStyle.UNDECORATED);
 
       return mask;
     } catch (IOException e) {

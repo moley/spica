@@ -5,9 +5,14 @@ import de.jensd.fx.glyphs.fontawesome.utils.FontAwesomeIconFactory;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
+import javafx.scene.control.Labeled;
+import javafx.scene.control.TextInputControl;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import java.util.ArrayList;
 
 public class UiUtils {
 
@@ -33,5 +38,30 @@ public class UiUtils {
     }
     else
       return null;
+  }
+
+  public static Node getFirstEditableNode (Parent root) {
+    for (Node next: getAllNodes(root)) {
+      if (next instanceof TextInputControl || next instanceof ComboBox) {
+        System.out.println ("First ediable node is " + next);
+        return next;
+      }
+    }
+
+    throw new IllegalStateException("No exitable node found on root " + root);
+  }
+
+  public static ArrayList<Node> getAllNodes(Parent root) {
+    ArrayList<Node> nodes = new ArrayList<Node>();
+    addAllDescendents(root, nodes);
+    return nodes;
+  }
+
+  private static void addAllDescendents(Parent parent, ArrayList<Node> nodes) {
+    for (Node node : parent.getChildrenUnmodifiable()) {
+      nodes.add(node);
+      if (node instanceof Parent)
+        addAllDescendents((Parent)node, nodes);
+    }
   }
 }

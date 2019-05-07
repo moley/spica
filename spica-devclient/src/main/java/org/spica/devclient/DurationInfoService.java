@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 
 public class DurationInfoService {
@@ -21,10 +22,17 @@ public class DurationInfoService {
 
         Duration duration = Duration.between(startDateTime, now);
 
-        String durationString = AmountFormats.wordBased(duration, Locale.UK);
-        String info = "started at " + startTime + ", running for " + durationString;
+        if (duration.get(ChronoUnit.SECONDS) < 60) {
+            String info = "started some moments ago";
+            return info;
+        }
+        else {
+            String durationString = AmountFormats.wordBased(duration, Locale.UK);
+            String info = "started at " + startTime + ", running for " + durationString;
+            return info;
+        }
 
-        return info;
+
 
 
 

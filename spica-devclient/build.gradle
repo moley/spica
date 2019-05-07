@@ -16,7 +16,7 @@ dependencies {
   
   
   runtime 'de.jensd:fontawesomefx-fontawesome:4.6.1-2'
-  
+  runtime 'org.controlsfx:controlsfx:11.0.0'
 
   runtime 'org.openjfx:javafx-controls:12-ea+8'
   runtime 'org.openjfx:javafx-graphics:12-ea+8'

@@ -4,15 +4,14 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.devclient.actions.widgets.ComboBoxAutoComplete;
 import org.spica.javaclient.actions.Action;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.FoundAction;
@@ -26,7 +25,7 @@ public class ActionParamController {
 
     private ActionContext actionContext;
 
-    private Stage stage;
+    private Tab tab;
 
     public void setFoundAction(FoundAction foundAction) {
         LOGGER.info("Use foundaction " + System.identityHashCode(foundAction));
@@ -60,7 +59,7 @@ public class ActionParamController {
                 } else if (nextInputParam instanceof SearchInputParam) {
                     SearchInputParam searchInputParam = (SearchInputParam) nextInputParam;
                     ComboBox<String> comboBox = new ComboBox<String>(FXCollections.observableArrayList(searchInputParam.getItems()));
-                    ComboBoxAutoComplete<String> comboBoxAutoComplete = new ComboBoxAutoComplete<String>(comboBox);
+
                     comboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
                         @Override
                         public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -85,8 +84,13 @@ public class ActionParamController {
             public void handle(ActionEvent event) {
                 LOGGER.info("Use action " + System.identityHashCode(action));
                 action.execute(actionContext, inputParams, foundAction.getParameter());
-                stage.close();
 
+                EventHandler<Event> handler = tab.getOnClosed();
+                if (null != handler) {
+                    handler.handle(null);
+                } else {
+                    tab.getTabPane().getTabs().remove(tab);
+                }
             }
         });
     }
@@ -99,11 +103,12 @@ public class ActionParamController {
         this.actionContext = actionContext;
     }
 
-    public Stage getStage() {
-        return stage;
+
+    public Tab getTab() {
+        return tab;
     }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    public void setTab(Tab tab) {
+        this.tab = tab;
     }
 }

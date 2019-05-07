@@ -178,14 +178,12 @@ public class AmountFormats {
         ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME, locale);
         UnitFormat[] formats = {
             UnitFormat.of(bundle, WORDBASED_HOUR),
-            UnitFormat.of(bundle, WORDBASED_MINUTE),
-            UnitFormat.of(bundle, WORDBASED_SECOND)};
+            UnitFormat.of(bundle, WORDBASED_MINUTE)};
         WordBased wb = new WordBased(formats, bundle.getString(WORDBASED_COMMASPACE), bundle.getString(WORDBASED_SPACEANDSPACE));
 
         long hours = duration.toHours();
         long mins = duration.toMinutes() % MINUTES_PER_HOUR;
-        long secs = duration.getSeconds() % SECONDS_PER_MINUTE;
-        int[] values = {(int) hours, (int) mins, (int) secs};
+        int[] values = {(int) hours, (int) mins};
         return wb.format(values);
     }
 

@@ -39,16 +39,8 @@
 
         </GridPane>
     </top>
-    <left>
-        <ListView fx:id="lviTopics" minWidth="650">
-
-        </ListView>
-    </left>
-
     <center>
-        <DayPage fx:id="cviDayPage">
-
-        </DayPage>
+        <TabPane fx:id="tpaMain"/>
     </center>
 
 
