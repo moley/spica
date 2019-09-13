@@ -1,6 +1,7 @@
 package org.spica.server.project.api;
 
 import org.spica.server.project.domain.Topic;
+import org.spica.server.project.service.ExternalSystemTopicAdapter;
 import org.spica.server.project.service.TopicImporter;
 
 import java.util.ArrayList;

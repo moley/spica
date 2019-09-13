@@ -1,14 +1,15 @@
 package org.spica.javaclient.timetracker;
 
 import org.spica.javaclient.model.*;
+import org.spica.javaclient.utils.DateUtil;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 public class TimetrackerService {
 
-    public final static String DISPLAY_START_PAUSE = "Start pause";
-    public final static String DISPLAY_FINISH_PAUSE = "Finish pause";
+    private DateUtil dateUtil = new DateUtil();
 
     private ModelCacheService modelCacheService;
 
@@ -25,6 +26,7 @@ public class TimetrackerService {
     public void startPause () {
         stopLastOpenEvent();
         EventInfo pauseEvent = new EventInfo();
+        pauseEvent.setId(UUID.randomUUID().toString());
         pauseEvent.setStart(LocalDateTime.now());
         pauseEvent.setEventType(EventType.PAUSE);
         getModelCache().getEventInfosReal().add(pauseEvent);
@@ -33,10 +35,10 @@ public class TimetrackerService {
     public String togglePause () {
         if (isPause()) {
             stopPause();
-            return DISPLAY_START_PAUSE;
+            return "Pause is stopped at " + dateUtil.getDateAndTimeAsString(LocalDateTime.now());
         } else {
             startPause();
-            return DISPLAY_FINISH_PAUSE;
+            return "Pause is started at " + dateUtil.getDateAndTimeAsString(LocalDateTime.now());
         }
     }
 
@@ -66,6 +68,7 @@ public class TimetrackerService {
 
         EventInfo lastEventInfo = modelCache.getEventInfosRealToday().get(modelCache.getEventInfosRealToday().size() - 2);
         EventInfo newStartedEvent = new EventInfo();
+        newStartedEvent.setId(UUID.randomUUID().toString());
         newStartedEvent.setStart(LocalDateTime.now());
         newStartedEvent.setEventType(lastEventInfo.getEventType());
         newStartedEvent.setName(lastEventInfo.getName());
@@ -79,6 +82,7 @@ public class TimetrackerService {
         stopLastOpenEvent();
         ModelCache modelCache = getModelCache();
         EventInfo newStartedEvent = new EventInfo();
+        newStartedEvent.setId(UUID.randomUUID().toString());
         newStartedEvent.setStart(LocalDateTime.now());
         newStartedEvent.setEventType(EventType.TOPIC);
         newStartedEvent.setName(topicInfo.getName());
@@ -91,6 +95,7 @@ public class TimetrackerService {
         stopLastOpenEvent();
         ModelCache modelCache = getModelCache();
         EventInfo eventInfo = new EventInfo();
+        eventInfo.setId(UUID.randomUUID().toString());
         eventInfo.setStart(LocalDateTime.now());
         eventInfo.setEventType(EventType.MESSAGE);
         eventInfo.setName("Telephone call");
@@ -101,8 +106,11 @@ public class TimetrackerService {
 
     public void finishTelephoneCall (final MessageInfo messageInfo, UserInfo userInfo) {
         EventInfo eventInfo = getModelCache().findLastOpenEventFromToday();
+        if (eventInfo == null)
+            throw new IllegalStateException("Message not found, but " + eventInfo + "-" + getModelCache().getEventInfosRealToday());
+
         if (! eventInfo.getEventType().equals(EventType.MESSAGE))
-            throw new IllegalStateException("Last event is expected to be a phone call");
+            throw new IllegalStateException("Last event is expected to be a phone call, but is " + eventInfo);
         else {
             eventInfo.setStop(LocalDateTime.now());
             eventInfo.setName("Telephone call with " + userInfo.getName() + ", " + userInfo.getFirstname());
@@ -130,4 +138,7 @@ public class TimetrackerService {
         this.modelCacheService = modelCacheService;
     }
 
+    public void finishEvent(EventInfo eventInfo) {
+        eventInfo.setStop(LocalDateTime.now());
+    }
 }

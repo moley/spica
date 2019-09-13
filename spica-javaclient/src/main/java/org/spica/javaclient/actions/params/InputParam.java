@@ -8,5 +8,7 @@ public interface InputParam<T> {
 
     T getValue();
 
+    void setValue(T value);
+
 
 }

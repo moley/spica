@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @XmlRootElement
@@ -53,8 +54,28 @@ public class ModelCache {
     this.projectInfos = projectInfos;
   }
 
+  public List<TopicInfo> findTopicInfosByQuery (String query) {
+
+    Predicate<TopicInfo> filter = new Predicate<TopicInfo>() {
+      @Override
+      public boolean test(TopicInfo topicInfo) {
+        String nameNotNull = topicInfo.getName() != null ? topicInfo.getName(): "";
+        String externalSystemKeyNotNull = topicInfo.getExternalSystemKey() != null ? topicInfo.getExternalSystemKey(): "" ;
+        String idNotNull = topicInfo.getId() != null ? topicInfo.getId(): "";
+        return nameNotNull.contains(query) || externalSystemKeyNotNull.equals(query) || idNotNull.equals(query);
+      }
+    };
+    return topicInfos.stream().filter( filter).collect(Collectors.toList());
+  }
+
   public TopicInfo findTopicInfoById (final String id) {
     return topicInfos.stream().filter(topicInfo -> topicInfo.getId().equals(id)).findAny().orElse(null);
+  }
+
+
+
+  public TopicInfo findTopicInfoByExternalSystemKey (final String id) {
+    return topicInfos.stream().filter(topicInfo -> topicInfo.getExternalSystemKey().equals(id)).findAny().orElse(null);
   }
 
   public List<TopicInfo> getTopicInfos() {
@@ -74,6 +95,10 @@ public class ModelCache {
     return eventInfosReal;
   }
 
+
+  public EventInfo findEventInfoRealById (final String id) {
+    return eventInfosReal.stream().filter(eventInfo -> eventInfo.getId().equals(id)).findAny().orElse(null);
+  }
 
 
   public void setEventInfosReal(List<EventInfo> eventInfosReal) {

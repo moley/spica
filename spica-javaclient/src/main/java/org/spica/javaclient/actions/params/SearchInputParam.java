@@ -7,13 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 
 @Data
-public class SearchInputParam<T> extends AbstractInputParam {
+public class SearchInputParam<T> extends AbstractInputParam<T> {
 
     private List<T> items;
 
     private HashMap<String, T> itemsStringMap = new HashMap<String, T>();
 
-    private String selected;
+    private T selected;
 
     public SearchInputParam(final String key, final String displayname, final List<T> items, Renderer<T> renderer) {
         this.setKey(key);
@@ -31,16 +31,10 @@ public class SearchInputParam<T> extends AbstractInputParam {
         return itemsStringMap.keySet();
     }
 
-    public void setSelected (final String selected) {
-        super.setValue(itemsStringMap.get(selected));
-        this.selected = selected;
+    public void setValue(T value) {
+        this.selected = value;
+        T selected = itemsStringMap.get(value.toString().strip());
+        super.setValue(selected);
     }
 
-    public T getSelected () {
-        return itemsStringMap.get(selected);
-    }
-
-    public String getSelectedAsString () {
-        return selected;
-    }
 }

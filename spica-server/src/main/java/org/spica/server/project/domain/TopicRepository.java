@@ -12,4 +12,6 @@ public interface TopicRepository extends JpaRepository<Topic, String> {
 
 	List<Topic> findAllByCurrentUserIDAndExternalSystemID (final String userID, final String externalSystemID);
 
+	Topic findByCurrentUserIDAndExternalSystemKey (final String userID, final String externalSystemKey);
+
 }

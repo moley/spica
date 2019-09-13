@@ -24,6 +24,7 @@ public abstract class AbstractInputParam<T> implements InputParam<T>{
         return value;
     }
 
+    @Override
     public void setValue(T value) {
         this.value = value;
     }

@@ -51,6 +51,7 @@ public class JiraTopicImporter implements TopicImporter {
         HashMap<String, Topic> keyAndTopic = new HashMap<String, Topic>();
         existingTopics.forEach(topic->keyAndTopic.put(topic.getExternalSystemKey(), topic));
 
+        //TODO use JiraTopicAdapter at this point to avoid dependency to jira infrastructure at multiple locations
         JiraRestClient jiraRestClient = jiraRestClientFactory.create(URI.create(url), new BasicHttpAuthenticationHandler(user, pwd));
 
         LOGGER.info("Querying jira...");

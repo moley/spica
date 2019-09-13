@@ -1,13 +1,19 @@
 package org.spica.cli.actions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
 import org.spica.javaclient.actions.ActionContext;
+import org.spica.javaclient.actions.booking.FinishDayAction;
 import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.model.ModelCacheService;
 
 import java.io.File;
 
 public class StandaloneActionContext implements ActionContext {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(StandaloneActionContext.class);
+
 
 
     private SpicaProperties spicaProperties = new SpicaProperties();
@@ -38,10 +44,6 @@ public class StandaloneActionContext implements ActionContext {
         return spicaProperties;
     }
 
-    @Override
-    public void adaptButton(Class action, String buttontext, String icon) {
-
-    }
 
 
 }

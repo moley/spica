@@ -18,8 +18,5 @@ public interface ActionContext {
 
     SpicaProperties getSpicaProperties ();
 
-    void adaptButton(final Class action, String buttontext, String icon);
-
-
 
 }

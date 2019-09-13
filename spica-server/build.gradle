@@ -14,7 +14,6 @@ dependencies {
 
   compile 'io.jsonwebtoken:jjwt:0.9.0'
 
-  compile 'com.atlassian.jira:jira-rest-java-client-core:5.1.0'
   compile 'io.atlassian.fugue:fugue:4.7.2' //dep for java-client
 
   compile ('org.apache.directory.api:apache-ldap-api:1.0.0') {

@@ -82,14 +82,17 @@ paths:
               schema:
                 $ref: "#/components/schemas/TopicInfo"
 
-  /topics/import/{userId}:
+
+
+
+  /topics/import:
     post:
       tags:
         - topic
       operationId: "importTopics"
       description: "import topics for user from external system (currently only jira)"
       parameters:
-        - in: path
+        - in: query
           name: userId
           schema:
             type: string
@@ -118,6 +121,11 @@ paths:
         - topic
       operationId: "deleteTopic"
       parameters:
+        - in: query
+          name: userId
+          schema:
+            type: string
+          required: true
         - in: path
           name: topicId
           schema:
@@ -127,6 +135,26 @@ paths:
         '200':
           description: 'Null response'
 
+  /topics/{topicId}/finish:
+    post:
+      tags:
+        - topic
+      operationId: "finishTopic"
+      description: "finish a topic in the database and the external system"
+      parameters:
+        - in: query
+          name: userId
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: topicId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Null response'
 
 components:
   schemas:

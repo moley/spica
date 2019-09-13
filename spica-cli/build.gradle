@@ -6,6 +6,8 @@ mainClassName = 'org.spica.cli.Main'
 
 dependencies {
   compile project (':spica-javaclient')
+
+  compile 'de.codeshelf.consoleui:consoleui:0.0.9'
 }
 
 

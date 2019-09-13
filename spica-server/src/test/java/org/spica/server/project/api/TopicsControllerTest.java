@@ -7,7 +7,8 @@ import org.mockito.Mockito;
 import org.spica.SpicaServerApplication;
 import org.spica.server.project.domain.Topic;
 import org.spica.server.project.domain.TopicRepository;
-import org.spica.server.project.service.JiraTopicImporter;
+import org.spica.server.project.service.JiraTopicAdapter;
+import org.spica.server.project.service.TopicImporter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -32,7 +33,7 @@ public class TopicsControllerTest {
     protected WebApplicationContext context;
 
     @MockBean
-    private JiraTopicImporter mockedJiraTopicImporter;
+    private TopicImporter mockedJiraTopicImporter;
 
     @MockBean
     private TopicRepository mockedTopicRepository;

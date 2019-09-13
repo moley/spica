@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.server.project.service.JiraTopicImporter;
+import org.spica.server.project.service.JiraTopicAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -25,8 +25,8 @@ public class TopicRepositoryTest {
 
     @Test
     public void findAllByCurrentUserIDAndExternalSystemKey () {
-        Topic topic1 = Topic.builder().currentUserID("1").externalSystemID(JiraTopicImporter.EXTERNAL_SYSTEM_KEY_JIRA).build();
-        Topic topic2 = Topic.builder().currentUserID("2").externalSystemID(JiraTopicImporter.EXTERNAL_SYSTEM_KEY_JIRA).build();
+        Topic topic1 = Topic.builder().currentUserID("1").externalSystemID(JiraTopicAdapter.EXTERNAL_SYSTEM_KEY_JIRA).build();
+        Topic topic2 = Topic.builder().currentUserID("2").externalSystemID(JiraTopicAdapter.EXTERNAL_SYSTEM_KEY_JIRA).build();
         Topic topic3 = Topic.builder().currentUserID("3").externalSystemID("NERD").build();
 
         topicRepository.saveAll(Arrays.asList(topic1, topic2, topic3));
@@ -34,8 +34,8 @@ public class TopicRepositoryTest {
         for (Topic next: topicRepository.findAll()) {
             LOGGER.info("Found " + next.getCurrentUserID() + "-" + next.getExternalSystemKey());
         }
-        Assert.assertEquals (1, topicRepository.findAllByCurrentUserIDAndExternalSystemID("1", JiraTopicImporter.EXTERNAL_SYSTEM_KEY_JIRA).size());
-        Assert.assertEquals (1, topicRepository.findAllByCurrentUserIDAndExternalSystemID("2", JiraTopicImporter.EXTERNAL_SYSTEM_KEY_JIRA).size());
-        Assert.assertEquals (0, topicRepository.findAllByCurrentUserIDAndExternalSystemID("3", JiraTopicImporter.EXTERNAL_SYSTEM_KEY_JIRA).size());
+        Assert.assertEquals (1, topicRepository.findAllByCurrentUserIDAndExternalSystemID("1", JiraTopicAdapter.EXTERNAL_SYSTEM_KEY_JIRA).size());
+        Assert.assertEquals (1, topicRepository.findAllByCurrentUserIDAndExternalSystemID("2", JiraTopicAdapter.EXTERNAL_SYSTEM_KEY_JIRA).size());
+        Assert.assertEquals (0, topicRepository.findAllByCurrentUserIDAndExternalSystemID("3", JiraTopicAdapter.EXTERNAL_SYSTEM_KEY_JIRA).size());
     }
 }
