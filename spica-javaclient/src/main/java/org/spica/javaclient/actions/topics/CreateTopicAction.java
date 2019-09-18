@@ -13,6 +13,7 @@ import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.model.TopicInfo;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 public class CreateTopicAction implements Action {
 
@@ -46,6 +47,7 @@ public class CreateTopicAction implements Action {
 
 
         TopicInfo topicInfo = new TopicInfo();
+        topicInfo.setId(UUID.randomUUID().toString());
         topicInfo.setDescription(inputParams.getInputParamAsString(KEY_DESCRIPTION));
         topicInfo.setName(inputParams.getInputParamAsString(KEY_SUMMARY));
         ModelCache modelCache = actionContext.getModelCache();

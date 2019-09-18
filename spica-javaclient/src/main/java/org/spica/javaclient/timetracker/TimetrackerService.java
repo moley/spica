@@ -4,6 +4,8 @@ import org.spica.javaclient.model.*;
 import org.spica.javaclient.utils.DateUtil;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -66,15 +68,91 @@ public class TimetrackerService {
         if (! pauseInfo.getEventType().equals(eventType))
             throw new IllegalStateException("Your last event is not a started " + eventType.toString() + ". You cannot stop a " + pauseInfo.getEventType().toString() + " at this point");
 
-        EventInfo lastEventInfo = modelCache.getEventInfosRealToday().get(modelCache.getEventInfosRealToday().size() - 2);
+        if (modelCache.getEventInfosRealToday().size() > 1) {
+            EventInfo lastEventInfo = modelCache.getEventInfosRealToday().get(modelCache.getEventInfosRealToday().size() - 2);
+            EventInfo newStartedEvent = new EventInfo();
+            newStartedEvent.setId(UUID.randomUUID().toString());
+            newStartedEvent.setStart(LocalDateTime.now());
+            newStartedEvent.setEventType(lastEventInfo.getEventType());
+            newStartedEvent.setName(lastEventInfo.getName());
+            newStartedEvent.setReferenceId(lastEventInfo.getReferenceId());
+            modelCache.getEventInfosReal().add(newStartedEvent);
+        }
+        modelCacheService.set(modelCache);
+
+    }
+
+    public void createEvent (TimetrackerCreationParam timetrackerCreationParam) {
+        if (timetrackerCreationParam == null)
+            throw new IllegalArgumentException("Param timetrackerCreationParam must not be null");
+
+        timetrackerCreationParam.validate();
+
+        ModelCache modelCache = getModelCache();
         EventInfo newStartedEvent = new EventInfo();
         newStartedEvent.setId(UUID.randomUUID().toString());
-        newStartedEvent.setStart(LocalDateTime.now());
-        newStartedEvent.setEventType(lastEventInfo.getEventType());
-        newStartedEvent.setName(lastEventInfo.getName());
-        newStartedEvent.setReferenceId(lastEventInfo.getReferenceId());
+        newStartedEvent.setStart(timetrackerCreationParam.getFromAsLocalDateTime());
+        newStartedEvent.setStop(timetrackerCreationParam.getUntilAsLocalDateTime());
+
+        if (timetrackerCreationParam.getUntil() == null && timetrackerCreationParam.getFrom() == null)
+            throw new IllegalArgumentException("No period defined (until and from are null");
+
+        EventInfo eventInfoBefore = modelCache.findEventBefore(timetrackerCreationParam.getFromAsLocalDateTime());
+        EventInfo eventInfoAfter = modelCache.findEventAfter(timetrackerCreationParam.getFromAsLocalDateTime());
+
+
+        if (eventInfoBefore == null && eventInfoAfter != null) {
+
+            //If new event is before first event and no end time is defined then set start time of first event as end time of new event
+            if (newStartedEvent.getStop() == null)
+              newStartedEvent.setStop(eventInfoAfter.getStart());
+
+            //If new event is before first event and there is a gap between end time of new event and start time of old first event
+            if (newStartedEvent.getStop().isBefore(eventInfoAfter.getStart()))
+                throw new IllegalStateException("Gap between stop of new booking and start of old first booking. Configure no until or an until which matches start of first booking");
+        }
+
+        if (eventInfoAfter != null) {
+
+            //If new event ends after the next event starts, then adapt the next event to start when new event ends
+            if (eventInfoAfter.getStart().isBefore(newStartedEvent.getStop())) {
+                eventInfoAfter.setStart(newStartedEvent.getStop());
+            }
+        }
+
+        int numberOfHiddenElements = 0;
+        for (EventInfo next: modelCache.getEventInfosRealToday()) {
+            if (next.getStart().isAfter(newStartedEvent.getStart())) {
+                if (newStartedEvent.getStop() == null)
+                    numberOfHiddenElements++;
+                else if (next.getStop() != null && newStartedEvent.getStop().isAfter(next.getStop()))
+                    numberOfHiddenElements++;
+            }
+        }
+
+        if (numberOfHiddenElements > 0)
+            throw new IllegalStateException(numberOfHiddenElements + " existing events would be hidden by new event");
+
+        //If there is a event before then limit this to the start of the new one
+        if (eventInfoBefore != null)
+            eventInfoBefore.setStop(timetrackerCreationParam.getFromAsLocalDateTime());
+
         modelCache.getEventInfosReal().add(newStartedEvent);
-        modelCacheService.set(modelCache);
+
+        System.out.println(modelCache.getEventInfosReal());
+
+        Collections.sort(modelCache.getEventInfosReal(), new Comparator<EventInfo>() {
+            @Override
+            public int compare(EventInfo o1, EventInfo o2) {
+                LocalDateTime localDateTime1 = o1.getStart();
+                if (localDateTime1 == null)
+                    throw new IllegalStateException("No start time at event " + o1.getId());
+                LocalDateTime localDateTime2 = o2.getStart();
+                if (localDateTime2 == null)
+                    throw new IllegalStateException("No start time at event " + o2.getId());
+                return localDateTime1.compareTo(localDateTime2);
+            }
+        });
 
     }
 

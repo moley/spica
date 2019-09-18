@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -111,6 +112,26 @@ public class ModelCache {
 
   public void setEventInfosPlanned(List<EventInfo> eventInfosPlanned) {
     this.eventInfosPlanned = eventInfosPlanned;
+  }
+
+  public EventInfo findEventBefore (LocalDateTime currentDateTime) {
+    EventInfo last = null;
+    for (EventInfo next: getEventInfosRealToday()) {
+      if (next.getStart().isBefore(currentDateTime)) {
+        last = next;
+      }
+    }
+
+    return last;
+  }
+
+  public EventInfo findEventAfter (LocalDateTime currentDateTime) {
+    for (EventInfo next: getEventInfosRealToday()) {
+      if (next.getStart().isAfter(currentDateTime)) {
+        return next;
+      }
+    }
+    return null;
   }
 
   public EventInfo findLastOpenEventFromToday() {

@@ -11,6 +11,8 @@ import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.utils.DateUtil;
 
+import java.time.LocalDateTime;
+
 public class ListBookingsAction implements Action {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ListBookingsAction.class);
@@ -35,7 +37,7 @@ public class ListBookingsAction implements Action {
     @Override
     public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
 
-        System.out.println ("Bookings:\n\n");
+        System.out.println ("Bookings " + dateUtil.getDateAsString(LocalDateTime.now()) + ":\n\n");
         ModelCache modelCache = actionContext.getModelCache();
         for (EventInfo next: modelCache.getEventInfosRealToday()) {
             String startAsString = dateUtil.getTimeAsString(next.getStart());

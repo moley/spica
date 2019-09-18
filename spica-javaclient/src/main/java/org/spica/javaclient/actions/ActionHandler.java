@@ -24,6 +24,7 @@ public class ActionHandler {
         //Register actions
 
         //booking
+        registeredActions.add(new CreateBookingAction());
         registeredActions.add(new StartTopicAction());
         registeredActions.add(new StartOrStopPauseAction());
         registeredActions.add(new FinishTopicAction());

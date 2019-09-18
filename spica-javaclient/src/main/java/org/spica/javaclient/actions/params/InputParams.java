@@ -40,8 +40,13 @@ public class InputParams {
         throw new IllegalStateException("Parameter with key " + key + " not found");
     }
 
+    public boolean isAvailable (final String key) {
+        return getInputParam(key) != null;
+    }
+
     public String getInputParamAsString (final String key) {
-        return getInputParam(key).toString();
+        Object inputParam = getInputParam(key);
+        return inputParam != null ? getInputParam(key).toString() : null;
     }
 
     public boolean isEmpty () {
