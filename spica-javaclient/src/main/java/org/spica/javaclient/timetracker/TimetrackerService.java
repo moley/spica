@@ -4,10 +4,7 @@ import org.spica.javaclient.model.*;
 import org.spica.javaclient.utils.DateUtil;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class TimetrackerService {
 
@@ -82,7 +79,8 @@ public class TimetrackerService {
 
     }
 
-    public void createEvent (TimetrackerCreationParam timetrackerCreationParam) {
+    public List<String> createEvent (TimetrackerCreationParam timetrackerCreationParam) {
+        List<String> output = new ArrayList<String>();
         if (timetrackerCreationParam == null)
             throw new IllegalArgumentException("Param timetrackerCreationParam must not be null");
 
@@ -93,6 +91,17 @@ public class TimetrackerService {
         newStartedEvent.setId(UUID.randomUUID().toString());
         newStartedEvent.setStart(timetrackerCreationParam.getFromAsLocalDateTime());
         newStartedEvent.setStop(timetrackerCreationParam.getUntilAsLocalDateTime());
+        newStartedEvent.setEventType(timetrackerCreationParam.getEventType());
+
+        if (timetrackerCreationParam.getEventType().equals(EventType.MESSAGE)) {
+            newStartedEvent.setReferenceId(timetrackerCreationParam.getMessageInfo().getId());
+        }
+
+        if (timetrackerCreationParam.getEventType().equals(EventType.TOPIC)) {
+            newStartedEvent.setReferenceId(timetrackerCreationParam.getTopicInfo().getId());
+        }
+
+
 
         if (timetrackerCreationParam.getUntil() == null && timetrackerCreationParam.getFrom() == null)
             throw new IllegalArgumentException("No period defined (until and from are null");
@@ -104,8 +113,10 @@ public class TimetrackerService {
         if (eventInfoBefore == null && eventInfoAfter != null) {
 
             //If new event is before first event and no end time is defined then set start time of first event as end time of new event
-            if (newStartedEvent.getStop() == null)
-              newStartedEvent.setStop(eventInfoAfter.getStart());
+            if (newStartedEvent.getStop() == null) {
+                newStartedEvent.setStop(eventInfoAfter.getStart());
+                output.add("Limit the new booking to " + dateUtil.getDateAsString(eventInfoAfter.getStart()));
+            }
 
             //If new event is before first event and there is a gap between end time of new event and start time of old first event
             if (newStartedEvent.getStop().isBefore(eventInfoAfter.getStart()))
@@ -117,6 +128,7 @@ public class TimetrackerService {
             //If new event ends after the next event starts, then adapt the next event to start when new event ends
             if (eventInfoAfter.getStart().isBefore(newStartedEvent.getStop())) {
                 eventInfoAfter.setStart(newStartedEvent.getStop());
+                output.add("New event ends after start of first event of the day, set start of first event to " + dateUtil.getTimeAsString(newStartedEvent.getStop()));
             }
         }
 
@@ -134,12 +146,13 @@ public class TimetrackerService {
             throw new IllegalStateException(numberOfHiddenElements + " existing events would be hidden by new event");
 
         //If there is a event before then limit this to the start of the new one
-        if (eventInfoBefore != null)
+        if (eventInfoBefore != null) {
             eventInfoBefore.setStop(timetrackerCreationParam.getFromAsLocalDateTime());
+            output.add("Limit last event of the day to start of new event (" + dateUtil.getTimeAsString(eventInfoBefore.getStop()) + ")");
+        }
 
+        output.add("Create event " + newStartedEvent.getId() + " from " + dateUtil.getTimeAsString(newStartedEvent.getStart()) + " to " + dateUtil.getTimeAsString(newStartedEvent.getStop()));
         modelCache.getEventInfosReal().add(newStartedEvent);
-
-        System.out.println(modelCache.getEventInfosReal());
 
         Collections.sort(modelCache.getEventInfosReal(), new Comparator<EventInfo>() {
             @Override
@@ -153,6 +166,9 @@ public class TimetrackerService {
                 return localDateTime1.compareTo(localDateTime2);
             }
         });
+
+
+        return output;
 
     }
 

@@ -36,7 +36,7 @@ public class DateUtil {
 
         if (trimmed.length() == 4) {
             String hour = dateAsString.substring(0, 2);
-            String minute = dateAsString.substring(0, 2);
+            String minute = dateAsString.substring(2, 4);
             return LocalTime.of(Integer.valueOf(hour).intValue(), Integer.valueOf(minute).intValue());
         }
         else {

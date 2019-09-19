@@ -91,7 +91,7 @@ public class StartPhonecallAction implements Action {
     }
 
     @Override
-    public InputParams getInputParams(ActionContext actionContext) {
+    public InputParams getInputParams(ActionContext actionContext, String parameterlist) {
 
         List<UserInfo> userInfoList = actionContext.getModelCache().getUserInfos();
 

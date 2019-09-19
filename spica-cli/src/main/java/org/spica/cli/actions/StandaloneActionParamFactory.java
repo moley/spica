@@ -21,9 +21,7 @@ public class StandaloneActionParamFactory implements ActionParamFactory {
 
 
     @Override
-    public InputParams build(ActionContext actionContext, FoundAction foundAction) {
-
-        InputParams inputParams = foundAction.getAction().getInputParams(actionContext);
+    public InputParams build(ActionContext actionContext, InputParams inputParams, FoundAction foundAction) {
 
         ConsolePrompt prompt = new ConsolePrompt();
 

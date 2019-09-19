@@ -68,7 +68,7 @@ public class CreateTopicAction implements Action {
     }
 
     @Override
-    public InputParams getInputParams(ActionContext actionContext) {
+    public InputParams getInputParams(ActionContext actionContext, String paramList) {
 
         TextInputParam summary = new TextInputParam(1, KEY_SUMMARY, "Summary", "");
         TextInputParam description = new TextInputParam(5, KEY_DESCRIPTION, "Description", "");

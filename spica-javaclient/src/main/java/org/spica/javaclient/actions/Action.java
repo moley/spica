@@ -29,7 +29,7 @@ public interface Action {
 
     Command getCommand ();
 
-    default InputParams getInputParams(ActionContext actionContext) {
+    default InputParams getInputParams(ActionContext actionContext, String parameterList) {
         LOGGER.info("default getInputParams implementation");
         return new InputParams();
     }

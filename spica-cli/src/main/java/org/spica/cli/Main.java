@@ -70,11 +70,11 @@ public class Main {
 
             action.beforeParam(actionContext, foundAction.getParameter());
 
-            InputParams inputParams = action.getInputParams(actionContext);
+            InputParams inputParams = action.getInputParams(actionContext, foundAction.getParameter());
 
             if (! inputParams.isEmpty()) {
                 StandaloneActionParamFactory actionParamFactory = new StandaloneActionParamFactory();
-                inputParams = actionParamFactory.build(actionContext, foundAction);
+                inputParams = actionParamFactory.build(actionContext, inputParams, foundAction);
             }
 
             action.execute(new StandaloneActionContext(), inputParams,foundAction.getParameter());

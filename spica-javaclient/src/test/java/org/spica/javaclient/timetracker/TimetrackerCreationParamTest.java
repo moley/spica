@@ -2,6 +2,7 @@ package org.spica.javaclient.timetracker;
 
 import org.junit.Test;
 import org.spica.javaclient.model.EventType;
+import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.TopicInfo;
 
 import java.time.LocalDate;
@@ -58,7 +59,7 @@ public class TimetrackerCreationParamTest {
         timetrackerCreationParam.setFrom(LocalTime.now());
         timetrackerCreationParam.setEventType(EventType.TOPIC);
         timetrackerCreationParam.setTopicInfo(new TopicInfo());
-        timetrackerCreationParam.setMessageText("Bla");
+        timetrackerCreationParam.setMessageInfo(new MessageInfo());
         timetrackerCreationParam.validate();
     }
 
@@ -87,7 +88,7 @@ public class TimetrackerCreationParamTest {
         TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
         timetrackerCreationParam.setDate(LocalDate.now());
         timetrackerCreationParam.setFrom(LocalTime.now());
-        timetrackerCreationParam.setMessageText("Bla");
+        timetrackerCreationParam.setMessageInfo(new MessageInfo());
         timetrackerCreationParam.setEventType(EventType.MESSAGE);
         timetrackerCreationParam.validate();
     }

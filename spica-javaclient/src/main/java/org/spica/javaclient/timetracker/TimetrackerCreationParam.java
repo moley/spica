@@ -1,6 +1,7 @@
 package org.spica.javaclient.timetracker;
 
 import org.spica.javaclient.model.EventType;
+import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.TopicInfo;
 
 import java.time.LocalDate;
@@ -19,7 +20,8 @@ public class TimetrackerCreationParam {
 
     private TopicInfo topicInfo;
 
-    private String messageText;
+
+    private MessageInfo messageInfo;
 
     public LocalTime getFrom() {
         return from;
@@ -53,14 +55,6 @@ public class TimetrackerCreationParam {
         this.topicInfo = topicInfo;
     }
 
-    public String getMessageText() {
-        return messageText;
-    }
-
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
-    }
-
     public LocalDate getDate() {
         return date;
     }
@@ -82,14 +76,15 @@ public class TimetrackerCreationParam {
         if (topicInfo != null && ! eventType.equals(EventType.TOPIC))
             throw new IllegalArgumentException("Topicinfo must not be set on event type " + eventType.getValue());
 
-        if (messageText != null && ! eventType.equals(EventType.MESSAGE))
-            throw new IllegalArgumentException("Message must not be set on event type " + eventType.getValue());
+        if (messageInfo != null && ! eventType.equals(EventType.MESSAGE))
+            throw new IllegalArgumentException("MessageInfo must not be set on event type " + eventType.getValue());
+
 
         if (topicInfo == null && eventType.equals(EventType.TOPIC))
-            throw new IllegalArgumentException("Topicinfo must be set on event type " + eventType.getValue());
+            throw new IllegalArgumentException("TopicInfo must be set on event type " + eventType.getValue());
 
-        if (messageText == null && eventType.equals(EventType.MESSAGE))
-            throw new IllegalArgumentException("Message must be set on event type " + eventType.getValue());
+        if (messageInfo == null && eventType.equals(EventType.MESSAGE))
+            throw new IllegalArgumentException("MessageInfo must be set on event type " + eventType.getValue());
     }
 
     public LocalDateTime getFromAsLocalDateTime () {
@@ -99,4 +94,13 @@ public class TimetrackerCreationParam {
     public LocalDateTime getUntilAsLocalDateTime () {
         return until != null ? LocalDateTime.of(date, until): null;
     }
+
+    public void setMessageInfo(MessageInfo messageInfo) {
+        this.messageInfo = messageInfo;
+    }
+
+    public MessageInfo getMessageInfo() {
+        return messageInfo;
+    }
+
 }
