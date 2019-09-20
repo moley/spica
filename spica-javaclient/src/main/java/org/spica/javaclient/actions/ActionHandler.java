@@ -3,6 +3,9 @@ package org.spica.javaclient.actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.booking.*;
+import org.spica.javaclient.actions.links.CreateLinkAction;
+import org.spica.javaclient.actions.links.GotoLinkAction;
+import org.spica.javaclient.actions.links.ListLinksAction;
 import org.spica.javaclient.actions.navigation.GotoGoogleAction;
 import org.spica.javaclient.actions.navigation.GotoJiraAction;
 import org.spica.javaclient.actions.navigation.GotoStashAction;
@@ -50,6 +53,11 @@ public class ActionHandler {
         registeredActions.add(new ShowProjectsAction());
         registeredActions.add(new RemoveProjectAction());
         registeredActions.add(new EmptyProjectsAction());
+
+        //lists
+        registeredActions.add(new CreateLinkAction());
+        registeredActions.add(new ListLinksAction());
+        registeredActions.add(new GotoLinkAction());
 
         //navigation
         registeredActions.add(new GotoStashAction());

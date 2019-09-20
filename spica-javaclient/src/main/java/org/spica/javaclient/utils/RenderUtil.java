@@ -10,6 +10,9 @@ public class RenderUtil {
     }
 
     public String getTopic (final TopicInfo topicInfo) {
+        if (topicInfo == null)
+            return "";
+
         String asString = "";
         if (topicInfo.getExternalSystemKey() != null)
             asString = topicInfo.getExternalSystemKey() + " - ";

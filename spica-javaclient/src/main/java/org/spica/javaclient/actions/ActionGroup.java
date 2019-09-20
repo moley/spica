@@ -5,7 +5,8 @@ public enum ActionGroup {
     TOPIC("t"),
     PROJECT("p"),
     GOTO ("g"),
-    BOOKING("b");
+    BOOKING("b"),
+    LINKS("l");
 
     private String shortkey;
 

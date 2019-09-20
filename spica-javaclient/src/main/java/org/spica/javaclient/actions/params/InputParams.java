@@ -37,7 +37,11 @@ public class InputParams {
             }
         }
 
-        throw new IllegalStateException("Parameter with key " + key + " not found");
+        return null;
+    }
+
+    public <T> T getInputParam (final String key, final Class<T> type) {
+        return type.cast(getInputParam(key));
     }
 
     public boolean isAvailable (final String key) {

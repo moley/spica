@@ -30,6 +30,8 @@ public class ModelCache {
 
   private List<MessagecontainerInfo> messagecontainerInfos = new ArrayList<MessagecontainerInfo>();
 
+  private List<LinkInfo> linkInfos = new ArrayList<LinkInfo>();
+
   private List<EventInfo> eventInfosReal = new ArrayList<>();
 
   private List<EventInfo> eventInfosPlanned = new ArrayList<>();
@@ -79,6 +81,20 @@ public class ModelCache {
       }
     };
     return projectInfos.stream().filter( filter).collect(Collectors.toList());
+
+  }
+
+  public List<LinkInfo> findLinkInfosByQuery (String query) {
+    Predicate<LinkInfo> filter = new Predicate<LinkInfo>() {
+      @Override
+      public boolean test(LinkInfo topicInfo) {
+        String nameNotNull = topicInfo.getName() != null ? topicInfo.getName(): "";
+        String idNotNull = topicInfo.getId() != null ? topicInfo.getId(): "";
+        String urlNotNull = topicInfo.getUrl() != null ? topicInfo.getUrl() : "";
+        return nameNotNull.contains(query) || idNotNull.equals(query) || urlNotNull.contains(query);
+      }
+    };
+    return linkInfos.stream().filter( filter).collect(Collectors.toList());
 
   }
 
@@ -147,6 +163,15 @@ public class ModelCache {
     return null;
   }
 
+  public TopicInfo getCurrentTopic () {
+    EventInfo eventInfo = findLastOpenEventFromToday();
+    TopicInfo currentTopic = null;
+    if (eventInfo != null && eventInfo.getEventType().equals(EventType.TOPIC)) {
+      return findTopicInfoById(eventInfo.getReferenceId());
+    }
+    return null;
+  }
+
   public EventInfo findLastOpenEventFromToday() {
     EventInfo last = null;
     for (EventInfo next: getEventInfosRealToday()) {
@@ -184,5 +209,13 @@ public class ModelCache {
 
   public void setMessagecontainerInfos(List<MessagecontainerInfo> messagecontainerInfos) {
     this.messagecontainerInfos = messagecontainerInfos;
+  }
+
+  public List<LinkInfo> getLinkInfos() {
+    return linkInfos;
+  }
+
+  public void setLinkInfos(List<LinkInfo> linkInfos) {
+    this.linkInfos = linkInfos;
   }
 }

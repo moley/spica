@@ -1,0 +1,51 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: "spica rest times component"
+  description: "Rest API for the links component of spica communication server"
+servers:
+  - url: http://localhost/api
+
+paths:
+  /links/list:
+    get:
+      tags:
+        - links
+      operationId: "getLinks"
+      description: "get all links"
+      responses:
+        '200':
+          description: 'links'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LinkInfo"
+
+
+
+components:
+  schemas:
+    LinkInfo:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        url:
+          type: "string"
+        id:
+          type: "string"
+        type:
+          $ref: "#/components/schemas/LinkType"
+        reference:
+          type: "string"
+
+
+    LinkType:
+      type: string
+      enum:
+        - topic
+        - project
+        - path
+        - general

@@ -12,6 +12,7 @@ import org.spica.javaclient.model.*;
 import org.spica.javaclient.timetracker.TimetrackerCreationParam;
 import org.spica.javaclient.timetracker.TimetrackerService;
 import org.spica.javaclient.utils.DateUtil;
+import org.spica.javaclient.utils.RenderUtil;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -52,7 +53,7 @@ public class CreateBookingAction implements Action {
         LocalTime untilTime = inputParams.isAvailable(KEY_UNTIL) ? dateUtil.getTime(inputParams.getInputParamAsString(KEY_UNTIL)): null;
 
         EventType eventType = EventType.fromValue(inputParams.getInputParamAsString(KEY_TYPE));
-        UserInfo userInfo = (UserInfo) inputParams.getInputParam(KEY_FOREIGN_USER);
+        UserInfo userInfo = inputParams.getInputParam(KEY_FOREIGN_USER, UserInfo.class);
         String text = inputParams.getInputParamAsString(KEY_TEXT);
 
         TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
@@ -60,7 +61,7 @@ public class CreateBookingAction implements Action {
         timetrackerCreationParam.setUntil(untilTime);
         timetrackerCreationParam.setDate(LocalDate.now());
         timetrackerCreationParam.setEventType(EventType.fromValue(inputParams.getInputParamAsString(KEY_TYPE)));
-        timetrackerCreationParam.setTopicInfo((TopicInfo) inputParams.getInputParam(KEY_TOPIC));
+        timetrackerCreationParam.setTopicInfo(inputParams.getInputParam(KEY_TOPIC, TopicInfo.class));
         TimetrackerService timetrackerService = new TimetrackerService();
         timetrackerService.setModelCacheService(actionContext.getModelCacheService());
 
@@ -117,16 +118,11 @@ public class CreateBookingAction implements Action {
 
         //Topic parameters
         List<TopicInfo> topicInfos = actionContext.getModelCache().getTopicInfos();
+        RenderUtil renderUtil = new RenderUtil();
         SearchInputParam<TopicInfo> topicSearch = new SearchInputParam<TopicInfo>(KEY_TOPIC, "Topic: ", topicInfos, new Renderer<TopicInfo>() {
             @Override
             public String toString(TopicInfo topicInfo) {
-
-                String topicSearch = "";
-                if (topicInfo.getExternalSystemKey() != null)
-                    topicSearch += topicInfo.getExternalSystemKey() + " ";
-
-                topicSearch += topicInfo.getName();
-                return topicSearch;
+                return renderUtil.getTopic(topicInfo);
             }
         });
         InputParamGroup inputParamGroupTopic = new InputParamGroup("Topic", inputParams -> inputParams.getInputParamAsString(KEY_TYPE).equalsIgnoreCase(EventType.TOPIC.getValue()));
