@@ -1,4 +1,4 @@
-package org.spica.javaclient.actions.topics;
+package org.spica.javaclient.actions.projects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,41 +10,43 @@ import org.spica.javaclient.actions.params.InputParamGroup;
 import org.spica.javaclient.actions.params.InputParams;
 import org.spica.javaclient.actions.params.TextInputParam;
 import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.model.ProjectInfo;
 import org.spica.javaclient.model.TopicInfo;
 import org.spica.javaclient.utils.LogUtil;
 
 import java.util.Arrays;
 import java.util.UUID;
 
-public class CreateTopicAction implements Action {
+public class CreateProjectAction implements Action {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(CreateTopicAction.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(CreateProjectAction.class);
 
-    public final static String KEY_SUMMARY = "summary";
-    public final static String KEY_DESCRIPTION = "description";
+    public final static String KEY_NAME = "name";
+
 
     @Override
     public String getDisplayname() {
-        return "Create topic";
+        return "Create project";
     }
 
     @Override
     public String getDescription() {
-        return "Creates a topic (parameter is topic subject)";
+        return "Creates a project (parameter is projectname)";
     }
 
     @Override
     public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
 
+        boolean parameterListAvailable = parameterList != null && ! parameterList.trim().isBlank();
+        String name = parameterListAvailable ? parameterList.trim() : inputParams.getInputParamAsString(KEY_NAME);
 
-        TopicInfo topicInfo = new TopicInfo();
-        topicInfo.setId(UUID.randomUUID().toString());
-        topicInfo.setDescription(inputParams.getInputParamAsString(KEY_DESCRIPTION));
-        topicInfo.setName(inputParams.getInputParamAsString(KEY_SUMMARY));
+        ProjectInfo projectInfo = new ProjectInfo();
+        projectInfo.setId(UUID.randomUUID().toString());
+        projectInfo.setName(name);
         ModelCache modelCache = actionContext.getModelCache();
-        modelCache.getTopicInfos().add(topicInfo);
+        modelCache.getProjectInfos().add(projectInfo);
 
-        outputOk("Created topic " + topicInfo.getName() + "(" + topicInfo.getId() + ")");
+        outputOk("Created project " + projectInfo.getName() + "(" + projectInfo.getId() + ")");
 
         actionContext.saveModelCache();
     }
@@ -52,7 +54,7 @@ public class CreateTopicAction implements Action {
 
     @Override
     public ActionGroup getGroup() {
-        return ActionGroup.TOPIC;
+        return ActionGroup.PROJECT;
     }
 
     @Override
@@ -63,13 +65,16 @@ public class CreateTopicAction implements Action {
     @Override
     public InputParams getInputParams(ActionContext actionContext, String paramList) {
 
-        TextInputParam summary = new TextInputParam(1, KEY_SUMMARY, "Summary", "");
-        TextInputParam description = new TextInputParam(5, KEY_DESCRIPTION, "Description", "");
 
         InputParamGroup inputParamGroup = new InputParamGroup();
-        inputParamGroup.getInputParams().add(summary);
-        inputParamGroup.getInputParams().add(description);
+        InputParams inputParams = new InputParams(Arrays.asList(inputParamGroup));
 
-        return new InputParams(Arrays.asList(inputParamGroup));
+        if (paramList.trim().isBlank()) {
+            TextInputParam name = new TextInputParam(1, KEY_NAME, "Name", "");
+            inputParamGroup.getInputParams().add(name);
+        }
+
+        return inputParams;
+
     }
 }

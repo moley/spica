@@ -12,15 +12,11 @@ import org.spica.javaclient.actions.params.InputParams;
 import org.spica.javaclient.api.TopicApi;
 import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.model.TopicContainerInfo;
+import org.spica.javaclient.utils.LogUtil;
 
 public class ImportTopicAction implements Action {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ImportTopicAction.class);
-
-    @Override
-    public boolean fromButton() {
-        return false;
-    }
 
     @Override
     public String getDisplayname() {
@@ -45,7 +41,7 @@ public class ImportTopicAction implements Action {
         try {
             TopicContainerInfo topicContainerInfo = topicApi.importTopics(jiraUser, jiraUser, jiraPassword);
             modelCache.setTopicInfos(topicContainerInfo.getTopics());
-            LOGGER.info("Imported " + topicContainerInfo.getTopics().size() + " topics");
+            outputOk("Imported " + topicContainerInfo.getTopics().size() + " topics");
         } catch (ApiException e) {
             LOGGER.error("Error importing jira topics: " + e.getResponseBody(), e);
         }

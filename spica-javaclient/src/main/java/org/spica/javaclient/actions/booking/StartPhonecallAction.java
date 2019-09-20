@@ -9,6 +9,7 @@ import org.spica.javaclient.actions.Command;
 import org.spica.javaclient.actions.params.*;
 import org.spica.javaclient.model.*;
 import org.spica.javaclient.timetracker.TimetrackerService;
+import org.spica.javaclient.utils.RenderUtil;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -19,19 +20,13 @@ public class StartPhonecallAction implements Action {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(StartPhonecallAction.class);
 
+    private RenderUtil renderUtil = new RenderUtil();
+
     public final static String KEY_FOREIGN_USER = "foreignUser";
     public final static String KEY_MESSAGE = "description";
 
 
-    @Override
-    public String getIcon() {
-        return "fa-PHONE";
-    }
 
-    @Override
-    public boolean fromButton() {
-        return true;
-    }
 
     @Override
     public String getDisplayname() {
@@ -43,7 +38,8 @@ public class StartPhonecallAction implements Action {
         return "Starts a phone call";
     }
 
-    public void beforeParam (ActionContext actionContext, String parameterList) {
+
+    public void beforeParam(ActionContext actionContext, String parameterList) {
         TimetrackerService timetrackerService = new TimetrackerService();
         timetrackerService.setModelCacheService(actionContext.getModelCacheService());
         timetrackerService.startTelephoneCall();
@@ -57,8 +53,6 @@ public class StartPhonecallAction implements Action {
 
         UserInfo selectedUser = (UserInfo) inputParams.getInputParam(KEY_FOREIGN_USER);
         String message = inputParams.getInputParamAsString(KEY_MESSAGE);
-
-        System.out.println ("Save phonecall with " + selectedUser.getFirstname() + " " + selectedUser.getName() + " with message " + message);
 
         MessageInfo messageInfo = new MessageInfo();
         messageInfo.setCreator(selectedUser.getId());
@@ -76,7 +70,7 @@ public class StartPhonecallAction implements Action {
         timetrackerService.finishTelephoneCall(messageInfo, selectedUser);
 
         actionContext.saveModelCache();
-        LOGGER.info("Start phonecall with parameter " + inputParams);
+        outputOk("Saved phonecall with " + renderUtil.getUser(selectedUser) + " with message " + message);
 
     }
 
@@ -102,7 +96,7 @@ public class StartPhonecallAction implements Action {
             }
         });
 
-        TextInputParam description = new TextInputParam (5, KEY_MESSAGE, "Description", "");
+        TextInputParam description = new TextInputParam(5, KEY_MESSAGE, "Description", "");
 
         InputParamGroup inputParamGroup = new InputParamGroup();
         inputParamGroup.getInputParams().add(userInfoSearchInputParam);

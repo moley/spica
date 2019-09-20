@@ -20,18 +20,6 @@ public class FinishTopicAction implements Action {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(FinishTopicAction.class);
 
-    public final static String KEY_SUMMARY = "summary";
-    public final static String KEY_DESCRIPTION = "description";
-
-    @Override
-    public String getIcon() {
-        return "fa-COCKTAIL";
-    }
-
-    @Override
-    public boolean fromButton() {
-        return true;
-    }
 
     @Override
     public String getDisplayname() {
@@ -71,6 +59,8 @@ public class FinishTopicAction implements Action {
             TimetrackerService timetrackerService = new TimetrackerService();
             timetrackerService.setModelCacheService(actionContext.getModelCacheService());
             timetrackerService.finishEvent(eventInfo);
+
+            outputDefault("Finished topic " + eventInfo.getName());
 
             actionContext.saveModelCache();
 

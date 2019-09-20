@@ -95,10 +95,12 @@ public class TimetrackerService {
 
         if (timetrackerCreationParam.getEventType().equals(EventType.MESSAGE)) {
             newStartedEvent.setReferenceId(timetrackerCreationParam.getMessageInfo().getId());
+            newStartedEvent.setName("Telephone call"); //TODO With
         }
 
         if (timetrackerCreationParam.getEventType().equals(EventType.TOPIC)) {
             newStartedEvent.setReferenceId(timetrackerCreationParam.getTopicInfo().getId());
+            newStartedEvent.setName(timetrackerCreationParam.getTopicInfo().getName());
         }
 
 

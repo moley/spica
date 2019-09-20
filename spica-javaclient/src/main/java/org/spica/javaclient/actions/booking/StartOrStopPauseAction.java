@@ -14,15 +14,6 @@ public class StartOrStopPauseAction implements Action {
     private final static Logger LOGGER = LoggerFactory.getLogger(StartOrStopPauseAction.class);
 
 
-    @Override
-    public String getIcon() {
-        return "fa-PAUSE";
-    }
-
-    @Override
-    public boolean fromButton() {
-        return true;
-    }
 
     @Override
     public String getDisplayname() {
@@ -39,7 +30,8 @@ public class StartOrStopPauseAction implements Action {
         LOGGER.info("Start or stop pause called with parameter " + parameterlist);
         TimetrackerService timetrackerService = new TimetrackerService();
         timetrackerService.setModelCacheService(actionContext.getModelCacheService());
-        System.out.println (timetrackerService.togglePause());
+
+        outputOk(timetrackerService.togglePause());
 
         actionContext.saveModelCache();
     }

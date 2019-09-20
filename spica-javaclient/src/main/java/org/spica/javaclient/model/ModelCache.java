@@ -69,6 +69,19 @@ public class ModelCache {
     return topicInfos.stream().filter( filter).collect(Collectors.toList());
   }
 
+  public List<ProjectInfo> findProjectInfosByQuery (String query) {
+    Predicate<ProjectInfo> filter = new Predicate<ProjectInfo>() {
+      @Override
+      public boolean test(ProjectInfo topicInfo) {
+        String nameNotNull = topicInfo.getName() != null ? topicInfo.getName(): "";
+        String idNotNull = topicInfo.getId() != null ? topicInfo.getId(): "";
+        return nameNotNull.contains(query) || idNotNull.equals(query);
+      }
+    };
+    return projectInfos.stream().filter( filter).collect(Collectors.toList());
+
+  }
+
   public TopicInfo findTopicInfoById (final String id) {
     return topicInfos.stream().filter(topicInfo -> topicInfo.getId().equals(id)).findAny().orElse(null);
   }

@@ -6,7 +6,9 @@ import org.spica.javaclient.actions.booking.*;
 import org.spica.javaclient.actions.navigation.GotoGoogleAction;
 import org.spica.javaclient.actions.navigation.GotoJiraAction;
 import org.spica.javaclient.actions.navigation.GotoStashAction;
+import org.spica.javaclient.actions.projects.*;
 import org.spica.javaclient.actions.topics.*;
+import org.spica.javaclient.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,13 +36,20 @@ public class ActionHandler {
         registeredActions.add(new RemoveBookingAction());
         registeredActions.add(new EmptyBookingsAction());
 
-            //topics
+        //topics
         registeredActions.add(new CreateTopicAction());
         registeredActions.add(new ListTopicsAction());
         registeredActions.add(new ShowTopicsAction());
         registeredActions.add(new ImportTopicAction());
         registeredActions.add(new RemoveTopicAction());
         registeredActions.add(new EmptyTopicsAction());
+
+        //projects
+        registeredActions.add(new CreateProjectAction());
+        registeredActions.add(new ListProjectsAction());
+        registeredActions.add(new ShowProjectsAction());
+        registeredActions.add(new RemoveProjectAction());
+        registeredActions.add(new EmptyProjectsAction());
 
         //navigation
         registeredActions.add(new GotoStashAction());
@@ -102,7 +111,7 @@ public class ActionHandler {
 
         for (Action next: registeredActions) {
             if (lastGroup.strip().isBlank() || ! lastGroup.equals(next.getGroup().name())) {
-                commands.add("\n  " + next.getGroup().name());
+                commands.add("\n  " + LogUtil.green(next.getGroup().name()));
             }
             lastGroup = next.getGroup().name();
 

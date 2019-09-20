@@ -9,10 +9,14 @@ import org.spica.javaclient.actions.Action;
 import org.spica.javaclient.actions.ActionHandler;
 import org.spica.javaclient.actions.FoundAction;
 import org.spica.javaclient.actions.params.InputParams;
+import org.spica.javaclient.event.EventDetails;
+import org.spica.javaclient.event.EventDetailsBuilder;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.model.TopicInfo;
 import org.spica.javaclient.utils.DateUtil;
+import org.spica.javaclient.utils.LogUtil;
+import org.spica.javaclient.utils.RenderUtil;
 
 public class Main {
 
@@ -28,33 +32,44 @@ public class Main {
 
         Configuration.getDefaultApiClient().setBasePath("http://localhost:8765/api"); //TODO make nice
 
-        System.out.println ("SPICA-CLI \n\n");
-
         StandaloneActionContext actionContext = new StandaloneActionContext();
 
+        System.out.println();
+
+        EventInfo firstTaskOfDay = ! actionContext.getModelCache().getEventInfosRealToday().isEmpty() ? actionContext.getModelCache().getEventInfosRealToday().get(0):null;
+
+        EventDetailsBuilder eventDetailsBuilder = new EventDetailsBuilder();
+        eventDetailsBuilder.setModelCache(actionContext.getModelCache());
+        EventDetails eventDetails = eventDetailsBuilder.getDurationDetails();
+
+
         EventInfo eventInfo = actionContext.getModelCache().findLastOpenEventFromToday();
-        String workingOn = "";
+
+        String task = LogUtil.cyan("No current task found for today");
+        String since = "";
         if (eventInfo != null) {
             if (eventInfo.getEventType().equals(EventType.PAUSE)) {
-                workingOn = "Pause";
+                task = "Pause";
             }
             else if (eventInfo.getEventType().equals(EventType.TOPIC)) {
                 TopicInfo topicInfoById = actionContext.getModelCache().findTopicInfoById(eventInfo.getReferenceId());
-                workingOn = "Working on topic " + topicInfoById.getExternalSystemKey() + "-" + topicInfoById.getName() + "(" + topicInfoById.getId() + ")";
+                RenderUtil renderUtil = new RenderUtil();
+                task = "Topic " + renderUtil.getTopic(topicInfoById);
             } else {
-                workingOn = eventInfo.getEventType().getValue();
+                task = eventInfo.getEventType().getValue();
             }
 
-            System.out.println (workingOn + " ( since " + dateUtil.getTimeAsString(eventInfo.getStart()) + " )");
+            since = " ( since " + dateUtil.getTimeAsString(eventInfo.getStart()) + " )";
         }
-        else
-            System.out.println ("No current task found for today");
 
-        System.out.println ("\n\n\n");
+        System.out.println ("Working since:        " + LogUtil.cyan(firstTaskOfDay != null ? dateUtil.getTimeAsString(firstTaskOfDay.getStart()) : ""));
+        System.out.println ("Cumulated work time:  " + LogUtil.cyan(dateUtil.getDuration(eventDetails.getDurationWork())));
+        System.out.println ("Cumulated pause time: " + LogUtil.cyan(dateUtil.getDuration(eventDetails.getDurationPause())));
+        System.out.println ("Current task:         " + LogUtil.cyan(task)  + since + "\n\n\n");
 
         ActionHandler actionHandler = new ActionHandler();
         if (args.length == 0) {
-            System.out.println("\n\nActions:");
+            System.out.println(LogUtil.gray("\n\nActions:"));
             for (String next: actionHandler.getHelp()) {
                 System.out.println (next);
             }

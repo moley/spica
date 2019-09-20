@@ -4,20 +4,12 @@ package org.spica.javaclient.actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.params.InputParams;
-
+import org.spica.javaclient.utils.LogUtil;
 
 
 public interface Action {
 
     final static Logger LOGGER = LoggerFactory.getLogger(Action.class);
-
-
-
-    default String getIcon () {
-        return null;
-    }
-
-    boolean fromButton ();
 
     String getDisplayname ();
 
@@ -36,5 +28,17 @@ public interface Action {
 
     default void beforeParam (ActionContext actionContext, String parameterList) {
         LOGGER.info("default beforeParam implementation");
+    }
+
+    default void outputOk (final String message) {
+        System.out.println (LogUtil.green(message));
+    }
+
+    default void outputDefault (final String message) {
+        System.out.println (LogUtil.green(message));
+    }
+
+    default void outputError (final String message) {
+        System.out.println (LogUtil.red(message));
     }
 }

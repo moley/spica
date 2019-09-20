@@ -34,15 +34,6 @@ public class CreateBookingAction implements Action {
 
     private DateUtil dateUtil = new DateUtil();
 
-    @Override
-    public String getIcon() {
-        return "fa-CLIPBOARD";
-    }
-
-    @Override
-    public boolean fromButton() {
-        return true;
-    }
 
     @Override
     public String getDisplayname() {
@@ -90,7 +81,7 @@ public class CreateBookingAction implements Action {
         }
 
         List<String> output = timetrackerService.createEvent(timetrackerCreationParam);
-        System.out.println (String.join("\n", output));
+        outputDefault(String.join("\n", output));
 
         actionContext.saveModelCache();
     }

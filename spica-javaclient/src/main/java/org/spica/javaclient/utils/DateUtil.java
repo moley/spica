@@ -1,5 +1,6 @@
 package org.spica.javaclient.utils;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Period;
@@ -44,5 +45,11 @@ public class DateUtil {
             return LocalTime.from(formatter.parse(trimmed));
         }
 
+    }
+
+    public String getDuration(Duration duration) {
+        long seconds = duration.getSeconds();
+        long absSeconds = Math.abs(seconds);
+        return String.format("%02d:%02d h", absSeconds / 3600, (absSeconds % 3600) / 60);
     }
 }

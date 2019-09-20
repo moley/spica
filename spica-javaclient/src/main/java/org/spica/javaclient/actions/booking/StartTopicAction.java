@@ -13,6 +13,7 @@ import org.spica.javaclient.actions.params.SearchInputParam;
 import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.model.TopicInfo;
 import org.spica.javaclient.timetracker.TimetrackerService;
+import org.spica.javaclient.utils.RenderUtil;
 
 import java.util.List;
 
@@ -20,17 +21,9 @@ public class StartTopicAction implements Action {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(StartTopicAction.class);
 
+    private RenderUtil renderUtil = new RenderUtil();
+
     public final static String KEY_TOPIC = "topic";
-
-    @Override
-    public String getIcon() {
-        return "fa-PHONE"; //TODO
-    }
-
-    @Override
-    public boolean fromButton() {
-        return false; //TODO
-    }
 
     @Override
     public String getDisplayname() {
@@ -54,7 +47,9 @@ public class StartTopicAction implements Action {
         timetrackerService.startWorkOnTopic(selectedTopicInfo);
         actionContext.saveModelCache();
 
-        System.out.println("Start work on topic " + selectedTopicInfo.getExternalSystemKey() + "-" + selectedTopicInfo.getName());
+
+
+        outputOk("Start work on topic " + renderUtil.getTopic(selectedTopicInfo));
     }
 
     @Override

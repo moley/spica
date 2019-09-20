@@ -18,11 +18,6 @@ public class RemoveBookingAction implements Action {
     private DateUtil dateUtil = new DateUtil();
 
     @Override
-    public boolean fromButton() {
-        return false;
-    }
-
-    @Override
     public String getDisplayname() {
         return "Remove booking";
     }
@@ -38,7 +33,6 @@ public class RemoveBookingAction implements Action {
         if (parameterList.strip().isBlank())
             throw new IllegalStateException("You have to add an id to your command");
 
-        System.out.println ("Remove bookings with id " + parameterList);
         ModelCache modelCache = actionContext.getModelCache();
 
         EventInfo eventInfoRealById = modelCache.findEventInfoRealById(parameterList);
@@ -46,6 +40,9 @@ public class RemoveBookingAction implements Action {
             throw new IllegalStateException("No event with id " + parameterList + " found");
 
         modelCache.getEventInfosReal().remove(eventInfoRealById);
+
+        outputOk("Removed booking with id " + eventInfoRealById);
+
         actionContext.saveModelCache();
 
     }

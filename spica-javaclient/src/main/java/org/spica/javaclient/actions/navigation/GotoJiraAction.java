@@ -23,11 +23,6 @@ public class GotoJiraAction implements Action {
     private final static Logger LOGGER = LoggerFactory.getLogger(GotoJiraAction.class);
 
     @Override
-    public boolean fromButton() {
-        return false;
-    }
-
-    @Override
     public String getDisplayname() {
         return "Goto current topic in Jira";
     }

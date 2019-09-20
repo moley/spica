@@ -76,5 +76,18 @@ allprojects {
   })
 }
 
+subprojects {
+  ((Project)it).pluginManager.withPlugin("java", {
+    test {
+      testLogging {
+        events "skipped", "failed"
+        exceptionFormat 'full'
+        showStackTraces = 'true'
+      }
+    }
+  })
+
+}
+
 println "Java-Version " + System.properties.get("java.home")
 

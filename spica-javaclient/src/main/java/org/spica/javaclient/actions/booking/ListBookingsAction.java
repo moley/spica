@@ -20,11 +20,6 @@ public class ListBookingsAction implements Action {
     private DateUtil dateUtil = new DateUtil();
 
     @Override
-    public boolean fromButton() {
-        return false;
-    }
-
-    @Override
     public String getDisplayname() {
         return "List bookings";
     }
@@ -37,14 +32,14 @@ public class ListBookingsAction implements Action {
     @Override
     public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
 
-        System.out.println ("Bookings " + dateUtil.getDateAsString(LocalDateTime.now()) + ":\n\n");
+        outputDefault("Bookings of " + dateUtil.getDateAsString(LocalDateTime.now()) + ":\n\n");
         ModelCache modelCache = actionContext.getModelCache();
         for (EventInfo next: modelCache.getEventInfosRealToday()) {
             String startAsString = dateUtil.getTimeAsString(next.getStart());
             String stopAsString = dateUtil.getTimeAsString(next.getStop());
             String nameNotNull = next.getName() != null ? next.getName() : "";
             String eventToken = String.format("     %-10s%-10s %-10s %-90s (%s)", startAsString, stopAsString, next.getEventType().name(), nameNotNull, next.getId());
-            System.out.println (eventToken);
+            outputDefault(eventToken);
         }
     }
 

@@ -18,13 +18,6 @@ public class EmptyBookingsAction implements Action {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(EmptyBookingsAction.class);
 
-    private DateUtil dateUtil = new DateUtil();
-
-    @Override
-    public boolean fromButton() {
-        return false;
-    }
-
     @Override
     public String getDisplayname() {
         return "Empty bookings";
@@ -43,7 +36,7 @@ public class EmptyBookingsAction implements Action {
         List<EventInfo> eventInfosRealToday = modelCache.getEventInfosRealToday();
         modelCache.getEventInfosReal().removeAll(eventInfosRealToday);
 
-        System.out.println ("Removed all events from today (" + eventInfosRealToday.size() + ")");
+        outputOk("Removed all events from today (" + eventInfosRealToday.size() + ")");
 
         actionContext.saveModelCache();
 

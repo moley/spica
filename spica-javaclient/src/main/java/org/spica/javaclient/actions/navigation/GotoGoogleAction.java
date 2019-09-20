@@ -22,11 +22,6 @@ public class GotoGoogleAction implements Action {
     private final static Logger LOGGER = LoggerFactory.getLogger(GotoJiraAction.class);
 
     @Override
-    public boolean fromButton() {
-        return false;
-    }
-
-    @Override
     public String getDisplayname() {
         return "Goto google with clipboard content";
     }

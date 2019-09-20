@@ -20,10 +20,6 @@ public class GotoStashAction implements Action {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(GotoStashAction.class);
 
-    @Override
-    public boolean fromButton() {
-        return false;
-    }
 
     @Override
     public String getDisplayname() {

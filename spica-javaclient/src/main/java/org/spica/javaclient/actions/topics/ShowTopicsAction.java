@@ -17,11 +17,6 @@ public class ShowTopicsAction implements Action {
     private final static Logger LOGGER = LoggerFactory.getLogger(ShowTopicsAction.class);
 
     @Override
-    public boolean fromButton() {
-        return false;
-    }
-
-    @Override
     public String getDisplayname() {
         return "Show topics";
     }
@@ -35,16 +30,16 @@ public class ShowTopicsAction implements Action {
     public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
         ModelCache modelCache = actionContext.getModelCache();
         List<TopicInfo> infos = modelCache.findTopicInfosByQuery(parameterList);
-        System.out.println ("Found " + infos.size() + " topics for query <" + parameterList + ">");
+        outputOk("Found " + infos.size() + " topics for query <" + parameterList + ">");
 
-        for (TopicInfo next : modelCache.findTopicInfosByQuery(parameterList)) {
+        for (TopicInfo next : infos) {
 
-            System.out.println ("ID               : " + next.getId());
-            System.out.println ("Name             : " + next.getName());
-            System.out.println ("Description      : " + next.getDescription());
-            System.out.println ("State            : " + next.getState());
-            System.out.println ("Project          : " + (next.getProject() != null ? next.getProject().getName(): "none"));
-            System.out.println("\n\n");
+            outputDefault("ID               : " + next.getId());
+            outputDefault("Name             : " + next.getName());
+            outputDefault("Description      : " + next.getDescription());
+            outputDefault("State            : " + next.getState());
+            outputDefault("Project          : " + (next.getProject() != null ? next.getProject().getName(): "none"));
+            outputDefault("\n\n");
         }
     }
 
