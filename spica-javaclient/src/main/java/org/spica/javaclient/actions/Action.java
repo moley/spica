@@ -23,12 +23,20 @@ public interface Action {
     void execute (ActionContext actionContext, InputParams inputParams, String parameterList);
 
     default String getFirstValue (final String ... values) {
+
+        String firstValue = getOptionalFirstValue(values);
+        if (firstValue == null)
+          throw new IllegalArgumentException("No value of " + values + " was valid");
+        return firstValue;
+    }
+
+    default String getOptionalFirstValue (final String ... values) {
         for (String next: values) {
             System.out.println ("Check value " + next);
             if (next != null && ! next.trim().isBlank())
                 return next;
         }
-        throw new IllegalArgumentException("No value of " + values + " was valid");
+        return null;
     }
 
     ActionGroup getGroup ();

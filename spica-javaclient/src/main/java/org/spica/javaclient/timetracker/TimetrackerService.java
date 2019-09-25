@@ -23,7 +23,7 @@ public class TimetrackerService {
     }
 
     public void startPause () {
-        stopLastOpenEvent();
+        stopLastOpenEvent(null);
         EventInfo pauseEvent = new EventInfo();
         pauseEvent.setId(UUID.randomUUID().toString());
         pauseEvent.setStart(LocalDateTime.now());
@@ -41,15 +41,15 @@ public class TimetrackerService {
         }
     }
 
-    private void stopLastOpenEvent() {
+    private void stopLastOpenEvent(LocalDateTime stopTime) {
         EventInfo eventInfo = getModelCache().findLastOpenEventFromToday();
         if (eventInfo != null) {
-            eventInfo.setStop(LocalDateTime.now());
+            eventInfo.setStop(stopTime != null ? stopTime: LocalDateTime.now());
         }
     }
 
     public void stopPause () {
-        stopLastOpenEvent();
+        stopLastOpenEvent(null);
 
         ModelCache modelCache = getModelCache();
 
@@ -175,7 +175,7 @@ public class TimetrackerService {
     }
 
     public void startWorkOnTopic (final TopicInfo topicInfo) {
-        stopLastOpenEvent();
+        stopLastOpenEvent(null);
         ModelCache modelCache = getModelCache();
         EventInfo newStartedEvent = new EventInfo();
         newStartedEvent.setId(UUID.randomUUID().toString());
@@ -188,7 +188,7 @@ public class TimetrackerService {
     }
 
     public void startTelephoneCall () {
-        stopLastOpenEvent();
+        stopLastOpenEvent(null);
         ModelCache modelCache = getModelCache();
         EventInfo eventInfo = new EventInfo();
         eventInfo.setId(UUID.randomUUID().toString());
@@ -221,8 +221,8 @@ public class TimetrackerService {
 
     }
 
-    public void finishDay() {
-        stopLastOpenEvent();
+    public void finishDay(LocalDateTime localDateTime) {
+        stopLastOpenEvent(localDateTime);
         modelCacheService.set(getModelCache());
     }
 

@@ -39,7 +39,7 @@ public class ListLinksAction implements Action {
             outputDefault("Links for:");
 
             EventInfo eventInfo = actionContext.getModelCache().findLastOpenEventFromToday();
-            TopicInfo topicInfo = eventInfo.getEventType().equals(EventType.TOPIC) ? actionContext.getModelCache().findTopicInfoById(eventInfo.getReferenceId()): null;
+            TopicInfo topicInfo = (eventInfo != null && eventInfo.getEventType().equals(EventType.TOPIC)) ? actionContext.getModelCache().findTopicInfoById(eventInfo.getReferenceId()): null;
             File currentPath = new File("").getAbsoluteFile();
 
             outputDefault("Topic : " + renderUtil.getTopic(topicInfo));

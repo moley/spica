@@ -1,9 +1,6 @@
 package org.spica.javaclient.utils;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Period;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 public class DateUtil {
@@ -30,6 +27,32 @@ public class DateUtil {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return localDateTime.format(formatter);
+    }
+
+    public String getDateAsString(LocalDate localDate) {
+        if (localDate == null)
+            return "";
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return localDate.format(formatter);
+    }
+
+    public LocalDate getDate (final String dateAsString) {
+        String trimmed = dateAsString.trim();
+
+        LocalDate today = LocalDate.now();
+
+        if (trimmed.length() == 4) {
+            String day = dateAsString.substring(0, 2);
+            String month = dateAsString.substring(2, 4);
+
+            return LocalDate.of(today.getYear(), Integer.valueOf(month).intValue(), Integer.valueOf(day).intValue());
+        }
+        else {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd");
+            return LocalDate.from(formatter.parse(trimmed));
+        }
+
     }
 
     public LocalTime getTime (final String dateAsString) {
