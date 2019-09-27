@@ -34,9 +34,12 @@ public class SearchInputParam<T> extends AbstractInputParam<T> {
     }
 
     public void setValue(T value) {
-        this.selected = value;
-        T selected = itemsStringMap.get(value.toString().strip());
-        super.setValue(selected);
+
+        if (! items.isEmpty()) {
+            this.selected = value;
+            T selected = itemsStringMap.get(value.toString().strip());
+            super.setValue(selected);
+        }
     }
 
 }

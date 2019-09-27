@@ -31,7 +31,13 @@ public class ModelCacheService implements Serializable{
 
   public File getConfigFile (){
     if (configFile == null) {
-      configFile = new File(spicaHome, "config.xml");
+      File configFileLocal = new File ("config.xml").getAbsoluteFile();
+      if (configFileLocal.exists()) {
+        LOGGER.info("Using local configuration " + configFileLocal.getAbsolutePath());
+        configFile = configFileLocal;
+      }
+      else
+        configFile = new File(spicaHome, "config.xml");
       LOGGER.info("configFile = " + configFile.getAbsolutePath());
     }
     return configFile;
@@ -96,6 +102,7 @@ public class ModelCacheService implements Serializable{
         throw new IllegalStateException("configuration file not set before saving ");
 
       LOGGER.info("Save configuration " + toFile.getAbsolutePath());
+      toFile = toFile.getAbsoluteFile();
 
       if (!toFile.getParentFile().exists())
         toFile.getParentFile().mkdirs();

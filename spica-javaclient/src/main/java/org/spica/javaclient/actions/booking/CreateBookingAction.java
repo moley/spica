@@ -69,12 +69,9 @@ public class CreateBookingAction implements Action {
             if (text != null && ! eventType.equals(EventType.MESSAGE))
                 throw new IllegalArgumentException("Text must not be set on event type " + eventType.getValue());
 
-            if (userInfo == null && eventType.equals(EventType.MESSAGE))
-                throw new IllegalArgumentException("User must be set on event type " + eventType.getValue());
-
             //TODO consolidate with StartPhoneCallAction
             MessageInfo messageInfo = new MessageInfo();
-            messageInfo.setCreator(userInfo.getId());
+            messageInfo.setCreator(userInfo != null ? userInfo.getId(): null);
             messageInfo.setMessage(text);
             messageInfo.setType(MessageType.PHONECALL);
             messageInfo.setId(UUID.randomUUID().toString());

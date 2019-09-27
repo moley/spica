@@ -16,4 +16,4 @@ out/
 bin/
 /.metadata
 
-spica-devclient/config.xml
+/spica-cli/config.xml

@@ -29,6 +29,17 @@ public class InputParams {
         this.inputParamGroups = inputParamGroups;
     }
 
+    public boolean isInputParamAvailable (final String key) {
+        for (InputParamGroup next: inputParamGroups) {
+            for (InputParam nextParam: next.getInputParams()) {
+                if (nextParam.getKey().equals(key))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
     public Object getInputParam (final String key) {
         for (InputParamGroup next: inputParamGroups) {
             for (InputParam nextParam: next.getInputParams()) {
@@ -62,7 +73,7 @@ public class InputParams {
         asString += "From : " + startTime + "\n";
         asString += "Until : " + endTime + "\n";
         for (InputParamGroup nextGroup: getInputParamGroups()) {
-            asString += "Group: \n";
+            asString += "Group (" + nextGroup.getName() + "): \n";
             for (InputParam nextParam: nextGroup.getInputParams()) {
                 asString += "- " + nextParam.getKey() + " -> " + nextParam.getValue() + "\n";
             }

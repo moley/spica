@@ -33,3 +33,10 @@ task installLocal(type: Copy) {
   dependsOn tasks.distZip
 }
 
+tasks.register("demoData", JavaExec) {
+  dependsOn testClasses
+  classpath = sourceSets.test.runtimeClasspath
+
+  main = 'org.spica.cli.demodata.CreateDemoData'
+}
+

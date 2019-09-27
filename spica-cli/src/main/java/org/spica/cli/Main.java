@@ -13,10 +13,13 @@ import org.spica.javaclient.event.EventDetails;
 import org.spica.javaclient.event.EventDetailsBuilder;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;
+import org.spica.javaclient.model.ModelCacheService;
 import org.spica.javaclient.model.TopicInfo;
 import org.spica.javaclient.utils.DateUtil;
 import org.spica.javaclient.utils.LogUtil;
 import org.spica.javaclient.utils.RenderUtil;
+
+import java.time.LocalDateTime;
 
 public class Main {
 
@@ -33,8 +36,6 @@ public class Main {
         Configuration.getDefaultApiClient().setBasePath("http://localhost:8765/api"); //TODO make nice
 
         StandaloneActionContext actionContext = new StandaloneActionContext();
-
-        System.out.println();
 
         EventInfo firstTaskOfDay = ! actionContext.getModelCache().getEventInfosRealToday().isEmpty() ? actionContext.getModelCache().getEventInfosRealToday().get(0):null;
 
@@ -62,6 +63,7 @@ public class Main {
             since = " ( since " + dateUtil.getTimeAsString(eventInfo.getStart()) + " )";
         }
 
+        System.out.println ("Current time:         " + LogUtil.cyan(dateUtil.getTimeAsString(LocalDateTime.now())));
         System.out.println ("Working since:        " + LogUtil.cyan(firstTaskOfDay != null ? dateUtil.getTimeAsString(firstTaskOfDay.getStart()) : ""));
         System.out.println ("Cumulated work time:  " + LogUtil.cyan(dateUtil.getDuration(eventDetails.getDurationWork())));
         System.out.println ("Cumulated pause time: " + LogUtil.cyan(dateUtil.getDuration(eventDetails.getDurationPause())));

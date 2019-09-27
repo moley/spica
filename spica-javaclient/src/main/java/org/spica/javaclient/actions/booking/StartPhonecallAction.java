@@ -81,7 +81,7 @@ public class StartPhonecallAction implements Action {
 
     @Override
     public Command getCommand() {
-        return new Command("call", "c");
+        return new Command("call", "a");
     }
 
     @Override

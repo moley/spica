@@ -36,6 +36,8 @@ public class StandaloneActionContext implements ActionContext {
 
     @Override
     public void saveModelCache() {
+        ModelCache modelCache = modelCacheService.get();
+        System.out.println (modelCache.getMessagecontainerInfos().size() + " messagecontainers");
         modelCacheService.set(modelCacheService.get());
     }
 

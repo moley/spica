@@ -87,6 +87,6 @@ public class StartTopicAction implements Action {
 
     @Override
     public Command getCommand() {
-        return new Command("start", "s");
+        return new Command("topic", "t");
     }
 }
