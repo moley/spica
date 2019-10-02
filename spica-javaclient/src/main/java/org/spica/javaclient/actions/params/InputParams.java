@@ -64,6 +64,14 @@ public class InputParams {
         return inputParam != null ? getInputParam(key).toString() : null;
     }
 
+    public boolean getInputParamAsBoolean (final String key, final boolean defaultValue) {
+        String valueAsString = getInputParamAsString(key);
+        if (valueAsString == null)
+            return defaultValue;
+        else
+        return valueAsString.equalsIgnoreCase(Boolean.TRUE.toString()) || valueAsString.equalsIgnoreCase("YES");
+    }
+
     public boolean isEmpty () {
         return inputParamGroups.isEmpty();
     }

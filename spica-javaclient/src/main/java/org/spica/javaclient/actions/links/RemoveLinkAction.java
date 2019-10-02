@@ -1,27 +1,27 @@
-package org.spica.javaclient.actions.booking;
+package org.spica.javaclient.actions.links;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.*;
 import org.spica.javaclient.actions.params.InputParams;
-import org.spica.javaclient.model.EventInfo;
+import org.spica.javaclient.model.LinkInfo;
 import org.spica.javaclient.model.ModelCache;
-import org.spica.javaclient.utils.DateUtil;
+import org.spica.javaclient.utils.RenderUtil;
 
-public class RemoveBookingAction extends AbstractAction {
+public class RemoveLinkAction extends AbstractAction {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(RemoveBookingAction.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(RemoveLinkAction.class);
 
-    private DateUtil dateUtil = new DateUtil();
+    private RenderUtil renderUtil = new RenderUtil();
 
     @Override
     public String getDisplayname() {
-        return "Remove booking";
+        return "Remove link";
     }
 
     @Override
     public String getDescription() {
-        return "Remove booking with id";
+        return "Remove link with id";
     }
 
     @Override
@@ -32,28 +32,25 @@ public class RemoveBookingAction extends AbstractAction {
 
         ModelCache modelCache = actionContext.getModelCache();
 
-        EventInfo eventInfoRealById = modelCache.findEventInfoRealById(parameterList);
-        if (eventInfoRealById == null)
-            throw new IllegalStateException("No event with id " + parameterList + " found");
+        LinkInfo linkInfoById = modelCache.findLinkInfoById(parameterList);
+        if (linkInfoById == null)
+            throw new IllegalStateException("No link with id " + parameterList + " found");
 
-        modelCache.getEventInfosReal().remove(eventInfoRealById);
+        modelCache.getLinkInfos().remove(linkInfoById);
 
-        outputOk("Removed booking with id " + eventInfoRealById);
+        outputOk("Removed link with id " + linkInfoById.getId());
 
         actionContext.saveModelCache(getClass().getName());
-
     }
 
 
     @Override
     public ActionGroup getGroup() {
-        return ActionGroup.BOOKING;
+        return ActionGroup.LINKS;
     }
 
     @Override
     public Command getCommand() {
         return new Command ("remove", "r");
     }
-
-
 }

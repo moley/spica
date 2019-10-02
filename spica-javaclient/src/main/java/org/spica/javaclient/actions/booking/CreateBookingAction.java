@@ -2,10 +2,7 @@ package org.spica.javaclient.actions.booking;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.Action;
-import org.spica.javaclient.actions.ActionContext;
-import org.spica.javaclient.actions.ActionGroup;
-import org.spica.javaclient.actions.Command;
+import org.spica.javaclient.actions.*;
 import org.spica.javaclient.actions.params.*;
 import org.spica.javaclient.actions.topics.CreateTopicAction;
 import org.spica.javaclient.model.*;
@@ -20,9 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class CreateBookingAction implements Action {
+public class CreateBookingAction extends AbstractAction {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(CreateTopicAction.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(CreateBookingAction.class);
 
     public final static String KEY_FROM = "from";
     public final static String KEY_UNTIL = "until";
@@ -81,7 +78,7 @@ public class CreateBookingAction implements Action {
         List<String> output = timetrackerService.createEvent(timetrackerCreationParam);
         outputDefault(String.join("\n", output));
 
-        actionContext.saveModelCache();
+        actionContext.saveModelCache(getClass().getName());
     }
 
 

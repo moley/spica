@@ -130,6 +130,10 @@ public class ModelCache {
     return eventInfosReal.stream().filter(eventInfo -> eventInfo.getId().equals(id)).findAny().orElse(null);
   }
 
+  public LinkInfo findLinkInfoById (final String id) {
+    return linkInfos.stream().filter(linkInfo -> linkInfo.getId().equals(id)).findAny().orElse(null);
+  }
+
 
   public void setEventInfosReal(List<EventInfo> eventInfosReal) {
     this.eventInfosReal = eventInfosReal;
@@ -175,6 +179,21 @@ public class ModelCache {
   public EventInfo findLastOpenEventFromToday() {
     EventInfo last = null;
     for (EventInfo next: getEventInfosRealToday()) {
+      if (next.getStop() == null) {
+        if (last == null)
+          last = next;
+        else
+          throw new IllegalStateException("Implementation error, more than one open event found");
+      }
+    }
+
+    return last;
+
+  }
+
+  public EventInfo findLastOpenEvent() {
+    EventInfo last = null;
+    for (EventInfo next: getEventInfosReal()) {
       if (next.getStop() == null) {
         if (last == null)
           last = next;

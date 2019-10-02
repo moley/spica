@@ -14,7 +14,7 @@ public interface ActionContext {
 
     ModelCacheService getModelCacheService ();
 
-    void saveModelCache();
+    void saveModelCache(final String lastAction);
 
     SpicaProperties getSpicaProperties ();
 

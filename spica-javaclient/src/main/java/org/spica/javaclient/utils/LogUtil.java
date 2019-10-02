@@ -43,14 +43,9 @@ public class LogUtil {
     private static final String ESC_OFF = escape + "[0m";
 
     /**
-     * System line separator character(s)
+     * Escape sequences for terminal and console: clear screen
      */
-    static final String lineSep = System.getProperty("line.separator");
-
-    /**
-     * Input prompt
-     */
-    static final String inputPrompt = "${lineSep}??>";
+    private static final String ESC_CLS = escape + "[2J";
 
     /**
      * Renders a line in the default Gradle Yellow style.
@@ -111,6 +106,8 @@ public class LogUtil {
     public static String red(String line) {
         return RED_ON + line + ESC_OFF;
     }
+
+    public static String clearScreen () {return ESC_CLS;}
 
 
 }

@@ -2,10 +2,7 @@ package org.spica.javaclient.actions.topics;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.Action;
-import org.spica.javaclient.actions.ActionContext;
-import org.spica.javaclient.actions.ActionGroup;
-import org.spica.javaclient.actions.Command;
+import org.spica.javaclient.actions.*;
 import org.spica.javaclient.actions.params.InputParams;
 import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.model.TopicInfo;
@@ -13,13 +10,13 @@ import org.spica.javaclient.utils.LogUtil;
 
 import java.util.List;
 
-public class RemoveTopicAction implements Action {
+public class RemoveTopicAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(RemoveTopicAction.class);
 
     @Override
     public String getDisplayname() {
-        return "Remove topic";
+        return "Remove topics";
     }
 
     @Override
@@ -33,9 +30,9 @@ public class RemoveTopicAction implements Action {
         List<TopicInfo> infos = modelCache.findTopicInfosByQuery(parameterList);
         modelCache.getTopicInfos().removeAll(infos);
 
-        outputOk("Removed " + infos.size() +  " projects");
+        outputOk("Removed " + infos.size() +  " topics");
 
-        actionContext.saveModelCache();
+        actionContext.saveModelCache(getClass().getName());
     }
 
 

@@ -2,10 +2,7 @@ package org.spica.javaclient.actions.links;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.Action;
-import org.spica.javaclient.actions.ActionContext;
-import org.spica.javaclient.actions.ActionGroup;
-import org.spica.javaclient.actions.Command;
+import org.spica.javaclient.actions.*;
 import org.spica.javaclient.actions.params.*;
 import org.spica.javaclient.actions.projects.CreateProjectAction;
 import org.spica.javaclient.links.LinkFinder;
@@ -19,14 +16,15 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public class CreateLinkAction implements Action {
+public class CreateLinkAction extends AbstractAction {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(CreateProjectAction.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(CreateLinkAction.class);
 
     public final static String KEY_NAME = "name";
     public final static String KEY_URL = "url";
     public final static String KEY_TYPE = "type";
     public final static String KEY_TOPIC = "topic";
+    public final static String KEY_PROJECT = "project";
 
     private String clipboard;
 
@@ -50,6 +48,7 @@ public class CreateLinkAction implements Action {
         LinkType selectedLinkType = inputParams.getInputParam(KEY_TYPE, LinkType.class);
 
         TopicInfo currentTopic = modelCache.getCurrentTopic() != null ? modelCache.getCurrentTopic() : inputParams.getInputParam(KEY_TOPIC, TopicInfo.class);
+        ProjectInfo currentProject = inputParams.getInputParam(KEY_PROJECT, ProjectInfo.class);
 
         LinkInfo linkInfo = new LinkInfo();
         linkInfo.setId(UUID.randomUUID().toString());
@@ -61,10 +60,13 @@ public class CreateLinkAction implements Action {
             linkInfo.setReference(currentTopic.getId());
         }
         else if (selectedLinkType.equals(LinkType.PROJECT)) {
-            if (currentTopic.getProject() == null)
-                outputError("Current topic does not have project reference, cannot create project related link");
+            currentProject = currentProject != null ? currentProject : currentTopic.getProject();
+            if (currentProject == null) {
+                outputError("No project reference found, cannot create project related link");
+                return;
+            }
             else
-                linkInfo.setReference(currentTopic.getProject().getId());
+                linkInfo.setReference(currentProject.getId());
         }
         else if (selectedLinkType.equals(LinkType.PATH)) {
             linkInfo.setReference(new File ("").getAbsolutePath());
@@ -73,7 +75,7 @@ public class CreateLinkAction implements Action {
 
         outputOk("Created link " + linkInfo.getName() + " with type " + selectedLinkType.getValue() + "-> " + linkInfo.getUrl() + " (" + linkInfo.getId() + ")");
 
-        actionContext.saveModelCache();
+        actionContext.saveModelCache(getClass().getName());
     }
 
 
@@ -118,8 +120,8 @@ public class CreateLinkAction implements Action {
         });
         inputParamGroupGeneric.getInputParams().add(type);
 
-        //Reference
-        InputParamGroup inputParamGroupReference = new InputParamGroup("Reference", new Predicate<InputParams>() {
+        //Reference Topic
+        InputParamGroup inputParamGroupReferenceTopic = new InputParamGroup("Reference Topic", new Predicate<InputParams>() {
             @Override
             public boolean test(InputParams inputParams) {
                 LinkType linkType = inputParams.getInputParam(KEY_TYPE, LinkType.class);
@@ -141,9 +143,33 @@ public class CreateLinkAction implements Action {
                 return renderUtil.getTopic(topicInfo);
             }
         });
-        inputParamGroupReference.getInputParams().add(topicSearch);
+        inputParamGroupReferenceTopic.getInputParams().add(topicSearch);
 
-        InputParams inputParams = new InputParams(Arrays.asList(inputParamGroupGeneric, inputParamGroupReference));
+        //Reference Project
+        InputParamGroup inputParamGroupReferenceProject = new InputParamGroup("Reference Topic", new Predicate<InputParams>() {
+            @Override
+            public boolean test(InputParams inputParams) {
+                LinkType linkType = inputParams.getInputParam(KEY_TYPE, LinkType.class);
+                boolean linkTypeNeedsProject = linkType.equals(LinkType.PROJECT);
+
+                if (linkTypeNeedsProject) {
+                    TopicInfo currentTopic = modelCache.getCurrentTopic();
+                    return currentTopic == null || currentTopic.getProject() == null;
+                }
+                return false;
+            }
+        });
+
+        List<ProjectInfo> projectInfos = actionContext.getModelCache().getProjectInfos();
+        SearchInputParam<ProjectInfo> projectSearch = new SearchInputParam<ProjectInfo>(KEY_PROJECT, "Project: ", projectInfos, new Renderer<ProjectInfo>() {
+            @Override
+            public String toString(ProjectInfo projectInfo) {
+                return renderUtil.getProject(projectInfo);
+            }
+        });
+        inputParamGroupReferenceProject.getInputParams().add(projectSearch);
+
+        InputParams inputParams = new InputParams(Arrays.asList(inputParamGroupGeneric, inputParamGroupReferenceTopic, inputParamGroupReferenceProject));
 
         return inputParams;
     }

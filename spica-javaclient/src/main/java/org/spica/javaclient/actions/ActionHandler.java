@@ -3,10 +3,9 @@ package org.spica.javaclient.actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.admin.ImportUsersAction;
+import org.spica.javaclient.actions.admin.ShowStatusAction;
 import org.spica.javaclient.actions.booking.*;
-import org.spica.javaclient.actions.links.CreateLinkAction;
-import org.spica.javaclient.actions.links.GotoLinkAction;
-import org.spica.javaclient.actions.links.ListLinksAction;
+import org.spica.javaclient.actions.links.*;
 import org.spica.javaclient.actions.navigation.GotoGoogleAction;
 import org.spica.javaclient.actions.navigation.GotoJiraAction;
 import org.spica.javaclient.actions.navigation.GotoStashAction;
@@ -55,10 +54,13 @@ public class ActionHandler {
         registeredActions.add(new RemoveProjectAction());
         registeredActions.add(new EmptyProjectsAction());
 
-        //lists
+        //links
         registeredActions.add(new CreateLinkAction());
         registeredActions.add(new ListLinksAction());
+        registeredActions.add(new ExecuteLinkAction());
         registeredActions.add(new GotoLinkAction());
+        registeredActions.add(new RemoveLinkAction());
+
 
         //navigation
         registeredActions.add(new GotoStashAction());
@@ -66,6 +68,7 @@ public class ActionHandler {
         registeredActions.add(new GotoGoogleAction());
 
         registeredActions.add(new ImportUsersAction());
+        registeredActions.add(new ShowStatusAction());
 
     }
 
@@ -93,9 +96,8 @@ public class ActionHandler {
             }
         }
 
-        throw new IllegalStateException("No command found for " + text + "(existing commands: " + foundCommandTokens + ")");
 
-
+        return null;
 
     }
 

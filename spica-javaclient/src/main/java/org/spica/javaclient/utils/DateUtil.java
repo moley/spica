@@ -2,6 +2,7 @@ package org.spica.javaclient.utils;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 
 public class DateUtil {
 
@@ -50,7 +51,8 @@ public class DateUtil {
         }
         else {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd");
-            return LocalDate.from(formatter.parse(trimmed));
+            TemporalAccessor temporalAccessor = formatter.parse(trimmed);
+            return LocalDate.from(temporalAccessor);
         }
 
     }

@@ -2,10 +2,7 @@ package org.spica.javaclient.actions.topics;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.Action;
-import org.spica.javaclient.actions.ActionContext;
-import org.spica.javaclient.actions.ActionGroup;
-import org.spica.javaclient.actions.Command;
+import org.spica.javaclient.actions.*;
 import org.spica.javaclient.actions.params.InputParamGroup;
 import org.spica.javaclient.actions.params.InputParams;
 import org.spica.javaclient.actions.params.TextInputParam;
@@ -16,12 +13,14 @@ import org.spica.javaclient.utils.LogUtil;
 import java.util.Arrays;
 import java.util.UUID;
 
-public class CreateTopicAction implements Action {
+public class CreateTopicAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(CreateTopicAction.class);
 
     public final static String KEY_SUMMARY = "summary";
     public final static String KEY_DESCRIPTION = "description";
+
+    public final static String ERROR_PARAM_NAME = "You did not define a subject as parameter";
 
     @Override
     public String getDisplayname() {
@@ -36,17 +35,22 @@ public class CreateTopicAction implements Action {
     @Override
     public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
 
+        String name = inputParams.getInputParamAsString(KEY_SUMMARY);
 
-        TopicInfo topicInfo = new TopicInfo();
-        topicInfo.setId(UUID.randomUUID().toString());
-        topicInfo.setDescription(inputParams.getInputParamAsString(KEY_DESCRIPTION));
-        topicInfo.setName(inputParams.getInputParamAsString(KEY_SUMMARY));
-        ModelCache modelCache = actionContext.getModelCache();
-        modelCache.getTopicInfos().add(topicInfo);
+        if (name != null) {
+            TopicInfo topicInfo = new TopicInfo();
+            topicInfo.setId(UUID.randomUUID().toString());
+            topicInfo.setDescription(inputParams.getInputParamAsString(KEY_DESCRIPTION));
+            topicInfo.setName(name);
+            ModelCache modelCache = actionContext.getModelCache();
+            modelCache.getTopicInfos().add(topicInfo);
 
-        outputOk("Created topic " + topicInfo.getName() + "(" + topicInfo.getId() + ")");
+            outputOk("Created topic " + topicInfo.getName() + "(" + topicInfo.getId() + ")");
 
-        actionContext.saveModelCache();
+            actionContext.saveModelCache(getClass().getName());
+        }
+        else
+            outputError(ERROR_PARAM_NAME);
     }
 
 

@@ -2,10 +2,7 @@ package org.spica.javaclient.actions.booking;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.Action;
-import org.spica.javaclient.actions.ActionContext;
-import org.spica.javaclient.actions.ActionGroup;
-import org.spica.javaclient.actions.Command;
+import org.spica.javaclient.actions.*;
 import org.spica.javaclient.actions.params.*;
 import org.spica.javaclient.model.*;
 import org.spica.javaclient.timetracker.TimetrackerService;
@@ -16,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class StartPhonecallAction implements Action {
+public class StartPhonecallAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(StartPhonecallAction.class);
 
@@ -43,7 +40,7 @@ public class StartPhonecallAction implements Action {
         TimetrackerService timetrackerService = new TimetrackerService();
         timetrackerService.setModelCacheService(actionContext.getModelCacheService());
         timetrackerService.startTelephoneCall();
-        actionContext.saveModelCache();
+        actionContext.saveModelCache(getClass().getName() + "beforeParam");
     }
 
     @Override
@@ -69,7 +66,7 @@ public class StartPhonecallAction implements Action {
         timetrackerService.setModelCacheService(actionContext.getModelCacheService());
         timetrackerService.finishTelephoneCall(messageInfo, selectedUser);
 
-        actionContext.saveModelCache();
+        actionContext.saveModelCache(getClass().getName());
         outputOk("Saved phonecall with " + renderUtil.getUser(selectedUser) + " with message " + message);
 
     }

@@ -11,8 +11,9 @@ public class TestUtils {
 
     public ActionContext createActionContext (final Class clazz) {
         ModelCacheService modelCacheService = new ModelCacheService();
+        modelCacheService.close();
         modelCacheService.setConfigFile(new File("build/test/" + clazz.getSimpleName()));
-        modelCacheService.set(new ModelCache());
+        modelCacheService.set(new ModelCache(), "create action context");
 
         ActionContext actionContext = Mockito.mock(ActionContext.class);
         Mockito.when(actionContext.getModelCacheService()).thenReturn(modelCacheService);

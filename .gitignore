@@ -17,3 +17,4 @@ bin/
 /.metadata
 
 /spica-cli/config.xml
+/spica-cli/src/main/resources/spica-cli.version

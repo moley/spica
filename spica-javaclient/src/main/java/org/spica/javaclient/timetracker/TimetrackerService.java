@@ -42,10 +42,12 @@ public class TimetrackerService {
     }
 
     private void stopLastOpenEvent(LocalDateTime stopTime) {
-        EventInfo eventInfo = getModelCache().findLastOpenEventFromToday();
+        EventInfo eventInfo = getModelCache().findLastOpenEvent();
         if (eventInfo != null) {
             eventInfo.setStop(stopTime != null ? stopTime: LocalDateTime.now());
         }
+        else
+            throw new IllegalStateException("No started and not finished booking found");
     }
 
     public void stopPause () {
@@ -75,7 +77,7 @@ public class TimetrackerService {
             newStartedEvent.setReferenceId(lastEventInfo.getReferenceId());
             modelCache.getEventInfosReal().add(newStartedEvent);
         }
-        modelCacheService.set(modelCache);
+        modelCacheService.set(modelCache, "restart last real event" + eventType.name());
 
     }
 
@@ -184,7 +186,7 @@ public class TimetrackerService {
         newStartedEvent.setName(topicInfo.getName());
         newStartedEvent.setReferenceId(topicInfo.getId());
         modelCache.getEventInfosReal().add(newStartedEvent);
-        modelCacheService.set(modelCache);
+        modelCacheService.set(modelCache, "Start work on topic");
     }
 
     public void startTelephoneCall () {
@@ -197,7 +199,7 @@ public class TimetrackerService {
         eventInfo.setName("Telephone call");
 
         modelCache.getEventInfosReal().add(eventInfo);
-        modelCacheService.set(modelCache);
+        modelCacheService.set(modelCache, "Start telephone call");
     }
 
     public void finishTelephoneCall (final MessageInfo messageInfo, UserInfo userInfo) {
@@ -223,7 +225,7 @@ public class TimetrackerService {
 
     public void finishDay(LocalDateTime localDateTime) {
         stopLastOpenEvent(localDateTime);
-        modelCacheService.set(getModelCache());
+        modelCacheService.set(getModelCache(), "Finish day");
     }
 
     public ModelCacheService getModelCacheService() {

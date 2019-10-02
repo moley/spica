@@ -45,7 +45,7 @@ public class DevClientDemoDataCreator {
 
 
 
-        modelCacheService.set(modelCache);
+        modelCacheService.set(modelCache, "Creating demo data");
 
     }
 }

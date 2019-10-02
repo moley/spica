@@ -2,10 +2,7 @@ package org.spica.javaclient.actions.booking;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.Action;
-import org.spica.javaclient.actions.ActionContext;
-import org.spica.javaclient.actions.ActionGroup;
-import org.spica.javaclient.actions.Command;
+import org.spica.javaclient.actions.*;
 import org.spica.javaclient.actions.params.InputParamGroup;
 import org.spica.javaclient.actions.params.InputParams;
 import org.spica.javaclient.actions.params.Renderer;
@@ -17,7 +14,7 @@ import org.spica.javaclient.utils.RenderUtil;
 
 import java.util.List;
 
-public class StartTopicAction implements Action {
+public class StartTopicAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(StartTopicAction.class);
 
@@ -45,7 +42,7 @@ public class StartTopicAction implements Action {
         TimetrackerService timetrackerService = new TimetrackerService();
         timetrackerService.setModelCacheService(actionContext.getModelCacheService());
         timetrackerService.startWorkOnTopic(selectedTopicInfo);
-        actionContext.saveModelCache();
+        actionContext.saveModelCache(getClass().getName());
 
 
 

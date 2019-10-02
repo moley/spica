@@ -2,10 +2,7 @@ package org.spica.javaclient.actions.links;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.Action;
-import org.spica.javaclient.actions.ActionContext;
-import org.spica.javaclient.actions.ActionGroup;
-import org.spica.javaclient.actions.Command;
+import org.spica.javaclient.actions.*;
 import org.spica.javaclient.actions.params.InputParams;
 import org.spica.javaclient.links.LinkFinder;
 import org.spica.javaclient.model.EventInfo;
@@ -17,7 +14,7 @@ import org.spica.javaclient.utils.RenderUtil;
 import java.io.File;
 import java.util.List;
 
-public class ListLinksAction implements Action {
+public class ListLinksAction extends AbstractAction {
 
         private final static Logger LOGGER = LoggerFactory.getLogger(ListLinksAction.class);
 
@@ -30,29 +27,36 @@ public class ListLinksAction implements Action {
 
         @Override
         public String getDescription() {
-            return "List all links for the current context";
+            return "List all links for the current context (--all shows all available)";
         }
 
         @Override
         public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
 
-            outputDefault("Links for:");
+            boolean showAllLinks = parameterList.contains("--all");
 
             EventInfo eventInfo = actionContext.getModelCache().findLastOpenEventFromToday();
             TopicInfo topicInfo = (eventInfo != null && eventInfo.getEventType().equals(EventType.TOPIC)) ? actionContext.getModelCache().findTopicInfoById(eventInfo.getReferenceId()): null;
             File currentPath = new File("").getAbsoluteFile();
 
-            outputDefault("Topic : " + renderUtil.getTopic(topicInfo));
-            outputDefault("Path  : " + currentPath.getAbsolutePath());
+            if (showAllLinks)
+                outputDefault("Show all links:");
+            else {
+                outputDefault("Show links for:");
+                outputDefault("- Topic " + renderUtil.getTopic(topicInfo));
+                outputDefault("- Path  " + currentPath.getAbsolutePath());
+            }
 
-            outputDefault("\n\n");
+            outputDefault("");
 
             LinkFinder linkFinder = new LinkFinder();
             linkFinder.setModelCache(actionContext.getModelCache());
-            List<LinkInfo> linkInfos = linkFinder.findMatchingLinks(topicInfo, currentPath);
+            List<LinkInfo> linkInfos = actionContext.getModelCache().getLinkInfos();
+            if (!showAllLinks)
+              linkInfos = linkFinder.findMatchingLinks(topicInfo, currentPath);
+
             for (LinkInfo next: linkInfos) {
-                String linkToken = String.format("     %-30s%-70s (%s)", next.getName(), next.getUrl(), next.getId());
-                outputOk(linkToken);
+                outputDefault(renderUtil.getLink(next));
             }
         }
 

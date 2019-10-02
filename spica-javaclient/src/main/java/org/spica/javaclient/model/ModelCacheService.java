@@ -1,6 +1,7 @@
 package org.spica.javaclient.model;
 
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
@@ -10,8 +11,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
+import java.nio.charset.Charset;
+import java.util.Date;
 
 
 public class ModelCacheService implements Serializable{
@@ -63,7 +67,7 @@ public class ModelCacheService implements Serializable{
       else {
         LOGGER.info("Create new configuration because " + configFile.getAbsolutePath() + " does not exist");
         currentConfiguration = new ModelCache();
-        set(currentConfiguration);
+        set(currentConfiguration, "Creation");
       }
     } catch (Exception e) {
       LOGGER.error("Error loading configurations from " + configFile.getAbsolutePath() + ":" + e.getLocalizedMessage(), e);
@@ -90,7 +94,7 @@ public class ModelCacheService implements Serializable{
   }
 
 
-  public void set(ModelCache configuration) {
+  public void set(ModelCache configuration, final String action) {
     JAXBContext jc = null;
     try {
       jc = JAXBContext.newInstance(ModelCache.class);
@@ -107,8 +111,17 @@ public class ModelCacheService implements Serializable{
       if (!toFile.getParentFile().exists())
         toFile.getParentFile().mkdirs();
 
+      if (toFile.exists()) {
+        File savedXml = new File (toFile.getParentFile(), "config_" + new Date() + ".xml");
+        File savedMetainf = new File (toFile.getParentFile(), "config_" + new Date() + ".metainf");
+        FileUtils.copyFile(toFile, savedXml);
+        FileUtils.write(savedMetainf, "Last action: " + action, Charset.defaultCharset());
+      }
+
       marshaller.marshal(configuration, toFile);
     } catch (JAXBException e) {
+      throw new IllegalStateException(e);
+    } catch (IOException e) {
       throw new IllegalStateException(e);
     }
   }

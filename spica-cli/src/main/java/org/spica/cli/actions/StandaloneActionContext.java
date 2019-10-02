@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
 import org.spica.javaclient.actions.ActionContext;
-import org.spica.javaclient.actions.booking.FinishDayAction;
 import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.model.ModelCacheService;
 
@@ -35,10 +34,9 @@ public class StandaloneActionContext implements ActionContext {
     }
 
     @Override
-    public void saveModelCache() {
+    public void saveModelCache(String lastAction) {
         ModelCache modelCache = modelCacheService.get();
-        System.out.println (modelCache.getMessagecontainerInfos().size() + " messagecontainers");
-        modelCacheService.set(modelCacheService.get());
+        modelCacheService.set(modelCache, lastAction);
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.util.Collection;
 
 public class ActionHandlerTest {
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void findActionInvalidCommand () {
         ActionHandler actionHandler = new ActionHandler();
         Assert.assertNull (actionHandler.findAction("x s"));

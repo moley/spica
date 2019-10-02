@@ -2,10 +2,7 @@ package org.spica.javaclient.actions.projects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.Action;
-import org.spica.javaclient.actions.ActionContext;
-import org.spica.javaclient.actions.ActionGroup;
-import org.spica.javaclient.actions.Command;
+import org.spica.javaclient.actions.*;
 import org.spica.javaclient.actions.params.InputParamGroup;
 import org.spica.javaclient.actions.params.InputParams;
 import org.spica.javaclient.actions.params.TextInputParam;
@@ -17,7 +14,7 @@ import org.spica.javaclient.utils.LogUtil;
 import java.util.Arrays;
 import java.util.UUID;
 
-public class CreateProjectAction implements Action {
+public class CreateProjectAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(CreateProjectAction.class);
 
@@ -48,7 +45,7 @@ public class CreateProjectAction implements Action {
 
         outputOk("Created project " + projectInfo.getName() + "(" + projectInfo.getId() + ")");
 
-        actionContext.saveModelCache();
+        actionContext.saveModelCache(getClass().getName());
     }
 
 

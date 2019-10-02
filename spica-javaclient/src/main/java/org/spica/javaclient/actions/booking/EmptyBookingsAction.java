@@ -2,10 +2,7 @@ package org.spica.javaclient.actions.booking;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.Action;
-import org.spica.javaclient.actions.ActionContext;
-import org.spica.javaclient.actions.ActionGroup;
-import org.spica.javaclient.actions.Command;
+import org.spica.javaclient.actions.*;
 import org.spica.javaclient.actions.params.InputParams;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.ModelCache;
@@ -14,7 +11,7 @@ import org.spica.javaclient.utils.DateUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmptyBookingsAction implements Action {
+public class EmptyBookingsAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(EmptyBookingsAction.class);
 
@@ -38,7 +35,7 @@ public class EmptyBookingsAction implements Action {
 
         outputOk("Removed all events from today (" + eventInfosRealToday.size() + ")");
 
-        actionContext.saveModelCache();
+        actionContext.saveModelCache(getClass().getName());
 
     }
 

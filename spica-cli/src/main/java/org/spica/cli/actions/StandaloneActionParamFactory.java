@@ -56,6 +56,8 @@ public class StandaloneActionParamFactory implements ActionParamFactory {
                         prompBuilder.newItem(nextKey).text(nextMessage).add();
                     }
                     prompBuilder.addPrompt();
+                } else if (nextInputParam instanceof ConfirmInputParam) {
+                    promptBuilder.createConfirmPromp().name(nextInputParam.getKey()).message(nextInputParam.getDisplayname()).addPrompt();
                 } else
                     throw new IllegalStateException("Param type " + nextInputParam.getClass().getName() + " not supported");
             }
@@ -77,8 +79,9 @@ public class StandaloneActionParamFactory implements ActionParamFactory {
                     } else if (promtResultItemIF instanceof CheckboxResult) {
                         CheckboxResult inputResult = (CheckboxResult) promtResultItemIF;
                         nextInputParam.setValue(inputResult.getSelectedIds());
-
-
+                    } else if (promtResultItemIF instanceof ConfirmResult) {
+                        ConfirmResult confirmResult = (ConfirmResult) promtResultItemIF;
+                        nextInputParam.setValue(confirmResult.getConfirmed().name());
                     } else
                         throw new IllegalStateException("Result of type " + promtResultItemIF.getClass().getName() + " not supported");
 

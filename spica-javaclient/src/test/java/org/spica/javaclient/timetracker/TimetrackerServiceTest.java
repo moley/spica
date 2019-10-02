@@ -17,7 +17,7 @@ public class TimetrackerServiceTest {
     @Before
     public void before () {
         modelCacheService.close();
-        modelCacheService.set(new ModelCache());
+        modelCacheService.set(new ModelCache(), "create new model");
         timetrackerService.setModelCacheService(modelCacheService);
 
     }

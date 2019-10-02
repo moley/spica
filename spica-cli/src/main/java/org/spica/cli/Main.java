@@ -33,6 +33,7 @@ public class Main {
         System.err.close();
         System.setErr(System.out); //to avoid reflection warnings
 
+
         Configuration.getDefaultApiClient().setBasePath("http://localhost:8765/api"); //TODO make nice
 
         StandaloneActionContext actionContext = new StandaloneActionContext();
@@ -63,15 +64,15 @@ public class Main {
             since = " ( since " + dateUtil.getTimeAsString(eventInfo.getStart()) + " )";
         }
 
+        //System.out.println (LogUtil.clearScreen());
         System.out.println ("Current time:         " + LogUtil.cyan(dateUtil.getTimeAsString(LocalDateTime.now())));
         System.out.println ("Working since:        " + LogUtil.cyan(firstTaskOfDay != null ? dateUtil.getTimeAsString(firstTaskOfDay.getStart()) : ""));
         System.out.println ("Cumulated work time:  " + LogUtil.cyan(dateUtil.getDuration(eventDetails.getDurationWork())));
         System.out.println ("Cumulated pause time: " + LogUtil.cyan(dateUtil.getDuration(eventDetails.getDurationPause())));
-        System.out.println ("Current task:         " + LogUtil.cyan(task)  + since + "\n\n\n");
+        System.out.println ("Current task:         " + LogUtil.cyan(task)  + since + "\n\n");
 
         ActionHandler actionHandler = new ActionHandler();
         if (args.length == 0) {
-            System.out.println(LogUtil.gray("\n\nActions:"));
             for (String next: actionHandler.getHelp()) {
                 System.out.println (next);
             }
@@ -79,22 +80,37 @@ public class Main {
         }
         else {
 
-            FoundAction foundAction = actionHandler.findAction(String.join(" ", args));
-            LOGGER.info("Found action     : " + foundAction.getAction().getClass().getName());
-            LOGGER.info("with parameter   : " + foundAction.getParameter());
 
-            Action action = foundAction.getAction();
+            String parameter = String.join(" ", args);
+            FoundAction foundAction = actionHandler.findAction(parameter);
 
-            action.beforeParam(actionContext, foundAction.getParameter());
+            if (foundAction == null) {
+                System.out.println (LogUtil.red("No command found for <" + parameter + ">"));
 
-            InputParams inputParams = action.getInputParams(actionContext, foundAction.getParameter());
+                for (String next: actionHandler.getHelp()) {
+                    System.out.println (next);
+                }
+                System.out.println("\n");
 
-            if (! inputParams.isEmpty()) {
-                StandaloneActionParamFactory actionParamFactory = new StandaloneActionParamFactory();
-                inputParams = actionParamFactory.build(actionContext, inputParams, foundAction);
+            } else {
+                String parameterAddon = foundAction.getParameter().trim().isEmpty() ? "" : " ( " + foundAction.getParameter().trim() + " )";
+                System.out.println(LogUtil.green(foundAction.getAction().getDisplayname().toUpperCase() + parameterAddon) + "\n\n");
+                LOGGER.info("Found action     : " + foundAction.getAction().getClass().getName());
+                LOGGER.info("with parameter   : " + foundAction.getParameter());
+
+                Action action = foundAction.getAction();
+
+                action.beforeParam(actionContext, foundAction.getParameter());
+
+                InputParams inputParams = action.getInputParams(actionContext, foundAction.getParameter());
+
+                if (!inputParams.isEmpty()) {
+                    StandaloneActionParamFactory actionParamFactory = new StandaloneActionParamFactory();
+                    inputParams = actionParamFactory.build(actionContext, inputParams, foundAction);
+                }
+
+                action.execute(new StandaloneActionContext(), inputParams, foundAction.getParameter());
             }
-
-            action.execute(new StandaloneActionContext(), inputParams,foundAction.getParameter());
         }
 
     }

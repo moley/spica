@@ -3,10 +3,7 @@ package org.spica.javaclient.actions.navigation;
 import org.eclipse.jgit.api.Git;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.Action;
-import org.spica.javaclient.actions.ActionContext;
-import org.spica.javaclient.actions.ActionGroup;
-import org.spica.javaclient.actions.Command;
+import org.spica.javaclient.actions.*;
 import org.spica.javaclient.actions.params.InputParams;
 
 import java.awt.*;
@@ -16,7 +13,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-public class GotoStashAction implements Action {
+public class GotoStashAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(GotoStashAction.class);
 
