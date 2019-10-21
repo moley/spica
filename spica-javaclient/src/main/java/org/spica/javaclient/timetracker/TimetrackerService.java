@@ -46,8 +46,6 @@ public class TimetrackerService {
         if (eventInfo != null) {
             eventInfo.setStop(stopTime != null ? stopTime: LocalDateTime.now());
         }
-        else
-            throw new IllegalStateException("No started and not finished booking found");
     }
 
     public void stopPause () {

@@ -35,6 +35,7 @@ public class ActionHandler {
         registeredActions.add(new FinishTopicAction());
         registeredActions.add(new StartPhonecallAction());
         registeredActions.add(new ListBookingsAction());
+        registeredActions.add(new CloseBookingAction());
         registeredActions.add(new FinishDayAction());
         registeredActions.add(new RemoveBookingAction());
         registeredActions.add(new EmptyBookingsAction());

@@ -12,8 +12,6 @@ public class RemoveBookingAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(RemoveBookingAction.class);
 
-    private DateUtil dateUtil = new DateUtil();
-
     @Override
     public String getDisplayname() {
         return "Remove booking";

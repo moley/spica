@@ -1,14 +1,12 @@
 package org.spica.javaclient.actions;
 
-import org.spica.javaclient.utils.LogUtil;
-
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import org.spica.javaclient.utils.LogUtil;
 
 public abstract class AbstractAction implements Action {
 
