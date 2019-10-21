@@ -43,7 +43,7 @@ public class CreateDemoData {
 
         createDemoData.createTopics(modelCache);
 
-        modelCacheService.set(modelCache);
+        modelCacheService.set(modelCache, "init");
 
 
     }
