@@ -1,17 +1,28 @@
 package org.spica.javaclient.actions.booking;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.*;
-import org.spica.javaclient.actions.params.*;
-import org.spica.javaclient.model.*;
-import org.spica.javaclient.timetracker.TimetrackerService;
-import org.spica.javaclient.utils.RenderUtil;
-
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.spica.javaclient.actions.AbstractAction;
+import org.spica.javaclient.actions.ActionContext;
+import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.Command;
+import org.spica.javaclient.model.MessageInfo;
+import org.spica.javaclient.model.MessageType;
+import org.spica.javaclient.model.MessagecontainerInfo;
+import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.model.UserInfo;
+import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.InputParamGroup;
+import org.spica.javaclient.params.InputParams;
+import org.spica.javaclient.params.Renderer;
+import org.spica.javaclient.params.SearchInputParam;
+import org.spica.javaclient.params.TextInputParam;
+import org.spica.javaclient.timetracker.TimetrackerService;
+import org.spica.javaclient.utils.RenderUtil;
 
 public class StartPhonecallAction extends AbstractAction {
 
@@ -22,19 +33,14 @@ public class StartPhonecallAction extends AbstractAction {
     public final static String KEY_FOREIGN_USER = "foreignUser";
     public final static String KEY_MESSAGE = "description";
 
-
-
-
-    @Override
-    public String getDisplayname() {
-        return "Call";
+    @Override public String getDisplayname() {
+        return "Start phonecall";
     }
 
     @Override
     public String getDescription() {
         return "Starts a phone call";
     }
-
 
     public void beforeParam(ActionContext actionContext, String parameterList) {
         TimetrackerService timetrackerService = new TimetrackerService();
@@ -44,12 +50,12 @@ public class StartPhonecallAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, String parameterlist) {
+    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
         inputParams.setEndTime(LocalDateTime.now());
         TimetrackerService timetrackerService = new TimetrackerService();
 
-        UserInfo selectedUser = (UserInfo) inputParams.getInputParam(KEY_FOREIGN_USER);
-        String message = inputParams.getInputParamAsString(KEY_MESSAGE);
+        UserInfo selectedUser = (UserInfo) inputParams.getInputValue(KEY_FOREIGN_USER);
+        String message = inputParams.getInputValueAsString(KEY_MESSAGE);
 
         MessageInfo messageInfo = new MessageInfo();
         messageInfo.setCreator(selectedUser.getId());
@@ -82,7 +88,7 @@ public class StartPhonecallAction extends AbstractAction {
     }
 
     @Override
-    public InputParams getInputParams(ActionContext actionContext, String parameterlist) {
+    public InputParams getInputParams(ActionContext actionContext, CommandLineArguments commandLineArguments) {
 
         List<UserInfo> userInfoList = actionContext.getModelCache().getUserInfos();
 
@@ -93,7 +99,7 @@ public class StartPhonecallAction extends AbstractAction {
             }
         });
 
-        TextInputParam description = new TextInputParam(5, KEY_MESSAGE, "Description", "");
+        TextInputParam description = new TextInputParam(5, KEY_MESSAGE, "Description");
 
         InputParamGroup inputParamGroup = new InputParamGroup();
         inputParamGroup.getInputParams().add(userInfoSearchInputParam);

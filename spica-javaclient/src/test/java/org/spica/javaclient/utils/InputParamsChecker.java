@@ -1,7 +1,7 @@
 package org.spica.javaclient.utils;
 
 import org.junit.Assert;
-import org.spica.javaclient.actions.params.InputParams;
+import org.spica.javaclient.params.InputParams;
 
 public class InputParamsChecker {
 

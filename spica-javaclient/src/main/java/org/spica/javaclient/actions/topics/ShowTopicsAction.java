@@ -3,7 +3,8 @@ package org.spica.javaclient.actions.topics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.*;
-import org.spica.javaclient.actions.params.InputParams;
+import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.model.TopicInfo;
 
@@ -13,8 +14,7 @@ public class ShowTopicsAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ShowTopicsAction.class);
 
-    @Override
-    public String getDisplayname() {
+    @Override public String getDisplayname() {
         return "Show topics";
     }
 
@@ -24,10 +24,11 @@ public class ShowTopicsAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
+    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
         ModelCache modelCache = actionContext.getModelCache();
-        List<TopicInfo> infos = modelCache.findTopicInfosByQuery(parameterList);
-        outputOk("Found " + infos.size() + " topics for query <" + parameterList + ">");
+        String query = commandLineArguments.getOptionalFirstArgumentNotNull();
+        List<TopicInfo> infos = modelCache.findTopicInfosByQuery(query);
+        outputOk("Found " + infos.size() + " topics for query <" + query + ">");
 
         for (TopicInfo next : infos) {
 

@@ -1,0 +1,18 @@
+eclipse {
+}
+
+idea {
+}
+
+jdk {
+  '11'
+}
+
+git {
+  module 'https://github.com/moley/spica.git', 'master'
+  module 'https://github.com/moley/leguan.git', 'master'
+  module 'https://github.com/moley/pike.git', 'master'
+}
+
+links {
+}

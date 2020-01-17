@@ -1,17 +1,19 @@
 package org.spica.javaclient.actions.topics;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.*;
-import org.spica.javaclient.actions.params.InputParamGroup;
-import org.spica.javaclient.actions.params.InputParams;
-import org.spica.javaclient.actions.params.TextInputParam;
-import org.spica.javaclient.model.ModelCache;
-import org.spica.javaclient.model.TopicInfo;
-import org.spica.javaclient.utils.LogUtil;
-
 import java.util.Arrays;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.spica.javaclient.actions.AbstractAction;
+import org.spica.javaclient.actions.ActionContext;
+import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.Command;
+import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.model.TopicInfo;
+import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.InputParamGroup;
+import org.spica.javaclient.params.InputParams;
+import org.spica.javaclient.params.TextInputParam;
 
 public class CreateTopicAction extends AbstractAction {
 
@@ -22,10 +24,10 @@ public class CreateTopicAction extends AbstractAction {
 
     public final static String ERROR_PARAM_NAME = "You did not define a subject as parameter";
 
-    @Override
-    public String getDisplayname() {
+    @Override public String getDisplayname() {
         return "Create topic";
     }
+
 
     @Override
     public String getDescription() {
@@ -33,14 +35,14 @@ public class CreateTopicAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
+    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
-        String name = inputParams.getInputParamAsString(KEY_SUMMARY);
+        String name = inputParams.getInputValueAsString(KEY_SUMMARY);
 
         if (name != null) {
             TopicInfo topicInfo = new TopicInfo();
             topicInfo.setId(UUID.randomUUID().toString());
-            topicInfo.setDescription(inputParams.getInputParamAsString(KEY_DESCRIPTION));
+            topicInfo.setDescription(inputParams.getInputValueAsString(KEY_DESCRIPTION));
             topicInfo.setName(name);
             ModelCache modelCache = actionContext.getModelCache();
             modelCache.getTopicInfos().add(topicInfo);
@@ -65,10 +67,10 @@ public class CreateTopicAction extends AbstractAction {
     }
 
     @Override
-    public InputParams getInputParams(ActionContext actionContext, String paramList) {
+    public InputParams getInputParams(ActionContext actionContext, CommandLineArguments commandLineArguments) {
 
-        TextInputParam summary = new TextInputParam(1, KEY_SUMMARY, "Summary", "");
-        TextInputParam description = new TextInputParam(5, KEY_DESCRIPTION, "Description", "");
+        TextInputParam summary = new TextInputParam(1, KEY_SUMMARY, "Summary");
+        TextInputParam description = new TextInputParam(5, KEY_DESCRIPTION, "Description");
 
         InputParamGroup inputParamGroup = new InputParamGroup();
         inputParamGroup.getInputParams().add(summary);

@@ -44,6 +44,12 @@ task installLocal(type: Copy) {
   into localCliInstallationPath
   includeEmptyDirs = false
   dependsOn tasks.distZip
+
+  doLast {
+    File javaVersionFile = new File (localCliInstallationPath + "/.java-version")
+    javaVersionFile.createNewFile()
+    javaVersionFile.text = '11.0'
+  }
 }
 
 tasks.register("demoData", JavaExec) {

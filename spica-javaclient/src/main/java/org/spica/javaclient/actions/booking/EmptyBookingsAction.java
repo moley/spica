@@ -3,21 +3,19 @@ package org.spica.javaclient.actions.booking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.*;
-import org.spica.javaclient.actions.params.InputParams;
+import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.ModelCache;
-import org.spica.javaclient.utils.DateUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class EmptyBookingsAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(EmptyBookingsAction.class);
 
-    @Override
-    public String getDisplayname() {
-        return "Empty bookings";
+    @Override public String getDisplayname() {
+        return "Empty booking";
     }
 
     @Override
@@ -26,7 +24,7 @@ public class EmptyBookingsAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
+    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
         ModelCache modelCache = actionContext.getModelCache();
 

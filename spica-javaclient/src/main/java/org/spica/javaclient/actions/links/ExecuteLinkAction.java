@@ -1,19 +1,18 @@
 package org.spica.javaclient.actions.links;
 
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.*;
-import org.spica.javaclient.actions.params.*;
+import org.spica.javaclient.actions.AbstractAction;
+import org.spica.javaclient.actions.ActionContext;
+import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.Command;
 import org.spica.javaclient.model.LinkInfo;
-import org.spica.javaclient.model.ModelCache;
-import org.spica.javaclient.model.TopicInfo;
+import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.ConfirmInputParam;
+import org.spica.javaclient.params.InputParamGroup;
+import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.utils.RenderUtil;
-
-import java.awt.*;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
 
 public class ExecuteLinkAction extends AbstractAction {
 
@@ -23,9 +22,8 @@ public class ExecuteLinkAction extends AbstractAction {
 
     private RenderUtil renderUtil = new RenderUtil();
 
-    @Override
-    public String getDisplayname() {
-        return "Execute links";
+    @Override public String getDisplayname() {
+        return "Execute link";
     }
 
     @Override
@@ -34,15 +32,16 @@ public class ExecuteLinkAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
+    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
 
-        List<LinkInfo> linkInfos = actionContext.getModelCache().findLinkInfosByQuery(parameterList);
+        String query = commandLineArguments.getMandatoryFirstArgument("You have to add a parameter containing a name, id or url to your command");
+        List<LinkInfo> linkInfos = actionContext.getModelCache().findLinkInfosByQuery(query);
         if (linkInfos.isEmpty())
-            outputError("No links found for query <" + parameterList + ">");
+            outputError("No links found for query <" + query + ">");
         else {
 
-            boolean confirmed = inputParams.getInputParamAsBoolean(KEY_CONFIRM, false);
+            boolean confirmed = inputParams.getInputValueAsBoolean(KEY_CONFIRM, false);
             if (confirmed) {
                 outputDefault("\n");
                 for (LinkInfo next : linkInfos) {

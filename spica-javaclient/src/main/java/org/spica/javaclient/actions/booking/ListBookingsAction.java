@@ -3,7 +3,8 @@ package org.spica.javaclient.actions.booking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.*;
-import org.spica.javaclient.actions.params.InputParams;
+import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.utils.DateUtil;
@@ -16,10 +17,10 @@ public class ListBookingsAction extends AbstractAction {
 
     private DateUtil dateUtil = new DateUtil();
 
-    @Override
-    public String getDisplayname() {
-        return "List bookings";
+    @Override public String getDisplayname() {
+        return "List booking";
     }
+
 
     @Override
     public String getDescription() {
@@ -27,17 +28,20 @@ public class ListBookingsAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
+    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
         LocalDate from = LocalDate.now();
         LocalDate until = LocalDate.now();
 
         LocalDate today = LocalDate.now();
 
-        if (getOptionalFirstValue(parameterList) != null) {
+        String optionalFirstArgument = commandLineArguments.getOptionalFirstArgument();
 
-            if (parameterList.trim().startsWith("week")) {
-                String offset = parameterList.trim().substring(4);
+        if (optionalFirstArgument != null) {
+            //TODO extract Date parser in own class
+
+            if (optionalFirstArgument.trim().startsWith("week")) {
+                String offset = optionalFirstArgument.trim().substring(4);
                 from = today.minusDays(today.getDayOfWeek().getValue() - 1);
                 until = from.plusDays(6);
 
@@ -47,8 +51,8 @@ public class ListBookingsAction extends AbstractAction {
                     until = until.plusWeeks(offsetAsInt);
                 }
             }
-            else if (parameterList.trim().startsWith("month")) {
-                String offset = parameterList.trim().substring(5);
+            else if (optionalFirstArgument.trim().startsWith("month")) {
+                String offset = optionalFirstArgument.trim().substring(5);
                 from = today.minusDays(today.getDayOfMonth() - 1);
                 until = from.plusMonths(1).minusDays(1);
 
@@ -59,13 +63,13 @@ public class ListBookingsAction extends AbstractAction {
                 }
 
             }
-            else if (parameterList.length() == 4 || parameterList.length() == 5) {
-                LocalDate concreteDate = dateUtil.getDate(parameterList);
+            else if (optionalFirstArgument.length() == 4 || optionalFirstArgument.length() == 5) {
+                LocalDate concreteDate = dateUtil.getDate(optionalFirstArgument);
                 from = concreteDate;
                 until = concreteDate;
             }
             else
-                throw new IllegalArgumentException("Illegal format of parameter: " + parameterList);
+                throw new IllegalArgumentException("Illegal format of parameter: " + optionalFirstArgument);
 
 
         }

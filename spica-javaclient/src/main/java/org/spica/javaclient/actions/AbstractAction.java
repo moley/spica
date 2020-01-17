@@ -20,9 +20,15 @@ public abstract class AbstractAction implements Action {
         System.out.println (message);
     }
 
-    protected void outputError (final String message) {
+
+    protected AbstractAction outputError (final String message) {
         errors.add(message);
         System.out.println (LogUtil.red(message));
+        return this;
+    }
+
+    public void finish () {
+        System.exit(1);
     }
 
     public List<String> getErrors () {
@@ -39,7 +45,7 @@ public abstract class AbstractAction implements Action {
         } catch (IOException e) {
             outputError(e.getLocalizedMessage());
         }
-        return "";
+        return null;
     }
 
 }

@@ -1,5 +1,7 @@
 package org.spica.server.project.domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -8,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.spica.server.commons.Idable;
+import org.spica.server.communication.domain.Message;
 
 @Entity
 @Builder
@@ -28,6 +31,8 @@ public class Project implements Idable {
 	private String visibilityRules;
 
 	private String creatorID;
+
+
 
 
 

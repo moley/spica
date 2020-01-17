@@ -1,10 +1,9 @@
 package org.spica.javaclient.actions;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.params.InputParams;
-
+import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.InputParams;
 
 public interface Action {
 
@@ -12,9 +11,10 @@ public interface Action {
 
     String getDisplayname ();
 
+
     String getDescription ();
 
-    void execute (ActionContext actionContext, InputParams inputParams, String parameterList);
+    void execute (ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLine);
 
     default String getFirstValue (final String ... values) {
 
@@ -36,14 +36,11 @@ public interface Action {
 
     Command getCommand ();
 
-    default InputParams getInputParams(ActionContext actionContext, String parameterList) {
+    default InputParams getInputParams(ActionContext actionContext, CommandLineArguments commandLineArguments) {
         LOGGER.info("default getInputParams implementation");
         return new InputParams();
     }
 
-    default void beforeParam (ActionContext actionContext, String parameterList) {
-        LOGGER.info("default beforeParam implementation");
-    }
 
 
 }

@@ -4,7 +4,8 @@ import org.eclipse.jgit.api.Git;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.*;
-import org.spica.javaclient.actions.params.InputParams;
+import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.InputParams;
 
 import java.awt.*;
 import java.io.File;
@@ -17,10 +18,8 @@ public class GotoStashAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(GotoStashAction.class);
 
-
-    @Override
-    public String getDisplayname() {
-        return "Goto stash";
+    @Override public String getDisplayname() {
+        return "Goto bitbucket";
     }
 
     @Override
@@ -44,7 +43,7 @@ public class GotoStashAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
+    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
         File currentWorkingDir = getNextGitProject(actionContext.getCurrentWorkingDir());
         if (currentWorkingDir != null) {

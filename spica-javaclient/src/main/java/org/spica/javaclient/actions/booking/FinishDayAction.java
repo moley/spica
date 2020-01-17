@@ -1,19 +1,22 @@
 package org.spica.javaclient.actions.booking;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.*;
-import org.spica.javaclient.actions.params.ConfirmInputParam;
-import org.spica.javaclient.actions.params.InputParamGroup;
-import org.spica.javaclient.actions.params.InputParams;
-import org.spica.javaclient.model.EventInfo;
-import org.spica.javaclient.model.ModelCache;
-import org.spica.javaclient.timetracker.TimetrackerService;
-import org.spica.javaclient.utils.DateUtil;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.spica.javaclient.actions.AbstractAction;
+import org.spica.javaclient.actions.ActionContext;
+import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.Command;
+import org.spica.javaclient.model.EventInfo;
+import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.ConfirmInputParam;
+import org.spica.javaclient.params.InputParamGroup;
+import org.spica.javaclient.params.InputParams;
+import org.spica.javaclient.timetracker.TimetrackerService;
+import org.spica.javaclient.utils.DateUtil;
 
 public class FinishDayAction extends AbstractAction {
 
@@ -24,9 +27,8 @@ public class FinishDayAction extends AbstractAction {
     public final static String DISPLAY_NAME = "Finish day";
     public final static String KEY_CONFIRM_LATER = "CONFIRM_LATER";
 
-    @Override
-    public String getDisplayname() {
-        return DISPLAY_NAME;
+    @Override public String getDisplayname() {
+        return "Finish day";
     }
 
     @Override
@@ -35,21 +37,21 @@ public class FinishDayAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, String parameterlist) {
-        LOGGER.info("Finish day called with parameter " + parameterlist);
+    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
+        LOGGER.info("Finish day called with parameter " + commandLineArguments);
 
 
 
         LocalDate lastOpenEventDate = getDateLastOpenEvent(actionContext);
-        if (lastOpenEventDate.equals(LocalDate.now()) || inputParams.getInputParamAsBoolean(KEY_CONFIRM_LATER, Boolean.FALSE)) {
+        if (lastOpenEventDate.equals(LocalDate.now()) || inputParams.getInputValueAsBoolean(KEY_CONFIRM_LATER, Boolean.FALSE)) {
 
-            if (inputParams.getInputParamAsBoolean(KEY_CONFIRM_LATER, Boolean.FALSE) && parameterlist.isEmpty()) {
+            if (inputParams.getInputValueAsBoolean(KEY_CONFIRM_LATER, Boolean.FALSE) && commandLineArguments.isEmpty()) {
                 outputError("If you want to finish a previous day you have to add the stop time as parameter");
             }
             else {
                 LocalDateTime stopTime = LocalDateTime.now();
-                if (parameterlist != null && !parameterlist.trim().isEmpty()) {
-                    LocalTime localTime = dateUtil.getTime(parameterlist);
+                if (! commandLineArguments.isEmpty()) {
+                    LocalTime localTime = dateUtil.getTime(commandLineArguments.getSingleArgument());
                     stopTime = LocalDateTime.of(LocalDate.now(), localTime);
                 }
                 TimetrackerService timetrackerService = new TimetrackerService();
@@ -77,7 +79,7 @@ public class FinishDayAction extends AbstractAction {
     }
 
     @Override
-    public InputParams getInputParams(ActionContext actionContext, String parameterList) {
+    public InputParams getInputParams(ActionContext actionContext, CommandLineArguments commandLineArguments) {
 
 
         InputParams inputParams = new InputParams();

@@ -1,20 +1,22 @@
 package org.spica.javaclient.actions.projects;
 
+import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.*;
-import org.spica.javaclient.actions.params.InputParams;
+import org.spica.javaclient.actions.AbstractAction;
+import org.spica.javaclient.actions.ActionContext;
+import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.Command;
 import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.model.ProjectInfo;
-
-import java.util.ArrayList;
+import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.InputParams;
 
 public class EmptyProjectsAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(EmptyProjectsAction.class);
 
-    @Override
-    public String getDisplayname() {
+    @Override public String getDisplayname() {
         return "Empty projects";
     }
 
@@ -24,7 +26,7 @@ public class EmptyProjectsAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
+    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
         ModelCache modelCache = actionContext.getModelCache();
         modelCache.setProjectInfos(new ArrayList<ProjectInfo>());

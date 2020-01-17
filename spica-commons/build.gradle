@@ -4,6 +4,12 @@ dependencies {
   compile 'org.modelmapper:modelmapper:2.3.0'
   compile 'org.springframework:spring-context:5.1.5.RELEASE'
 
+  compile 'com.atlassian.stash:stash-java-client-api:2.3.0'
+  compile 'com.atlassian.stash:stash-java-client-httpclient:2.3.0'
+  compile 'org.eclipse.jgit:org.eclipse.jgit:4.11.0.201803080745-r'
+  compile 'com.google.code.gson:gson:2.8.5'
+  compile 'commons-io:commons-io:2.6'
+
   compile 'com.atlassian.jira:jira-rest-java-client-core:5.1.0'
 
 

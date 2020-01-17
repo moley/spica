@@ -3,7 +3,8 @@ package org.spica.javaclient.actions.navigation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.*;
-import org.spica.javaclient.actions.params.InputParams;
+import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.InputParams;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -18,9 +19,8 @@ public class GotoGoogleAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(GotoGoogleAction.class);
 
-    @Override
-    public String getDisplayname() {
-        return "Goto google with clipboard content";
+    @Override public String getDisplayname() {
+        return "Goto google";
     }
 
     @Override
@@ -29,7 +29,7 @@ public class GotoGoogleAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
+    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
 
         try {
@@ -46,6 +46,8 @@ public class GotoGoogleAction extends AbstractAction {
                 url = url + "/search?q=" + encodedQuery;
                 LOGGER.info("Search url " + url);
             }
+            else
+                outputError("You have to add content to clipboard before you call this command");
 
             Desktop.getDesktop().browse(new URI(url));
 

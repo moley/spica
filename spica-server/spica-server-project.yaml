@@ -167,6 +167,22 @@ components:
           type: "string"
         parent:
           $ref: "#/components/schemas/ProjectInfo"
+        sourceparts:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ProjectSourcePartInfo"
+
+    ProjectSourcePartInfo:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        url:
+          type: "string"
+        branch:
+          type: "string"
+        enabled:
+          type: "boolean"
 
     ProjectContainerInfo:
       type: "object"

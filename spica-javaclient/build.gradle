@@ -20,6 +20,8 @@ dependencies {
   compile 'javax.inject:javax.inject:1'
 
   compile 'commons-io:commons-io:2.6'
+  compile 'commons-cli:commons-cli:1.4'
+
 
   compile 'org.slf4j:slf4j-api:1.7.25'
 

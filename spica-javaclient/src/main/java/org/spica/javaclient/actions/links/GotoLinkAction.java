@@ -3,7 +3,8 @@ package org.spica.javaclient.actions.links;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.*;
-import org.spica.javaclient.actions.params.InputParams;
+import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.model.LinkInfo;
 
 import java.awt.*;
@@ -16,9 +17,8 @@ public class GotoLinkAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(GotoLinkAction.class);
 
-    @Override
-    public String getDisplayname() {
-        return "Goto links";
+    @Override public String getDisplayname() {
+        return "Goto link";
     }
 
     @Override
@@ -27,14 +27,15 @@ public class GotoLinkAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
+    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
         outputDefault("Links:\n\n");
 
-        List<LinkInfo> linkInfos = actionContext.getModelCache().findLinkInfosByQuery(parameterList);
+        String query = commandLineArguments.getMandatoryFirstArgument("You have to add a query param (name, id, url) to the search");
+        List<LinkInfo> linkInfos = actionContext.getModelCache().findLinkInfosByQuery(query);
 
         if (linkInfos.isEmpty())
-            outputError("No links found for query <" + parameterList + ">");
+            outputError("No links found for query <" + query + ">");
         else
             for (LinkInfo next : linkInfos) {
                 try {

@@ -3,10 +3,11 @@ package org.spica.javaclient.actions.booking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.*;
-import org.spica.javaclient.actions.params.InputParamGroup;
-import org.spica.javaclient.actions.params.InputParams;
-import org.spica.javaclient.actions.params.Renderer;
-import org.spica.javaclient.actions.params.SearchInputParam;
+import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.InputParamGroup;
+import org.spica.javaclient.params.InputParams;
+import org.spica.javaclient.params.Renderer;
+import org.spica.javaclient.params.SearchInputParam;
 import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.model.TopicInfo;
 import org.spica.javaclient.timetracker.TimetrackerService;
@@ -22,8 +23,7 @@ public class StartTopicAction extends AbstractAction {
 
     public final static String KEY_TOPIC = "topic";
 
-    @Override
-    public String getDisplayname() {
+    @Override public String getDisplayname() {
         return "Start topic";
     }
 
@@ -33,11 +33,12 @@ public class StartTopicAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, String parameterlist) {
+    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
         ModelCache modelCache = actionContext.getModelCache();
-        List<TopicInfo> infos = modelCache.findTopicInfosByQuery(parameterlist);
-        TopicInfo selectedTopicInfo = infos.size() == 1 ? infos.get(0): (TopicInfo) inputParams.getInputParam(KEY_TOPIC);
+        String query = commandLineArguments.getMandatoryFirstArgument("You have to add a parameter id, name or external system id to your command");
+        List<TopicInfo> infos = modelCache.findTopicInfosByQuery(query);
+        TopicInfo selectedTopicInfo = infos.size() == 1 ? infos.get(0): (TopicInfo) inputParams.getInputValue(KEY_TOPIC);
 
         TimetrackerService timetrackerService = new TimetrackerService();
         timetrackerService.setModelCacheService(actionContext.getModelCacheService());

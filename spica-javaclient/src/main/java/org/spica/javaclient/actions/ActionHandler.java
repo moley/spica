@@ -1,21 +1,49 @@
 package org.spica.javaclient.actions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.admin.ImportUsersAction;
-import org.spica.javaclient.actions.admin.ShowStatusAction;
-import org.spica.javaclient.actions.booking.*;
-import org.spica.javaclient.actions.links.*;
-import org.spica.javaclient.actions.navigation.GotoGoogleAction;
-import org.spica.javaclient.actions.navigation.GotoJiraAction;
-import org.spica.javaclient.actions.navigation.GotoStashAction;
-import org.spica.javaclient.actions.projects.*;
-import org.spica.javaclient.actions.topics.*;
-import org.spica.javaclient.utils.LogUtil;
-
+import com.atlassian.stash.rest.client.api.entity.Branch;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.spica.javaclient.actions.auto.ExecuteScriptAction;
+import org.spica.javaclient.actions.booking.CloseBookingAction;
+import org.spica.javaclient.actions.booking.CreateBookingAction;
+import org.spica.javaclient.actions.booking.EmptyBookingsAction;
+import org.spica.javaclient.actions.booking.FinishDayAction;
+import org.spica.javaclient.actions.booking.FinishTopicAction;
+import org.spica.javaclient.actions.booking.ListBookingsAction;
+import org.spica.javaclient.actions.booking.RemoveBookingAction;
+import org.spica.javaclient.actions.booking.StartOrStopPauseAction;
+import org.spica.javaclient.actions.booking.StartPhonecallAction;
+import org.spica.javaclient.actions.booking.StartTopicAction;
+import org.spica.javaclient.actions.configuration.ImportUsersAction;
+import org.spica.javaclient.actions.configuration.ShowStatusAction;
+import org.spica.javaclient.actions.links.CreateLinkAction;
+import org.spica.javaclient.actions.links.ExecuteLinkAction;
+import org.spica.javaclient.actions.links.GotoLinkAction;
+import org.spica.javaclient.actions.links.ListLinksAction;
+import org.spica.javaclient.actions.links.RemoveLinkAction;
+import org.spica.javaclient.actions.navigation.GotoGoogleAction;
+import org.spica.javaclient.actions.navigation.GotoJiraAction;
+import org.spica.javaclient.actions.navigation.GotoStashAction;
+import org.spica.javaclient.actions.projects.BranchProjectAction;
+import org.spica.javaclient.actions.projects.CloneProjectAction;
+import org.spica.javaclient.actions.projects.CreateProjectAction;
+import org.spica.javaclient.actions.projects.EmptyProjectsAction;
+import org.spica.javaclient.actions.projects.ListProjectsAction;
+import org.spica.javaclient.actions.projects.ModulesInProjectAction;
+import org.spica.javaclient.actions.projects.RemoveBranchProjectAction;
+import org.spica.javaclient.actions.projects.RemoveProjectAction;
+import org.spica.javaclient.actions.projects.ResetProjectAction;
+import org.spica.javaclient.actions.projects.ShowProjectsAction;
+import org.spica.javaclient.actions.topics.CreateTopicAction;
+import org.spica.javaclient.actions.topics.EmptyTopicsAction;
+import org.spica.javaclient.actions.topics.ImportTopicAction;
+import org.spica.javaclient.actions.topics.ListTopicsAction;
+import org.spica.javaclient.actions.topics.RemoveTopicAction;
+import org.spica.javaclient.actions.topics.ShowTopicsAction;
+import org.spica.javaclient.utils.LogUtil;
 
 public class ActionHandler {
 
@@ -52,8 +80,14 @@ public class ActionHandler {
         registeredActions.add(new CreateProjectAction());
         registeredActions.add(new ListProjectsAction());
         registeredActions.add(new ShowProjectsAction());
+        registeredActions.add(new ModulesInProjectAction());
+        registeredActions.add(new CloneProjectAction());
+        registeredActions.add(new BranchProjectAction());
+        registeredActions.add(new ResetProjectAction());
+        registeredActions.add(new RemoveBranchProjectAction());
         registeredActions.add(new RemoveProjectAction());
         registeredActions.add(new EmptyProjectsAction());
+
 
         //links
         registeredActions.add(new CreateLinkAction());
@@ -68,9 +102,12 @@ public class ActionHandler {
         registeredActions.add(new GotoJiraAction());
         registeredActions.add(new GotoGoogleAction());
 
+        //configuration
         registeredActions.add(new ImportUsersAction());
         registeredActions.add(new ShowStatusAction());
 
+        //automatication
+        registeredActions.add(new ExecuteScriptAction());
     }
 
     public FoundAction findAction (final String text) {
@@ -82,17 +119,15 @@ public class ActionHandler {
         String group = tokens[0];
         String command = tokens [1];
         String [] params = Arrays.copyOfRange(tokens, 2, tokens.length);
-        String paramstring = String.join(" ", params);
 
         Collection<String> foundCommandTokens = new ArrayList<String>();
-
 
         for (Action next: registeredActions) {
 
             foundCommandTokens.add(next.getGroup().name() + "(" + next.getGroup().getShortkey() + ") - " + next.getCommand().getCommand() + "(" + next.getCommand().getShortkey());
             if (next.getGroup().name().equalsIgnoreCase(group) || next.getGroup().getShortkey().equalsIgnoreCase(group)) {
                 if (next.getCommand().getCommand().equalsIgnoreCase(command) || next.getCommand().getShortkey().equalsIgnoreCase(command)) {
-                    return new FoundAction(next, paramstring);
+                    return new FoundAction(next, params);
                 }
             }
         }
@@ -108,11 +143,11 @@ public class ActionHandler {
 
         for (Action next: registeredActions) {
             if (lastGroup.strip().isBlank() || ! lastGroup.equals(next.getGroup().name())) {
-                commands.add("\n  " + LogUtil.green(next.getGroup().name()));
+                commands.add("\n  " + LogUtil.green(next.getGroup().name() + " (" + next.getGroup().getShortkey() + ")"));
             }
             lastGroup = next.getGroup().name();
 
-            String helpToken = String.format("     %-2s%-5s%-40s%-70s", next.getGroup().getShortkey(), next.getCommand().getShortkey(), next.getDisplayname(), next.getDescription());
+            String helpToken = String.format("     %-15s%-50s%-70s", next.getCommand().getCommand(), next.getDisplayname(), next.getDescription());
             commands.add(helpToken);
         }
 

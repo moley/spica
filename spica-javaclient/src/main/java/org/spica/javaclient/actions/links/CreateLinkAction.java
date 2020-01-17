@@ -1,20 +1,29 @@
 package org.spica.javaclient.actions.links;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.*;
-import org.spica.javaclient.actions.params.*;
-import org.spica.javaclient.actions.projects.CreateProjectAction;
-import org.spica.javaclient.links.LinkFinder;
-import org.spica.javaclient.model.*;
-import org.spica.javaclient.utils.RenderUtil;
-
-import java.awt.datatransfer.Clipboard;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.spica.javaclient.actions.AbstractAction;
+import org.spica.javaclient.actions.ActionContext;
+import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.Command;
+import org.spica.javaclient.model.LinkInfo;
+import org.spica.javaclient.model.LinkType;
+import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.model.ProjectInfo;
+import org.spica.javaclient.model.TopicInfo;
+import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.InputParamGroup;
+import org.spica.javaclient.params.InputParams;
+import org.spica.javaclient.params.Renderer;
+import org.spica.javaclient.params.SearchInputParam;
+import org.spica.javaclient.params.SelectInputParam;
+import org.spica.javaclient.params.TextInputParam;
+import org.spica.javaclient.utils.RenderUtil;
 
 public class CreateLinkAction extends AbstractAction {
 
@@ -26,10 +35,7 @@ public class CreateLinkAction extends AbstractAction {
     public final static String KEY_TOPIC = "topic";
     public final static String KEY_PROJECT = "project";
 
-    private String clipboard;
-
-    @Override
-    public String getDisplayname() {
+    @Override public String getDisplayname() {
         return "Create link";
     }
 
@@ -39,16 +45,16 @@ public class CreateLinkAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
+    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
         ModelCache modelCache = actionContext.getModelCache();
 
-        String name = getFirstValue(parameterList, inputParams.getInputParamAsString(KEY_NAME));
-        String url = getFirstValue(clipboard, inputParams.getInputParamAsString(KEY_URL));
-        LinkType selectedLinkType = inputParams.getInputParam(KEY_TYPE, LinkType.class);
+        String name = getFirstValue(commandLineArguments.getOptionalFirstArgument(), inputParams.getInputValueAsString(KEY_NAME));
+        String url = getFirstValue(inputParams.getInputValueAsString(KEY_URL));
+        LinkType selectedLinkType = inputParams.getInputValue(KEY_TYPE, LinkType.class);
 
-        TopicInfo currentTopic = modelCache.getCurrentTopic() != null ? modelCache.getCurrentTopic() : inputParams.getInputParam(KEY_TOPIC, TopicInfo.class);
-        ProjectInfo currentProject = inputParams.getInputParam(KEY_PROJECT, ProjectInfo.class);
+        TopicInfo currentTopic = modelCache.getCurrentTopic() != null ? modelCache.getCurrentTopic() : inputParams.getInputValue(KEY_TOPIC, TopicInfo.class);
+        ProjectInfo currentProject = inputParams.getInputValue(KEY_PROJECT, ProjectInfo.class);
 
         LinkInfo linkInfo = new LinkInfo();
         linkInfo.setId(UUID.randomUUID().toString());
@@ -90,27 +96,17 @@ public class CreateLinkAction extends AbstractAction {
     }
 
     @Override
-    public InputParams getInputParams(ActionContext actionContext, String paramList) {
-
-
-        clipboard = getClipBoard();
-
-        System.out.println ("Clipboard: " + clipboard);
-        System.out.println ("Parameter: " + paramList);
-
+    public InputParams getInputParams(ActionContext actionContext, CommandLineArguments commandLineArguments) {
         InputParamGroup inputParamGroupGeneric = new InputParamGroup("Generic");
 
         ModelCache modelCache = actionContext.getModelCache();
 
         //General configurations
-        if (paramList.trim().isBlank()) {
-            TextInputParam name = new TextInputParam(1, KEY_NAME, "Name", "");
-            inputParamGroupGeneric.getInputParams().add(name);
-        }
-        if (clipboard == null || clipboard.trim().isBlank()) {
-            TextInputParam name = new TextInputParam(1, KEY_URL, "URL", "");
-            inputParamGroupGeneric.getInputParams().add(name);
-        }
+        TextInputParam name = new TextInputParam(1, KEY_NAME, "Name");
+        inputParamGroupGeneric.getInputParams().add(name);
+
+        TextInputParam url = new TextInputParam(1, KEY_URL, "URL", getClipBoard());
+        inputParamGroupGeneric.getInputParams().add(url);
 
         SelectInputParam<LinkType> type = new SelectInputParam<LinkType>(KEY_TYPE, "Type: ", Arrays.asList(LinkType.values()), new Renderer<LinkType>() {
             @Override
@@ -124,7 +120,7 @@ public class CreateLinkAction extends AbstractAction {
         InputParamGroup inputParamGroupReferenceTopic = new InputParamGroup("Reference Topic", new Predicate<InputParams>() {
             @Override
             public boolean test(InputParams inputParams) {
-                LinkType linkType = inputParams.getInputParam(KEY_TYPE, LinkType.class);
+                LinkType linkType = inputParams.getInputValue(KEY_TYPE, LinkType.class);
                 boolean linkTypeNeedsTopic = linkType.equals(LinkType.TOPIC) || linkType.equals(LinkType.PROJECT);
 
                 if (linkTypeNeedsTopic) {
@@ -149,7 +145,7 @@ public class CreateLinkAction extends AbstractAction {
         InputParamGroup inputParamGroupReferenceProject = new InputParamGroup("Reference Topic", new Predicate<InputParams>() {
             @Override
             public boolean test(InputParams inputParams) {
-                LinkType linkType = inputParams.getInputParam(KEY_TYPE, LinkType.class);
+                LinkType linkType = inputParams.getInputValue(KEY_TYPE, LinkType.class);
                 boolean linkTypeNeedsProject = linkType.equals(LinkType.PROJECT);
 
                 if (linkTypeNeedsProject) {

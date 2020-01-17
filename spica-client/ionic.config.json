@@ -1,7 +1,0 @@
-{
-  "name": "spica-client",
-  "integrations": {
-    "cordova": {}
-  },
-  "type": "ionic-angular"
-}

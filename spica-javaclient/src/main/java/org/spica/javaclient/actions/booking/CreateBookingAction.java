@@ -1,21 +1,32 @@
 package org.spica.javaclient.actions.booking;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.*;
-import org.spica.javaclient.actions.params.*;
-import org.spica.javaclient.actions.topics.CreateTopicAction;
-import org.spica.javaclient.model.*;
-import org.spica.javaclient.timetracker.TimetrackerCreationParam;
-import org.spica.javaclient.timetracker.TimetrackerService;
-import org.spica.javaclient.utils.DateUtil;
-import org.spica.javaclient.utils.RenderUtil;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.spica.javaclient.actions.AbstractAction;
+import org.spica.javaclient.actions.ActionContext;
+import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.Command;
+import org.spica.javaclient.model.EventType;
+import org.spica.javaclient.model.MessageInfo;
+import org.spica.javaclient.model.MessageType;
+import org.spica.javaclient.model.TopicInfo;
+import org.spica.javaclient.model.UserInfo;
+import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.InputParamGroup;
+import org.spica.javaclient.params.InputParams;
+import org.spica.javaclient.params.Renderer;
+import org.spica.javaclient.params.SearchInputParam;
+import org.spica.javaclient.params.SelectInputParam;
+import org.spica.javaclient.params.TextInputParam;
+import org.spica.javaclient.timetracker.TimetrackerCreationParam;
+import org.spica.javaclient.timetracker.TimetrackerService;
+import org.spica.javaclient.utils.DateUtil;
+import org.spica.javaclient.utils.RenderUtil;
 
 public class CreateBookingAction extends AbstractAction {
 
@@ -32,9 +43,7 @@ public class CreateBookingAction extends AbstractAction {
 
     private DateUtil dateUtil = new DateUtil();
 
-
-    @Override
-    public String getDisplayname() {
+    @Override public String getDisplayname() {
         return "Create booking";
     }
 
@@ -44,21 +53,21 @@ public class CreateBookingAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
+    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
-        LocalTime fromTime = dateUtil.getTime(inputParams.getInputParamAsString(KEY_FROM));
-        LocalTime untilTime = inputParams.isAvailable(KEY_UNTIL) ? dateUtil.getTime(inputParams.getInputParamAsString(KEY_UNTIL)): null;
+        LocalTime fromTime = dateUtil.getTime(inputParams.getInputValueAsString(KEY_FROM));
+        LocalTime untilTime = inputParams.isAvailable(KEY_UNTIL) ? dateUtil.getTime(inputParams.getInputValueAsString(KEY_UNTIL)): null;
 
-        EventType eventType = EventType.fromValue(inputParams.getInputParamAsString(KEY_TYPE));
-        UserInfo userInfo = inputParams.getInputParam(KEY_FOREIGN_USER, UserInfo.class);
-        String text = inputParams.getInputParamAsString(KEY_TEXT);
+        EventType eventType = EventType.fromValue(inputParams.getInputValueAsString(KEY_TYPE));
+        UserInfo userInfo = inputParams.getInputValue(KEY_FOREIGN_USER, UserInfo.class);
+        String text = inputParams.getInputValueAsString(KEY_TEXT);
 
         TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
         timetrackerCreationParam.setFrom( fromTime);
         timetrackerCreationParam.setUntil(untilTime);
         timetrackerCreationParam.setDate(LocalDate.now());
-        timetrackerCreationParam.setEventType(EventType.fromValue(inputParams.getInputParamAsString(KEY_TYPE)));
-        timetrackerCreationParam.setTopicInfo(inputParams.getInputParam(KEY_TOPIC, TopicInfo.class));
+        timetrackerCreationParam.setEventType(EventType.fromValue(inputParams.getInputValueAsString(KEY_TYPE)));
+        timetrackerCreationParam.setTopicInfo(inputParams.getInputValue(KEY_TOPIC, TopicInfo.class));
         TimetrackerService timetrackerService = new TimetrackerService();
         timetrackerService.setModelCacheService(actionContext.getModelCacheService());
 
@@ -93,11 +102,11 @@ public class CreateBookingAction extends AbstractAction {
     }
 
     @Override
-    public InputParams getInputParams(ActionContext actionContext, String parameterList) {
+    public InputParams getInputParams(ActionContext actionContext, CommandLineArguments commandLineArguments) {
 
         //General parameters
-        TextInputParam started = new TextInputParam(1, KEY_FROM, "Started ", null);
-        TextInputParam stopped = new TextInputParam(1, KEY_UNTIL, "Stopped (maybe empty)", null);
+        TextInputParam started = new TextInputParam(1, KEY_FROM, "Started ");
+        TextInputParam stopped = new TextInputParam(1, KEY_UNTIL, "Stopped (maybe empty)");
         SelectInputParam<EventType> type = new SelectInputParam<EventType>(KEY_TYPE, "Type: ", Arrays.asList(EventType.values()), new Renderer<EventType>() {
             @Override
             public String toString(EventType eventType) {
@@ -119,11 +128,11 @@ public class CreateBookingAction extends AbstractAction {
                 return renderUtil.getTopic(topicInfo);
             }
         });
-        InputParamGroup inputParamGroupTopic = new InputParamGroup("Topic", inputParams -> inputParams.getInputParamAsString(KEY_TYPE).equalsIgnoreCase(EventType.TOPIC.getValue()));
+        InputParamGroup inputParamGroupTopic = new InputParamGroup("Topic", inputParams -> inputParams.getInputValueAsString(KEY_TYPE).equalsIgnoreCase(EventType.TOPIC.getValue()));
         inputParamGroupTopic.getInputParams().add(topicSearch);
 
         //Message parameters
-        TextInputParam summary = new TextInputParam(1, KEY_TEXT, "Message text: ", null);
+        TextInputParam summary = new TextInputParam(1, KEY_TEXT, "Message text: ");
         List<UserInfo> userInfoList = actionContext.getModelCache().getUserInfos();
         SearchInputParam<UserInfo> userInfoSearchInputParam = new SearchInputParam<UserInfo>(KEY_FOREIGN_USER, "User", userInfoList, new Renderer<UserInfo>() {
             @Override
@@ -133,7 +142,7 @@ public class CreateBookingAction extends AbstractAction {
         });
 
 
-        InputParamGroup inputParamGroupMessage = new InputParamGroup("Message", inputParams -> inputParams.getInputParamAsString(KEY_TYPE).equalsIgnoreCase(EventType.MESSAGE.getValue()));
+        InputParamGroup inputParamGroupMessage = new InputParamGroup("Message", inputParams -> inputParams.getInputValueAsString(KEY_TYPE).equalsIgnoreCase(EventType.MESSAGE.getValue()));
         inputParamGroupMessage.getInputParams().add(summary);
         inputParamGroupMessage.getInputParams().add(userInfoSearchInputParam);
 

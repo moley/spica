@@ -3,7 +3,8 @@ package org.spica.javaclient.actions.projects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.*;
-import org.spica.javaclient.actions.params.InputParams;
+import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.model.ProjectInfo;
 
@@ -13,10 +14,8 @@ public class RemoveProjectAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(RemoveProjectAction.class);
 
-
-    @Override
-    public String getDisplayname() {
-        return "Remove projects";
+    @Override public String getDisplayname() {
+        return "Remove project";
     }
 
     @Override
@@ -24,10 +23,11 @@ public class RemoveProjectAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
+    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
         ModelCache modelCache = actionContext.getModelCache();
-        List<ProjectInfo> infos = modelCache.findProjectInfosByQuery(parameterList);
+        String query = commandLineArguments.getMandatoryFirstArgument("You have to add an parameter containing a name or an id to your command");
+        List<ProjectInfo> infos = modelCache.findProjectInfosByQuery(query);
         modelCache.getProjectInfos().removeAll(infos);
 
         outputOk("Removed " + infos.size() +  " projects");

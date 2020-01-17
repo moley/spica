@@ -4,32 +4,34 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
 import org.spica.javaclient.ApiException;
-import org.spica.javaclient.actions.*;
-import org.spica.javaclient.actions.params.InputParams;
+import org.spica.javaclient.actions.AbstractAction;
+import org.spica.javaclient.actions.ActionContext;
+import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.Command;
 import org.spica.javaclient.api.TopicApi;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.model.TopicInfo;
+import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.timetracker.TimetrackerService;
 
 public class FinishTopicAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(FinishTopicAction.class);
 
-
-    @Override
-    public String getDisplayname() {
-        return "Finish topic";
-    }
-
     @Override
     public String getDescription() {
         return "Finish current topic";
     }
 
+    @Override public String getDisplayname() {
+        return "Finish current topic";
+    }
+
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, String parameterList) {
+    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
         ModelCache modelCache = actionContext.getModelCache();
         SpicaProperties spicaProperties = actionContext.getSpicaProperties();
 

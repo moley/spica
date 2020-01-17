@@ -4,9 +4,9 @@ public class FoundAction {
 
     private final Action action;
 
-    private final String parameter;
+    private final String [] parameter;
 
-    public FoundAction (final Action action, String parameter) {
+    public FoundAction (final Action action, String [] parameter) {
         this.action = action;
         this.parameter = parameter;
 
@@ -17,7 +17,7 @@ public class FoundAction {
         return action;
     }
 
-    public String getParameter() {
+    public String [] getParameter() {
         return parameter;
     }
 }

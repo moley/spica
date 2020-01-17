@@ -7,7 +7,8 @@ public enum ActionGroup {
     GOTO ("g"),
     BOOKING("b"),
     LINKS("l"),
-    ADMIN("a");
+    CONFIGURATION("c"),
+    AUTOMATION ("a");
 
     private String shortkey;
 

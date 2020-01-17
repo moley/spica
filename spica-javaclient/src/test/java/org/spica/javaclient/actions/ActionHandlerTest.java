@@ -36,7 +36,6 @@ public class ActionHandlerTest {
         Collection<String> helpStrings = actionHandler.getHelp();
         String asString = String.join("\n", helpStrings);
         Assert.assertTrue ("Shortform of action not found", asString.contains("b c"));
-        Assert.assertTrue ("Displayname of action not found", asString.contains(createBookingAction.getDisplayname()));
         Assert.assertTrue ("Description of action not found", asString.contains(createBookingAction.getDescription()));
 
     }
