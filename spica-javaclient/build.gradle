@@ -40,11 +40,9 @@ dependencies {
 
   compile 'org.eclipse.jgit:org.eclipse.jgit:4.11.0.201803080745-r'
 
+  compile 'org.codehaus.groovy:groovy-all:2.5.9'
+
   testCompile 'org.mockito:mockito-core:2.28.2'
-
-
-
-
 }
 
 swaggerSources {

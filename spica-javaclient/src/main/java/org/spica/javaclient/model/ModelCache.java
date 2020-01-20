@@ -36,8 +36,6 @@ public class ModelCache {
 
   private List<EventInfo> eventInfosPlanned = new ArrayList<>();
 
-  @SerializedName("start")
-  private LocalDateTime something = null;
 
 
 
@@ -169,7 +167,6 @@ public class ModelCache {
 
   public TopicInfo getCurrentTopic () {
     EventInfo eventInfo = findLastOpenEventFromToday();
-    TopicInfo currentTopic = null;
     if (eventInfo != null && eventInfo.getEventType().equals(EventType.TOPIC)) {
       return findTopicInfoById(eventInfo.getReferenceId());
     }
@@ -204,14 +201,6 @@ public class ModelCache {
 
     return last;
 
-  }
-
-  public LocalDateTime getSomething() {
-    return something;
-  }
-
-  public void setSomething(LocalDateTime something) {
-    this.something = something;
   }
 
   public List<UserInfo> getUserInfos() {
