@@ -1,22 +1,28 @@
 package org.spica.javaclient.actions;
 
-import org.spica.commons.SpicaProperties;
-import org.spica.javaclient.model.ModelCache;
-import org.spica.javaclient.model.ModelCacheService;
-
 import java.io.File;
+import org.spica.commons.SpicaProperties;
+import org.spica.javaclient.model.Model;
+import org.spica.javaclient.params.ActionParamFactory;
+import org.spica.javaclient.services.Services;
 
 public interface ActionContext {
 
     File getCurrentWorkingDir ();
 
-    ModelCache getModelCache ();
+    Model getModel();
 
-    ModelCacheService getModelCacheService ();
+    Services getServices ();
 
-    void saveModelCache(final String lastAction);
+    SpicaProperties getProperties();
 
-    SpicaProperties getSpicaProperties ();
+    ActionHandler getActionHandler();
+
+    ActionParamFactory getActionParamFactory();
+
+    void saveModel(final String lastAction);
+
+
 
 
 }

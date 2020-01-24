@@ -3,10 +3,10 @@ package org.spica.javaclient.actions.booking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.*;
+import org.spica.javaclient.model.Model;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.model.EventInfo;
-import org.spica.javaclient.model.ModelCache;
 
 import java.util.List;
 
@@ -24,16 +24,17 @@ public class EmptyBookingsAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
+    public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
-        ModelCache modelCache = actionContext.getModelCache();
+        Model model = actionContext.getModel();
 
-        List<EventInfo> eventInfosRealToday = modelCache.getEventInfosRealToday();
-        modelCache.getEventInfosReal().removeAll(eventInfosRealToday);
+        List<EventInfo> eventInfosRealToday = model.getEventInfosRealToday();
+        model.getEventInfosReal().removeAll(eventInfosRealToday);
 
         outputOk("Removed all events from today (" + eventInfosRealToday.size() + ")");
 
-        actionContext.saveModelCache(getClass().getName());
+        actionContext.saveModel(getClass().getName());
+        return null;
 
     }
 

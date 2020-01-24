@@ -7,8 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.AbstractAction;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.ActionResult;
 import org.spica.javaclient.actions.Command;
-import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.TopicInfo;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParamGroup;
@@ -35,24 +36,28 @@ public class CreateTopicAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
+    public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
         String name = inputParams.getInputValueAsString(KEY_SUMMARY);
+        ActionResult actionResult = new ActionResult();
 
         if (name != null) {
             TopicInfo topicInfo = new TopicInfo();
             topicInfo.setId(UUID.randomUUID().toString());
             topicInfo.setDescription(inputParams.getInputValueAsString(KEY_DESCRIPTION));
             topicInfo.setName(name);
-            ModelCache modelCache = actionContext.getModelCache();
-            modelCache.getTopicInfos().add(topicInfo);
+            Model model = actionContext.getModel();
+            model.getTopicInfos().add(topicInfo);
+            actionResult.setUserObject(topicInfo);
 
             outputOk("Created topic " + topicInfo.getName() + "(" + topicInfo.getId() + ")");
 
-            actionContext.saveModelCache(getClass().getName());
+            actionContext.saveModel(getClass().getName());
         }
         else
             outputError(ERROR_PARAM_NAME);
+
+        return actionResult;
     }
 
 

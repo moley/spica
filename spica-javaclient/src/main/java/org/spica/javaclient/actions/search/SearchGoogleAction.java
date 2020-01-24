@@ -1,4 +1,4 @@
-package org.spica.javaclient.actions.navigation;
+package org.spica.javaclient.actions.search;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +15,9 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 
-public class GotoGoogleAction extends AbstractAction {
+public class SearchGoogleAction extends AbstractAction {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(GotoGoogleAction.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(SearchGoogleAction.class);
 
     @Override public String getDisplayname() {
         return "Goto google";
@@ -29,7 +29,7 @@ public class GotoGoogleAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
+    public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
 
         try {
@@ -60,11 +60,13 @@ public class GotoGoogleAction extends AbstractAction {
             LOGGER.error(e.getLocalizedMessage(), e);
         }
 
+        return null;
+
     }
 
     @Override
     public ActionGroup getGroup() {
-        return ActionGroup.GOTO;
+        return ActionGroup.SEARCH;
     }
 
     @Override

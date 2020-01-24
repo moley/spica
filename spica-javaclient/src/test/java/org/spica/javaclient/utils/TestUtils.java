@@ -2,8 +2,8 @@ package org.spica.javaclient.utils;
 
 import org.mockito.Mockito;
 import org.spica.javaclient.actions.ActionContext;
-import org.spica.javaclient.model.ModelCache;
-import org.spica.javaclient.model.ModelCacheService;
+import org.spica.javaclient.model.Model;
+import org.spica.javaclient.services.ModelCacheService;
 
 import java.io.File;
 
@@ -13,11 +13,11 @@ public class TestUtils {
         ModelCacheService modelCacheService = new ModelCacheService();
         modelCacheService.close();
         modelCacheService.setConfigFile(new File("build/test/" + clazz.getSimpleName()));
-        modelCacheService.set(new ModelCache(), "create action context");
+        modelCacheService.set(new Model(), "create action context");
 
         ActionContext actionContext = Mockito.mock(ActionContext.class);
-        Mockito.when(actionContext.getModelCacheService()).thenReturn(modelCacheService);
-        Mockito.when(actionContext.getModelCache()).thenReturn(modelCacheService.get());
+        Mockito.when(actionContext.getServices().getModelCacheService()).thenReturn(modelCacheService);
+        Mockito.when(actionContext.getModel()).thenReturn(modelCacheService.get());
 
         return actionContext;
     }

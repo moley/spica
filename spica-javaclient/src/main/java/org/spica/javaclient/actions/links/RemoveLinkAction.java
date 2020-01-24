@@ -6,7 +6,7 @@ import org.spica.javaclient.actions.*;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.model.LinkInfo;
-import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.model.Model;
 
 public class RemoveLinkAction extends AbstractAction {
 
@@ -22,21 +22,23 @@ public class RemoveLinkAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
+    public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
-        ModelCache modelCache = actionContext.getModelCache();
+        Model model = actionContext.getModel();
 
         String query = commandLineArguments.getMandatoryFirstArgument("You have to add a parameter containing an ID to your command");
 
-        LinkInfo linkInfoById = modelCache.findLinkInfoById(query);
+        LinkInfo linkInfoById = model.findLinkInfoById(query);
         if (linkInfoById == null)
             throw new IllegalStateException("No link with id " + query + " found");
 
-        modelCache.getLinkInfos().remove(linkInfoById);
+        model.getLinkInfos().remove(linkInfoById);
 
         outputOk("Removed link with id " + linkInfoById.getId());
 
-        actionContext.saveModelCache(getClass().getName());
+        actionContext.saveModel(getClass().getName());
+
+        return null;
     }
 
 

@@ -1,25 +1,22 @@
 package org.spica.javaclient.model;
 
-import com.google.gson.annotations.SerializedName;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import javax.xml.bind.annotation.XmlRootElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @XmlRootElement
-public class ModelCache {
+public class Model {
 
   private File currentFile;
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(ModelCache.class);
+  private final static Logger LOGGER = LoggerFactory.getLogger(Model.class);
 
 
   private List<UserInfo> userInfos = new ArrayList<>();
@@ -56,6 +53,8 @@ public class ModelCache {
   }
 
   public List<TopicInfo> findTopicInfosByQuery (String query) {
+    if (query == null)
+      return new ArrayList<TopicInfo>();
 
     Predicate<TopicInfo> filter = new Predicate<TopicInfo>() {
       @Override
@@ -173,6 +172,18 @@ public class ModelCache {
     return null;
   }
 
+  public List<EventInfo> findOldOpenEvents () {
+    LocalDate today = LocalDate.now();
+    List<EventInfo> oldEventInfos = new ArrayList<EventInfo>();
+    for (EventInfo next: getEventInfosReal()) {
+      if (next.getStop() == null && next.getStart().toLocalDate().isBefore(today)) {
+        oldEventInfos.add(next);
+      }
+    }
+
+    return oldEventInfos;
+  }
+
   public EventInfo findLastOpenEventFromToday() {
     EventInfo last = null;
     for (EventInfo next: getEventInfosRealToday()) {
@@ -188,20 +199,6 @@ public class ModelCache {
 
   }
 
-  public EventInfo findLastOpenEvent() {
-    EventInfo last = null;
-    for (EventInfo next: getEventInfosReal()) {
-      if (next.getStop() == null) {
-        if (last == null)
-          last = next;
-        else
-          throw new IllegalStateException("Implementation error, more than one open event found");
-      }
-    }
-
-    return last;
-
-  }
 
   public List<UserInfo> getUserInfos() {
     return userInfos;

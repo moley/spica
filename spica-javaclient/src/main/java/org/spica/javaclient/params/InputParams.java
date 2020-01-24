@@ -2,6 +2,7 @@ package org.spica.javaclient.params;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class InputParams {
@@ -38,6 +39,18 @@ public class InputParams {
         }
 
         return false;
+    }
+
+    public List<InputParam> getInputParams (final String keyPrefix) {
+        List<InputParam> inputParams = new ArrayList<>();
+        for (InputParamGroup next: inputParamGroups) {
+            for (InputParam nextParam: next.getInputParams()) {
+                if (nextParam.getKey().startsWith(keyPrefix))
+                    inputParams.add(nextParam);
+            }
+        }
+
+        return inputParams;
     }
 
     public Object getInputValue(final String key) {

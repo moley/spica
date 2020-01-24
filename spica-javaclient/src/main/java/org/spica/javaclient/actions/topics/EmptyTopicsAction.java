@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.*;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
-import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.TopicInfo;
 
 import java.util.ArrayList;
@@ -24,14 +24,16 @@ public class EmptyTopicsAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
+    public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
-        ModelCache modelCache = actionContext.getModelCache();
-        modelCache.setTopicInfos(new ArrayList<TopicInfo>());
+        Model model = actionContext.getModel();
+        model.setTopicInfos(new ArrayList<TopicInfo>());
 
         outputOk("Removed all topics");
 
-        actionContext.saveModelCache(getClass().getName());
+        actionContext.saveModel(getClass().getName());
+
+        return null;
     }
 
 

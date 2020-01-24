@@ -1,23 +1,31 @@
 package org.spica.javaclient.actions.booking;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.*;
+import org.spica.javaclient.actions.AbstractAction;
+import org.spica.javaclient.actions.ActionContext;
+import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.ActionResult;
+import org.spica.javaclient.actions.Command;
+import org.spica.javaclient.actions.FoundAction;
+import org.spica.javaclient.actions.topics.CreateTopicAction;
+import org.spica.javaclient.model.Model;
+import org.spica.javaclient.model.TopicInfo;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParamGroup;
 import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.params.Renderer;
-import org.spica.javaclient.params.SearchInputParam;
-import org.spica.javaclient.model.ModelCache;
-import org.spica.javaclient.model.TopicInfo;
+import org.spica.javaclient.params.SelectInputParam;
 import org.spica.javaclient.timetracker.TimetrackerService;
 import org.spica.javaclient.utils.RenderUtil;
-
-import java.util.List;
 
 public class StartTopicAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(StartTopicAction.class);
+
+    private final static String SPECIAL_TASK_NEW = "_NEW";
 
     private RenderUtil renderUtil = new RenderUtil();
 
@@ -33,21 +41,30 @@ public class StartTopicAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
+    public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
-        ModelCache modelCache = actionContext.getModelCache();
-        String query = commandLineArguments.getMandatoryFirstArgument("You have to add a parameter id, name or external system id to your command");
-        List<TopicInfo> infos = modelCache.findTopicInfosByQuery(query);
+        Model model = actionContext.getModel();
+
+        String query = commandLineArguments.getOptionalFirstArgument();
+        List<TopicInfo> infos = model.findTopicInfosByQuery(query);
         TopicInfo selectedTopicInfo = infos.size() == 1 ? infos.get(0): (TopicInfo) inputParams.getInputValue(KEY_TOPIC);
 
+        String context = "existing";
+        if (selectedTopicInfo.getId().equals(SPECIAL_TASK_NEW)) {
+            FoundAction foundAction = actionContext.getActionHandler().findAction(CreateTopicAction.class);
+            ActionResult actionResult = actionContext.getActionHandler().handleAction(actionContext, foundAction);
+            selectedTopicInfo = (TopicInfo) actionResult.getUserObject();
+            context = "created";
+        }
+
         TimetrackerService timetrackerService = new TimetrackerService();
-        timetrackerService.setModelCacheService(actionContext.getModelCacheService());
+        timetrackerService.setModelCacheService(actionContext.getServices().getModelCacheService());
         timetrackerService.startWorkOnTopic(selectedTopicInfo);
-        actionContext.saveModelCache(getClass().getName());
+        actionContext.saveModel(getClass().getName());
 
+        outputOk("Start work on " + context + " topic " + renderUtil.getTopic(selectedTopicInfo));
 
-
-        outputOk("Start work on topic " + renderUtil.getTopic(selectedTopicInfo));
+        return null;
     }
 
     @Override
@@ -55,15 +72,19 @@ public class StartTopicAction extends AbstractAction {
         return ActionGroup.BOOKING;
     }
 
-    public InputParams getInputParams(ActionContext actionContext, String parameterList) {
+    @Override
+    public InputParams getInputParams(ActionContext actionContext, CommandLineArguments parameterList) {
 
         InputParams inputParams = new InputParams();
-        ModelCache modelCache = actionContext.getModelCache();
-        List<TopicInfo> filteredTopicInfos = modelCache.findTopicInfosByQuery(parameterList);
+        Model model = actionContext.getModel();
+        List<TopicInfo> filteredTopicInfos = model.findTopicInfosByQuery(parameterList.getOptionalFirstArgument());
         if (filteredTopicInfos.size() != 1) {
-            List<TopicInfo> allTopicInfos = modelCache.getTopicInfos();
+            List<TopicInfo> allTopicInfosForSelection = new ArrayList<>();
+            allTopicInfosForSelection.addAll(model.getTopicInfos());
+            allTopicInfosForSelection.add(new TopicInfo().name("Create new task").id(SPECIAL_TASK_NEW));
+
             System.out.println("Did not find exactly one topic with query <" + parameterList + ">");
-            SearchInputParam<TopicInfo> topicSearch = new SearchInputParam<TopicInfo>(KEY_TOPIC, "Topic: ", allTopicInfos, new Renderer<TopicInfo>() {
+            SelectInputParam<TopicInfo> topicSearch = new SelectInputParam<TopicInfo>(KEY_TOPIC, "Topic: ", allTopicInfosForSelection, new Renderer<TopicInfo>() {
                 @Override
                 public String toString(TopicInfo topicInfo) {
 

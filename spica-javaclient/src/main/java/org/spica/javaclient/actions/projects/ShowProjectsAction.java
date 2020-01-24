@@ -8,8 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.AbstractAction;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.ActionResult;
 import org.spica.javaclient.actions.Command;
-import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.ProjectInfo;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
@@ -41,11 +42,11 @@ public class ShowProjectsAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
+    public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
-        ModelCache modelCache = actionContext.getModelCache();
+        Model model = actionContext.getModel();
         String query = commandLineArguments.getOptionalFirstArgumentNotNull();
-        List<ProjectInfo> infos = modelCache.findProjectInfosByQuery(query);
+        List<ProjectInfo> infos = model.findProjectInfosByQuery(query);
         outputOk("Found " + infos.size() + " projects for query <" + query + ">");
 
         for (ProjectInfo next : infos) {
@@ -56,6 +57,8 @@ public class ShowProjectsAction extends AbstractAction {
             outputDefault("Disabled modules : " + getSourceParts(next, false));
             outputDefault("\n\n");
         }
+
+        return null;
     }
 
 

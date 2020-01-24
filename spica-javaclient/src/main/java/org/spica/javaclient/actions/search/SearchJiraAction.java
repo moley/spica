@@ -1,14 +1,14 @@
-package org.spica.javaclient.actions.navigation;
+package org.spica.javaclient.actions.search;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
 import org.spica.javaclient.actions.*;
+import org.spica.javaclient.model.Model;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;
-import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.model.TopicInfo;
 
 import java.awt.*;
@@ -16,9 +16,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class GotoJiraAction extends AbstractAction {
+public class SearchJiraAction extends AbstractAction {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(GotoJiraAction.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(SearchJiraAction.class);
 
     @Override public String getDisplayname() {
         return "Goto jira";
@@ -30,16 +30,16 @@ public class GotoJiraAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
+    public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
-        ModelCache modelCache = actionContext.getModelCache();
-        SpicaProperties spicaProperties = actionContext.getSpicaProperties();
-        EventInfo eventInfo = modelCache.findLastOpenEventFromToday();
+        Model model = actionContext.getModel();
+        SpicaProperties spicaProperties = actionContext.getProperties();
+        EventInfo eventInfo = model.findLastOpenEventFromToday();
         LOGGER.info("Found event " + eventInfo);
         if (eventInfo != null && eventInfo.getEventType().equals(EventType.TOPIC)) {
             LOGGER.info("Reference ID: " + eventInfo.getReferenceId());
             if (eventInfo.getReferenceId() != null) {
-                TopicInfo newValue = modelCache.findTopicInfoById(eventInfo.getReferenceId());
+                TopicInfo newValue = model.findTopicInfoById(eventInfo.getReferenceId());
                 String key = newValue.getExternalSystemKey();
                 //TODO make multi system able
                 String jiraBaseUrl = spicaProperties.getValue("spica.jira.url");
@@ -58,11 +58,13 @@ public class GotoJiraAction extends AbstractAction {
         else
             LOGGER.info("No task available, were you are currently working on");
 
+        return null;
+
     }
 
     @Override
     public ActionGroup getGroup() {
-        return ActionGroup.GOTO;
+        return ActionGroup.SEARCH;
     }
 
     @Override

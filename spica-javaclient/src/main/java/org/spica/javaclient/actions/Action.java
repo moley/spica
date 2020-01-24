@@ -14,7 +14,15 @@ public interface Action {
 
     String getDescription ();
 
-    void execute (ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLine);
+    /**
+     * execute an action
+     *
+     * @param actionContext     context
+     * @param inputParams       input params
+     * @param commandLine       command line args
+     * @return <code>null</code> or the follow up action if you want to chain actions
+     */
+    ActionResult execute (ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLine);
 
     default String getFirstValue (final String ... values) {
 

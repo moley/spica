@@ -35,12 +35,12 @@ public class CreateTopicActionTest {
         Mockito.when(inputParams.getInputValueAsString(CreateTopicAction.KEY_SUMMARY)).thenReturn(name);
         CreateTopicAction createTopicAction = new CreateTopicAction();
 
-        Assert.assertEquals ("Topic was created before test", 0, actionContext.getModelCache().getTopicInfos().size());
+        Assert.assertEquals ("Topic was created before test", 0, actionContext.getModel().getTopicInfos().size());
 
         createTopicAction.execute(actionContext, inputParams, new CommandLineArguments(new String [] {}));
 
-        Assert.assertEquals ("Topic not created", 1, actionContext.getModelCache().getTopicInfos().size());
-        TopicInfo topicInfo = actionContext.getModelCache().getTopicInfos().get(0);
+        Assert.assertEquals ("Topic not created", 1, actionContext.getModel().getTopicInfos().size());
+        TopicInfo topicInfo = actionContext.getModel().getTopicInfos().get(0);
         Assert.assertEquals ("Name invalid", name, topicInfo.getName());
         Assert.assertNotNull ("ID is null", topicInfo.getId());
 
@@ -53,11 +53,11 @@ public class CreateTopicActionTest {
         InputParams inputParams = Mockito.mock(InputParams.class);
         CreateTopicAction createTopicAction = new CreateTopicAction();
 
-        Assert.assertEquals ("Topic was created before test", 0, actionContext.getModelCache().getTopicInfos().size());
+        Assert.assertEquals ("Topic was created before test", 0, actionContext.getModel().getTopicInfos().size());
 
         createTopicAction.execute(actionContext, inputParams, new CommandLineArguments(new String [] {}));
 
-        Assert.assertEquals ("Topic not created", 0, actionContext.getModelCache().getTopicInfos().size());
+        Assert.assertEquals ("Topic not created", 0, actionContext.getModel().getTopicInfos().size());
 
         new ResultChecker (createTopicAction).numberOfErrors(1).contains(CreateTopicAction.ERROR_PARAM_NAME);
 

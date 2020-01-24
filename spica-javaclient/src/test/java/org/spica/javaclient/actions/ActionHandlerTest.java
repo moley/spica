@@ -33,7 +33,7 @@ public class ActionHandlerTest {
     public void getHelp () {
         ActionHandler actionHandler = new ActionHandler();
         CreateBookingAction createBookingAction = new CreateBookingAction();
-        Collection<String> helpStrings = actionHandler.getHelp();
+        Collection<String> helpStrings = actionHandler.getHelp(ActionGroup.BOOKING);
         String asString = String.join("\n", helpStrings);
         Assert.assertTrue ("Shortform of action not found", asString.contains("b c"));
         Assert.assertTrue ("Description of action not found", asString.contains(createBookingAction.getDescription()));

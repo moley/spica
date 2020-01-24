@@ -2,7 +2,7 @@ package org.spica.javaclient.links;
 
 import org.spica.javaclient.model.LinkInfo;
 import org.spica.javaclient.model.LinkType;
-import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.TopicInfo;
 
 import java.io.File;
@@ -11,12 +11,12 @@ import java.util.List;
 
 public class LinkFinder {
 
-    private ModelCache modelCache = new ModelCache();
+    private Model model = new Model();
 
     public List<LinkInfo> findMatchingLinks ( final TopicInfo topicInfo,
                                               final File currentDir) {
         List<LinkInfo> matchingLinks = new ArrayList<LinkInfo>();
-        for (LinkInfo next: modelCache.getLinkInfos()) {
+        for (LinkInfo next: model.getLinkInfos()) {
             if (next.getType().equals(LinkType.GENERAL))
                 matchingLinks.add(next);
             else if (next.getType().equals(LinkType.PROJECT)) {
@@ -37,11 +37,11 @@ public class LinkFinder {
         return matchingLinks;
     }
 
-    public ModelCache getModelCache() {
-        return modelCache;
+    public Model getModel() {
+        return model;
     }
 
-    public void setModelCache(ModelCache modelCache) {
-        this.modelCache = modelCache;
+    public void setModel(Model model) {
+        this.model = model;
     }
 }

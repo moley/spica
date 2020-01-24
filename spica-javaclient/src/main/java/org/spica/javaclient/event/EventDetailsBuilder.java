@@ -2,7 +2,7 @@ package org.spica.javaclient.event;
 
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;
-import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.model.Model;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -10,7 +10,7 @@ import java.time.temporal.ChronoUnit;
 
 public class EventDetailsBuilder {
 
-    private ModelCache modelCache;
+    private Model model;
 
     public EventDetails getDurationDetails () {
 
@@ -18,7 +18,7 @@ public class EventDetailsBuilder {
         Duration durationPause = Duration.of(0, ChronoUnit.MINUTES);
 
 
-        for (EventInfo next: modelCache.getEventInfosRealToday()) {
+        for (EventInfo next: model.getEventInfosRealToday()) {
             LocalDateTime start = next.getStart();
             LocalDateTime stop = next.getStop() != null ? next.getStop() : LocalDateTime.now();
 
@@ -38,11 +38,11 @@ public class EventDetailsBuilder {
 
     }
 
-    public ModelCache getModelCache() {
-        return modelCache;
+    public Model getModel() {
+        return model;
     }
 
-    public void setModelCache(ModelCache modelCache) {
-        this.modelCache = modelCache;
+    public void setModel(Model model) {
+        this.model = model;
     }
 }

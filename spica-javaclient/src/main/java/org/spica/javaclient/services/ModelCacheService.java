@@ -1,4 +1,4 @@
-package org.spica.javaclient.model;
+package org.spica.javaclient.services;
 
 
 import org.apache.commons.io.FileUtils;
@@ -16,7 +16,7 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.Date;
-
+import org.spica.javaclient.model.Model;
 
 public class ModelCacheService implements Serializable{
 
@@ -27,7 +27,7 @@ public class ModelCacheService implements Serializable{
   private File configFile;
 
 
-  private static ModelCache currentConfiguration;
+  private static Model currentConfiguration;
 
   public void setConfigFile (final File configFile) {
     this.configFile = configFile;
@@ -48,7 +48,7 @@ public class ModelCacheService implements Serializable{
 
   }
 
-  public ModelCache get() {
+  public Model get() {
     if (currentConfiguration != null)
       return currentConfiguration;
 
@@ -56,22 +56,22 @@ public class ModelCacheService implements Serializable{
     File configFile = getConfigFile();
 
     try {
-      jc = JAXBContext.newInstance(ModelCache.class);
+      jc = JAXBContext.newInstance(Model.class);
       Unmarshaller unmarshaller = jc.createUnmarshaller();
 
       if (configFile.exists()) {
         LOGGER.info("Load configuration from " + configFile.getAbsolutePath());
-        currentConfiguration = (ModelCache) unmarshaller.unmarshal(configFile);
+        currentConfiguration = (Model) unmarshaller.unmarshal(configFile);
         currentConfiguration.setCurrentFile(configFile);
       }
       else {
         LOGGER.info("Create new configuration because " + configFile.getAbsolutePath() + " does not exist");
-        currentConfiguration = new ModelCache();
+        currentConfiguration = new Model();
         set(currentConfiguration, "Creation");
       }
     } catch (Exception e) {
       LOGGER.error("Error loading configurations from " + configFile.getAbsolutePath() + ":" + e.getLocalizedMessage(), e);
-      currentConfiguration = new ModelCache();
+      currentConfiguration = new Model();
       currentConfiguration.setCurrentFile(configFile);
     }
 
@@ -83,7 +83,7 @@ public class ModelCacheService implements Serializable{
 
   public boolean isValid (final String configString) {
     try {
-      JAXBContext jc = JAXBContext.newInstance(ModelCache.class);
+      JAXBContext jc = JAXBContext.newInstance(Model.class);
       Unmarshaller unmarshaller = jc.createUnmarshaller();
       unmarshaller.unmarshal(new StringReader(configString));
       return true;
@@ -94,10 +94,10 @@ public class ModelCacheService implements Serializable{
   }
 
 
-  public void set(ModelCache configuration, final String action) {
+  public void set(Model configuration, final String action) {
     JAXBContext jc = null;
     try {
-      jc = JAXBContext.newInstance(ModelCache.class);
+      jc = JAXBContext.newInstance(Model.class);
       Marshaller marshaller = jc.createMarshaller();
       marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 

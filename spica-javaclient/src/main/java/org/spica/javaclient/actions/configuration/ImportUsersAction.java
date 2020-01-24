@@ -4,11 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.ApiException;
 import org.spica.javaclient.actions.*;
+import org.spica.javaclient.model.Model;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.actions.topics.ImportTopicAction;
 import org.spica.javaclient.api.UserApi;
-import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.model.UserInfo;
 
 import java.util.List;
@@ -29,9 +29,9 @@ public class ImportUsersAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
+    public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
-        ModelCache modelCache = actionContext.getModelCache();
+        Model model = actionContext.getModel();
 
         try {
 
@@ -42,12 +42,14 @@ public class ImportUsersAction extends AbstractAction {
             //TODO make refreshing in server periodically
             userInfos = userApi.getUsers();
 
-            modelCache.setUserInfos(userInfos);
+            model.setUserInfos(userInfos);
             outputOk("Imported " + userInfos.size() + " users");
         } catch (ApiException e) {
             LOGGER.error("Error importing users: " + e.getResponseBody(), e);
         }
-        actionContext.saveModelCache(getClass().getName());
+        actionContext.saveModel(getClass().getName());
+
+        return null;
     }
 
 

@@ -8,10 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.AbstractAction;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.ActionResult;
 import org.spica.javaclient.actions.Command;
 import org.spica.javaclient.actions.projects.template.InitializeFrom;
 import org.spica.javaclient.actions.projects.template.InitializeFromFactory;
-import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.ProjectInfo;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParamGroup;
@@ -36,7 +37,7 @@ public class CreateProjectAction extends AbstractAction {
     return "Creates a project from scratch / stash url ";
   }
 
-  @Override public void execute(ActionContext actionContext, InputParams inputParams,
+  @Override public ActionResult execute(ActionContext actionContext, InputParams inputParams,
       CommandLineArguments commandLineArguments) {
 
     String name = inputParams.getInputValueAsString(KEY_NAME);
@@ -54,13 +55,15 @@ public class CreateProjectAction extends AbstractAction {
     } else
       projectInfo.setSourceparts(new ArrayList<>());
 
-    ModelCache modelCache = actionContext.getModelCache();
-    modelCache.getProjectInfos().add(projectInfo);
+    Model model = actionContext.getModel();
+    model.getProjectInfos().add(projectInfo);
 
     outputOk("Created project " + projectInfo.getName() + "(" + projectInfo.getId() + ") with " + projectInfo
         .getSourceparts().size() + " source parts");
 
-    actionContext.saveModelCache(getClass().getName());
+    actionContext.saveModel(getClass().getName());
+
+    return null;
   }
 
   @Override public ActionGroup getGroup() {

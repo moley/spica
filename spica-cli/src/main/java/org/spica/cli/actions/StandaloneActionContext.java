@@ -1,49 +1,65 @@
 package org.spica.cli.actions;
 
+import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
 import org.spica.javaclient.actions.ActionContext;
-import org.spica.javaclient.model.ModelCache;
-import org.spica.javaclient.model.ModelCacheService;
-
-import java.io.File;
+import org.spica.javaclient.actions.ActionHandler;
+import org.spica.javaclient.model.Model;
+import org.spica.javaclient.params.ActionParamFactory;
+import org.spica.javaclient.services.ModelCacheService;
+import org.spica.javaclient.services.Services;
 
 public class StandaloneActionContext implements ActionContext {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(StandaloneActionContext.class);
+  private final static Logger LOGGER = LoggerFactory.getLogger(StandaloneActionContext.class);
+
+  private SpicaProperties spicaProperties = new SpicaProperties();
+
+  private Services services = new Services();
+
+  private ActionHandler actionHandler = new ActionHandler();
+
+  private ActionParamFactory actionParamFactory;
 
 
+  @Override public File getCurrentWorkingDir() {
+    return new File("").getAbsoluteFile();
+  }
 
-    private SpicaProperties spicaProperties = new SpicaProperties();
-    ModelCacheService modelCacheService = new ModelCacheService();
+  @Override public Services getServices() {
+    return services;
+  }
 
-    @Override
-    public File getCurrentWorkingDir() {
-        return new File ("").getAbsoluteFile();
-    }
+  @Override public Model getModel() {
+    return services.getModelCacheService().get();
+  }
 
-    @Override
-    public ModelCache getModelCache() {
-        return modelCacheService.get();
-    }
+  @Override public void saveModel(String lastAction) {
+    ModelCacheService modelCacheService = services.getModelCacheService();
+    Model model = modelCacheService.get();
+    modelCacheService.set(model, lastAction);
+  }
 
-    @Override
-    public ModelCacheService getModelCacheService() {
-        return modelCacheService;
-    }
+  @Override public SpicaProperties getProperties() {
+    return spicaProperties;
+  }
 
-    @Override
-    public void saveModelCache(String lastAction) {
-        ModelCache modelCache = modelCacheService.get();
-        modelCacheService.set(modelCache, lastAction);
-    }
+  @Override public ActionHandler getActionHandler() {
+    return actionHandler;
+  }
 
-    @Override
-    public SpicaProperties getSpicaProperties() {
-        return spicaProperties;
-    }
+  @Override public ActionParamFactory getActionParamFactory() {
+    return actionParamFactory;
+  }
 
+  public void setActionParamFactory (final ActionParamFactory actionParamFactory) {
+    this.actionParamFactory = actionParamFactory;
+  }
 
+  public void setActionHandler(ActionHandler actionHandler) {
+    this.actionHandler = actionHandler;
+  }
 
 }

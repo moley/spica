@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.*;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
-import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.model.Model;
 
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -25,18 +25,18 @@ public class ShowStatusAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
+    public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
-        ModelCache modelCache = actionContext.getModelCache();
+        Model model = actionContext.getModel();
 
-        outputDefault("Event infos real       : " + modelCache.getEventInfosReal().size());
-        outputDefault("Event infos planned    : " + modelCache.getEventInfosPlanned().size());
-        outputDefault("Projects               : " + modelCache.getProjectInfos().size());
-        outputDefault("Topics                 : " + modelCache.getTopicInfos().size());
-        outputDefault("MessageContainers      : " + modelCache.getMessagecontainerInfos().size());
-        outputDefault("Links                  : " + modelCache.getLinkInfos().size());
-        outputDefault("Users                  : " + modelCache.getUserInfos().size());
-        outputDefault("Model file             : " + modelCache.getCurrentFile().getAbsolutePath());
+        outputDefault("Event infos real       : " + model.getEventInfosReal().size());
+        outputDefault("Event infos planned    : " + model.getEventInfosPlanned().size());
+        outputDefault("Projects               : " + model.getProjectInfos().size());
+        outputDefault("Topics                 : " + model.getTopicInfos().size());
+        outputDefault("MessageContainers      : " + model.getMessagecontainerInfos().size());
+        outputDefault("Links                  : " + model.getLinkInfos().size());
+        outputDefault("Users                  : " + model.getUserInfos().size());
+        outputDefault("Model file             : " + model.getCurrentFile().getAbsolutePath());
 
         try {
             URL leguanVersion = getClass().getClassLoader().getResource("spica-cli.version");
@@ -50,6 +50,8 @@ public class ShowStatusAction extends AbstractAction {
         } catch (Throwable e) {
             LOGGER.error(e.getLocalizedMessage(), e);
         }
+
+        return null;
     }
 
 

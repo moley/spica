@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.*;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
-import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.ProjectInfo;
 
 public class ListProjectsAction extends AbstractAction {
@@ -22,15 +22,17 @@ public class ListProjectsAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
+    public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
         outputDefault("Projects:\n\n");
-        ModelCache modelCache = actionContext.getModelCache();
-        for (ProjectInfo next: modelCache.getProjectInfos()) {
+        Model model = actionContext.getModel();
+        for (ProjectInfo next: model.getProjectInfos()) {
             String topicToken = String.format("     %-40s (%s)", next.getName(), next.getId());
 
             if (commandLineArguments.noArgumentOr(next.getId(), next.getName()));
               outputDefault(topicToken);
         }
+
+        return null;
     }
 
 

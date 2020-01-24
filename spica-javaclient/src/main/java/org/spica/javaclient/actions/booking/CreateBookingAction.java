@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.AbstractAction;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.ActionResult;
 import org.spica.javaclient.actions.Command;
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.model.MessageInfo;
@@ -53,7 +54,7 @@ public class CreateBookingAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
+    public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
         LocalTime fromTime = dateUtil.getTime(inputParams.getInputValueAsString(KEY_FROM));
         LocalTime untilTime = inputParams.isAvailable(KEY_UNTIL) ? dateUtil.getTime(inputParams.getInputValueAsString(KEY_UNTIL)): null;
@@ -69,7 +70,7 @@ public class CreateBookingAction extends AbstractAction {
         timetrackerCreationParam.setEventType(EventType.fromValue(inputParams.getInputValueAsString(KEY_TYPE)));
         timetrackerCreationParam.setTopicInfo(inputParams.getInputValue(KEY_TOPIC, TopicInfo.class));
         TimetrackerService timetrackerService = new TimetrackerService();
-        timetrackerService.setModelCacheService(actionContext.getModelCacheService());
+        timetrackerService.setModelCacheService(actionContext.getServices().getModelCacheService());
 
         if (eventType.equals(EventType.MESSAGE)) {
             if (text != null && ! eventType.equals(EventType.MESSAGE))
@@ -87,7 +88,8 @@ public class CreateBookingAction extends AbstractAction {
         List<String> output = timetrackerService.createEvent(timetrackerCreationParam);
         outputDefault(String.join("\n", output));
 
-        actionContext.saveModelCache(getClass().getName());
+        actionContext.saveModel(getClass().getName());
+        return null;
     }
 
 
@@ -120,7 +122,7 @@ public class CreateBookingAction extends AbstractAction {
         inputParamGroup.getInputParams().add(type);
 
         //Topic parameters
-        List<TopicInfo> topicInfos = actionContext.getModelCache().getTopicInfos();
+        List<TopicInfo> topicInfos = actionContext.getModel().getTopicInfos();
         RenderUtil renderUtil = new RenderUtil();
         SearchInputParam<TopicInfo> topicSearch = new SearchInputParam<TopicInfo>(KEY_TOPIC, "Topic: ", topicInfos, new Renderer<TopicInfo>() {
             @Override
@@ -133,7 +135,7 @@ public class CreateBookingAction extends AbstractAction {
 
         //Message parameters
         TextInputParam summary = new TextInputParam(1, KEY_TEXT, "Message text: ");
-        List<UserInfo> userInfoList = actionContext.getModelCache().getUserInfos();
+        List<UserInfo> userInfoList = actionContext.getModel().getUserInfos();
         SearchInputParam<UserInfo> userInfoSearchInputParam = new SearchInputParam<UserInfo>(KEY_FOREIGN_USER, "User", userInfoList, new Renderer<UserInfo>() {
             @Override
             public String toString(UserInfo object) {

@@ -1,21 +1,17 @@
 package org.spica.cli;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.cli.actions.StandaloneActionContext;
 import org.spica.cli.actions.StandaloneActionParamFactory;
 import org.spica.javaclient.Configuration;
-import org.spica.javaclient.actions.Action;
+import org.spica.javaclient.actions.ActionGroup;
 import org.spica.javaclient.actions.ActionHandler;
+import org.spica.javaclient.actions.ActionResult;
 import org.spica.javaclient.actions.FoundAction;
-import org.spica.javaclient.params.CommandLineArguments;
-import org.spica.javaclient.params.FlagInputParam;
-import org.spica.javaclient.params.InputParam;
-import org.spica.javaclient.params.InputParamGroup;
-import org.spica.javaclient.params.InputParams;
+import org.spica.javaclient.actions.booking.StartTopicAction;
 import org.spica.javaclient.event.EventDetails;
 import org.spica.javaclient.event.EventDetailsBuilder;
 import org.spica.javaclient.model.EventInfo;
@@ -25,127 +21,107 @@ import org.spica.javaclient.utils.DateUtil;
 import org.spica.javaclient.utils.LogUtil;
 import org.spica.javaclient.utils.RenderUtil;
 
-import java.time.LocalDateTime;
-
 public class Main {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(Main.class);
+  private final static Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
+  public final static void main(final String[] args) {
 
-    public final static void main (final String [] args) {
+    DateUtil dateUtil = new DateUtil();
 
-        DateUtil dateUtil = new DateUtil();
+    System.err.close();
+    System.setErr(System.out); //to avoid reflection warnings
 
-        System.err.close();
-        System.setErr(System.out); //to avoid reflection warnings
+    Configuration.getDefaultApiClient().setBasePath("http://localhost:8765/api"); //TODO make nice
 
+    StandaloneActionContext actionContext = new StandaloneActionContext();
+    actionContext.setActionHandler(new ActionHandler());
+    actionContext.setActionParamFactory(new StandaloneActionParamFactory());
 
-        Configuration.getDefaultApiClient().setBasePath("http://localhost:8765/api"); //TODO make nice
+    EventInfo firstTaskOfDay = !actionContext.getModel().getEventInfosRealToday().isEmpty() ?
+        actionContext.getModel().getEventInfosRealToday().get(0) :
+        null;
 
-        StandaloneActionContext actionContext = new StandaloneActionContext();
+    EventDetailsBuilder eventDetailsBuilder = new EventDetailsBuilder();
+    eventDetailsBuilder.setModel(actionContext.getModel());
+    EventDetails eventDetails = eventDetailsBuilder.getDurationDetails();
 
-        EventInfo firstTaskOfDay = ! actionContext.getModelCache().getEventInfosRealToday().isEmpty() ? actionContext.getModelCache().getEventInfosRealToday().get(0):null;
+    EventInfo eventInfo = actionContext.getModel().findLastOpenEventFromToday();
 
-        EventDetailsBuilder eventDetailsBuilder = new EventDetailsBuilder();
-        eventDetailsBuilder.setModelCache(actionContext.getModelCache());
-        EventDetails eventDetails = eventDetailsBuilder.getDurationDetails();
+    String task = LogUtil.cyan("No current task found for today");
+    String since = "";
+    if (eventInfo != null) {
+      if (eventInfo.getEventType().equals(EventType.PAUSE)) {
+        task = "Pause";
+      } else if (eventInfo.getEventType().equals(EventType.TOPIC)) {
+        TopicInfo topicInfoById = actionContext.getModel().findTopicInfoById(eventInfo.getReferenceId());
+        RenderUtil renderUtil = new RenderUtil();
+        task = "Topic " + renderUtil.getTopic(topicInfoById);
+      } else if (eventInfo.getEventType().equals(EventType.MESSAGE)) {
+        task = eventInfo.getName();
+      } else {
+        task = eventInfo.getEventType().getValue();
+      }
 
+      since = " ( since " + dateUtil.getTimeAsString(eventInfo.getStart()) + " )";
+    }
 
-        EventInfo eventInfo = actionContext.getModelCache().findLastOpenEventFromToday();
+    //System.out.println (LogUtil.clearScreen());
+    System.out.println("Current model:        " + actionContext.getServices().getModelCacheService().getConfigFile()
+        .getAbsolutePath());
+    System.out.println("Current time:         " + LogUtil.cyan(dateUtil.getTimeAsString(LocalDateTime.now())));
+    System.out.println("Working since:        " + LogUtil
+        .cyan(firstTaskOfDay != null ? dateUtil.getTimeAsString(firstTaskOfDay.getStart()) : ""));
+    System.out.println("Cumulated work time:  " + LogUtil.cyan(dateUtil.getDuration(eventDetails.getDurationWork())));
+    System.out.println("Cumulated pause time: " + LogUtil.cyan(dateUtil.getDuration(eventDetails.getDurationPause())));
+    System.out.println("Current task:         " + LogUtil.cyan(task) + since);
 
-        String task = LogUtil.cyan("No current task found for today");
-        String since = "";
-        if (eventInfo != null) {
-            if (eventInfo.getEventType().equals(EventType.PAUSE)) {
-                task = "Pause";
-            }
-            else if (eventInfo.getEventType().equals(EventType.TOPIC)) {
-                TopicInfo topicInfoById = actionContext.getModelCache().findTopicInfoById(eventInfo.getReferenceId());
-                RenderUtil renderUtil = new RenderUtil();
-                task = "Topic " + renderUtil.getTopic(topicInfoById);
-            } else {
-                task = eventInfo.getEventType().getValue();
-            }
+    List<EventInfo> oldUnfinishedEvents = actionContext.getModel().findOldOpenEvents();
+    if (!oldUnfinishedEvents.isEmpty()) {
+      System.out.println(LogUtil
+          .yellow(oldUnfinishedEvents.size() + " open events found before today, finish them with command b close"));
+    }
 
-            since = " ( since " + dateUtil.getTimeAsString(eventInfo.getStart()) + " )";
-        }
+    System.out.println("\n\n");
 
-        //System.out.println (LogUtil.clearScreen());
-        System.out.println ("Current model:        " + actionContext.getModelCacheService().getConfigFile().getAbsolutePath());
-        System.out.println ("Current time:         " + LogUtil.cyan(dateUtil.getTimeAsString(LocalDateTime.now())));
-        System.out.println ("Working since:        " + LogUtil.cyan(firstTaskOfDay != null ? dateUtil.getTimeAsString(firstTaskOfDay.getStart()) : ""));
-        System.out.println ("Cumulated work time:  " + LogUtil.cyan(dateUtil.getDuration(eventDetails.getDurationWork())));
-        System.out.println ("Cumulated pause time: " + LogUtil.cyan(dateUtil.getDuration(eventDetails.getDurationPause())));
-        System.out.println ("Current task:         " + LogUtil.cyan(task)  + since + "\n\n");
+    ActionHandler actionHandler = actionContext.getActionHandler();
 
-        ActionHandler actionHandler = new ActionHandler();
-        if (args.length == 0) {
-            for (String next: actionHandler.getHelp()) {
-                System.out.println (next);
-            }
-            System.out.println("\n");
-        }
-        else {
+    if (args.length == 0 && eventInfo != null) { //if it is not the first call at the time and no params are added
+      System.out.println("Usage: s (ACTIONGROUP) (COMMAND) [PARAMETER1..n]\n");
+      System.out.println("Available action groups:\n");
+      for (ActionGroup nextGroup : ActionGroup.values()) {
+        System.out.println("   " + LogUtil.green(nextGroup.getShortkey() + " - " + nextGroup.name()));
+      }
+      System.out.println("\n\nFurther help on an action group you get with 's [ACTIONGROUP] help\n");
+    } else {
+      String parameter = String.join(" ", args);
 
+      FoundAction foundAction = null;
 
-            String parameter = String.join(" ", args);
-            FoundAction foundAction = actionHandler.findAction(parameter);
+      //even if we did not provide command line parameters and it is the first call at the day we choose the start topic action
+      if (parameter.trim().isEmpty() && eventInfo == null) {
+        foundAction = actionHandler.findAction(StartTopicAction.class);
+      } else {
+        foundAction = actionHandler.findAction(parameter);
+      }
 
-            if (foundAction == null) {
-                System.out.println (LogUtil.red("No command found for <" + parameter + ">"));
+      //if no action found we choose the help action for the given action group
+      if (foundAction == null || args.length == 1) {
+        ActionGroup actionGroup = ActionGroup.findByShortKey(args[0].trim());
+        foundAction = actionHandler.findAction(actionGroup, ActionHandler.HELP_TASKNAME);
+      }
 
-                for (String next: actionHandler.getHelp()) {
-                    System.out.println (next);
-                }
-                System.out.println("\n");
+      while (foundAction != null) {
+        ActionResult actionResult = actionHandler.handleAction(actionContext, foundAction);
 
-            } else {
-                String parameterAddon = String.join(" ", foundAction.getParameter());
-                System.out.println(LogUtil.green(foundAction.getAction().getDisplayname().toUpperCase() + parameterAddon) + "\n\n");
-                LOGGER.info("Found action     : " + foundAction.getAction().getClass().getName());
-                LOGGER.info("with parameter   : " + foundAction.getParameter());
-
-                Action action = foundAction.getAction();
-
-                CommandLineArguments commandLineArguments = new CommandLineArguments(foundAction.getParameter());
-
-
-                //create input params
-                InputParams inputParams = action.getInputParams(actionContext, commandLineArguments);
-
-
-                //Parse commandline
-                Options options = new Options();
-                for (InputParamGroup next: inputParams.getInputParamGroups()) {
-                    for (InputParam nextParam: next.getInputParams()) {
-                        boolean hasArg = ! (nextParam instanceof FlagInputParam);
-                        options.addOption(new Option(nextParam.getKey(), hasArg, nextParam.getDisplayname()));
-                    }
-                }
-                CommandLine commandLine = commandLineArguments.buildCommandline(options);
-
-                if (!inputParams.isEmpty()) {
-
-                    //inject values of commandline
-                    for (InputParamGroup next: inputParams.getInputParamGroups()) {
-                        for (InputParam nextParam : next.getInputParams()) {
-                            if (options.hasOption(nextParam.getKey())) {
-                                String optionValue = commandLine.getOptionValue(nextParam.getKey());
-                                if (optionValue != null)
-                                  nextParam.setValue(commandLine.getOptionValue(nextParam.getKey()));
-                            }
-                        }
-                    }
-
-                    StandaloneActionParamFactory actionParamFactory = new StandaloneActionParamFactory();
-                    inputParams = actionParamFactory.build(actionContext, inputParams, foundAction);
-                }
-
-
-                action.execute(new StandaloneActionContext(), inputParams, commandLineArguments);
-            }
-        }
+        if (actionResult != null)
+          foundAction = actionResult.getFollowUpAction();
+        else
+          foundAction = null;
+      }
 
     }
+
+  }
 
 }

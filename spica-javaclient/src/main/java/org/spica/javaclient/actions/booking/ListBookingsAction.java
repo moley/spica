@@ -3,10 +3,10 @@ package org.spica.javaclient.actions.booking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.*;
+import org.spica.javaclient.model.Model;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.model.EventInfo;
-import org.spica.javaclient.model.ModelCache;
 import org.spica.javaclient.utils.DateUtil;
 
 import java.time.LocalDate;
@@ -28,7 +28,7 @@ public class ListBookingsAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
+    public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
         LocalDate from = LocalDate.now();
         LocalDate until = LocalDate.now();
@@ -39,8 +39,14 @@ public class ListBookingsAction extends AbstractAction {
 
         if (optionalFirstArgument != null) {
             //TODO extract Date parser in own class
-
-            if (optionalFirstArgument.trim().startsWith("week")) {
+            if (optionalFirstArgument.trim().startsWith("all")) {
+                from = LocalDate.of(2016, 1, 1);
+                until = today;
+            }
+            else if (optionalFirstArgument.trim().startsWith("year")) {
+                from = LocalDate.of(today.getYear(), 1, 1);
+                until = today;
+            } else if (optionalFirstArgument.trim().startsWith("week")) {
                 String offset = optionalFirstArgument.trim().substring(4);
                 from = today.minusDays(today.getDayOfWeek().getValue() - 1);
                 until = from.plusDays(6);
@@ -74,8 +80,8 @@ public class ListBookingsAction extends AbstractAction {
 
         }
         outputDefault("Bookings from " + dateUtil.getDateAsString(from) + " until " + dateUtil.getDateAsString(until) + ":\n\n");
-        ModelCache modelCache = actionContext.getModelCache();
-        for (EventInfo next: modelCache.getEventInfosReal()) {
+        Model model = actionContext.getModel();
+        for (EventInfo next: model.getEventInfosReal()) {
 
             if (next.getStart().toLocalDate().isBefore(from))
                 continue;
@@ -90,6 +96,8 @@ public class ListBookingsAction extends AbstractAction {
             String eventToken = String.format("     %-15s%-10s%-10s %-10s %-90s (%s)", dayAsString, startAsString, stopAsString, next.getEventType().name(), nameNotNull, next.getId());
             outputDefault(eventToken);
         }
+
+        return null;
     }
 
 

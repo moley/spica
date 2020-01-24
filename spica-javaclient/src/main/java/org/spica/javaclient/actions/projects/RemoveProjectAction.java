@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.*;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
-import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.ProjectInfo;
 
 import java.util.List;
@@ -23,16 +23,18 @@ public class RemoveProjectAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
+    public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
-        ModelCache modelCache = actionContext.getModelCache();
+        Model model = actionContext.getModel();
         String query = commandLineArguments.getMandatoryFirstArgument("You have to add an parameter containing a name or an id to your command");
-        List<ProjectInfo> infos = modelCache.findProjectInfosByQuery(query);
-        modelCache.getProjectInfos().removeAll(infos);
+        List<ProjectInfo> infos = model.findProjectInfosByQuery(query);
+        model.getProjectInfos().removeAll(infos);
 
         outputOk("Removed " + infos.size() +  " projects");
 
-        actionContext.saveModelCache(getClass().getName());
+        actionContext.saveModel(getClass().getName());
+
+        return null;
     }
 
 

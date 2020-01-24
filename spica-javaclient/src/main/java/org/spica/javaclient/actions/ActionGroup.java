@@ -4,7 +4,7 @@ public enum ActionGroup {
 
     TOPIC("t"),
     PROJECT("p"),
-    GOTO ("g"),
+    SEARCH("s"),
     BOOKING("b"),
     LINKS("l"),
     CONFIGURATION("c"),
@@ -18,5 +18,16 @@ public enum ActionGroup {
 
     public String getShortkey () {
         return shortkey;
+    }
+
+    public static ActionGroup findByShortKey (final String shortkey) {
+        for (ActionGroup next: ActionGroup.values()) {
+            if (next.getShortkey().equals(shortkey))
+                return next;
+
+        }
+
+        throw new IllegalStateException("No action group found for shortkey '" + shortkey + "'");
+
     }
 }

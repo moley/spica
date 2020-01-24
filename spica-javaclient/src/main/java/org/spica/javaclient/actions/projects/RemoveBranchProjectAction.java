@@ -4,17 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.ActionResult;
 import org.spica.javaclient.actions.Command;
 import org.spica.javaclient.model.ProjectInfo;
 import org.spica.javaclient.model.ProjectSourcePartInfo;
 import org.spica.javaclient.params.CommandLineArguments;
-import org.spica.javaclient.params.FlagInputParam;
 import org.spica.javaclient.params.InputParamGroup;
 import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.params.TextInputParam;
@@ -34,12 +33,12 @@ public class RemoveBranchProjectAction extends AbstractProjectAction {
     return "Removes a branch on all submodules of a project";
   }
 
-  @Override public void execute(ActionContext actionContext, InputParams inputParams,
+  @Override public ActionResult execute(ActionContext actionContext, InputParams inputParams,
       CommandLineArguments commandLineArguments) {
 
     final String branch = inputParams.getInputValueAsString(KEY_BRANCH);
 
-    ProjectInfo projectInfo = getProject(actionContext.getModelCache(), commandLineArguments);
+    ProjectInfo projectInfo = getProject(actionContext.getModel(), commandLineArguments);
 
     for (ProjectSourcePartInfo nextModule : projectInfo.getSourceparts()) {
       if (nextModule.isEnabled()) {
@@ -53,6 +52,8 @@ public class RemoveBranchProjectAction extends AbstractProjectAction {
         }
       }
     }
+
+    return null;
 
   }
 

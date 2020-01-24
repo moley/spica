@@ -8,7 +8,10 @@ import org.spica.javaclient.model.UserInfo;
 public class RenderUtil {
 
     public String getUser(final UserInfo userinfo) {
-        return userinfo.getName() + ", " + userinfo.getFirstname();
+        if (userinfo == null)
+            return "unknown user";
+        else
+          return userinfo.getName() + ", " + userinfo.getFirstname();
     }
 
     public String getTopic(final TopicInfo topicInfo) {

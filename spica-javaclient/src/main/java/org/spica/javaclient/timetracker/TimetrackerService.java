@@ -1,6 +1,7 @@
 package org.spica.javaclient.timetracker;
 
 import org.spica.javaclient.model.*;
+import org.spica.javaclient.services.ModelCacheService;
 import org.spica.javaclient.utils.DateUtil;
 
 import java.time.LocalDateTime;
@@ -12,13 +13,13 @@ public class TimetrackerService {
 
     private ModelCacheService modelCacheService;
 
-    private ModelCache getModelCache () {
+    private Model getModelCache () {
         return modelCacheService.get();
     }
 
     public boolean isPause () {
-        ModelCache modelCache = getModelCache();
-        EventInfo lastEventInfo = modelCache.findLastOpenEventFromToday();
+        Model model = getModelCache();
+        EventInfo lastEventInfo = model.findLastOpenEventFromToday();
         return lastEventInfo != null && lastEventInfo.getEventType().equals(EventType.PAUSE);
     }
 
@@ -42,7 +43,7 @@ public class TimetrackerService {
     }
 
     private void stopLastOpenEvent(LocalDateTime stopTime) {
-        EventInfo eventInfo = getModelCache().findLastOpenEvent();
+        EventInfo eventInfo = getModelCache().findLastOpenEventFromToday();
         if (eventInfo != null) {
             eventInfo.setStop(stopTime != null ? stopTime: LocalDateTime.now());
         }
@@ -51,31 +52,31 @@ public class TimetrackerService {
     public void stopPause () {
         stopLastOpenEvent(null);
 
-        ModelCache modelCache = getModelCache();
+        Model model = getModelCache();
 
-        List<EventInfo> eventInfoListToday = modelCache.getEventInfosRealToday();
+        List<EventInfo> eventInfoListToday = model.getEventInfosRealToday();
         if (eventInfoListToday.size() < 2 )
             throw new IllegalStateException("You cannot stop a pause with less than two events. Seems your day started with a pause, which is invalid");
 
-        restartLastRealEvent(modelCache, EventType.PAUSE);
+        restartLastRealEvent(model, EventType.PAUSE);
     }
 
-    private void restartLastRealEvent (final ModelCache modelCache, final EventType eventType) {
-        EventInfo pauseInfo = modelCache.getEventInfosRealToday().get(modelCache.getEventInfosRealToday().size() - 1);
+    private void restartLastRealEvent (final Model model, final EventType eventType) {
+        EventInfo pauseInfo = model.getEventInfosRealToday().get(model.getEventInfosRealToday().size() - 1);
         if (! pauseInfo.getEventType().equals(eventType))
             throw new IllegalStateException("Your last event is not a started " + eventType.toString() + ". You cannot stop a " + pauseInfo.getEventType().toString() + " at this point");
 
-        if (modelCache.getEventInfosRealToday().size() > 1) {
-            EventInfo lastEventInfo = modelCache.getEventInfosRealToday().get(modelCache.getEventInfosRealToday().size() - 2);
+        if (model.getEventInfosRealToday().size() > 1) {
+            EventInfo lastEventInfo = model.getEventInfosRealToday().get(model.getEventInfosRealToday().size() - 2);
             EventInfo newStartedEvent = new EventInfo();
             newStartedEvent.setId(UUID.randomUUID().toString());
             newStartedEvent.setStart(LocalDateTime.now());
             newStartedEvent.setEventType(lastEventInfo.getEventType());
             newStartedEvent.setName(lastEventInfo.getName());
             newStartedEvent.setReferenceId(lastEventInfo.getReferenceId());
-            modelCache.getEventInfosReal().add(newStartedEvent);
+            model.getEventInfosReal().add(newStartedEvent);
         }
-        modelCacheService.set(modelCache, "restart last real event" + eventType.name());
+        modelCacheService.set(model, "restart last real event" + eventType.name());
 
     }
 
@@ -86,7 +87,7 @@ public class TimetrackerService {
 
         timetrackerCreationParam.validate();
 
-        ModelCache modelCache = getModelCache();
+        Model model = getModelCache();
         EventInfo newStartedEvent = new EventInfo();
         newStartedEvent.setId(UUID.randomUUID().toString());
         newStartedEvent.setStart(timetrackerCreationParam.getFromAsLocalDateTime());
@@ -108,8 +109,8 @@ public class TimetrackerService {
         if (timetrackerCreationParam.getUntil() == null && timetrackerCreationParam.getFrom() == null)
             throw new IllegalArgumentException("No period defined (until and from are null");
 
-        EventInfo eventInfoBefore = modelCache.findEventBefore(timetrackerCreationParam.getFromAsLocalDateTime());
-        EventInfo eventInfoAfter = modelCache.findEventAfter(timetrackerCreationParam.getFromAsLocalDateTime());
+        EventInfo eventInfoBefore = model.findEventBefore(timetrackerCreationParam.getFromAsLocalDateTime());
+        EventInfo eventInfoAfter = model.findEventAfter(timetrackerCreationParam.getFromAsLocalDateTime());
 
 
         if (eventInfoBefore == null && eventInfoAfter != null) {
@@ -135,7 +136,7 @@ public class TimetrackerService {
         }
 
         int numberOfHiddenElements = 0;
-        for (EventInfo next: modelCache.getEventInfosRealToday()) {
+        for (EventInfo next: model.getEventInfosRealToday()) {
             if (next.getStart().isAfter(newStartedEvent.getStart())) {
                 if (newStartedEvent.getStop() == null)
                     numberOfHiddenElements++;
@@ -154,9 +155,9 @@ public class TimetrackerService {
         }
 
         output.add("Create event " + newStartedEvent.getId() + " from " + dateUtil.getTimeAsString(newStartedEvent.getStart()) + " to " + dateUtil.getTimeAsString(newStartedEvent.getStop()));
-        modelCache.getEventInfosReal().add(newStartedEvent);
+        model.getEventInfosReal().add(newStartedEvent);
 
-        Collections.sort(modelCache.getEventInfosReal(), new Comparator<EventInfo>() {
+        Collections.sort(model.getEventInfosReal(), new Comparator<EventInfo>() {
             @Override
             public int compare(EventInfo o1, EventInfo o2) {
                 LocalDateTime localDateTime1 = o1.getStart();
@@ -176,28 +177,28 @@ public class TimetrackerService {
 
     public void startWorkOnTopic (final TopicInfo topicInfo) {
         stopLastOpenEvent(null);
-        ModelCache modelCache = getModelCache();
+        Model model = getModelCache();
         EventInfo newStartedEvent = new EventInfo();
         newStartedEvent.setId(UUID.randomUUID().toString());
         newStartedEvent.setStart(LocalDateTime.now());
         newStartedEvent.setEventType(EventType.TOPIC);
         newStartedEvent.setName(topicInfo.getName());
         newStartedEvent.setReferenceId(topicInfo.getId());
-        modelCache.getEventInfosReal().add(newStartedEvent);
-        modelCacheService.set(modelCache, "Start work on topic");
+        model.getEventInfosReal().add(newStartedEvent);
+        modelCacheService.set(model, "Start work on topic");
     }
 
     public void startTelephoneCall () {
         stopLastOpenEvent(null);
-        ModelCache modelCache = getModelCache();
+        Model model = getModelCache();
         EventInfo eventInfo = new EventInfo();
         eventInfo.setId(UUID.randomUUID().toString());
         eventInfo.setStart(LocalDateTime.now());
         eventInfo.setEventType(EventType.MESSAGE);
         eventInfo.setName("Telephone call");
 
-        modelCache.getEventInfosReal().add(eventInfo);
-        modelCacheService.set(modelCache, "Start telephone call");
+        model.getEventInfosReal().add(eventInfo);
+        modelCacheService.set(model, "Start telephone call");
     }
 
     public void finishTelephoneCall (final MessageInfo messageInfo, UserInfo userInfo) {
@@ -209,14 +210,15 @@ public class TimetrackerService {
             throw new IllegalStateException("Last event is expected to be a phone call, but is " + eventInfo);
         else {
             eventInfo.setStop(LocalDateTime.now());
-            eventInfo.setName("Telephone call with " + userInfo.getName() + ", " + userInfo.getFirstname());
+            String userinfo = userInfo != null ? userInfo.getName() + ", " + userInfo.getFirstname() : "unknown user";
+            eventInfo.setName("Telephone call with " + userinfo);
         }
 
         eventInfo.setReferenceId(messageInfo.getId());
 
-        ModelCache modelCache = getModelCache();
+        Model model = getModelCache();
 
-        restartLastRealEvent(modelCache, EventType.MESSAGE);
+        restartLastRealEvent(model, EventType.MESSAGE);
 
 
     }
@@ -234,7 +236,9 @@ public class TimetrackerService {
         this.modelCacheService = modelCacheService;
     }
 
-    public void finishEvent(EventInfo eventInfo) {
-        eventInfo.setStop(LocalDateTime.now());
+    public LocalDateTime finishEvent(EventInfo eventInfo) {
+        LocalDateTime now = LocalDateTime.now();
+        eventInfo.setStop(now);
+        return now;
     }
 }

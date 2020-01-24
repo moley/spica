@@ -1,4 +1,4 @@
-package org.spica.javaclient.actions.navigation;
+package org.spica.javaclient.actions.search;
 
 import org.eclipse.jgit.api.Git;
 import org.slf4j.Logger;
@@ -14,9 +14,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-public class GotoStashAction extends AbstractAction {
+public class SearchStashAction extends AbstractAction {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(GotoStashAction.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(SearchStashAction.class);
 
     @Override public String getDisplayname() {
         return "Goto bitbucket";
@@ -43,7 +43,7 @@ public class GotoStashAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
+    public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
         File currentWorkingDir = getNextGitProject(actionContext.getCurrentWorkingDir());
         if (currentWorkingDir != null) {
@@ -72,11 +72,13 @@ public class GotoStashAction extends AbstractAction {
             }
         }
 
+        return null;
+
     }
 
     @Override
     public ActionGroup getGroup() {
-        return ActionGroup.GOTO;
+        return ActionGroup.SEARCH;
     }
 
     @Override

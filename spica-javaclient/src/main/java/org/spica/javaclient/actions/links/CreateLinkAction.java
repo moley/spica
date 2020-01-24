@@ -10,10 +10,11 @@ import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.AbstractAction;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.ActionResult;
 import org.spica.javaclient.actions.Command;
 import org.spica.javaclient.model.LinkInfo;
 import org.spica.javaclient.model.LinkType;
-import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.ProjectInfo;
 import org.spica.javaclient.model.TopicInfo;
 import org.spica.javaclient.params.CommandLineArguments;
@@ -45,15 +46,15 @@ public class CreateLinkAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
+    public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
-        ModelCache modelCache = actionContext.getModelCache();
+        Model model = actionContext.getModel();
 
         String name = getFirstValue(commandLineArguments.getOptionalFirstArgument(), inputParams.getInputValueAsString(KEY_NAME));
         String url = getFirstValue(inputParams.getInputValueAsString(KEY_URL));
         LinkType selectedLinkType = inputParams.getInputValue(KEY_TYPE, LinkType.class);
 
-        TopicInfo currentTopic = modelCache.getCurrentTopic() != null ? modelCache.getCurrentTopic() : inputParams.getInputValue(KEY_TOPIC, TopicInfo.class);
+        TopicInfo currentTopic = model.getCurrentTopic() != null ? model.getCurrentTopic() : inputParams.getInputValue(KEY_TOPIC, TopicInfo.class);
         ProjectInfo currentProject = inputParams.getInputValue(KEY_PROJECT, ProjectInfo.class);
 
         LinkInfo linkInfo = new LinkInfo();
@@ -69,7 +70,7 @@ public class CreateLinkAction extends AbstractAction {
             currentProject = currentProject != null ? currentProject : currentTopic.getProject();
             if (currentProject == null) {
                 outputError("No project reference found, cannot create project related link");
-                return;
+                return null;
             }
             else
                 linkInfo.setReference(currentProject.getId());
@@ -77,11 +78,12 @@ public class CreateLinkAction extends AbstractAction {
         else if (selectedLinkType.equals(LinkType.PATH)) {
             linkInfo.setReference(new File ("").getAbsolutePath());
         }
-        modelCache.getLinkInfos().add(linkInfo);
+        model.getLinkInfos().add(linkInfo);
 
         outputOk("Created link " + linkInfo.getName() + " with type " + selectedLinkType.getValue() + "-> " + linkInfo.getUrl() + " (" + linkInfo.getId() + ")");
 
-        actionContext.saveModelCache(getClass().getName());
+        actionContext.saveModel(getClass().getName());
+        return null;
     }
 
 
@@ -99,7 +101,7 @@ public class CreateLinkAction extends AbstractAction {
     public InputParams getInputParams(ActionContext actionContext, CommandLineArguments commandLineArguments) {
         InputParamGroup inputParamGroupGeneric = new InputParamGroup("Generic");
 
-        ModelCache modelCache = actionContext.getModelCache();
+        Model model = actionContext.getModel();
 
         //General configurations
         TextInputParam name = new TextInputParam(1, KEY_NAME, "Name");
@@ -124,14 +126,14 @@ public class CreateLinkAction extends AbstractAction {
                 boolean linkTypeNeedsTopic = linkType.equals(LinkType.TOPIC) || linkType.equals(LinkType.PROJECT);
 
                 if (linkTypeNeedsTopic) {
-                    TopicInfo currentTopic = modelCache.getCurrentTopic();
+                    TopicInfo currentTopic = model.getCurrentTopic();
                     return currentTopic == null;
                 }
                 return false;
             }
         });
 
-        List<TopicInfo> topicInfos = actionContext.getModelCache().getTopicInfos();
+        List<TopicInfo> topicInfos = actionContext.getModel().getTopicInfos();
         RenderUtil renderUtil = new RenderUtil();
         SearchInputParam<TopicInfo> topicSearch = new SearchInputParam<TopicInfo>(KEY_TOPIC, "Topic: ", topicInfos, new Renderer<TopicInfo>() {
             @Override
@@ -149,14 +151,14 @@ public class CreateLinkAction extends AbstractAction {
                 boolean linkTypeNeedsProject = linkType.equals(LinkType.PROJECT);
 
                 if (linkTypeNeedsProject) {
-                    TopicInfo currentTopic = modelCache.getCurrentTopic();
+                    TopicInfo currentTopic = model.getCurrentTopic();
                     return currentTopic == null || currentTopic.getProject() == null;
                 }
                 return false;
             }
         });
 
-        List<ProjectInfo> projectInfos = actionContext.getModelCache().getProjectInfos();
+        List<ProjectInfo> projectInfos = actionContext.getModel().getProjectInfos();
         SearchInputParam<ProjectInfo> projectSearch = new SearchInputParam<ProjectInfo>(KEY_PROJECT, "Project: ", projectInfos, new Renderer<ProjectInfo>() {
             @Override
             public String toString(ProjectInfo projectInfo) {

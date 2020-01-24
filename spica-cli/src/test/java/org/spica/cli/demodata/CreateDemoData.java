@@ -1,7 +1,7 @@
 package org.spica.cli.demodata;
 
-import org.spica.javaclient.model.ModelCache;
-import org.spica.javaclient.model.ModelCacheService;
+import org.spica.javaclient.model.Model;
+import org.spica.javaclient.services.ModelCacheService;
 import org.spica.javaclient.model.TopicInfo;
 import org.spica.javaclient.model.UserInfo;
 
@@ -16,19 +16,19 @@ public class CreateDemoData {
 
     private TopicInfo topicInfo1;
 
-    public void createUsers (ModelCache modelCache) {
+    public void createUsers (Model model) {
 
         userInfo1 = new UserInfo().id("1").name("Smith").firstname("John").email("john.smith@spica.org");
         userInfo2 = new UserInfo().id("2").name("Clark").firstname("Carla").email("carla.clark@spica.org");
 
-        modelCache.setUserInfos(Arrays.asList(userInfo1, userInfo2));
+        model.setUserInfos(Arrays.asList(userInfo1, userInfo2));
 
     }
 
-    public void createTopics (ModelCache modelCache) {
+    public void createTopics (Model model) {
         topicInfo1 = new TopicInfo().id("1").name("Feature 1").description("Implementation").externalSystemID("JIRA").externalSystemKey("PRO-1");
 
-        modelCache.setTopicInfos(Arrays.asList(topicInfo1));
+        model.setTopicInfos(Arrays.asList(topicInfo1));
     }
 
     public final static void main (final String [] args) {
@@ -38,12 +38,12 @@ public class CreateDemoData {
         ModelCacheService modelCacheService = new ModelCacheService();
         modelCacheService.setConfigFile(new File("config.xml"));
         CreateDemoData createDemoData = new CreateDemoData();
-        ModelCache modelCache = modelCacheService.get();
-        createDemoData.createUsers(modelCache);
+        Model model = modelCacheService.get();
+        createDemoData.createUsers(model);
 
-        createDemoData.createTopics(modelCache);
+        createDemoData.createTopics(model);
 
-        modelCacheService.set(modelCache, "init");
+        modelCacheService.set(model, "init");
 
 
     }

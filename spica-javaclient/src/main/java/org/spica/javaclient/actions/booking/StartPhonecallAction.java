@@ -9,13 +9,15 @@ import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.AbstractAction;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.ActionResult;
 import org.spica.javaclient.actions.Command;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.MessageType;
 import org.spica.javaclient.model.MessagecontainerInfo;
-import org.spica.javaclient.model.ModelCache;
+import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.UserInfo;
 import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.ConfirmInputParam;
 import org.spica.javaclient.params.InputParamGroup;
 import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.params.Renderer;
@@ -32,6 +34,7 @@ public class StartPhonecallAction extends AbstractAction {
 
     public final static String KEY_FOREIGN_USER = "foreignUser";
     public final static String KEY_MESSAGE = "description";
+    public final static String KEY_FINISH = "finish";
 
     @Override public String getDisplayname() {
         return "Start phonecall";
@@ -42,15 +45,8 @@ public class StartPhonecallAction extends AbstractAction {
         return "Starts a phone call";
     }
 
-    public void beforeParam(ActionContext actionContext, String parameterList) {
-        TimetrackerService timetrackerService = new TimetrackerService();
-        timetrackerService.setModelCacheService(actionContext.getModelCacheService());
-        timetrackerService.startTelephoneCall();
-        actionContext.saveModelCache(getClass().getName() + "beforeParam");
-    }
-
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
+    public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
         inputParams.setEndTime(LocalDateTime.now());
         TimetrackerService timetrackerService = new TimetrackerService();
 
@@ -58,7 +54,8 @@ public class StartPhonecallAction extends AbstractAction {
         String message = inputParams.getInputValueAsString(KEY_MESSAGE);
 
         MessageInfo messageInfo = new MessageInfo();
-        messageInfo.setCreator(selectedUser.getId());
+        if (selectedUser != null)
+          messageInfo.setCreator(selectedUser.getId());
         messageInfo.setMessage(message);
         messageInfo.setType(MessageType.PHONECALL);
         messageInfo.setId(UUID.randomUUID().toString());
@@ -66,14 +63,16 @@ public class StartPhonecallAction extends AbstractAction {
         MessagecontainerInfo messagecontainerInfo = new MessagecontainerInfo();
         messagecontainerInfo.setMessage(Arrays.asList(messageInfo));
 
-        ModelCache modelCache = actionContext.getModelCache();
-        modelCache.getMessagecontainerInfos().add(messagecontainerInfo);
+        Model model = actionContext.getModel();
+        model.getMessagecontainerInfos().add(messagecontainerInfo);
 
-        timetrackerService.setModelCacheService(actionContext.getModelCacheService());
+        timetrackerService.setModelCacheService(actionContext.getServices().getModelCacheService());
         timetrackerService.finishTelephoneCall(messageInfo, selectedUser);
 
-        actionContext.saveModelCache(getClass().getName());
+        actionContext.saveModel(getClass().getName());
         outputOk("Saved phonecall with " + renderUtil.getUser(selectedUser) + " with message " + message);
+
+        return null;
 
     }
 
@@ -90,7 +89,12 @@ public class StartPhonecallAction extends AbstractAction {
     @Override
     public InputParams getInputParams(ActionContext actionContext, CommandLineArguments commandLineArguments) {
 
-        List<UserInfo> userInfoList = actionContext.getModelCache().getUserInfos();
+        TimetrackerService timetrackerService = new TimetrackerService();
+        timetrackerService.setModelCacheService(actionContext.getServices().getModelCacheService());
+        timetrackerService.startTelephoneCall();
+        actionContext.saveModel(getClass().getName() + "beforeParam");
+
+        List<UserInfo> userInfoList = actionContext.getModel().getUserInfos();
 
         SearchInputParam<UserInfo> userInfoSearchInputParam = new SearchInputParam<UserInfo>(KEY_FOREIGN_USER, "User", userInfoList, new Renderer<UserInfo>() {
             @Override
@@ -100,10 +104,12 @@ public class StartPhonecallAction extends AbstractAction {
         });
 
         TextInputParam description = new TextInputParam(5, KEY_MESSAGE, "Description");
+        ConfirmInputParam confirmInputParam = new ConfirmInputParam(KEY_FINISH, "Finish call and continue previous work", null);
 
         InputParamGroup inputParamGroup = new InputParamGroup();
         inputParamGroup.getInputParams().add(userInfoSearchInputParam);
         inputParamGroup.getInputParams().add(description);
+        inputParamGroup.getInputParams().add(confirmInputParam);
 
         return new InputParams(Arrays.asList(inputParamGroup));
     }

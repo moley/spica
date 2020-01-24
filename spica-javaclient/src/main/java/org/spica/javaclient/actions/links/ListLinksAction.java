@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.AbstractAction;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.ActionResult;
 import org.spica.javaclient.actions.Command;
 import org.spica.javaclient.links.LinkFinder;
 import org.spica.javaclient.model.EventInfo;
@@ -31,14 +32,14 @@ public class ListLinksAction extends AbstractAction {
     return "List all links for the current context (--all shows all available)";
   }
 
-  @Override public void execute(ActionContext actionContext, InputParams inputParams,
+  @Override public ActionResult execute(ActionContext actionContext, InputParams inputParams,
       CommandLineArguments commandLineArguments) {
 
     boolean showAllLinks = commandLineArguments.hasArgument("--all");
 
-    EventInfo eventInfo = actionContext.getModelCache().findLastOpenEventFromToday();
+    EventInfo eventInfo = actionContext.getModel().findLastOpenEventFromToday();
     TopicInfo topicInfo = (eventInfo != null && eventInfo.getEventType().equals(EventType.TOPIC)) ?
-        actionContext.getModelCache().findTopicInfoById(eventInfo.getReferenceId()) :
+        actionContext.getModel().findTopicInfoById(eventInfo.getReferenceId()) :
         null;
     File currentPath = new File("").getAbsoluteFile();
 
@@ -53,14 +54,16 @@ public class ListLinksAction extends AbstractAction {
     outputDefault("");
 
     LinkFinder linkFinder = new LinkFinder();
-    linkFinder.setModelCache(actionContext.getModelCache());
-    List<LinkInfo> linkInfos = actionContext.getModelCache().getLinkInfos();
+    linkFinder.setModel(actionContext.getModel());
+    List<LinkInfo> linkInfos = actionContext.getModel().getLinkInfos();
     if (!showAllLinks)
       linkInfos = linkFinder.findMatchingLinks(topicInfo, currentPath);
 
     for (LinkInfo next : linkInfos) {
       outputDefault(renderUtil.getLink(next));
     }
+
+    return null;
   }
 
   @Override public ActionGroup getGroup() {

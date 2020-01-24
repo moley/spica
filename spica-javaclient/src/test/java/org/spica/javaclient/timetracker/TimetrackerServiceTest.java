@@ -7,6 +7,7 @@ import org.spica.javaclient.model.*;
 
 import java.time.*;
 import java.util.UUID;
+import org.spica.javaclient.services.ModelCacheService;
 
 public class TimetrackerServiceTest {
 
@@ -17,7 +18,7 @@ public class TimetrackerServiceTest {
     @Before
     public void before () {
         modelCacheService.close();
-        modelCacheService.set(new ModelCache(), "create new model");
+        modelCacheService.set(new Model(), "create new model");
         timetrackerService.setModelCacheService(modelCacheService);
 
     }
@@ -44,9 +45,9 @@ public class TimetrackerServiceTest {
     @Test
     public void createEventAfterLastFinishedEvent() {
 
-        ModelCache modelCache = modelCacheService.get();
+        Model model = modelCacheService.get();
         //08:00 - 09:00
-        modelCache.getEventInfosReal().add(createEvent(LocalTime.of(8,0), LocalTime.of(9,0)));
+        model.getEventInfosReal().add(createEvent(LocalTime.of(8,0), LocalTime.of(9,0)));
 
         //->09:00 - 10:00
         timetrackerService.createEvent(createCreationParam(LocalTime.of(9,0), LocalTime.of(10,0)));
@@ -54,39 +55,39 @@ public class TimetrackerServiceTest {
         //Check
         //08:00 - 09:00
         //09:00 - 10:00
-        Assert.assertEquals (2, modelCache.getEventInfosRealToday().size());
-        Assert.assertEquals (LocalTime.of(8,0), modelCache.getEventInfosRealToday().get(0).getStart().toLocalTime());
-        Assert.assertEquals (LocalTime.of(9,0), modelCache.getEventInfosRealToday().get(1).getStart().toLocalTime());
+        Assert.assertEquals (2, model.getEventInfosRealToday().size());
+        Assert.assertEquals (LocalTime.of(8,0), model.getEventInfosRealToday().get(0).getStart().toLocalTime());
+        Assert.assertEquals (LocalTime.of(9,0), model.getEventInfosRealToday().get(1).getStart().toLocalTime());
     }
 
     @Test
     public void createEventWithPreviousOriginNotFinished () {
-        ModelCache modelCache = modelCacheService.get();
+        Model model = modelCacheService.get();
 
         //09:00 -
-        modelCache.getEventInfosReal().add(createEvent(LocalTime.of(9,0), null));
+        model.getEventInfosReal().add(createEvent(LocalTime.of(9,0), null));
 
         //->08:00 - 09:00
         timetrackerService.createEvent(createCreationParam(LocalTime.of(8,0), LocalTime.of(9,0)));
 
-        System.out.println (modelCache.getEventInfosRealToday());
+        System.out.println (model.getEventInfosRealToday());
 
         //Check
         //08:00 - 09:00
         //09:00 -
-        Assert.assertEquals (2, modelCache.getEventInfosRealToday().size());
-        Assert.assertEquals (LocalTime.of(8,0), modelCache.getEventInfosRealToday().get(0).getStart().toLocalTime());
-        Assert.assertEquals (LocalTime.of(9,0), modelCache.getEventInfosRealToday().get(0).getStop().toLocalTime());
-        Assert.assertEquals (LocalTime.of(9,0), modelCache.getEventInfosRealToday().get(1).getStart().toLocalTime());
-        Assert.assertNull (modelCache.getEventInfosRealToday().get(1).getStop());
+        Assert.assertEquals (2, model.getEventInfosRealToday().size());
+        Assert.assertEquals (LocalTime.of(8,0), model.getEventInfosRealToday().get(0).getStart().toLocalTime());
+        Assert.assertEquals (LocalTime.of(9,0), model.getEventInfosRealToday().get(0).getStop().toLocalTime());
+        Assert.assertEquals (LocalTime.of(9,0), model.getEventInfosRealToday().get(1).getStart().toLocalTime());
+        Assert.assertNull (model.getEventInfosRealToday().get(1).getStop());
     }
 
     @Test
     public void createEventAfterLastNotFinishedEvent () {
-        ModelCache modelCache = modelCacheService.get();
+        Model model = modelCacheService.get();
 
         //8:00 -
-        modelCache.getEventInfosReal().add(createEvent(LocalTime.of(8,0), null));
+        model.getEventInfosReal().add(createEvent(LocalTime.of(8,0), null));
 
         //->09:00 - 10:00
         timetrackerService.createEvent(createCreationParam(LocalTime.of(9,0), LocalTime.of(10,0)));
@@ -94,18 +95,18 @@ public class TimetrackerServiceTest {
         //Check
         //08:00 - 09:00
         //09:00 - 10:00
-        Assert.assertEquals (2, modelCache.getEventInfosRealToday().size());
-        Assert.assertEquals (LocalTime.of(8,0), modelCache.getEventInfosRealToday().get(0).getStart().toLocalTime());
-        Assert.assertEquals (LocalTime.of(9,0), modelCache.getEventInfosRealToday().get(0).getStop().toLocalTime());
-        Assert.assertEquals (LocalTime.of(9,0), modelCache.getEventInfosRealToday().get(1).getStart().toLocalTime());
-        Assert.assertEquals (LocalTime.of(10,0), modelCache.getEventInfosRealToday().get(1).getStop().toLocalTime());
+        Assert.assertEquals (2, model.getEventInfosRealToday().size());
+        Assert.assertEquals (LocalTime.of(8,0), model.getEventInfosRealToday().get(0).getStart().toLocalTime());
+        Assert.assertEquals (LocalTime.of(9,0), model.getEventInfosRealToday().get(0).getStop().toLocalTime());
+        Assert.assertEquals (LocalTime.of(9,0), model.getEventInfosRealToday().get(1).getStart().toLocalTime());
+        Assert.assertEquals (LocalTime.of(10,0), model.getEventInfosRealToday().get(1).getStop().toLocalTime());
     }
 
     @Test
     public void createEventBeforeFirstEvent () {
-        ModelCache modelCache = modelCacheService.get();
+        Model model = modelCacheService.get();
         //09:00 - 10:00
-        modelCache.getEventInfosReal().add(createEvent(LocalTime.of(9,0), LocalTime.of(10,0)));
+        model.getEventInfosReal().add(createEvent(LocalTime.of(9,0), LocalTime.of(10,0)));
 
 
         //->08:00 -
@@ -113,20 +114,20 @@ public class TimetrackerServiceTest {
 
         //08:00 - 09:00
         //09:00 - 10:00
-        Assert.assertEquals (2, modelCache.getEventInfosRealToday().size());
-        Assert.assertEquals (LocalTime.of(8,0), modelCache.getEventInfosRealToday().get(0).getStart().toLocalTime());
-        Assert.assertEquals (LocalTime.of(9,0), modelCache.getEventInfosRealToday().get(0).getStop().toLocalTime());
-        Assert.assertEquals (LocalTime.of(9,0), modelCache.getEventInfosRealToday().get(1).getStart().toLocalTime());
-        Assert.assertEquals (LocalTime.of(10, 0), modelCache.getEventInfosRealToday().get(1).getStop().toLocalTime());
+        Assert.assertEquals (2, model.getEventInfosRealToday().size());
+        Assert.assertEquals (LocalTime.of(8,0), model.getEventInfosRealToday().get(0).getStart().toLocalTime());
+        Assert.assertEquals (LocalTime.of(9,0), model.getEventInfosRealToday().get(0).getStop().toLocalTime());
+        Assert.assertEquals (LocalTime.of(9,0), model.getEventInfosRealToday().get(1).getStart().toLocalTime());
+        Assert.assertEquals (LocalTime.of(10, 0), model.getEventInfosRealToday().get(1).getStop().toLocalTime());
 
     }
 
     @Test(expected = IllegalStateException.class)
     public void createEventBeforeFirstEventGap () {
-        ModelCache modelCache = modelCacheService.get();
+        Model model = modelCacheService.get();
 
         //09:00 - 10:00
-        modelCache.getEventInfosReal().add(createEvent(LocalTime.of(9,0), LocalTime.of(10,0)));
+        model.getEventInfosReal().add(createEvent(LocalTime.of(9,0), LocalTime.of(10,0)));
 
         //->08:00 - 08:30
         timetrackerService.createEvent(createCreationParam(LocalTime.of(8,0), LocalTime.of(8,30)));
@@ -136,10 +137,10 @@ public class TimetrackerServiceTest {
 
     @Test(expected = IllegalStateException.class)
     public void createEventBeforeFirstEventHidingOrigin () {
-        ModelCache modelCache = modelCacheService.get();
+        Model model = modelCacheService.get();
 
         //09:00 - 10:00
-        modelCache.getEventInfosReal().add(createEvent(LocalTime.of(9,0), LocalTime.of(10,0)));
+        model.getEventInfosReal().add(createEvent(LocalTime.of(9,0), LocalTime.of(10,0)));
 
         //->08:00 - 11:30
         timetrackerService.createEvent(createCreationParam(LocalTime.of(8,0), LocalTime.of(11,0)));
@@ -151,10 +152,10 @@ public class TimetrackerServiceTest {
 
     @Test
     public void createEventSplittingOrigin () {
-        ModelCache modelCache = modelCacheService.get();
+        Model model = modelCacheService.get();
 
         //08:00 - 09:00
-        modelCache.getEventInfosReal().add(createEvent(LocalTime.of(8,0), LocalTime.of(9,0)));
+        model.getEventInfosReal().add(createEvent(LocalTime.of(8,0), LocalTime.of(9,0)));
 
 
         //->08:30 - 09:00
@@ -163,22 +164,22 @@ public class TimetrackerServiceTest {
 
         //08:00 - 08:30
         //08:30 - 09:00
-        Assert.assertEquals (2, modelCache.getEventInfosRealToday().size());
-        Assert.assertEquals (LocalTime.of(8,0), modelCache.getEventInfosRealToday().get(0).getStart().toLocalTime());
-        Assert.assertEquals (LocalTime.of(8,30), modelCache.getEventInfosRealToday().get(0).getStop().toLocalTime());
-        Assert.assertEquals (LocalTime.of(8,30), modelCache.getEventInfosRealToday().get(1).getStart().toLocalTime());
-        Assert.assertEquals (LocalTime.of(9, 0), modelCache.getEventInfosRealToday().get(1).getStop().toLocalTime());
+        Assert.assertEquals (2, model.getEventInfosRealToday().size());
+        Assert.assertEquals (LocalTime.of(8,0), model.getEventInfosRealToday().get(0).getStart().toLocalTime());
+        Assert.assertEquals (LocalTime.of(8,30), model.getEventInfosRealToday().get(0).getStop().toLocalTime());
+        Assert.assertEquals (LocalTime.of(8,30), model.getEventInfosRealToday().get(1).getStart().toLocalTime());
+        Assert.assertEquals (LocalTime.of(9, 0), model.getEventInfosRealToday().get(1).getStop().toLocalTime());
 
     }
 
     @Test
     public void createEventOverlapping () {
-        ModelCache modelCache = modelCacheService.get();
+        Model model = modelCacheService.get();
 
         //08:00 - 09:00
         //09:00 - 10:00
-        modelCache.getEventInfosReal().add(createEvent(LocalTime.of(8,0), LocalTime.of(9,0)));
-        modelCache.getEventInfosReal().add(createEvent(LocalTime.of(9,0), LocalTime.of(10,0)));
+        model.getEventInfosReal().add(createEvent(LocalTime.of(8,0), LocalTime.of(9,0)));
+        model.getEventInfosReal().add(createEvent(LocalTime.of(9,0), LocalTime.of(10,0)));
 
         //->08:30 - 09:30
         timetrackerService.createEvent(createCreationParam(LocalTime.of(8,30), LocalTime.of(9,30)));
@@ -186,25 +187,25 @@ public class TimetrackerServiceTest {
         //08:00 - 08:30
         //08:30 - 09:30
         //09:30 - 10:00
-        Assert.assertEquals (3, modelCache.getEventInfosRealToday().size());
-        Assert.assertEquals (LocalTime.of(8,0), modelCache.getEventInfosRealToday().get(0).getStart().toLocalTime());
-        Assert.assertEquals (LocalTime.of(8,30), modelCache.getEventInfosRealToday().get(0).getStop().toLocalTime());
-        Assert.assertEquals (LocalTime.of(8,30), modelCache.getEventInfosRealToday().get(1).getStart().toLocalTime());
-        Assert.assertEquals (LocalTime.of(9, 30), modelCache.getEventInfosRealToday().get(1).getStop().toLocalTime());
-        Assert.assertEquals (LocalTime.of(9,30), modelCache.getEventInfosRealToday().get(2).getStart().toLocalTime());
-        Assert.assertEquals (LocalTime.of(10, 0), modelCache.getEventInfosRealToday().get(2).getStop().toLocalTime());
+        Assert.assertEquals (3, model.getEventInfosRealToday().size());
+        Assert.assertEquals (LocalTime.of(8,0), model.getEventInfosRealToday().get(0).getStart().toLocalTime());
+        Assert.assertEquals (LocalTime.of(8,30), model.getEventInfosRealToday().get(0).getStop().toLocalTime());
+        Assert.assertEquals (LocalTime.of(8,30), model.getEventInfosRealToday().get(1).getStart().toLocalTime());
+        Assert.assertEquals (LocalTime.of(9, 30), model.getEventInfosRealToday().get(1).getStop().toLocalTime());
+        Assert.assertEquals (LocalTime.of(9,30), model.getEventInfosRealToday().get(2).getStart().toLocalTime());
+        Assert.assertEquals (LocalTime.of(10, 0), model.getEventInfosRealToday().get(2).getStop().toLocalTime());
     }
 
     @Test(expected = IllegalStateException.class)
     public void createEventOverlappingHidingOtherEvent () {
-        ModelCache modelCache = modelCacheService.get();
+        Model model = modelCacheService.get();
 
         //08:00 - 09:00
         //09:00 - 10:00
         //10:00 - 11:00
-        modelCache.getEventInfosReal().add(createEvent(LocalTime.of(8,0), LocalTime.of(9,0)));
-        modelCache.getEventInfosReal().add(createEvent(LocalTime.of(9,0), LocalTime.of(10,0)));
-        modelCache.getEventInfosReal().add(createEvent(LocalTime.of(10,0), LocalTime.of(11,0)));
+        model.getEventInfosReal().add(createEvent(LocalTime.of(8,0), LocalTime.of(9,0)));
+        model.getEventInfosReal().add(createEvent(LocalTime.of(9,0), LocalTime.of(10,0)));
+        model.getEventInfosReal().add(createEvent(LocalTime.of(10,0), LocalTime.of(11,0)));
 
         //->08:30 - 09:30
         timetrackerService.createEvent(createCreationParam(LocalTime.of(8,30), LocalTime.of(10,30)));

@@ -27,16 +27,16 @@ public class GotoLinkAction extends AbstractAction {
     }
 
     @Override
-    public void execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
+    public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
         outputDefault("Links:\n\n");
 
         String query = commandLineArguments.getMandatoryFirstArgument("You have to add a query param (name, id, url) to the search");
-        List<LinkInfo> linkInfos = actionContext.getModelCache().findLinkInfosByQuery(query);
+        List<LinkInfo> linkInfos = actionContext.getModel().findLinkInfosByQuery(query);
 
         if (linkInfos.isEmpty())
             outputError("No links found for query <" + query + ">");
-        else
+        else {
             for (LinkInfo next : linkInfos) {
                 try {
                     Desktop.getDesktop().browse(new URI(next.getUrl()));
@@ -46,6 +46,9 @@ public class GotoLinkAction extends AbstractAction {
                     LOGGER.error(e.getLocalizedMessage(), e);
                 }
             }
+        }
+
+        return null;
 
     }
 
