@@ -14,6 +14,8 @@ public class ShowTopicsAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ShowTopicsAction.class);
 
+
+
     @Override public String getDisplayname() {
         return "Show topics";
     }
