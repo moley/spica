@@ -17,7 +17,6 @@ import org.spica.server.user.config.LdapConfiguration;
 import org.spica.server.user.domain.User;
 
 /**
- * Created by OleyMa on 03.07.15.
  */
 public class LdapUserProvider implements UserProvider {
 

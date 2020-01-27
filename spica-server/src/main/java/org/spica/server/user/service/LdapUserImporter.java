@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Created by OleyMa on 03.07.15.
  */
 @Component
 public class LdapUserImporter implements UserImporter {
