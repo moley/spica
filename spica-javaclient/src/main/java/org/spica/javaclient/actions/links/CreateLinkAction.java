@@ -50,7 +50,7 @@ public class CreateLinkAction extends AbstractAction {
 
         Model model = actionContext.getModel();
 
-        String name = getFirstValue(commandLineArguments.getOptionalFirstArgument(), inputParams.getInputValueAsString(KEY_NAME));
+        String name = getFirstValue(commandLineArguments.getOptionalMainArgument(), inputParams.getInputValueAsString(KEY_NAME));
         String url = getFirstValue(inputParams.getInputValueAsString(KEY_URL));
         LinkType selectedLinkType = inputParams.getInputValue(KEY_TYPE, LinkType.class);
 

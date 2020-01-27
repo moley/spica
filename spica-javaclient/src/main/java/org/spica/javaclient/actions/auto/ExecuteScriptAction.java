@@ -76,7 +76,7 @@ public class ExecuteScriptAction extends AbstractAction {
         InputParamGroup inputParamGroup = new InputParamGroup();
         InputParams inputParams = new InputParams(Arrays.asList(inputParamGroup));
 
-        TextInputParam branch = new TextInputParam(1, KEY_FILE, "File", commandLineArguments.getOptionalFirstArgument());
+        TextInputParam branch = new TextInputParam(1, KEY_FILE, "File", commandLineArguments.getOptionalMainArgument());
         inputParamGroup.getInputParams().add(branch);
 
         return inputParams;

@@ -26,7 +26,7 @@ public class RemoveProjectAction extends AbstractAction {
     public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
         Model model = actionContext.getModel();
-        String query = commandLineArguments.getMandatoryFirstArgument("You have to add an parameter containing a name or an id to your command");
+        String query = commandLineArguments.getMandatoryMainArgument("You have to add an parameter containing a name or an id to your command");
         List<ProjectInfo> infos = model.findProjectInfosByQuery(query);
         model.getProjectInfos().removeAll(infos);
 

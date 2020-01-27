@@ -50,7 +50,7 @@ public class FinishDayAction extends AbstractAction {
             else {
                 LocalDateTime stopTime = LocalDateTime.now();
                 if (! commandLineArguments.isEmpty()) {
-                    LocalTime localTime = dateUtil.getTime(commandLineArguments.getSingleArgument());
+                    LocalTime localTime = dateUtil.getTime(commandLineArguments.getSingleMainArgument());
                     stopTime = LocalDateTime.of(LocalDate.now(), localTime);
                 }
                 TimetrackerService timetrackerService = new TimetrackerService();

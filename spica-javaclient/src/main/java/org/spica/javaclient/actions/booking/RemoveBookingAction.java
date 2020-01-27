@@ -30,7 +30,7 @@ public class RemoveBookingAction extends AbstractAction {
 
         Model model = actionContext.getModel();
 
-        String id = commandLineArguments.getMandatoryFirstArgument("You have to add an parameter id to your command");
+        String id = commandLineArguments.getMandatoryMainArgument("You have to add an parameter id to your command");
 
         EventInfo eventInfoRealById = model.findEventInfoRealById(id);
         if (eventInfoRealById == null)

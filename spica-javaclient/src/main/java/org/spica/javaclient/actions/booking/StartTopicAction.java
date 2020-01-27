@@ -45,7 +45,7 @@ public class StartTopicAction extends AbstractAction {
 
         Model model = actionContext.getModel();
 
-        String query = commandLineArguments.getOptionalFirstArgument();
+        String query = commandLineArguments.getOptionalMainArgument();
         List<TopicInfo> infos = model.findTopicInfosByQuery(query);
         TopicInfo selectedTopicInfo = infos.size() == 1 ? infos.get(0): (TopicInfo) inputParams.getInputValue(KEY_TOPIC);
 
@@ -77,7 +77,7 @@ public class StartTopicAction extends AbstractAction {
 
         InputParams inputParams = new InputParams();
         Model model = actionContext.getModel();
-        List<TopicInfo> filteredTopicInfos = model.findTopicInfosByQuery(parameterList.getOptionalFirstArgument());
+        List<TopicInfo> filteredTopicInfos = model.findTopicInfosByQuery(parameterList.getOptionalMainArgument());
         if (filteredTopicInfos.size() != 1) {
             List<TopicInfo> allTopicInfosForSelection = new ArrayList<>();
             allTopicInfosForSelection.addAll(model.getTopicInfos());

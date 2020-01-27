@@ -31,7 +31,7 @@ public class GotoLinkAction extends AbstractAction {
 
         outputDefault("Links:\n\n");
 
-        String query = commandLineArguments.getMandatoryFirstArgument("You have to add a query param (name, id, url) to the search");
+        String query = commandLineArguments.getMandatoryMainArgument("You have to add a query param (name, id, url) to the search");
         List<LinkInfo> linkInfos = actionContext.getModel().findLinkInfosByQuery(query);
 
         if (linkInfos.isEmpty())

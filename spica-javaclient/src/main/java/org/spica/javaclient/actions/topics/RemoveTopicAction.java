@@ -25,7 +25,7 @@ public class RemoveTopicAction extends AbstractAction {
     @Override
     public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
-        String query = commandLineArguments.getMandatoryFirstArgument("You have to add an parameter containing a name, id or external id to your command");
+        String query = commandLineArguments.getMandatoryMainArgument("You have to add an parameter containing a name, id or external id to your command");
 
         Model model = actionContext.getModel();
         List<TopicInfo> infos = model.findTopicInfosByQuery(query);

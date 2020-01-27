@@ -11,7 +11,4 @@ public class FlagInputParam<T> extends AbstractInputParam<T> {
         this.setKey(key);
     }
 
-    public void setValue(T value) {
-    }
-
 }

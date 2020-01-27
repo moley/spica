@@ -26,7 +26,7 @@ public class ShowTopicsAction extends AbstractAction {
     @Override
     public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
         Model model = actionContext.getModel();
-        String query = commandLineArguments.getOptionalFirstArgumentNotNull();
+        String query = commandLineArguments.getOptionalMainArgumentNotNull();
         List<TopicInfo> infos = model.findTopicInfosByQuery(query);
         outputOk("Found " + infos.size() + " topics for query <" + query + ">");
 

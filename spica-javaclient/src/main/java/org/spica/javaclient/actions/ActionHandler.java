@@ -22,6 +22,7 @@ import org.spica.javaclient.actions.booking.StartPhonecallAction;
 import org.spica.javaclient.actions.booking.StartTopicAction;
 import org.spica.javaclient.actions.configuration.ImportUsersAction;
 import org.spica.javaclient.actions.configuration.ShowStatusAction;
+import org.spica.javaclient.actions.gradle.InitGradleProjectAction;
 import org.spica.javaclient.actions.links.CreateLinkAction;
 import org.spica.javaclient.actions.links.GotoLinkAction;
 import org.spica.javaclient.actions.links.ListLinksAction;
@@ -111,6 +112,9 @@ public class ActionHandler {
     registeredActions.add(new ImportUsersAction());
     registeredActions.add(new ShowStatusAction());
 
+    //gradle
+    registeredActions.add(new InitGradleProjectAction());
+
     //automatication
     registeredActions.add(new ExecuteScriptAction());
 
@@ -198,7 +202,11 @@ public class ActionHandler {
       //inject values of commandline
       for (InputParamGroup next : inputParams.getInputParamGroups()) {
         for (InputParam nextParam : next.getInputParams()) {
-          if (options.hasOption(nextParam.getKey())) {
+          if ( nextParam instanceof FlagInputParam) {
+            boolean optionContained = commandLine.hasOption(nextParam.getKey());
+            nextParam.setValue(String.valueOf(optionContained));
+          }
+          else if (options.hasOption(nextParam.getKey())) {
             String optionValue = commandLine.getOptionValue(nextParam.getKey());
             if (optionValue != null)
               nextParam.setValue(commandLine.getOptionValue(nextParam.getKey()));

@@ -1,5 +1,6 @@
 package org.spica.javaclient.params;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -45,36 +46,53 @@ public class CommandLineArguments {
     return commandLine.getOptionValue(option);
   }
 
-  public String getOptionalFirstArgument () {
-    if (isEmpty())
-      return null;
-    else
-      return arguments.get(0);
+  public List<String> getMainArguments () {
+    List<String> mainArguments = new ArrayList<>();
+
+    for (String next: arguments) {
+      if (! next.startsWith("-"))
+        mainArguments.add(next);
+    }
+
+    return mainArguments;
   }
 
-  public String getOptionalFirstArgumentNotNull () {
-    if (isEmpty())
+  public String getOptionalMainArgument() {
+    List<String> mainArguments = getMainArguments();
+    if (mainArguments.isEmpty())
+      return null;
+    else
+      return mainArguments.get(0);
+  }
+
+  public String getOptionalMainArgumentNotNull() {
+    List<String> mainArguments = getMainArguments();
+
+    if (mainArguments.isEmpty())
       return "";
     else
-      return arguments.get(0);
+      return mainArguments.get(0);
   }
 
   public boolean hasArgument (final String argument) {
     return commandLine.hasOption(argument);
   }
 
-  public String getMandatoryFirstArgument (String error) {
-    if (isEmpty())
+  public String getMandatoryMainArgument(String error) {
+    List<String> mainArguments = getMainArguments();
+    if (mainArguments.isEmpty())
       throw new IllegalStateException(error);
     else
-      return arguments.get(0);
+      return mainArguments.get(0);
   }
 
-  public String getSingleArgument () {
-    if (arguments.size() != 1)
+  public String getSingleMainArgument() {
+    List<String> mainArguments = getMainArguments();
+
+    if (mainArguments.size() != 1)
       throw new IllegalStateException("Not exactly one argument used, but " + commandLine.getArgList());
     else
-      return arguments.get(0);
+      return mainArguments.get(0);
   }
 
   public boolean isEmpty () {
@@ -101,10 +119,6 @@ public class CommandLineArguments {
 
   public List<String> getArguments() {
     return arguments;
-  }
-
-  public String getArgumentsString () {
-    return String.join(" ", arguments);
   }
 
   public String toString () {

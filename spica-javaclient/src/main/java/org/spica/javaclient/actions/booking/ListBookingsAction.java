@@ -35,7 +35,7 @@ public class ListBookingsAction extends AbstractAction {
 
         LocalDate today = LocalDate.now();
 
-        String optionalFirstArgument = commandLineArguments.getOptionalFirstArgument();
+        String optionalFirstArgument = commandLineArguments.getOptionalMainArgument();
 
         if (optionalFirstArgument != null) {
             //TODO extract Date parser in own class

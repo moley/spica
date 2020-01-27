@@ -26,7 +26,7 @@ public class RemoveLinkAction extends AbstractAction {
 
         Model model = actionContext.getModel();
 
-        String query = commandLineArguments.getMandatoryFirstArgument("You have to add a parameter containing an ID to your command");
+        String query = commandLineArguments.getMandatoryMainArgument("You have to add a parameter containing an ID to your command");
 
         LinkInfo linkInfoById = model.findLinkInfoById(query);
         if (linkInfoById == null)

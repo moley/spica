@@ -8,6 +8,7 @@ public enum ActionGroup {
     BOOKING("b"),
     LINKS("l"),
     CONFIGURATION("c"),
+    GRADLE ("g"),
     AUTOMATION ("a");
 
     private String shortkey;

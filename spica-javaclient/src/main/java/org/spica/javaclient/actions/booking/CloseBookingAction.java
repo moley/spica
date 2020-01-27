@@ -52,7 +52,7 @@ public class CloseBookingAction extends AbstractAction {
     }
 
     //Handle new closing
-    String query = commandLineArguments.getOptionalFirstArgument();
+    String query = commandLineArguments.getOptionalMainArgument();
     EventInfo eventInfoRealById = query != null ? model.findEventInfoRealById(query) : model.findLastOpenEventFromToday();
     if (eventInfoRealById == null) {
       outputDefault((query != null ? "No event with id " + query : "No last open event from today") + " found");

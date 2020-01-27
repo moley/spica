@@ -45,7 +45,7 @@ public class ShowProjectsAction extends AbstractAction {
     public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
         Model model = actionContext.getModel();
-        String query = commandLineArguments.getOptionalFirstArgumentNotNull();
+        String query = commandLineArguments.getOptionalMainArgumentNotNull();
         List<ProjectInfo> infos = model.findProjectInfosByQuery(query);
         outputOk("Found " + infos.size() + " projects for query <" + query + ">");
 
