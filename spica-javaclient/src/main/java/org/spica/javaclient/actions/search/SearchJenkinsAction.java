@@ -16,11 +16,15 @@ import org.spica.javaclient.actions.ActionGroup;
 import org.spica.javaclient.actions.ActionResult;
 import org.spica.javaclient.actions.Command;
 import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.FlagInputParam;
+import org.spica.javaclient.params.InputParamGroup;
 import org.spica.javaclient.params.InputParams;
 
 public class SearchJenkinsAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(SearchJenkinsAction.class);
+
+    private final static String KEY_TESTS = "tests";
 
     @Override public String getDisplayname() {
         return "Goto jenkins";
@@ -36,6 +40,12 @@ public class SearchJenkinsAction extends AbstractAction {
     @Override
     public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
+        String detailsSite = "";
+        if (inputParams.getInputValueAsBoolean(KEY_TESTS, false)) {
+            detailsSite = "/lastCompletedBuild/testReport/";
+        }
+
+
         File currentWorkingDir = actionContext.getCurrentWorkingDir();
         File jenkinsFile = new File (currentWorkingDir, "Jenkinsfile");
         if (jenkinsFile.exists()) {
@@ -43,8 +53,8 @@ public class SearchJenkinsAction extends AbstractAction {
                 List<String> lines = FileUtils.readLines(jenkinsFile, Charset.defaultCharset());
                 String link = lines.get(1);
                 if (link.startsWith("//")) {
-                    link = link.substring(2);
-                    Desktop.getDesktop().browse(new URI(link));
+                    link = link.substring(2).replace("//", "/");
+                    Desktop.getDesktop().browse(new URI(link + detailsSite));
                     return null;
                 }
 
@@ -67,5 +77,16 @@ public class SearchJenkinsAction extends AbstractAction {
     @Override
     public Command getCommand() {
         return new Command("jenkins", "j");
+    }
+
+    @Override public InputParams getInputParams(ActionContext actionContext, CommandLineArguments commandLineArguments) {
+        InputParams inputParams = new InputParams();
+        InputParamGroup inputParamGroup = new InputParamGroup();
+
+        inputParamGroup.getInputParams().add(new FlagInputParam(KEY_TESTS));
+
+        inputParams.getInputParamGroups().add(inputParamGroup);
+
+        return inputParams;
     }
 }
