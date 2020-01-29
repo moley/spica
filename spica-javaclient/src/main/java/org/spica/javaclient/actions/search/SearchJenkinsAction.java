@@ -36,7 +36,6 @@ public class SearchJenkinsAction extends AbstractAction {
     }
 
 
-
     @Override
     public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 

@@ -50,6 +50,8 @@ public class CloseBookingAction extends AbstractAction {
       actionContext.saveModel(getClass().getName());
       index++;
     }
+    actionContext.saveModel(getClass().getName());
+
 
     //Handle new closing
     String query = commandLineArguments.getOptionalMainArgument();
@@ -58,14 +60,16 @@ public class CloseBookingAction extends AbstractAction {
       outputDefault((query != null ? "No event with id " + query : "No last open event from today") + " found");
     } else {
 
-      LocalTime stopTime = dateUtil.getTime(inputParams.getInputValueAsString(KEY_STOPTIME));
+      String newClosingValue = inputParams.getInputValueAsString(KEY_STOPTIME);
+      if (newClosingValue != null) {
+        LocalTime stopTime = dateUtil.getTime(newClosingValue);
 
-      LocalDateTime stopDateTime = LocalDateTime.of(eventInfoRealById.getStart().toLocalDate(), stopTime);
-      outputOk("Saved booking " + eventInfoRealById.getId() + " with stop time " + dateUtil
-          .getDateAndTimeAsString(stopDateTime));
-      eventInfoRealById.setStop(stopDateTime);
+        LocalDateTime stopDateTime = LocalDateTime.of(eventInfoRealById.getStart().toLocalDate(), stopTime);
+        outputOk("Saved booking " + eventInfoRealById.getId() + " with stop time " + dateUtil.getDateAndTimeAsString(stopDateTime));
+        eventInfoRealById.setStop(stopDateTime);
 
-      actionContext.saveModel(getClass().getName());
+        actionContext.saveModel(getClass().getName());
+      }
     }
     return null;
   }
@@ -97,7 +101,7 @@ public class CloseBookingAction extends AbstractAction {
     EventInfo lastEventInfoToday = actionContext.getModel().findLastOpenEventFromToday();
     if (lastEventInfoToday != null) {
       TextInputParam description = new TextInputParam(5, KEY_STOPTIME,
-          "Stop last event " + getInfoFromEvent(lastEventInfoToday));
+          "Stop last event " + getInfoFromEvent(lastEventInfoToday) + " (CR to skip)");
       inputParamGroup.getInputParams().add(description);
     }
 
