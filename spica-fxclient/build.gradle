@@ -9,5 +9,16 @@ javafx {
 }
 
 
+dependencies {
+    compile 'org.kordamp.ikonli:ikonli-javafx:11.3.4'
+    compile 'org.kordamp.ikonli:ikonli-fontawesome-pack:11.3.4'
+    compile 'org.controlsfx:controlsfx:11.0.0' //GUI Elements / PopOver
+    compile 'org.openjfx:javafx-controls:14-ea+2'
+    compile 'org.openjfx:javafx-graphics:14-ea+2'
+    compile 'org.openjfx:javafx-swing:14-ea+2'
+    compile 'org.openjfx:javafx-media:14-ea+2'
+
+}
+
 mainClassName = 'org.spica.fx.SpicaFxClient'
 
