@@ -1,6 +1,6 @@
 include 'spica-commons'
 include 'spica-docs'
 include 'spica-cli'
-include 'spica-client'
+include 'spica-ionicclient'
 include 'spica-javaclient'
 include 'spica-server'
