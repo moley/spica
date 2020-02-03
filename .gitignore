@@ -18,3 +18,4 @@ bin/
 
 /spica-cli/config.xml
 /spica-cli/src/main/resources/spica-cli.version
+/spica-ionicclient/package-lock.json

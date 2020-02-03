@@ -1,0 +1,13 @@
+plugins {
+    id 'org.openjfx.javafxplugin' version '0.0.6'
+    id 'application'
+}
+
+javafx {
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.swing', 'javafx.media']
+    version = "11.0.2" //12-ea+8"
+}
+
+
+mainClassName = 'org.spica.fx.SpicaFxClient'
+
