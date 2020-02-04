@@ -1,20 +1,15 @@
 package org.spica.fx;
 
-import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.Parent;
 
-public class DashboardView implements View {
+public class DashboardView extends AbstractView {
   @Override public String getName() {
     return "Dashboard";
   }
 
-  @Override public Pane getPane() {
-    VBox vbox = new VBox();
-    Label label = new Label();
-    label.setText("Dashboard");
-    vbox.getChildren().add(label);
-    return vbox;
+  @Override public Parent getParent() {
+    Mask mask = getMask("dashboard");
+    return mask.getScene().getRoot();
   }
 
   @Override public String getIcon() {

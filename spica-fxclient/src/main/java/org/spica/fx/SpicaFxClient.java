@@ -7,6 +7,7 @@ import java.util.List;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
@@ -46,8 +47,8 @@ public class SpicaFxClient extends Application {
     menu.setFillWidth(true);
     for (View next: views) {
       Button button = new Button(next.getName(), Consts.createIcon(next.getIcon(), Consts.ICONSIZE_MENU));
+      UiUtils.setCssClass(button, "menubutton");
 
-      button.setStyle("-fx-background-color: #777777;");
       button.setOnMouseClicked(new EventHandler<MouseEvent>() {
         @Override public void handle(MouseEvent event) {
           System.out.println (event.getSource());
@@ -58,7 +59,7 @@ public class SpicaFxClient extends Application {
         }
       });
 
-      Pane pane = next.getPane();
+      Parent pane = next.getParent();
       pane.setStyle("-fx-background-color: #AAAAAA");
 
       detailNode.getChildren().add(pane);
@@ -69,7 +70,7 @@ public class SpicaFxClient extends Application {
     }
 
     Button btnExit = new Button("Finish day", Consts.createIcon("fa-sign-out", Consts.ICONSIZE_MENU));
-    btnExit.setStyle("-fx-background-color: #777777;");
+    UiUtils.setCssClass(btnExit, "menubutton");
     btnExit.setOnMouseClicked(new EventHandler<MouseEvent>() {
       @Override public void handle(MouseEvent event) {
         System.exit(0);

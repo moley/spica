@@ -18,6 +18,7 @@ dependencies {
     compile 'org.openjfx:javafx-swing:14-ea+2'
     compile 'org.openjfx:javafx-media:14-ea+2'
 
+    compile project (':spica-javaclient')
 }
 
 mainClassName = 'org.spica.fx.SpicaFxClient'

@@ -1,0 +1,13 @@
+.header {
+    -fx-text-fill: #707070;
+    -fx-font-size: 30pt;
+    -fx-font-weight: bold;
+    -fx-font-family: Arial;
+}
+
+.menubutton {
+    -fx-font-size: 20pt;
+    -fx-font-weight: bold;
+    -fx-font-family: Arial;
+    -fx-background-color: #777777;
+}

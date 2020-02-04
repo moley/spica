@@ -1,12 +1,12 @@
 package org.spica.fx;
 
-import javafx.scene.layout.Pane;
+import javafx.scene.Parent;
 
 public interface View {
 
   String getName ();
 
-  Pane getPane ();
+  Parent getParent();
 
   String getIcon ();
 
