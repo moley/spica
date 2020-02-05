@@ -2,13 +2,42 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.GridPane?>
-<GridPane xmlns:fx="http://javafx.com/fxml" alignment="TOP_LEFT" hgap="10" vgap="10" >
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fx.controllers.DashboardController" alignment="TOP_LEFT" hgap="10" vgap="10" >
     <stylesheets>
         <URL value="@/spica.css" />
     </stylesheets>
     <padding><Insets top="20" bottom="20" left="20" right="20"/> </padding>
 
-    <Label text="DASHBOARD" fx:id="lblDashboardHeader" styleClass="header"/>
+    <Label text="DASHBOARD" fx:id="lblDashboardHeader" styleClass="header" GridPane.rowIndex="0" GridPane.columnIndex="0">
+        <GridPane.margin>
+            <Insets bottom="20"/>
+        </GridPane.margin>
+    </Label>
+    <GridPane fx:id="panHeader"  styleClass="infopane" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" hgap="10" vgap="10" GridPane.columnIndex="0" >
+        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+
+        <GridPane.margin>
+            <Insets bottom="5" top="5" left="5" right="5"/>
+        </GridPane.margin>
+        <Label text="Current time:" styleClass="infotype" GridPane.rowIndex="0" GridPane.columnIndex="0"></Label>
+        <Label text="11:20" styleClass="infotext" GridPane.rowIndex="0" GridPane.columnIndex="1"></Label>
+
+        <Label text="Working since:" styleClass="infotype" GridPane.rowIndex="1" GridPane.columnIndex="0"></Label>
+        <Label text="12:20" styleClass="infotext" GridPane.rowIndex="1" GridPane.columnIndex="1"></Label>
+
+        <Label text="Work time:" styleClass="infotype" GridPane.rowIndex="2" GridPane.columnIndex="0"></Label>
+        <Label text="02:20 h" styleClass="infotext" GridPane.rowIndex="2" GridPane.columnIndex="1"></Label>
+
+        <Label text="Pause time:" styleClass="infotype" GridPane.rowIndex="3" GridPane.columnIndex="0"></Label>
+        <Label text="00:20 h" styleClass="infotext" GridPane.rowIndex="3" GridPane.columnIndex="1"></Label>
+
+        <Label text="Current task:" styleClass="infotype" GridPane.rowIndex="4" GridPane.columnIndex="0"></Label>
+        <Label text="Blabla doing nice things" styleClass="infotext" GridPane.rowIndex="4" GridPane.columnIndex="1"></Label>
+
+    </GridPane>
+
+
+
 
 
 

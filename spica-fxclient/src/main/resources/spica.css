@@ -1,7 +1,31 @@
 .header {
-    -fx-text-fill: #707070;
+    -fx-text-fill: #895A5A;
     -fx-font-size: 30pt;
     -fx-font-weight: bold;
+    -fx-font-family: Arial;
+}
+
+
+
+.rootpane {
+    -fx-background-color: #111111
+}
+
+.infopane {
+    -fx-background-color: #000000
+}
+
+
+.infotype {
+    -fx-text-fill: #AAAAAA;
+    -fx-font-size: 15pt;
+    -fx-font-weight: bold;
+    -fx-font-family: Arial;
+}
+
+.infotext {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 15pt;
     -fx-font-family: Arial;
 }
 
@@ -9,5 +33,5 @@
     -fx-font-size: 20pt;
     -fx-font-weight: bold;
     -fx-font-family: Arial;
-    -fx-background-color: #777777;
+    -fx-background-color: #444444;
 }

@@ -6,16 +6,20 @@ import java.util.HashMap;
 import java.util.List;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -34,11 +38,17 @@ public class SpicaFxClient extends Application {
 
 
   public static void main(String[] args) {
+    System.setProperty("apple.laf.useScreenMenuBar", "true");
+    System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Name");
+    System.setProperty("com.apple.mrj.application.apple.menu.about.name", "MyApplication");
+
+
     launch(SpicaFxClient.class, args);
   }
 
   @Override
   public void start(Stage primaryStage) throws IOException {
+
 
     views.add(new DashboardView());
     views.add(new UserView());
@@ -60,7 +70,7 @@ public class SpicaFxClient extends Application {
       });
 
       Parent pane = next.getParent();
-      pane.setStyle("-fx-background-color: #AAAAAA");
+      pane.getStyleClass().add("rootpane");
 
       detailNode.getChildren().add(pane);
 
