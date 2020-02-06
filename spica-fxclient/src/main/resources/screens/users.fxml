@@ -8,7 +8,11 @@
     </stylesheets>
     <padding><Insets top="20" bottom="20" left="20" right="20"/> </padding>
 
-    <Label text="USERS" fx:id="lblUsersHeader" />
+    <Label text="USER" fx:id="lblUsersHeader" styleClass="header" GridPane.rowIndex="0" GridPane.columnIndex="0">
+        <GridPane.margin>
+            <Insets bottom="20"/>
+        </GridPane.margin>
+    </Label>
 
 
 

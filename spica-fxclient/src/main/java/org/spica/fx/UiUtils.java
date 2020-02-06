@@ -1,6 +1,7 @@
 package org.spica.fx;
 
 import javafx.geometry.Bounds;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Control;
@@ -41,9 +42,9 @@ public class UiUtils {
 
   }
 
-  public static void setCssClass (final Control control, final String cssClass) {
-    control.getStyleClass().clear();
-    control.getStyleClass().add(cssClass);
+  public static void setStyleClass(final Node node, final String cssClass) {
+    node.getStyleClass().clear();
+    node.getStyleClass().add(cssClass);
   }
 
   public static void hideOnFocusLost (final Stage stage) {

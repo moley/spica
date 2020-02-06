@@ -12,6 +12,8 @@ public interface ActionContext {
 
     Model getModel();
 
+    Model reloadModel ();
+
     Services getServices ();
 
     SpicaProperties getProperties();

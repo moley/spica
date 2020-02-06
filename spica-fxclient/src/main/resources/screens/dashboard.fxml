@@ -20,19 +20,19 @@
             <Insets bottom="5" top="5" left="5" right="5"/>
         </GridPane.margin>
         <Label text="Current time:" styleClass="infotype" GridPane.rowIndex="0" GridPane.columnIndex="0"></Label>
-        <Label text="11:20" styleClass="infotext" GridPane.rowIndex="0" GridPane.columnIndex="1"></Label>
+        <Label fx:id="lblCurrentTime" text="11:20" styleClass="infotext" GridPane.rowIndex="0" GridPane.columnIndex="1"></Label>
 
         <Label text="Working since:" styleClass="infotype" GridPane.rowIndex="1" GridPane.columnIndex="0"></Label>
-        <Label text="12:20" styleClass="infotext" GridPane.rowIndex="1" GridPane.columnIndex="1"></Label>
+        <Label fx:id = "lblWorkingSince" styleClass="infotext" GridPane.rowIndex="1" GridPane.columnIndex="1"></Label>
 
         <Label text="Work time:" styleClass="infotype" GridPane.rowIndex="2" GridPane.columnIndex="0"></Label>
-        <Label text="02:20 h" styleClass="infotext" GridPane.rowIndex="2" GridPane.columnIndex="1"></Label>
+        <Label fx:id="lblWorkTime"  styleClass="infotext" GridPane.rowIndex="2" GridPane.columnIndex="1"></Label>
 
         <Label text="Pause time:" styleClass="infotype" GridPane.rowIndex="3" GridPane.columnIndex="0"></Label>
-        <Label text="00:20 h" styleClass="infotext" GridPane.rowIndex="3" GridPane.columnIndex="1"></Label>
+        <Label fx:id="lblPauseTime" styleClass="infotext" GridPane.rowIndex="3" GridPane.columnIndex="1"></Label>
 
         <Label text="Current task:" styleClass="infotype" GridPane.rowIndex="4" GridPane.columnIndex="0"></Label>
-        <Label text="Blabla doing nice things" styleClass="infotext" GridPane.rowIndex="4" GridPane.columnIndex="1"></Label>
+        <Label fx:id= "lblCurrentTask" text="Blabla doing nice things" styleClass="infotext" GridPane.rowIndex="4" GridPane.columnIndex="1"></Label>
 
     </GridPane>
 

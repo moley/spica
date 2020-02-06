@@ -1,5 +1,5 @@
 .header {
-    -fx-text-fill: #895A5A;
+    -fx-text-fill: #ccd1c6;
     -fx-font-size: 30pt;
     -fx-font-weight: bold;
     -fx-font-family: Arial;
@@ -8,30 +8,39 @@
 
 
 .rootpane {
-    -fx-background-color: #111111
+    -fx-background-color: #FFFFFF;
 }
 
 .infopane {
-    -fx-background-color: #000000
+    -fx-background-color: #ccd1c6;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
 }
 
 
 .infotype {
-    -fx-text-fill: #AAAAAA;
-    -fx-font-size: 15pt;
-    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
+    -fx-font-size: 18pt;
     -fx-font-family: Arial;
 }
 
 .infotext {
-    -fx-text-fill: #FFFFFF;
-    -fx-font-size: 15pt;
+    -fx-text-fill: #444444;
+    -fx-font-size: 18pt;
+    -fx-font-weight: bold;
     -fx-font-family: Arial;
 }
 
 .menubutton {
-    -fx-font-size: 20pt;
-    -fx-font-weight: bold;
+    -fx-font-size: 15pt;
     -fx-font-family: Arial;
-    -fx-background-color: #444444;
+    -fx-background-color: #bebfbc;
+    -fx-content-display: bottom;
+    -fx-alignment: CENTER;
+}
+
+.menu {
+    -fx-background-color: #bebfbc;
+    -fx-spacing: 30;
+    -fx-padding: 5;
 }

@@ -4,7 +4,7 @@ import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class UserController {
+public class UserController  extends AbstractController {
 
   @FXML private Label lblUsersHeader;
 
