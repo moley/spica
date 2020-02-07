@@ -43,6 +43,7 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<Void> refreshUsers() {
+        LOGGER.info("refreshUsers called");
         ldapUserImporter.getUsers();
         return new ResponseEntity<Void>(HttpStatus.OK);
     }

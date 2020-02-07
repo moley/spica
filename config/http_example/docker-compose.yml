@@ -1,0 +1,10 @@
+version: "3"
+services:
+  spica:
+    image: markusoley/spica:0.1
+    container_name: spica
+    restart: unless-stopped
+    ports:
+      - "8765:8765"
+    volumes:
+      - ./conf/spica.properties:/app/.spica/spica.properties

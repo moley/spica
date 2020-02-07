@@ -13,6 +13,7 @@ import org.apache.directory.ldap.client.api.LdapNetworkConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
+import org.spica.commons.credentials.PasswordMask;
 import org.spica.server.user.config.LdapConfiguration;
 import org.spica.server.user.domain.User;
 import org.spica.server.user.domain.UserRepository;
@@ -58,10 +59,10 @@ public class LdapUserImporter implements UserImporter {
 
             LdapConnection connection = new LdapNetworkConnection(host, port, false);
 
-            LOGGER.info("Created connection with");
+            LOGGER.info("Starting importing users from LDAP with following configurations");
             LOGGER.info("Host              : " + host);
             LOGGER.info("BindDn            : " + bindDn);
-            LOGGER.info("Password          : " + pw);
+            LOGGER.info("Password          : " + new PasswordMask().getMaskedPassword(pw));
             LOGGER.info("BaseDn            : " + stammDn);
             LOGGER.info("SearchUserFilter  : " + searchUsersFilter);
             LOGGER.info("Port              : " + port);
@@ -161,6 +162,8 @@ public class LdapUserImporter implements UserImporter {
 
             LOGGER.info("Search completed with " + number + " results in " + time + " ms");
         }
+        else
+            LOGGER.warn("Importing LDAP Users is disabled by configuration");
 
         return users;
     }

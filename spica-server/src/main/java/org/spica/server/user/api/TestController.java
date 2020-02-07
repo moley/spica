@@ -7,13 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
-
-  public TestController () {
-    System.out.println ("");
-  }
-  @GetMapping("/secret")
+  @GetMapping("/test")
   @CrossOrigin
   public String secretService() {
-    return "A secret message";
+    return "The spica server is running";
   }
 }
