@@ -1,6 +1,6 @@
 package org.spica.fx;
 
-public class UserView extends AbstractView {
+public class UsersView extends AbstractView {
 
   @Override public String getId() {
     return "users";
@@ -12,6 +12,6 @@ public class UserView extends AbstractView {
 
 
   @Override public String getIcon() {
-    return "fa-user";
+    return "fa-users";
   }
 }

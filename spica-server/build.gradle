@@ -44,6 +44,7 @@ jar.onlyIf {false}
 
 bootRun {
   sourceResources sourceSets.main
+  jvmArgs = ['-Ddemodata']
 }
 
 swaggerSources {

@@ -21,20 +21,20 @@ public class DevelopmentDemoData extends DemoDataCreator{
   private final static String PRODUKT_1 = "Produkt 1";
   private final static String PRODUKT_2 = "Produkt 2";
 
-  private final static String ISSUE_PERFORMANCE = "Performance ist zu schlecht";
-  private final static String ISSUE_USABILITY = "Usability ist wie Windows 95";
-  private final static String ISSUE_STABILITY = "Stabilitaet ist schlecht";
+  private final static String ISSUE_PERFORMANCE = "Performance is too bad";
+  private final static String ISSUE_USABILITY = "Usability is like Windows 95";
+  private final static String ISSUE_STABILITY = "Stability is even worse";
 
   public void create () {
     LOGGER.info("Start creating development demo data");
 
-    User dev1 = user("Mayer", "Michael", Role.USER);
-    User dev2 = user("Klein", "Karin", Role.USER);
-    User hotliner = user("Hotliner", "Holger", Role.USER);
-    User conception = user("Konzept", "Karin", Role.USER);
-    User guest = user("Gast", "Gregor", Role.GUEST);
-    User admin = user ("Admin", "Achim", Role.ADMIN);
-    User teamlead = user ("Lercher", "Lasse", Role.USER);
+    User dev1 = user("Mayer", "Marc", Role.USER);
+    User dev2 = user("User", "Uriah", Role.USER);
+    User hotliner = user("HotlineMan", "Harry", Role.USER);
+    User conception = user("ConceptWriter", "Cade", Role.USER);
+    User guest = user("Guest", "George", Role.GUEST);
+    User admin = user ("Admin", "Andy", Role.ADMIN);
+    User teamlead = user ("Teamlead", "Tom", Role.USER);
 
     UserGroup departmentConception = userGroup(CONCEPTION_DEPARTMENT, conception, false);
     UserGroup departmentHotline = userGroup(HOTLINE_DEPARTMENT, hotliner, false);
@@ -51,19 +51,19 @@ public class DevelopmentDemoData extends DemoDataCreator{
     Topic topicIssuePerformance = topic(ISSUE_PERFORMANCE, guest, product2);
     Topic topicIssueUsability = topic(ISSUE_USABILITY, teamlead, product2);
 
-    meep(guest, product1, "Hallo, ich habe Euer Produkt im Internet gesehen, kann ich das haben?");
+    meep(guest, product1, "Hi, I have seen your application on your homepage, can I buy it?");
 
-    meep(guest, topicIssuePerformance, "Warum ist mein Programm so langsam");
-    meep(hotliner, topicIssuePerformance, "Welche Version haben Sie?");
+    meep(guest, topicIssuePerformance, "Why is my application soooooo slow?");
+    meep(hotliner, topicIssuePerformance, "Which version do you have?");
     meep(guest, topicIssuePerformance, "0.8.15");
-    meep(hotliner, topicIssuePerformance, "@Mayer Kannst Du mal bitte schauen?");
-    meep(dev1, topicIssuePerformance, "Also auf meinem Rechner ist es rasendschnell, stellt ihm mal neue Hardware hin");
+    meep(hotliner, topicIssuePerformance, "@Mayer Can you please take a look?");
+    meep(dev1, topicIssuePerformance, "On my machine it is fast, can you try it on new hardware");
 
-    meep(guest, topicIssueStability, "Mein Tisch, auf dem mein Rechner mit dem Programm lief, ist zusammengebrochen. Was tun?");
+    meep(guest, topicIssueStability, "My desk, on which the PC with the application runs, has broken down. And now?");
 
-    meep(conception, topicIssueUsability, "Ich glaube die neue Version von unserem Produkt ist schlecht zu bedienen");
+    meep(conception, topicIssueUsability, "I believe the new version of your application is unusable");
 
-
+    skills("Java", "Junit4", "C#", "Jira", "Python", "Angular", "Agility");
 
 
   }

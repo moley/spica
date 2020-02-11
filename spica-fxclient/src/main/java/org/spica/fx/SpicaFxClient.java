@@ -6,14 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -21,7 +19,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.spica.cli.actions.StandaloneActionContext;
-import org.spica.fx.controllers.AbstractController;
+import org.spica.fx.controllers.AbstractFxController;
+import org.spica.javaclient.Configuration;
 import org.spica.javaclient.actions.ActionContext;
 
 public class SpicaFxClient extends Application {
@@ -47,11 +46,18 @@ public class SpicaFxClient extends Application {
 
 
     views.add(new DashboardView());
-    views.add(new UserView());
+    views.add(new UsersView());
+    views.add(new MeView());
 
     ActionContext actionContext = new StandaloneActionContext();
+    String serverUrl = actionContext.getProperties().getValueOrDefault("spica.cli.serverurl", "http://localhost:8765/api");
 
-    List<AbstractController> controllers = new ArrayList<AbstractController>();
+
+    Configuration.getDefaultApiClient().setBasePath(serverUrl);
+
+    List<AbstractFxController> controllers = new ArrayList<AbstractFxController>();
+
+
 
 
 
@@ -59,9 +65,9 @@ public class SpicaFxClient extends Application {
     menu.setAlignment(Pos.TOP_CENTER);
     menu.setFillWidth(true);
     for (View next: views) {
-      AbstractController abstractController = next.getController();
-      controllers.add(abstractController);
-      abstractController.setActionContext(actionContext);
+      AbstractFxController abstractFxController = next.getController();
+      controllers.add(abstractFxController);
+      abstractFxController.setActionContext(actionContext);
       Button button = new Button(next.getDisplayname(), Consts.createIcon(next.getIcon(), Consts.ICONSIZE_MENU));
       button.setMaxWidth(Double.MAX_VALUE);
       UiUtils.setStyleClass(button, "menubutton");
@@ -92,7 +98,7 @@ public class SpicaFxClient extends Application {
     ResetTimeThread resetTimeThread = new ResetTimeThread(actionContext, controllers);
     resetTimeThread.start();
 
-    Button btnExit = new Button("Finish day", Consts.createIcon("fa-sign-out", Consts.ICONSIZE_MENU));
+    Button btnExit = new Button("Exit", Consts.createIcon("fa-sign-out", Consts.ICONSIZE_MENU));
     UiUtils.setStyleClass(btnExit, "menubutton");
 
     btnExit.setOnMouseClicked(new EventHandler<MouseEvent>() {

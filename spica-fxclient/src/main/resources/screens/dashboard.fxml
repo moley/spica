@@ -2,7 +2,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.GridPane?>
-<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fx.controllers.DashboardController" alignment="TOP_LEFT" hgap="10" vgap="10" >
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fx.controllers.DashboardFxController" alignment="TOP_LEFT" hgap="10" vgap="10" >
     <stylesheets>
         <URL value="@/spica.css" />
     </stylesheets>
@@ -20,7 +20,7 @@
             <Insets bottom="5" top="5" left="5" right="5"/>
         </GridPane.margin>
         <Label text="Current time:" styleClass="infotype" GridPane.rowIndex="0" GridPane.columnIndex="0"></Label>
-        <Label fx:id="lblCurrentTime" text="11:20" styleClass="infotext" GridPane.rowIndex="0" GridPane.columnIndex="1"></Label>
+        <Label fx:id="lblCurrentTime" styleClass="infotext" GridPane.rowIndex="0" GridPane.columnIndex="1"></Label>
 
         <Label text="Working since:" styleClass="infotype" GridPane.rowIndex="1" GridPane.columnIndex="0"></Label>
         <Label fx:id = "lblWorkingSince" styleClass="infotext" GridPane.rowIndex="1" GridPane.columnIndex="1"></Label>
@@ -32,7 +32,7 @@
         <Label fx:id="lblPauseTime" styleClass="infotext" GridPane.rowIndex="3" GridPane.columnIndex="1"></Label>
 
         <Label text="Current task:" styleClass="infotype" GridPane.rowIndex="4" GridPane.columnIndex="0"></Label>
-        <Label fx:id= "lblCurrentTask" text="Blabla doing nice things" styleClass="infotext" GridPane.rowIndex="4" GridPane.columnIndex="1"></Label>
+        <Label fx:id= "lblCurrentTask" styleClass="infotext" GridPane.rowIndex="4" GridPane.columnIndex="1"></Label>
 
     </GridPane>
 

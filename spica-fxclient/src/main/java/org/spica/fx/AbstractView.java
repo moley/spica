@@ -1,9 +1,9 @@
 package org.spica.fx;
 
 import javafx.scene.Parent;
-import org.spica.fx.controllers.AbstractController;
+import org.spica.fx.controllers.AbstractFxController;
 
-public abstract class AbstractView<T extends AbstractController> implements View  {
+public abstract class AbstractView<T extends AbstractFxController> implements View  {
 
   private Mask<T> mask;
 

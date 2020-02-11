@@ -1,7 +1,7 @@
 package org.spica.fx;
 
 import javafx.scene.Parent;
-import org.spica.fx.controllers.AbstractController;
+import org.spica.fx.controllers.AbstractFxController;
 
 public interface View {
 
@@ -13,6 +13,6 @@ public interface View {
 
   String getIcon ();
 
-  AbstractController getController ();
+  AbstractFxController getController ();
 
 }

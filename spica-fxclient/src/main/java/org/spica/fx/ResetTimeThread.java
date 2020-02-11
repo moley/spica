@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import javafx.application.Platform;
 import lombok.SneakyThrows;
-import org.spica.fx.controllers.AbstractController;
+import org.spica.fx.controllers.AbstractFxController;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.utils.DateUtil;
 
@@ -13,13 +13,13 @@ public class ResetTimeThread extends Thread {
   private boolean stopped = false;
 
   private final ActionContext actionContext;
-  private final Collection<AbstractController> controllers;
+  private final Collection<AbstractFxController> controllers;
 
   private DateUtil dateUtil = new DateUtil();
 
   private String currentTime = "";
 
-  public ResetTimeThread(final ActionContext actionContext, Collection<AbstractController> controllers) {
+  public ResetTimeThread(final ActionContext actionContext, Collection<AbstractFxController> controllers) {
     this.actionContext = actionContext;
     this.controllers = controllers;
   }
@@ -34,8 +34,8 @@ public class ResetTimeThread extends Thread {
         currentTime = dateUtil.getTimeAsString(LocalDateTime.now());
         Platform.runLater(new Runnable() {
           @Override public void run() {
-            for (AbstractController nextController: controllers) {
-              nextController.setActionContext(actionContext);
+            for (AbstractFxController nextController: controllers) {
+              nextController.setTiming();
             }
           }
         });

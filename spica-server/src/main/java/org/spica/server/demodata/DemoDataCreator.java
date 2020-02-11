@@ -1,5 +1,7 @@
 package org.spica.server.demodata;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.server.communication.domain.Message;
@@ -45,6 +47,9 @@ public class DemoDataCreator {
 
   @Autowired
   private MessageRepository messageRepository;
+
+  @Autowired
+  private SkillRepository skillRepository;
 
   @Autowired
   private MessagecontainerRepository messageContainerRepository;
@@ -109,6 +114,18 @@ public class DemoDataCreator {
     }
 
     return project;
+  }
+
+  protected List<Skill> skills (final String ... descriptions) {
+    LOGGER.info("Skills <" + descriptions + "> are created");
+    List<Skill> skills = new ArrayList<Skill>();
+    for (String next: descriptions) {
+      Skill skill = new Skill();
+      skill.setDescription(next);
+      skillRepository.save(skill);
+    }
+    return skills;
+
   }
 
   protected Topic topic (final String name, final User creator, Project project) {

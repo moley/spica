@@ -166,6 +166,9 @@ public class SpicaProperties {
       return customSpicaPath;
     else {
 
+      File local = new File (".spica");
+      if (local.exists())
+        return local;
 
       File home = new File (System.getProperty("user.home"));
       String spicaHome = System.getProperty("spica.home");

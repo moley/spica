@@ -31,6 +31,10 @@ public class User implements Idable, UserDetails {
   private String name;
 
   private String nummer;
+
+  private int currentScore;
+
+  private String skills;
   
   private String firstname;
   

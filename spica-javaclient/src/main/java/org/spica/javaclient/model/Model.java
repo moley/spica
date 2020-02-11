@@ -33,7 +33,7 @@ public class Model {
 
   private List<EventInfo> eventInfosPlanned = new ArrayList<>();
 
-
+  private List<SkillInfo> allSkills = new ArrayList<SkillInfo>();
 
 
   public File getCurrentFile() {
@@ -222,5 +222,24 @@ public class Model {
 
   public void setLinkInfos(List<LinkInfo> linkInfos) {
     this.linkInfos = linkInfos;
+  }
+
+  public List<SkillInfo> getAllSkills() {
+    if (allSkills == null)
+      allSkills = new ArrayList<>();
+    return allSkills;
+  }
+
+  public SkillInfo findSkillByName (final String name) {
+    for (SkillInfo next: allSkills) {
+      if (next.getName().trim().equalsIgnoreCase(name.trim())) {
+        return next;
+      }
+    }
+    return null;
+  }
+
+  public void setAllSkills(List<SkillInfo> allSkills) {
+    this.allSkills = allSkills;
   }
 }

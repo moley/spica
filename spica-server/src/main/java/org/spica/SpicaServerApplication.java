@@ -1,9 +1,8 @@
 package org.spica;
 
-import org.spica.server.demodata.CustomerDemoData;
-import org.spica.server.demodata.DemoDataType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spica.server.demodata.DevelopmentDemoData;
-import org.spica.server.demodata.SchoolDemoData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,32 +16,16 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan
 public class SpicaServerApplication {
 
-  @Autowired
-  SchoolDemoData schoolDemoData;
+  private final static Logger LOGGER = LoggerFactory.getLogger(SpicaServerApplication.class);
 
-  @Autowired
-  CustomerDemoData customerDemoData;
 
-  @Autowired
-  DevelopmentDemoData developmentDemoData;
+  public SpicaServerApplication(@Autowired  DevelopmentDemoData developmentDemoData) {
 
-  public SpicaServerApplication() {
 
     String demoDataType = System.getProperty("demodata");
     if (demoDataType != null) {
-      DemoDataType demoDataTypeAsEnum = DemoDataType.valueOf(demoDataType.toUpperCase());
-      switch (demoDataTypeAsEnum) {
-        case SCHOOL:
-          schoolDemoData.create();
-          break;
-        case CUSTOMER:
-          customerDemoData.create();
-          break;
-        case DEVELOPMENT:
-          developmentDemoData.create();
-          break;
-        default:
-      }
+      LOGGER.info("Creating demodata because system property demodata is set to " + demoDataType + " on " + developmentDemoData);
+      developmentDemoData.create();
     }
 
   }

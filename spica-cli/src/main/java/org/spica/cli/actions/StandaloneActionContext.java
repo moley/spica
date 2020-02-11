@@ -4,9 +4,12 @@ import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
+import org.spica.javaclient.ApiException;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.ActionHandler;
+import org.spica.javaclient.actions.Api;
 import org.spica.javaclient.model.Model;
+import org.spica.javaclient.model.UserInfo;
 import org.spica.javaclient.params.ActionParamFactory;
 import org.spica.javaclient.services.ModelCacheService;
 import org.spica.javaclient.services.Services;
@@ -21,7 +24,11 @@ public class StandaloneActionContext implements ActionContext {
 
   private ActionHandler actionHandler = new ActionHandler();
 
+  private UserInfo me;
+
   private ActionParamFactory actionParamFactory;
+
+  private Api api = new Api();
 
 
   @Override public File getCurrentWorkingDir() {
@@ -30,6 +37,23 @@ public class StandaloneActionContext implements ActionContext {
 
   @Override public Services getServices() {
     return services;
+  }
+
+  @Override public Api getApi() {
+    return api;
+  }
+
+  @Override public UserInfo getMe() {
+    if (me != null)
+      return me;
+
+    String username = getProperties().getValueNotNull("spica.cli.username");
+    try {
+      me =  getApi().getUserApi().findUser(username);
+      return me;
+    } catch (ApiException e) {
+      throw new IllegalStateException("Could not find user info for user " + username);
+    }
   }
 
   @Override public Model getModel() {

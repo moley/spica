@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import javafx.application.Platform;
 import lombok.SneakyThrows;
-import org.spica.fx.controllers.AbstractController;
+import org.spica.fx.controllers.AbstractFxController;
 import org.spica.javaclient.actions.ActionContext;
 
 public class ResetModelFileThread extends Thread {
@@ -21,9 +21,9 @@ public class ResetModelFileThread extends Thread {
 
   private final File modelFile;
   private final ActionContext actionContext;
-  private final Collection<AbstractController> controllers;
+  private final Collection<AbstractFxController> controllers;
 
-  public ResetModelFileThread(final File modelFile, final ActionContext actionContext, Collection<AbstractController> controllers) {
+  public ResetModelFileThread(final File modelFile, final ActionContext actionContext, Collection<AbstractFxController> controllers) {
     this.modelFile = modelFile;
     this.actionContext = actionContext;
     this.controllers = controllers;
@@ -48,7 +48,7 @@ public class ResetModelFileThread extends Thread {
               if (event.context().toString().equals("config.xml")) {
                 System.out.println ("ResetModelFileThread recieved file event on " + event.context());
                 actionContext.reloadModel();
-                for (AbstractController nextController: controllers) {
+                for (AbstractFxController nextController: controllers) {
                   nextController.setActionContext(actionContext);
                 }
               }

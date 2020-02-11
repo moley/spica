@@ -7,6 +7,91 @@ servers:
   - url: http://localhost/api
 
 paths:
+  /skill/create:
+    post:
+      tags:
+        - user
+      operationId: "createSkill"
+      description: "creates a new skill"
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'skill'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SkillInfo"
+  /skill/list:
+    get:
+      tags:
+        - user
+      operationId: "getSkills"
+      description: "get all skills"
+      responses:
+        '200':
+          description: 'skills'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SkillInfo"
+
+  /user/skills:
+    get:
+      tags:
+        - user
+      operationId: "getUserSkills"
+      description: "gets all skills of user"
+      parameters:
+      - name: userId
+        in: query
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: 'skill'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SkillInfo"
+
+  /user/skills/set:
+    post:
+      consumes:
+        - application/json
+      tags:
+        - user
+      operationId: "setUserSkills"
+      description: "sets the skills of the user"
+      parameters:
+        - name: userId
+          in: query
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/SkillInfo"
+
+      responses:
+        '200':
+          description: 'Null response'
+
+
   /user/refresh:
     get:
       tags:
@@ -16,6 +101,26 @@ paths:
       responses:
         '200':
           description: 'Null response'
+
+  /user/byUsername:
+    get:
+      tags:
+        - user
+      operationId: "findUser"
+      description: "find user by username"
+      parameters:
+        - name: username
+          in: query
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'users'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserInfo"
 
   /user/list:
     get:
@@ -35,6 +140,7 @@ paths:
 
 
 
+
 components:
   schemas:
     UserInfo:
@@ -50,3 +156,11 @@ components:
           type: "string"
         id:
           type: "string"
+
+    SkillInfo:
+       type: "object"
+       properties:
+         name:
+           type: "string"
+         id:
+           type: "integer"

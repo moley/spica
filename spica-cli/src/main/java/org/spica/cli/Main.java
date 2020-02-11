@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.cli.actions.StandaloneActionContext;
 import org.spica.cli.actions.StandaloneActionParamFactory;
+import org.spica.commons.SpicaProperties;
 import org.spica.javaclient.Configuration;
 import org.spica.javaclient.actions.ActionGroup;
 import org.spica.javaclient.actions.ActionHandler;
@@ -32,9 +33,11 @@ public class Main {
     System.err.close();
     System.setErr(System.out); //to avoid reflection warnings
 
-    Configuration.getDefaultApiClient().setBasePath("http://localhost:8765/api"); //TODO make nice
-
     StandaloneActionContext actionContext = new StandaloneActionContext();
+    String serverUrl = actionContext.getProperties().getValueOrDefault("spica.cli.serverurl", "http://localhost:8765/api");
+
+    Configuration.getDefaultApiClient().setBasePath(serverUrl);
+
     actionContext.setActionHandler(new ActionHandler());
     actionContext.setActionParamFactory(new StandaloneActionParamFactory());
 
@@ -67,6 +70,7 @@ public class Main {
     }
 
     //System.out.println (LogUtil.clearScreen());
+    System.out.println("Current server:       " + Configuration.getDefaultApiClient().getBasePath());
     System.out.println("Current model:        " + actionContext.getServices().getModelCacheService().getConfigFile()
         .getAbsolutePath());
     System.out.println("Current time:         " + LogUtil.cyan(dateUtil.getTimeAsString(LocalDateTime.now())));

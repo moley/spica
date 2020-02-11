@@ -13,12 +13,11 @@ import org.spica.javaclient.model.TopicInfo;
 import org.spica.javaclient.utils.DateUtil;
 import org.spica.javaclient.utils.RenderUtil;
 
-public class DashboardController extends AbstractController {
+public class DashboardFxController extends AbstractFxController {
 
   @FXML private Label lblUsersHeader;
 
-  @FXML
-  private Pane panHeader;
+  @FXML private Pane panHeader;
 
   private DateUtil dateUtil = new DateUtil();
 
@@ -32,15 +31,14 @@ public class DashboardController extends AbstractController {
 
   @FXML private Label lblCurrentTask;
 
+  private EventDetailsBuilder eventDetailsBuilder = new EventDetailsBuilder();
 
-  public void setActionContext(ActionContext actionContext) {
-    super.setActionContext(actionContext);
+  public void setTiming() {
+    ActionContext actionContext = getActionContext();
     EventInfo firstTaskOfDay = !actionContext.getModel().getEventInfosRealToday().isEmpty() ?
         actionContext.getModel().getEventInfosRealToday().get(0) :
         null;
 
-    EventDetailsBuilder eventDetailsBuilder = new EventDetailsBuilder();
-    eventDetailsBuilder.setModel(actionContext.getModel());
     EventDetails eventDetails = eventDetailsBuilder.getDurationDetails();
 
     String since = "";
@@ -60,6 +58,7 @@ public class DashboardController extends AbstractController {
       }
 
       since = dateUtil.getTimeAsString(eventInfo.getStart());
+
     }
 
     lblCurrentTime.setText(dateUtil.getTimeAsString(LocalDateTime.now()));
@@ -68,5 +67,11 @@ public class DashboardController extends AbstractController {
     lblPauseTime.setText(dateUtil.getDuration(eventDetails.getDurationPause()));
     lblCurrentTask.setText(task);
     lblWorkingSince.setText(since);
+  }
+
+  public void setActionContext(ActionContext actionContext) {
+    super.setActionContext(actionContext);
+    eventDetailsBuilder.setModel(actionContext.getModel());
+
   }
 }
