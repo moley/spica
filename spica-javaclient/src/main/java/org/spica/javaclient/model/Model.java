@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spica.commons.DashboardItemType;
 
 @XmlRootElement
 public class Model {
@@ -19,6 +20,8 @@ public class Model {
   private final static Logger LOGGER = LoggerFactory.getLogger(Model.class);
 
   private UserInfo me;
+
+  private List<DashboardItemInfo> dashboardItemInfos = new ArrayList<DashboardItemInfo>();
 
   private List<SkillInfo> userSkills = new ArrayList<>();
 
@@ -124,6 +127,8 @@ public class Model {
   public List<EventInfo> getEventInfosReal() {
     return eventInfosReal;
   }
+
+
 
 
   public EventInfo findEventInfoRealById (final String id) {
@@ -260,5 +265,23 @@ public class Model {
 
   public void setUserSkills(List<SkillInfo> userSkills) {
     this.userSkills = userSkills;
+  }
+
+  public List<DashboardItemInfo> getDashboardItemInfos() {
+    return dashboardItemInfos;
+  }
+
+  public DashboardItemInfo findDashboardItemInfo (final DashboardItemType dashboardItemType, final String referenceId) {
+
+    for (DashboardItemInfo next: dashboardItemInfos) {
+      if (next.getItemReference().equals(referenceId) && next.getItemType().equals(dashboardItemType.name())) {
+        return next;
+      }
+    }
+    return null;
+  }
+
+  public void setDashboardItemInfos(List<DashboardItemInfo> dashboardItemInfos) {
+    this.dashboardItemInfos = dashboardItemInfos;
   }
 }

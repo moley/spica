@@ -1,0 +1,39 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: "spica rest dashboard component"
+  description: "Rest API for the time component of spica communication server"
+servers:
+  - url: http://localhost/api
+
+paths:
+  /dashboard:
+    get:
+      tags:
+        - dashboard
+      operationId: "getDashboardItemsForToday"
+      description: "returns all dashboard items for today"
+      responses:
+        '200':
+          description: list of dashboarditems
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardItemInfo"
+
+components:
+  schemas:
+    DashboardItemInfo:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        description:
+          type: "string"
+        created:
+          type: "string"
+          format: "date-time"
+        itemType:
+          type: "string"
+        itemReference:
+          type: "string"

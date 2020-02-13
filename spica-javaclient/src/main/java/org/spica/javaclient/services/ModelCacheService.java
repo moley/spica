@@ -1,9 +1,11 @@
 package org.spica.javaclient.services;
 
 
+import java.util.UUID;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spica.commons.DashboardItemType;
 import org.spica.commons.SpicaProperties;
 
 import javax.xml.bind.JAXBContext;
@@ -16,6 +18,9 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.Date;
+import org.spica.javaclient.model.DashboardItemInfo;
+import org.spica.javaclient.model.EventContainerInfo;
+import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.Model;
 
 public class ModelCacheService implements Serializable{
@@ -59,6 +64,24 @@ public class ModelCacheService implements Serializable{
 
   }
 
+  private Model migrateOnDemand (final Model model) {
+    for (EventInfo nextEvent: model.getEventInfosReal()) {
+
+      //create an event on dashboard if does not exist yet
+      if (model.findDashboardItemInfo(DashboardItemType.EVENT, nextEvent.getId()) == null) {
+        DashboardItemInfo dashboardItemInfo = new DashboardItemInfo();
+        dashboardItemInfo.setCreated(nextEvent.getStart());
+        dashboardItemInfo.setDescription(nextEvent.getName());
+        dashboardItemInfo.setItemReference(nextEvent.getId());
+        dashboardItemInfo.setItemType(DashboardItemType.EVENT.name());
+        model.getDashboardItemInfos().add(dashboardItemInfo);
+      }
+    }
+
+    return model;
+
+  }
+
   public Model get() {
     if (currentConfiguration != null)
       return currentConfiguration;
@@ -74,6 +97,7 @@ public class ModelCacheService implements Serializable{
         LOGGER.info("Load configuration from " + configFile.getAbsolutePath());
         currentConfiguration = (Model) unmarshaller.unmarshal(configFile);
         currentConfiguration.setCurrentFile(configFile);
+        currentConfiguration = migrateOnDemand(currentConfiguration);
       }
       else {
         LOGGER.info("Create new configuration because " + configFile.getAbsolutePath() + " does not exist");
