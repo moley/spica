@@ -1,6 +1,7 @@
 package org.spica.cli.actions;
 
 import java.io.File;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
@@ -8,7 +9,9 @@ import org.spica.javaclient.ApiException;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.ActionHandler;
 import org.spica.javaclient.actions.Api;
+import org.spica.javaclient.api.UserApi;
 import org.spica.javaclient.model.Model;
+import org.spica.javaclient.model.SkillInfo;
 import org.spica.javaclient.model.UserInfo;
 import org.spica.javaclient.params.ActionParamFactory;
 import org.spica.javaclient.services.ModelCacheService;
@@ -24,7 +27,6 @@ public class StandaloneActionContext implements ActionContext {
 
   private ActionHandler actionHandler = new ActionHandler();
 
-  private UserInfo me;
 
   private ActionParamFactory actionParamFactory;
 
@@ -43,17 +45,30 @@ public class StandaloneActionContext implements ActionContext {
     return api;
   }
 
-  @Override public UserInfo getMe() {
-    if (me != null)
-      return me;
+  public void refreshServer () {
+    //refresh all skills
+    UserApi userApi = getApi().getUserApi();
+    try {
+      List<SkillInfo> skills = userApi.getSkills();
+      LOGGER.info("Reloaded " + skills.size() + " skills");
+      getModel().setAllSkills(skills);
+    } catch (ApiException e) {
+      LOGGER.info("Exception when reading skills: " + e.getLocalizedMessage(), e);
+    }
 
+    //refresh me
     String username = getProperties().getValueNotNull("spica.cli.username");
     try {
-      me =  getApi().getUserApi().findUser(username);
-      return me;
+      getModel().setMe(getApi().getUserApi().findUser(username));
+
+      getModel().setUserSkills(getApi().getUserApi().getUserSkills(getModel().getMe().getId()));
+
     } catch (ApiException e) {
-      throw new IllegalStateException("Could not find user info for user " + username);
+      LOGGER.info("Exception when requesting me: " + e.getLocalizedMessage(), e);
     }
+
+
+
   }
 
   @Override public Model getModel() {

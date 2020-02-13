@@ -18,6 +18,9 @@ public class Model {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(Model.class);
 
+  private UserInfo me;
+
+  private List<SkillInfo> userSkills = new ArrayList<>();
 
   private List<UserInfo> userInfos = new ArrayList<>();
 
@@ -241,5 +244,21 @@ public class Model {
 
   public void setAllSkills(List<SkillInfo> allSkills) {
     this.allSkills = allSkills;
+  }
+
+  public UserInfo getMe() {
+    return me;
+  }
+
+  public void setMe(UserInfo me) {
+    this.me = me;
+  }
+
+  public List<SkillInfo> getUserSkills() {
+    return userSkills;
+  }
+
+  public void setUserSkills(List<SkillInfo> userSkills) {
+    this.userSkills = userSkills;
   }
 }

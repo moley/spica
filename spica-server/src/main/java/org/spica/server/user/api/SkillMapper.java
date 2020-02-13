@@ -18,6 +18,9 @@ public class SkillMapper {
 
     List<SkillInfo> toApi (final List<Skill> allSkills, final String skillsForUser) {
         List<SkillInfo> skillInfos = new ArrayList<SkillInfo>();
+        if (skillsForUser == null)
+            return skillInfos;
+
         String [] skillsForUserArray = skillsForUser.split(",");
         for (String next: skillsForUserArray) {
             Skill nextSill = findSkill(allSkills, Integer.valueOf(next).intValue());

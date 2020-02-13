@@ -11,11 +11,17 @@ import java.nio.file.WatchService;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import javafx.application.Platform;
+import jline.internal.Log;
 import lombok.SneakyThrows;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spica.fx.controllers.AbstractFxController;
 import org.spica.javaclient.actions.ActionContext;
 
 public class ResetModelFileThread extends Thread {
+
+  private final static Logger LOGGER = LoggerFactory.getLogger(ResetModelFileThread.class);
+
 
   private boolean stopped = false;
 
@@ -30,7 +36,7 @@ public class ResetModelFileThread extends Thread {
   }
 
   @SneakyThrows public void run(){
-    System.out.println("ResetModelFileThread running");
+    LOGGER.info("ResetModelFileThread running");
 
     Path path = Paths.get(modelFile.getParentFile().toURI());
     WatchService watchService =  path.getFileSystem().newWatchService();
@@ -42,13 +48,13 @@ public class ResetModelFileThread extends Thread {
       watchKey = watchService.poll(10, TimeUnit.MINUTES);
       if(watchKey != null) {
         watchKey.pollEvents().stream().forEach(event -> {
-          System.out.println ("ResetModelFileThread recieved file event on " + event.context());
           Platform.runLater(new Runnable() {
             @Override public void run() {
               if (event.context().toString().equals("config.xml")) {
-                System.out.println ("ResetModelFileThread recieved file event on " + event.context());
+                LOGGER.info("ResetModelFileThread recieved file event on " + event.context());
                 actionContext.reloadModel();
                 for (AbstractFxController nextController: controllers) {
+                  LOGGER.info("Reload actioncontext on " + nextController.getClass().getSimpleName());
                   nextController.setActionContext(actionContext);
                 }
               }

@@ -16,8 +16,10 @@
             <Insets bottom="20"/>
         </GridPane.margin>
     </Label>
+    <Button fx:id="btnSave" styleClass="infobutton" text="Save" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.halignment="RIGHT"/>
 
-    <GridPane fx:id="panHeader"  styleClass="infopane" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"  GridPane.columnIndex="0" hgap="10" vgap="10">
+
+    <GridPane fx:id="panSkills"  styleClass="infopane" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"  GridPane.columnIndex="0" GridPane.columnSpan="2" hgap="10" vgap="10">
         <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
 
         <GridPane.margin>
@@ -25,11 +27,20 @@
         </GridPane.margin>
         <Label text="SKILLS" styleClass="infopaneheader" GridPane.rowIndex="0" GridPane.columnIndex="0"></Label>
         <TextField fx:id="txtSkills" styleClass="infotext" GridPane.rowIndex="1" GridPane.columnIndex="0"></TextField>
-        <ListView fx:id="lviUserSkills" GridPane.rowIndex="2"  GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="SOMETIMES"></ListView>
+        <ListView styleClass="infolistview" fx:id="lviUserSkills" GridPane.rowIndex="2"  GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="SOMETIMES"></ListView>
 
     </GridPane>
 
-    <Button fx:id="btnSave" text="Save" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <GridPane fx:id="panVacation"  styleClass="infopane" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2"  GridPane.columnIndex="0" GridPane.columnSpan="2" hgap="10" vgap="10">
+        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+
+        <GridPane.margin>
+            <Insets bottom="5" top="5" left="5" right="5"/>
+        </GridPane.margin>
+        <Label text="VACATION" styleClass="infopaneheader" GridPane.rowIndex="0" GridPane.columnIndex="0"></Label>
+    </GridPane>
+
+
 
 
 

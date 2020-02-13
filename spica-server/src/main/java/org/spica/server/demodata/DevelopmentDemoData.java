@@ -1,10 +1,14 @@
 package org.spica.server.demodata;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.server.commons.Role;
 import org.spica.server.project.domain.Project;
 import org.spica.server.project.domain.Topic;
+import org.spica.server.user.domain.Skill;
 import org.spica.server.user.domain.User;
 import org.spica.server.user.domain.UserGroup;
 import org.springframework.stereotype.Component;
@@ -28,13 +32,16 @@ public class DevelopmentDemoData extends DemoDataCreator{
   public void create () {
     LOGGER.info("Start creating development demo data");
 
-    User dev1 = user("Mayer", "Marc", Role.USER);
-    User dev2 = user("User", "Uriah", Role.USER);
-    User hotliner = user("HotlineMan", "Harry", Role.USER);
-    User conception = user("ConceptWriter", "Cade", Role.USER);
-    User guest = user("Guest", "George", Role.GUEST);
-    User admin = user ("Admin", "Andy", Role.ADMIN);
-    User teamlead = user ("Teamlead", "Tom", Role.USER);
+    List<Skill> skills = skills("Java", "Junit4", "C#", "Jira", "Python", "Angular", "Agility");
+
+
+    User dev1 = user("Mayer", "Marc", Role.USER, Arrays.asList(skills.get(0), skills.get(1)));
+    User dev2 = user("User", "Uriah", Role.USER, new ArrayList<>());
+    User hotliner = user("HotlineMan", "Harry", Role.USER, new ArrayList<>());
+    User conception = user("ConceptWriter", "Cade", Role.USER, new ArrayList<>());
+    User guest = user("Guest", "George", Role.GUEST, new ArrayList<>());
+    User admin = user ("Admin", "Andy", Role.ADMIN, new ArrayList<>());
+    User teamlead = user ("Teamlead", "Tom", Role.USER, new ArrayList<>());
 
     UserGroup departmentConception = userGroup(CONCEPTION_DEPARTMENT, conception, false);
     UserGroup departmentHotline = userGroup(HOTLINE_DEPARTMENT, hotliner, false);
@@ -63,7 +70,6 @@ public class DevelopmentDemoData extends DemoDataCreator{
 
     meep(conception, topicIssueUsability, "I believe the new version of your application is unusable");
 
-    skills("Java", "Junit4", "C#", "Jira", "Python", "Angular", "Agility");
 
 
   }

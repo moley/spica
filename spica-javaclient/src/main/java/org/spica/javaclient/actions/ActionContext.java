@@ -19,10 +19,6 @@ public interface ActionContext {
 
     Api getApi ();
 
-    UserInfo getMe ();
-
-
-
     SpicaProperties getProperties();
 
     ActionHandler getActionHandler();

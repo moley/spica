@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.spica.fx.ResetTimeThread;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.event.EventDetails;
 import org.spica.javaclient.event.EventDetailsBuilder;
@@ -14,6 +17,9 @@ import org.spica.javaclient.utils.DateUtil;
 import org.spica.javaclient.utils.RenderUtil;
 
 public class DashboardFxController extends AbstractFxController {
+
+  private final static Logger LOGGER = LoggerFactory.getLogger(DashboardFxController.class);
+
 
   @FXML private Label lblUsersHeader;
 
@@ -34,6 +40,7 @@ public class DashboardFxController extends AbstractFxController {
   private EventDetailsBuilder eventDetailsBuilder = new EventDetailsBuilder();
 
   public void setTiming() {
+    LOGGER.info("setTiming");
     ActionContext actionContext = getActionContext();
     EventInfo firstTaskOfDay = !actionContext.getModel().getEventInfosRealToday().isEmpty() ?
         actionContext.getModel().getEventInfosRealToday().get(0) :
@@ -67,11 +74,13 @@ public class DashboardFxController extends AbstractFxController {
     lblPauseTime.setText(dateUtil.getDuration(eventDetails.getDurationPause()));
     lblCurrentTask.setText(task);
     lblWorkingSince.setText(since);
+    LOGGER.info("setTiming finished");
   }
 
   public void setActionContext(ActionContext actionContext) {
     super.setActionContext(actionContext);
     eventDetailsBuilder.setModel(actionContext.getModel());
+    setTiming();
 
   }
 }

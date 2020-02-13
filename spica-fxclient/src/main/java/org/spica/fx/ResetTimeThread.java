@@ -4,11 +4,16 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import javafx.application.Platform;
 import lombok.SneakyThrows;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spica.fx.controllers.AbstractFxController;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.utils.DateUtil;
 
 public class ResetTimeThread extends Thread {
+
+  private final static Logger LOGGER = LoggerFactory.getLogger(ResetTimeThread.class);
+
 
   private boolean stopped = false;
 
@@ -25,12 +30,12 @@ public class ResetTimeThread extends Thread {
   }
 
   @SneakyThrows public void run(){
-    System.out.println("ResetClockThread running");
+    LOGGER.info("ResetTimeThread running");
 
     while (! stopped) {
 
       if (! currentTime.equals(dateUtil.getTimeAsString(LocalDateTime.now()))){
-        System.out.println ("ResetClockThread recieved time changed event");
+        LOGGER.info("ResetTimeThread recieved time changed event");
         currentTime = dateUtil.getTimeAsString(LocalDateTime.now());
         Platform.runLater(new Runnable() {
           @Override public void run() {

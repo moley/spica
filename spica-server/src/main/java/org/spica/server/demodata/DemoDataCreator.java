@@ -57,12 +57,17 @@ public class DemoDataCreator {
   private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12); //TODO inject
 
 
-  protected User user (final String name, final String firstname, final Role role) {
+  protected User user (final String name, final String firstname, final Role role, final List<Skill> skills) {
     LOGGER.info("Create new user " + name + "," + firstname + " with role " + role.name());
     String username = name.substring(0, 1).toLowerCase() + firstname.substring(0,1).toLowerCase();
     String mail = firstname.toLowerCase() + "." + name.toLowerCase() + "@somedomain.org";
     String encodedPassword = passwordEncoder.encode(username);
     User user = User.builder().name(name).firstname(firstname).username(username).createdAt(LocalDateTime.now()).email(mail).role(role).password(encodedPassword).build();
+    List<String> skillIds = new ArrayList<String>();
+    for (Skill next: skills) {
+      skillIds.add(String.valueOf(next.getId()));
+    }
+    user.setSkills(String.join(",", skillIds));
     userRepository.save(user);
     return user;
   }
@@ -123,6 +128,7 @@ public class DemoDataCreator {
       Skill skill = new Skill();
       skill.setDescription(next);
       skillRepository.save(skill);
+      skills.add(skill);
     }
     return skills;
 

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -66,6 +67,7 @@ public class MeFxController extends AbstractFxController {
         }
         if (event.getCode().equals(KeyCode.ENTER)) {
           String newOne = txtSkills.getText();
+          LOGGER.info("Want to create a new skill " + newOne + "?");
 
           SkillInfo foundSkillInfo = getActionContext().getModel().findSkillByName(newOne);
           if (foundSkillInfo == null) {
@@ -76,23 +78,45 @@ public class MeFxController extends AbstractFxController {
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
+
               UserApi userApi = getActionContext().getApi().getUserApi();
               try {
                 foundSkillInfo = userApi.createSkill(newOne);
-                getActionContext().getModel().getAllSkills().add(foundSkillInfo);
-                getActionContext().saveModel("Added skill " + foundSkillInfo);
+
+                if (foundSkillInfo != null) {
+                  LOGGER.info("Add a new skill " + foundSkillInfo.getName() + " to all skills");
+                  getActionContext().getModel().getAllSkills().add(foundSkillInfo);
+                }
               } catch (ApiException e) {
                 LOGGER.error(e.getLocalizedMessage(), e);
               }
+
+              alert.close();
+
             }
           }
+
           if (foundSkillInfo != null) {
+            LOGGER.info("Add skill " + foundSkillInfo.getName() + " to userskills (before: " + userSkills.size() + ") -> " + getActionContext().getModel().getUserSkills().size());
             userSkills.add(foundSkillInfo);
+            getActionContext().getModel().setUserSkills(userSkills);
+            LOGGER.info("Added skill " + foundSkillInfo.getName() + " to userskills (afterwards: " + userSkills.size() + ") -> " + getActionContext().getModel().getUserSkills().size());
           }
+
 
           txtSkills.setText("");
           txtSkills.requestFocus();
         }
+      }
+    });
+
+    lviUserSkills.getItems().addListener(new ListChangeListener() {
+      @Override
+      public void onChanged(ListChangeListener.Change change) {
+        UserInfo me = getActionContext().getModel().getMe();
+
+        LOGGER.info("lviUserSkills changed detected, settings " + userSkills.size() + " for user skills for user " + me.getId());
+        getActionContext().getModel().setUserSkills(userSkills);
       }
     });
 
@@ -107,7 +131,7 @@ public class MeFxController extends AbstractFxController {
           if (userSkills.isEmpty()) {
             event.consume();
             txtSkills.requestFocus();
-            txtSkills.setText("");
+            txtSkills.clear();
           }
         }
 
@@ -117,7 +141,7 @@ public class MeFxController extends AbstractFxController {
     btnSave.setOnAction(new EventHandler<ActionEvent>() {
       @Override public void handle(ActionEvent event) {
         try {
-          UserInfo meInfo = getActionContext().getMe();
+          UserInfo meInfo = getActionContext().getModel().getMe();
           getActionContext().getApi().getUserApi().setUserSkills(userSkills, meInfo.getId());
         } catch (ApiException e) {
           LOGGER.error(e.getLocalizedMessage());
@@ -128,34 +152,19 @@ public class MeFxController extends AbstractFxController {
 
   }
 
+
+  @Override
   public void setActionContext(ActionContext actionContext) {
     super.setActionContext(actionContext);
 
-    //set all skills
-    UserApi userApi = actionContext.getApi().getUserApi();
-    try {
-      List<SkillInfo> skills = userApi.getSkills();
-      getActionContext().getModel().setAllSkills(skills);
-    } catch (ApiException e) {
-      LOGGER.info("Exception when reading skills: " + e.getLocalizedMessage(), e);
-    }
-
-    //set user skills
-    try {
-      List<SkillInfo> userSkills = userApi.getUserSkills(actionContext.getMe().getId());
-      this.userSkills.clear();
-      this.userSkills.addAll(userSkills);
-    } catch (ApiException e) {
-      LOGGER.error(e.getLocalizedMessage(), e);
-    }
-
-    List<SkillInfo> skills = getActionContext().getModel().getAllSkills();
+    List<SkillInfo> allSkills = getActionContext().getModel().getAllSkills();
+    userSkills.setAll(getActionContext().getModel().getUserSkills());
 
     TextFields
         .bindAutoCompletion(txtSkills, new Callback<AutoCompletionBinding.ISuggestionRequest, Collection<SkillInfo>>() {
           @Override public Collection<SkillInfo> call(AutoCompletionBinding.ISuggestionRequest param) {
             Collection<SkillInfo> skillInfos = new ArrayList<SkillInfo>();
-            for (SkillInfo next : skills) {
+            for (SkillInfo next : allSkills) {
               if (next.getName().contains(param.getUserText()))
                 skillInfos.add(next);
             }
@@ -167,7 +176,7 @@ public class MeFxController extends AbstractFxController {
           }
 
           @Override public SkillInfo fromString(String string) {
-            for (SkillInfo next : skills) {
+            for (SkillInfo next : allSkills) {
               if (next.getName().equals(string))
                 return next;
             }

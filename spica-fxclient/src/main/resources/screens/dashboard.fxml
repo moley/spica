@@ -2,6 +2,9 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
 <GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fx.controllers.DashboardFxController" alignment="TOP_LEFT" hgap="10" vgap="10" >
     <stylesheets>
         <URL value="@/spica.css" />
@@ -13,12 +16,16 @@
             <Insets bottom="20"/>
         </GridPane.margin>
     </Label>
-    <GridPane fx:id="panHeader"  styleClass="infopane" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" hgap="10" vgap="10" GridPane.columnIndex="0" >
+    <Button fx:id="btnAdd" styleClass="infobutton" text="New" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.halignment="RIGHT"/>
+
+
+    <GridPane fx:id="panHeader"  styleClass="infopane" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" hgap="10" vgap="10" GridPane.columnSpan="2" GridPane.columnIndex="0" >
         <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
 
         <GridPane.margin>
             <Insets bottom="5" top="5" left="5" right="5"/>
         </GridPane.margin>
+
         <Label text="Current time:" styleClass="infotype" GridPane.rowIndex="0" GridPane.columnIndex="0"></Label>
         <Label fx:id="lblCurrentTime" styleClass="infotext" GridPane.rowIndex="0" GridPane.columnIndex="1"></Label>
 
@@ -35,6 +42,9 @@
         <Label fx:id= "lblCurrentTask" styleClass="infotext" GridPane.rowIndex="4" GridPane.columnIndex="1"></Label>
 
     </GridPane>
+
+    <ListView styleClass="infolistview" fx:id="lviLastItems" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.vgrow="ALWAYS"></ListView>
+
 
 
 

@@ -18,12 +18,16 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spica.cli.actions.StandaloneActionContext;
 import org.spica.fx.controllers.AbstractFxController;
 import org.spica.javaclient.Configuration;
-import org.spica.javaclient.actions.ActionContext;
+import org.spica.javaclient.services.ModelCacheService;
 
 public class SpicaFxClient extends Application {
+
+  private final static Logger LOGGER = LoggerFactory.getLogger(SpicaFxClient.class);
 
   private ScreenManager screenManager = new ScreenManager();
 
@@ -33,38 +37,32 @@ public class SpicaFxClient extends Application {
 
   private HashMap<Button, Node> nodesPerMenu = new HashMap<Button, Node>();
 
-
-
-
-
   public static void main(String[] args) {
     launch(SpicaFxClient.class, args);
   }
 
-  @Override
-  public void start(Stage primaryStage) throws IOException {
+  @Override public void start(Stage primaryStage) throws IOException {
 
+    LOGGER.info("Starting spica fx client");
 
     views.add(new DashboardView());
     views.add(new UsersView());
     views.add(new MeView());
 
-    ActionContext actionContext = new StandaloneActionContext();
-    String serverUrl = actionContext.getProperties().getValueOrDefault("spica.cli.serverurl", "http://localhost:8765/api");
-
+    StandaloneActionContext actionContext = new StandaloneActionContext();
+    String serverUrl = actionContext.getProperties()
+        .getValueOrDefault("spica.cli.serverurl", "http://localhost:8765/api");
 
     Configuration.getDefaultApiClient().setBasePath(serverUrl);
 
+    actionContext.refreshServer();
+
     List<AbstractFxController> controllers = new ArrayList<AbstractFxController>();
-
-
-
-
 
     VBox menu = new VBox();
     menu.setAlignment(Pos.TOP_CENTER);
     menu.setFillWidth(true);
-    for (View next: views) {
+    for (View next : views) {
       AbstractFxController abstractFxController = next.getController();
       controllers.add(abstractFxController);
       abstractFxController.setActionContext(actionContext);
@@ -74,7 +72,7 @@ public class SpicaFxClient extends Application {
 
       button.setOnMouseClicked(new EventHandler<MouseEvent>() {
         @Override public void handle(MouseEvent event) {
-          System.out.println (event.getSource());
+          System.out.println(event.getSource());
 
           Node currentNode = nodesPerMenu.get(event.getSource());
 
@@ -92,7 +90,8 @@ public class SpicaFxClient extends Application {
       menu.getChildren().add(button);
     }
 
-    ResetModelFileThread resetClockThread = new ResetModelFileThread(actionContext.getModel().getCurrentFile(), actionContext, controllers);
+    ResetModelFileThread resetClockThread = new ResetModelFileThread(actionContext.getModel().getCurrentFile(),
+        actionContext, controllers);
     resetClockThread.start();
 
     ResetTimeThread resetTimeThread = new ResetTimeThread(actionContext, controllers);
@@ -110,9 +109,7 @@ public class SpicaFxClient extends Application {
     menu.getChildren().add(btnExit);
     UiUtils.setStyleClass(menu, "menu");
 
-
     detailNode.getChildren().get(0).toFront();
-
 
     HBox main = new HBox();
     main.getChildren().add(menu);
@@ -121,8 +118,7 @@ public class SpicaFxClient extends Application {
 
     Scene scene = new Scene(main);
 
-
-    boolean isMultiScreenEnvironment = false; //screenManager.isMultiScreenEnvironment();
+    boolean isMultiScreenEnvironment = false;
 
     primaryStage.setScene(scene);
     primaryStage.setFullScreen(true);
@@ -130,7 +126,10 @@ public class SpicaFxClient extends Application {
     scene.getStylesheets().add(getClass().getResource("/spica.css").toExternalForm());
     primaryStage.setAlwaysOnTop(isMultiScreenEnvironment);
     primaryStage.setFullScreen(isMultiScreenEnvironment);
-    screenManager.layoutOnPrimary(primaryStage);
+    if (ModelCacheService.isDefault())
+      screenManager.layoutOnPrimary(primaryStage);
+    else
+      screenManager.layoutOnExternalOrPrimary(primaryStage);
 
     primaryStage.show();
   }
