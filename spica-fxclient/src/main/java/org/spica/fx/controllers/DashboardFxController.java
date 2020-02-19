@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 import org.slf4j.Logger;
@@ -27,10 +28,6 @@ import org.spica.javaclient.utils.RenderUtil;
 public class DashboardFxController extends AbstractFxController {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(DashboardFxController.class);
-
-  @FXML private Label lblUsersHeader;
-
-  @FXML private Pane panHeader;
 
   private DateUtil dateUtil = new DateUtil();
 
@@ -99,6 +96,12 @@ public class DashboardFxController extends AbstractFxController {
   public void setActionContext(ActionContext actionContext) {
     super.setActionContext(actionContext);
     eventDetailsBuilder.setModel(actionContext.getModel());
+    Tooltip defaultToolTip = new Tooltip(actionContext.getModel().getCurrentFile().getAbsolutePath() + "\n" + actionContext.getApi().getCurrentServer());
+    lblCurrentTime.setTooltip(defaultToolTip);
+    lblCurrentTask.setTooltip(defaultToolTip);
+    lblPauseTime.setTooltip(defaultToolTip);
+    lblWorkingSince.setTooltip(defaultToolTip);
+    lblWorkTime.setTooltip(defaultToolTip);
 
 
 

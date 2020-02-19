@@ -11,16 +11,15 @@ import java.nio.file.WatchService;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import javafx.application.Platform;
-import jline.internal.Log;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.fx.controllers.AbstractFxController;
 import org.spica.javaclient.actions.ActionContext;
 
-public class ResetModelFileThread extends Thread {
+public class ReloadModelFileThread extends Thread {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(ResetModelFileThread.class);
+  private final static Logger LOGGER = LoggerFactory.getLogger(ReloadModelFileThread.class);
 
 
   private boolean stopped = false;
@@ -29,7 +28,7 @@ public class ResetModelFileThread extends Thread {
   private final ActionContext actionContext;
   private final Collection<AbstractFxController> controllers;
 
-  public ResetModelFileThread(final File modelFile, final ActionContext actionContext, Collection<AbstractFxController> controllers) {
+  public ReloadModelFileThread(final File modelFile, final ActionContext actionContext, Collection<AbstractFxController> controllers) {
     this.modelFile = modelFile;
     this.actionContext = actionContext;
     this.controllers = controllers;

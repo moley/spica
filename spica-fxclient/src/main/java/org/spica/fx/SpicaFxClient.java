@@ -21,8 +21,11 @@ import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.cli.actions.StandaloneActionContext;
+import org.spica.commons.SpicaProperties;
+import org.spica.commons.mail.MailReciever;
 import org.spica.fx.controllers.AbstractFxController;
 import org.spica.javaclient.Configuration;
+import org.spica.javaclient.mail.MailImporter;
 import org.spica.javaclient.services.ModelCacheService;
 
 public class SpicaFxClient extends Application {
@@ -63,36 +66,50 @@ public class SpicaFxClient extends Application {
     menu.setAlignment(Pos.TOP_CENTER);
     menu.setFillWidth(true);
     for (View next : views) {
-      AbstractFxController abstractFxController = next.getController();
-      controllers.add(abstractFxController);
-      abstractFxController.setActionContext(actionContext);
-      Button button = new Button(next.getDisplayname(), Consts.createIcon(next.getIcon(), Consts.ICONSIZE_MENU));
-      button.setMaxWidth(Double.MAX_VALUE);
-      UiUtils.setStyleClass(button, "menubutton");
+      try {
+        AbstractFxController abstractFxController = next.getController();
+        controllers.add(abstractFxController);
+        abstractFxController.setActionContext(actionContext);
+        Button button = new Button(next.getDisplayname(), Consts.createIcon(next.getIcon(), Consts.ICONSIZE_MENU));
+        button.setMaxWidth(Double.MAX_VALUE);
+        UiUtils.setStyleClass(button, "menubutton");
 
-      button.setOnMouseClicked(new EventHandler<MouseEvent>() {
-        @Override public void handle(MouseEvent event) {
-          System.out.println(event.getSource());
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+          @Override public void handle(MouseEvent event) {
+            System.out.println(event.getSource());
 
-          Node currentNode = nodesPerMenu.get(event.getSource());
+            Node currentNode = nodesPerMenu.get(event.getSource());
 
-          currentNode.toFront();
-        }
-      });
+            currentNode.toFront();
+          }
+        });
 
-      Parent pane = next.getParent();
-      UiUtils.setStyleClass(pane, "rootpane");
+        Parent pane = next.getParent();
+        UiUtils.setStyleClass(pane, "rootpane");
 
-      detailNode.getChildren().add(pane);
+        detailNode.getChildren().add(pane);
 
-      nodesPerMenu.put(button, pane);
+        nodesPerMenu.put(button, pane);
 
-      menu.getChildren().add(button);
+        menu.getChildren().add(button);
+      } catch (Exception e) {
+        LOGGER.error("Error loading view " + next.getDisplayname() + ":" + e.getLocalizedMessage(), e);
+      }
     }
 
-    ResetModelFileThread resetClockThread = new ResetModelFileThread(actionContext.getModel().getCurrentFile(),
+    ReloadModelFileThread resetClockThread = new ReloadModelFileThread(actionContext.getModel().getCurrentFile(),
         actionContext, controllers);
     resetClockThread.start();
+
+    SpicaProperties spicaProperties = actionContext.getProperties();
+    if (spicaProperties.getValue(MailReciever.PROPERTY_MAIL_POP_HOST) != null &&
+        spicaProperties.getValue(MailReciever.PROPERTY_MAIL_POP_PORT) != null) {
+
+      RecieveMailsFileThread recieveMailsFileThread = new RecieveMailsFileThread(actionContext);
+      recieveMailsFileThread.start();
+    }
+    else
+      LOGGER.warn("Recieving mails is not started because no host or port was configured");
 
     ResetTimeThread resetTimeThread = new ResetTimeThread(actionContext, controllers);
     resetTimeThread.start();

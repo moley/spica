@@ -1,5 +1,6 @@
 package org.spica.javaclient.actions;
 
+import org.spica.javaclient.ApiClient;
 import org.spica.javaclient.api.UserApi;
 
 public class Api {
@@ -10,5 +11,8 @@ public class Api {
     if (userApi == null)
       userApi = new UserApi();
     return userApi;
+  }
+  public String getCurrentServer () {
+    return getUserApi().getApiClient().getBasePath();
   }
 }

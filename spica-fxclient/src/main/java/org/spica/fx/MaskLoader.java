@@ -1,6 +1,7 @@
 package org.spica.fx;
 
 import java.io.IOException;
+import java.net.URL;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -18,7 +19,13 @@ public class MaskLoader<T> {
   public Mask<T> load (final String name) {
     LOGGER.info("load mask " + name);
     Mask<T> mask = new Mask<T>();
-    FXMLLoader loader = new FXMLLoader(getClass().getResource("/screens/" + name + ".fxml"));
+
+    String locationAsString = "/screens/" + name + ".fxml";
+    URL location = getClass().getResource(locationAsString);
+    if (location == null)
+      throw new IllegalStateException("Could not find location " + locationAsString);
+
+    FXMLLoader loader = new FXMLLoader(location);
     try {
       Parent root = loader.load();
       T controller = loader.getController();

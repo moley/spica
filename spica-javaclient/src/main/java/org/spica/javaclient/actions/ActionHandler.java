@@ -40,6 +40,7 @@ import org.spica.javaclient.actions.projects.ShowProjectsAction;
 import org.spica.javaclient.actions.search.SearchGoogleAction;
 import org.spica.javaclient.actions.search.SearchJenkinsAction;
 import org.spica.javaclient.actions.search.SearchJiraAction;
+import org.spica.javaclient.actions.search.SearchProjectPathInBrowserAction;
 import org.spica.javaclient.actions.search.SearchStashAction;
 import org.spica.javaclient.actions.topics.CloseTopicAction;
 import org.spica.javaclient.actions.topics.CreateTopicAction;
@@ -111,6 +112,7 @@ public class ActionHandler {
     registeredActions.add(new SearchJiraAction());
     registeredActions.add(new SearchGoogleAction());
     registeredActions.add(new SearchJenkinsAction());
+    registeredActions.add(new SearchProjectPathInBrowserAction());
 
     //configuration
     registeredActions.add(new ImportUsersAction());
