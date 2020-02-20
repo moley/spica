@@ -1,10 +1,11 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ToggleButton?>
 <GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fx.controllers.DashboardFxController" alignment="TOP_LEFT" hgap="10" vgap="10" >
     <stylesheets>
         <URL value="@/spica.css" />
@@ -43,7 +44,15 @@
 
     </GridPane>
 
-    <ListView styleClass="infolistview" fx:id="lviDashboardItems" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.vgrow="ALWAYS"></ListView>
+    <ButtonBar GridPane.halignment="LEFT" fx:id="bbaFilter" GridPane.rowIndex="2" GridPane.hgrow="NEVER" GridPane.columnIndex="0" GridPane.columnSpan="2" >
+        <buttons>
+            <Label ButtonBar.buttonData="RIGHT"/> <!--Bug in JavaFX when there is no right element the left elements are centered-->
+            <ToggleButton styleClass="filterbutton" fx:id="btnFilterMail" ButtonBar.buttonData="LEFT"/>
+            <ToggleButton styleClass="filterbutton" fx:id="btnFilterEvent" ButtonBar.buttonData="LEFT"/>
+        </buttons>
+    </ButtonBar>
+
+    <ListView styleClass=" infolistview" fx:id="lviDashboardItems" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.vgrow="ALWAYS"></ListView>
 
 
 

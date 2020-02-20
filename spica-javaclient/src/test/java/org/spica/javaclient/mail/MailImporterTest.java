@@ -6,13 +6,11 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Date;
-import javax.mail.Address;
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.spica.commons.mail.Mail;
 import org.spica.commons.mail.MailReciever;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.MessageType;
@@ -39,18 +37,18 @@ public class MailImporterTest {
     MailImporter mailImporter = new MailImporter();
     MailReciever mailReciever = Mockito.mock(MailReciever.class);
 
-    Message message1 = Mockito.mock(Message.class);
+    Mail message1 = Mockito.mock(Mail.class);
     Mockito.when(message1.getSentDate()).thenReturn(localDate);
     Mockito.when(message1.getSubject()).thenReturn(topic);
-    Mockito.when(message1.getFrom()).thenReturn(new Address[]{new InternetAddress(mail) });
-    Mockito.when(message1.getContent()).thenReturn("Hello world");
+    Mockito.when(message1.getFrom()).thenReturn(mail);
+    Mockito.when(message1.getText()).thenReturn("Hello world");
 
 
-    Message message2 = Mockito.mock(Message.class);
+    Mail message2 = Mockito.mock(Mail.class);
     Mockito.when(message2.getSentDate()).thenReturn(localDate);
     Mockito.when(message2.getSubject()).thenReturn(topic);
-    Mockito.when(message2.getFrom()).thenReturn(new Address[]{new InternetAddress(mail2) });
-    Mockito.when(message2.getContent()).thenReturn("Hello world");
+    Mockito.when(message2.getFrom()).thenReturn(mail2);
+    Mockito.when(message2.getText()).thenReturn("Hello world");
 
 
     Mockito.when(mailReciever.recieveMails()).thenReturn(Arrays.asList(message1, message2));
@@ -82,18 +80,18 @@ public class MailImporterTest {
     MailImporter mailImporter = new MailImporter();
     MailReciever mailReciever = Mockito.mock(MailReciever.class);
 
-    Message message1 = Mockito.mock(Message.class);
+    Mail message1 = Mockito.mock(Mail.class);
     Mockito.when(message1.getSentDate()).thenReturn(localDate);
     Mockito.when(message1.getSubject()).thenReturn(topic);
-    Mockito.when(message1.getFrom()).thenReturn(new Address[]{new InternetAddress(mail) });
-    Mockito.when(message1.getContent()).thenReturn("Hello world");
+    Mockito.when(message1.getFrom()).thenReturn(mail);
+    Mockito.when(message1.getText()).thenReturn("Hello world");
 
 
-    Message message2 = Mockito.mock(Message.class);
+    Mail message2 = Mockito.mock(Mail.class);
     Mockito.when(message2.getSentDate()).thenReturn(laterDate);
     Mockito.when(message2.getSubject()).thenReturn(topic);
-    Mockito.when(message2.getFrom()).thenReturn(new Address[]{new InternetAddress(mail) });
-    Mockito.when(message2.getContent()).thenReturn("Hello world");
+    Mockito.when(message2.getFrom()).thenReturn(mail);
+    Mockito.when(message2.getText()).thenReturn("Hello world");
 
 
     Mockito.when(mailReciever.recieveMails()).thenReturn(Arrays.asList(message1, message2));
@@ -123,18 +121,18 @@ public class MailImporterTest {
     MailImporter mailImporter = new MailImporter();
     MailReciever mailReciever = Mockito.mock(MailReciever.class);
 
-    Message message1 = Mockito.mock(Message.class);
+    Mail message1 = Mockito.mock(Mail.class);
     Mockito.when(message1.getSentDate()).thenReturn(localDate);
     Mockito.when(message1.getSubject()).thenReturn(topic);
-    Mockito.when(message1.getFrom()).thenReturn(new Address[]{new InternetAddress(mail) });
-    Mockito.when(message1.getContent()).thenReturn("Hello world");
+    Mockito.when(message1.getFrom()).thenReturn(mail);
+    Mockito.when(message1.getText()).thenReturn("Hello world");
 
 
-    Message message2 = Mockito.mock(Message.class);
+    Mail message2 = Mockito.mock(Mail.class);
     Mockito.when(message2.getSentDate()).thenReturn(localDate);
     Mockito.when(message2.getSubject()).thenReturn(topic2);
-    Mockito.when(message2.getFrom()).thenReturn(new Address[]{new InternetAddress(mail) });
-    Mockito.when(message2.getContent()).thenReturn("Hello world");
+    Mockito.when(message2.getFrom()).thenReturn(mail);
+    Mockito.when(message2.getText()).thenReturn("Hello world");
 
 
     Mockito.when(mailReciever.recieveMails()).thenReturn(Arrays.asList(message1, message2));

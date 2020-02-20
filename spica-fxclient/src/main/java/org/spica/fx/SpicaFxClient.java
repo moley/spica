@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -47,7 +48,7 @@ public class SpicaFxClient extends Application {
   @Override public void start(Stage primaryStage) throws IOException {
 
     LOGGER.info("Starting spica fx client");
-
+    
     views.add(new DashboardView());
     views.add(new UsersView());
     views.add(new MeView());

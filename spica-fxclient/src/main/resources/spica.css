@@ -42,6 +42,9 @@
     -fx-border-radius: 90%;
 }
 
+.filterbutton {
+    -fx-background-color: #eeeeee;
+}
 .infobutton {
     -fx-background-color: transparent;
     -fx-text-fill: rgb(182, 189, 217);

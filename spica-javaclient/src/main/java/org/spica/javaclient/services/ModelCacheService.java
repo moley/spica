@@ -1,6 +1,8 @@
 package org.spica.javaclient.services;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -21,6 +23,7 @@ import java.util.Date;
 import org.spica.javaclient.model.DashboardItemInfo;
 import org.spica.javaclient.model.EventContainerInfo;
 import org.spica.javaclient.model.EventInfo;
+import org.spica.javaclient.model.MessagecontainerInfo;
 import org.spica.javaclient.model.Model;
 
 public class ModelCacheService implements Serializable{
@@ -64,7 +67,8 @@ public class ModelCacheService implements Serializable{
 
   }
 
-  private Model migrateOnDemand (final Model model) {
+  public void migrateOnDemand () {
+    Model model = get();
     for (EventInfo nextEvent: model.getEventInfosReal()) {
 
       //create an event on dashboard if does not exist yet
@@ -78,7 +82,14 @@ public class ModelCacheService implements Serializable{
       }
     }
 
-    return model;
+    //TODO temp
+    //List<DashboardItemInfo> dashboardItemInfos = new ArrayList<DashboardItemInfo>();
+    //for (DashboardItemInfo nextInfo: model.getDashboardItemInfos()) {
+    //  if (nextInfo.getItemType().equals(DashboardItemType.MAIL.toString()))
+    //    dashboardItemInfos.add(nextInfo);
+    // }
+    //model.getDashboardItemInfos().removeAll(dashboardItemInfos);
+    //model.getMessagecontainerInfos().clear();
 
   }
 
@@ -97,7 +108,6 @@ public class ModelCacheService implements Serializable{
         LOGGER.info("Load configuration from " + configFile.getAbsolutePath());
         currentConfiguration = (Model) unmarshaller.unmarshal(configFile);
         currentConfiguration.setCurrentFile(configFile);
-        currentConfiguration = migrateOnDemand(currentConfiguration);
       }
       else {
         LOGGER.info("Create new configuration because " + configFile.getAbsolutePath() + " does not exist");

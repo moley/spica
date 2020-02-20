@@ -7,6 +7,11 @@ public class Services {
 
   private DownloadService downloadService = new DownloadService();
 
+  public Services () {
+     modelCacheService.migrateOnDemand();
+
+  }
+
   public ModelCacheService getModelCacheService() {
     return modelCacheService;
   }

@@ -18,7 +18,7 @@ public class MailReciever {
   public final static String PROPERTY_MAIL_POP_USERNAME = "spica.mail.pop.user";
   public final static String PROPERTY_MAIL_POP_PASSWORD = "spica.mail.pop.password";
 
-  public List<Message> recieveMails () {
+  public List<Mail> recieveMails () {
 
 
     try{
@@ -30,6 +30,7 @@ public class MailReciever {
       mailProperties.setProperty("mail.pop3.host", spicaProperties.getValue(PROPERTY_MAIL_POP_HOST));
       mailProperties.setProperty("mail.pop3.port", spicaProperties.getValue(PROPERTY_MAIL_POP_PORT));
       mailProperties.setProperty("mail.pop3.ssl.enable",  Boolean.toString(true));
+      mailProperties.setProperty("mail.debug", Boolean.toString(true));
 
       String username = spicaProperties.getValue(PROPERTY_MAIL_POP_USERNAME);
       String password = spicaProperties.getValue(PROPERTY_MAIL_POP_PASSWORD);
@@ -45,7 +46,7 @@ public class MailReciever {
         }
       });
       //Gibt in der Console Debug-Meldungen zum Verlauf aus
-      session.setDebug(false);
+      session.setDebug(true);
 
 
 
@@ -60,54 +61,17 @@ public class MailReciever {
         throw new IllegalStateException("Folder could not be opened");
 
       Message message[] = folder.getMessages();
+      List<Mail> mailCollection = new ArrayList<Mail>();
 
       for(int i=0;i<message.length;i++){
         Message m = message[i];
-        /**m.getReceivedDate();
-
-        System.out.println( "-----------------------\nNachricht: " + i );
-        System.out.println ("Klasse:" + m.getClass().getName());
-        System.out.println( "Von: " + Arrays.toString(m.getFrom()) );
-        System.out.println( "Betreff: " + m.getSubject() );
-        System.out.println ("Disposition: " + m.getDisposition());
-        System.out.println( "Gesendet am: " + m.getSentDate() );
-        System.out.println( "ContentType: " + new ContentType(m.getContentType()) );
-        //System.out.println( "Content: " + m.getContent() );
-
-        //Nachricht ist eine einfache Text- bzw. HTML-Nachricht
-        /**if( m.isMimeType("text/plain") ){
-          System.out.println( m.getContent() );
-        }
-
-        //Nachricht ist eine Multipart-Nachricht (besteht aus mehreren Teilen)
-        if( m.isMimeType("multipart/*") ){
-          Multipart mp = (Multipart) m.getContent();
-
-          for( int j=0;j<mp.getCount();j++ ){
-            Part part = mp.getBodyPart(j);
-            String disposition = part.getDisposition();
-
-            if( disposition == null ){
-              MimeBodyPart mimePart = (MimeBodyPart) part;
-
-              if( mimePart.isMimeType("text/plain") ){
-                BufferedReader in = new BufferedReader( new InputStreamReader(mimePart.getInputStream()) );
-
-                for( String line; (line=in.readLine()) != null; ){
-                  System.out.println( line );
-                }
-              }
-            }
-          }
-        }//if Multipart**/
-        mails.add(m);
-
+        mailCollection.add(new Mail(m));
       }
 
       folder.close( false );
       store.close();
 
-      return mails;
+      return mailCollection;
 
 
     }catch(Exception err){

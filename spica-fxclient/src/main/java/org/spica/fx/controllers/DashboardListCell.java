@@ -26,6 +26,8 @@ public class DashboardListCell extends ListCell<DashboardItemInfo> {
       button.setStyle("-fx-background-color:transparent; -fx-padding: 3 30 3 10;");
       if (obj.getItemType().equals(DashboardItemType.EVENT.name())) {
         button.setGraphic(Consts.createIcon("fa-book", Consts.ICONSIZE_MENU));
+      } else if (obj.getItemType().equals(DashboardItemType.MAIL.name())) {
+        button.setGraphic(Consts.createIcon("fa-envelope", Consts.ICONSIZE_MENU));
       }
 
       setGraphic(button);

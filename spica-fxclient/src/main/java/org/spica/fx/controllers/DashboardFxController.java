@@ -1,20 +1,26 @@
 package org.spica.fx.controllers;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spica.commons.DashboardItemType;
+import org.spica.fx.Consts;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.event.EventDetails;
 import org.spica.javaclient.event.EventDetailsBuilder;
@@ -43,10 +49,38 @@ public class DashboardFxController extends AbstractFxController {
 
   @FXML private ListView<DashboardItemInfo> lviDashboardItems;
 
-  private ObservableList<DashboardItemInfo> dashboardItemInfos = FXCollections.observableArrayList();
+  @FXML private ToggleButton btnFilterMail;
 
+  @FXML private ToggleButton btnFilterEvent;
 
   private EventDetailsBuilder eventDetailsBuilder = new EventDetailsBuilder();
+
+  private FilteredList<DashboardItemInfo> filteredDashboardItems;
+
+  @FXML public void initialize() {
+    btnFilterMail.setGraphic(Consts.createIcon("fa-envelope", Consts.ICONSIZE_MENU));
+    btnFilterMail.setSelected(true);
+    btnFilterMail.setOnAction(event -> adaptFilter());
+    btnFilterEvent.setSelected(true);
+    btnFilterEvent.setOnAction(event -> adaptFilter());
+    btnFilterEvent.setGraphic(Consts.createIcon("fa-book", Consts.ICONSIZE_MENU));
+
+  }
+
+  private void adaptFilter() {
+    Collection<String> itemTypes = new ArrayList<>();
+    if (btnFilterEvent.isSelected())
+      itemTypes.add(DashboardItemType.EVENT.name());
+    if (btnFilterMail.isSelected())
+      itemTypes.add(DashboardItemType.MAIL.name());
+
+    filteredDashboardItems.setPredicate(new Predicate<DashboardItemInfo>() {
+      @Override public boolean test(DashboardItemInfo dashboardItemInfo) {
+        return itemTypes.contains(dashboardItemInfo.getItemType());
+      }
+    });
+
+  }
 
   public void setTiming() {
     LOGGER.info("setTiming");
@@ -89,21 +123,20 @@ public class DashboardFxController extends AbstractFxController {
     lblPauseTime.setText(dateUtil.getDuration(eventDetails.getDurationPause()));
     lblCurrentTask.setText(task);
     lblWorkingSince.setText(since);
-    lviDashboardItems.setItems(dashboardItemInfos);
+    lviDashboardItems.setItems(filteredDashboardItems);
     LOGGER.info("setTiming finished");
   }
 
   public void setActionContext(ActionContext actionContext) {
     super.setActionContext(actionContext);
     eventDetailsBuilder.setModel(actionContext.getModel());
-    Tooltip defaultToolTip = new Tooltip(actionContext.getModel().getCurrentFile().getAbsolutePath() + "\n" + actionContext.getApi().getCurrentServer());
+    Tooltip defaultToolTip = new Tooltip(
+        actionContext.getModel().getCurrentFile().getAbsolutePath() + "\n" + actionContext.getApi().getCurrentServer());
     lblCurrentTime.setTooltip(defaultToolTip);
     lblCurrentTask.setTooltip(defaultToolTip);
     lblPauseTime.setTooltip(defaultToolTip);
     lblWorkingSince.setTooltip(defaultToolTip);
     lblWorkTime.setTooltip(defaultToolTip);
-
-
 
     List<DashboardItemInfo> dashboardItemInfosFromModel = actionContext.getModel().getDashboardItemInfos();
 
@@ -115,10 +148,9 @@ public class DashboardFxController extends AbstractFxController {
       }
     });
 
-    dashboardItemInfos.clear();
-    dashboardItemInfos.addAll(dashboardItemInfosFromModel);
-
+    filteredDashboardItems = new FilteredList<DashboardItemInfo>(
+        FXCollections.observableList(dashboardItemInfosFromModel));
     setTiming();
-
+    adaptFilter();
   }
 }
