@@ -28,6 +28,8 @@ components:
       properties:
         id:
           type: "string"
+        open:
+          type: "boolean"
         description:
           type: "string"
         created:

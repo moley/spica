@@ -54,7 +54,11 @@ public class ReloadModelFileThread extends Thread {
                 actionContext.reloadModel();
                 for (AbstractFxController nextController: controllers) {
                   LOGGER.info("Reload actioncontext on " + nextController.getClass().getSimpleName());
-                  nextController.setActionContext(actionContext);
+                  Platform.runLater(new Runnable() {
+                    @Override public void run() {
+                      nextController.setActionContext(actionContext);
+                    }
+                  });
                 }
               }
             }

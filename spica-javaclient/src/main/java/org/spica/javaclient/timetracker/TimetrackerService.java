@@ -47,6 +47,8 @@ public class TimetrackerService {
         if (eventInfo != null) {
             eventInfo.setStop(stopTime != null ? stopTime: LocalDateTime.now());
         }
+
+        modelCacheService.closeEventDashboardsWhenEventIsClosed();
     }
 
     public void stopPause () {
@@ -170,6 +172,8 @@ public class TimetrackerService {
             }
         });
 
+        modelCacheService.closeEventDashboardsWhenEventIsClosed();
+
 
         return output;
 
@@ -220,6 +224,8 @@ public class TimetrackerService {
 
         restartLastRealEvent(model, EventType.MESSAGE);
 
+        modelCacheService.closeEventDashboardsWhenEventIsClosed();
+
 
     }
 
@@ -239,6 +245,9 @@ public class TimetrackerService {
     public LocalDateTime finishEvent(EventInfo eventInfo) {
         LocalDateTime now = LocalDateTime.now();
         eventInfo.setStop(now);
+
+        modelCacheService.closeEventDashboardsWhenEventIsClosed();
+
         return now;
     }
 }

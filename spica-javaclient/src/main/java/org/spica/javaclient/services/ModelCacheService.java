@@ -1,29 +1,22 @@
 package org.spica.javaclient.services;
 
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.spica.commons.DashboardItemType;
-import org.spica.commons.SpicaProperties;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.Date;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.spica.commons.DashboardItemType;
+import org.spica.commons.SpicaProperties;
 import org.spica.javaclient.model.DashboardItemInfo;
-import org.spica.javaclient.model.EventContainerInfo;
 import org.spica.javaclient.model.EventInfo;
-import org.spica.javaclient.model.MessagecontainerInfo;
 import org.spica.javaclient.model.Model;
 
 public class ModelCacheService implements Serializable{
@@ -91,7 +84,24 @@ public class ModelCacheService implements Serializable{
     //model.getDashboardItemInfos().removeAll(dashboardItemInfos);
     //model.getMessagecontainerInfos().clear();
 
+    closeEventDashboardsWhenEventIsClosed();
+
+
+
+
   }
+
+  public void closeEventDashboardsWhenEventIsClosed () {
+    Model model = get();
+    for (DashboardItemInfo nextDashboardItem: model.getDashboardItemInfos()) {
+      if (nextDashboardItem.getItemType().equals(DashboardItemType.EVENT.name())) {
+        EventInfo eventInfoRealById = model.findEventInfoRealById(nextDashboardItem.getItemReference());
+        nextDashboardItem.setOpen(eventInfoRealById.getStop() == null);
+      }
+    }
+
+  }
+
 
   public Model get() {
     if (currentConfiguration != null)

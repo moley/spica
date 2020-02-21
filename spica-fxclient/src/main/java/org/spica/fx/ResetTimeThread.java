@@ -40,7 +40,12 @@ public class ResetTimeThread extends Thread {
         Platform.runLater(new Runnable() {
           @Override public void run() {
             for (AbstractFxController nextController: controllers) {
-              nextController.setTiming();
+              Platform.runLater(new Runnable() {
+                @Override public void run() {
+                  nextController.setTiming();
+                }
+              });
+
             }
           }
         });

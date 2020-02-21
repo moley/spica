@@ -4,20 +4,60 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import javax.mail.MessagingException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.spica.commons.DashboardItemType;
 import org.spica.commons.mail.Mail;
 import org.spica.commons.mail.MailReciever;
+import org.spica.javaclient.model.DashboardItemInfo;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.MessageType;
 import org.spica.javaclient.model.MessagecontainerInfo;
 import org.spica.javaclient.model.Model;
 
 public class MailImporterTest {
+
+  @Test
+  public void closeOldMails () throws MessagingException, IOException {
+    String topic = "topic";
+    String mail = "hans@spica.org";
+    Model model = new Model();
+
+    LocalDateTime localDateTime = LocalDateTime.now();
+    Date localDate = Date.from( localDateTime.atZone( ZoneId.systemDefault()).toInstant());
+
+    MailImporter mailImporter = new MailImporter();
+    MailReciever mailReciever = Mockito.mock(MailReciever.class);
+
+    Mail message1 = Mockito.mock(Mail.class);
+    Mockito.when(message1.getSentDate()).thenReturn(localDate);
+    Mockito.when(message1.getSubject()).thenReturn(topic);
+    Mockito.when(message1.getFrom()).thenReturn(mail);
+    Mockito.when(message1.getText()).thenReturn("Hello world");
+
+    Mockito.when(mailReciever.recieveMails()).thenReturn(Arrays.asList(message1));
+    mailImporter.setMailReciever(mailReciever);
+    mailImporter.importMails(model);
+    Assert.assertEquals ("Number of message containers invalid:" + model.getMessagecontainerInfos(), 1, model.getMessagecontainerInfos().size());
+    Assert.assertEquals ("Number of messages invalid:" + model.getMessagecontainerInfos(), 1, model.getMessagecontainerInfos().get(0).getMessage().size());
+    String messageID = model.getMessagecontainerInfos().get(0).getMessage().get(0).getId();
+    DashboardItemInfo dashboardItemInfo = model.findDashboardItemInfo(DashboardItemType.MAIL, messageID);
+    Assert.assertTrue("DashboardItem must be open at first", dashboardItemInfo.isOpen());
+
+    MailReciever mailReciever2 = Mockito.mock(MailReciever.class);
+    Mockito.when(mailReciever.recieveMails()).thenReturn(new ArrayList<>());
+    mailImporter.setMailReciever(mailReciever2);
+    mailImporter.importMails(model);
+    Assert.assertFalse("DashboardItem was not closed when mail is no longer available", dashboardItemInfo.isOpen());
+
+
+
+  }
 
   @Test
   public void reimportMessageFromDifferentUserToExistingMessageContainer () throws IOException, MessagingException {

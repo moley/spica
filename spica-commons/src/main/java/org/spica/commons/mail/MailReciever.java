@@ -9,9 +9,14 @@ import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Store;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
 
 public class MailReciever {
+
+  private final static Logger LOGGER = LoggerFactory.getLogger(MailReciever.class);
+
 
   public final static String PROPERTY_MAIL_POP_HOST = "spica.mail.pop.host";
   public final static String PROPERTY_MAIL_POP_PORT = "spica.mail.pop.port";
@@ -22,7 +27,6 @@ public class MailReciever {
 
 
     try{
-      List<Message> mails = new ArrayList<Message>();
       //Get system properties
       SpicaProperties spicaProperties = new SpicaProperties();
 
@@ -30,23 +34,19 @@ public class MailReciever {
       mailProperties.setProperty("mail.pop3.host", spicaProperties.getValue(PROPERTY_MAIL_POP_HOST));
       mailProperties.setProperty("mail.pop3.port", spicaProperties.getValue(PROPERTY_MAIL_POP_PORT));
       mailProperties.setProperty("mail.pop3.ssl.enable",  Boolean.toString(true));
-      mailProperties.setProperty("mail.debug", Boolean.toString(true));
+      //mailProperties.setProperty("mail.debug", Boolean.toString(true));
 
       String username = spicaProperties.getValue(PROPERTY_MAIL_POP_USERNAME);
       String password = spicaProperties.getValue(PROPERTY_MAIL_POP_PASSWORD);
 
-      System.out.println (mailProperties);
-          System.out.println ("Username " + username);
-      System.out.println ("Password " + password);
-
-          //Session: steht für die Verbindung mit dem Mail-Server
+      //Session: steht für die Verbindung mit dem Mail-Server
       Session session = Session.getDefaultInstance(mailProperties, new Authenticator() {
         @Override protected PasswordAuthentication getPasswordAuthentication() {
           return new PasswordAuthentication(username, password);
         }
       });
       //Gibt in der Console Debug-Meldungen zum Verlauf aus
-      session.setDebug(true);
+      //session.setDebug(true);
 
 
 

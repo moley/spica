@@ -106,7 +106,7 @@ public class SpicaFxClient extends Application {
     if (spicaProperties.getValue(MailReciever.PROPERTY_MAIL_POP_HOST) != null &&
         spicaProperties.getValue(MailReciever.PROPERTY_MAIL_POP_PORT) != null) {
 
-      RecieveMailsFileThread recieveMailsFileThread = new RecieveMailsFileThread(actionContext);
+      RecieveMailsFileThread recieveMailsFileThread = new RecieveMailsFileThread(actionContext, controllers);
       recieveMailsFileThread.start();
     }
     else

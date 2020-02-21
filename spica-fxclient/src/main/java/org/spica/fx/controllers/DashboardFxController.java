@@ -7,10 +7,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -53,6 +53,8 @@ public class DashboardFxController extends AbstractFxController {
 
   @FXML private ToggleButton btnFilterEvent;
 
+  @FXML private ToggleButton btnFilterAll;
+
   private EventDetailsBuilder eventDetailsBuilder = new EventDetailsBuilder();
 
   private FilteredList<DashboardItemInfo> filteredDashboardItems;
@@ -64,6 +66,8 @@ public class DashboardFxController extends AbstractFxController {
     btnFilterEvent.setSelected(true);
     btnFilterEvent.setOnAction(event -> adaptFilter());
     btnFilterEvent.setGraphic(Consts.createIcon("fa-book", Consts.ICONSIZE_MENU));
+    btnFilterAll.setText("ALL");
+    btnFilterAll.setOnAction(event -> adaptFilter());
 
   }
 
@@ -74,11 +78,18 @@ public class DashboardFxController extends AbstractFxController {
     if (btnFilterMail.isSelected())
       itemTypes.add(DashboardItemType.MAIL.name());
 
+    boolean filterAll = btnFilterAll.isSelected();
+    LOGGER.info("Filter with types " + itemTypes + " and all " + filterAll);
+
+    filteredDashboardItems = new FilteredList<DashboardItemInfo>(FXCollections.observableList(getActionContext().getModel().getDashboardItemInfos()));
     filteredDashboardItems.setPredicate(new Predicate<DashboardItemInfo>() {
       @Override public boolean test(DashboardItemInfo dashboardItemInfo) {
-        return itemTypes.contains(dashboardItemInfo.getItemType());
+        boolean typeEquals = itemTypes.contains(dashboardItemInfo.getItemType());
+        boolean allEquals = filterAll || (dashboardItemInfo.isOpen() != null && dashboardItemInfo.isOpen());
+        return typeEquals && allEquals;
       }
     });
+    lviDashboardItems.setItems(filteredDashboardItems);
 
   }
 
@@ -150,6 +161,7 @@ public class DashboardFxController extends AbstractFxController {
 
     filteredDashboardItems = new FilteredList<DashboardItemInfo>(
         FXCollections.observableList(dashboardItemInfosFromModel));
+    lviDashboardItems.setItems(filteredDashboardItems);
     setTiming();
     adaptFilter();
   }

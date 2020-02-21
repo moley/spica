@@ -14,6 +14,12 @@ public class DashboardListCell extends ListCell<DashboardItemInfo> {
   @Override
   public void updateItem(DashboardItemInfo obj, boolean empty) {
     super.updateItem(obj, empty);
+    if (obj == null)
+      return;
+
+    if (obj.isOpen() == null || obj.isOpen().equals(Boolean.TRUE)) {
+      setStyle("-fx-background-color: #5F9EA0;");
+    }
     if (empty) {
       setText(null);
       setGraphic(null);

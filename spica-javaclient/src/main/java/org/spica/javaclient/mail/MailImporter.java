@@ -3,7 +3,10 @@ package org.spica.javaclient.mail;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import javax.mail.MessagingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spica.commons.DashboardItemType;
 import org.spica.commons.mail.Mail;
 import org.spica.commons.mail.MailReciever;
@@ -16,14 +19,20 @@ import org.spica.javaclient.model.Model;
 public class MailImporter {
 
 
+  private final static Logger LOGGER = LoggerFactory.getLogger(MailImporter.class);
+
 
   private MailReciever mailReciever = new MailReciever();
 
   public boolean importMails(Model model) throws MessagingException, IOException {
 
     boolean modelChanged = false;
+    Collection<String> ids = new ArrayList<String>();
 
     for (Mail nextMail : mailReciever.recieveMails()) {
+
+      ids.add(getId(nextMail));
+
       MessagecontainerInfo messagecontainerInfo = getMessageContainer(model, nextMail);
       if (messagecontainerInfo == null) {
         messagecontainerInfo = new MessagecontainerInfo().message(new ArrayList<MessageInfo>());
@@ -46,12 +55,24 @@ public class MailImporter {
         if (dashboardItemInfo == null) {
           dashboardItemInfo = new DashboardItemInfo();
           dashboardItemInfo.setCreated(messageInfo.getCreationtime());
+          dashboardItemInfo.setOpen(Boolean.TRUE);
           dashboardItemInfo.setItemType(DashboardItemType.MAIL.toString());
           dashboardItemInfo.setItemReference(messageInfo.getId());
           dashboardItemInfo.setDescription(messagecontainerInfo.getTopic());
           model.getDashboardItemInfos().add(dashboardItemInfo);
         }
 
+      }
+    }
+
+    //close open mails if not imported anymore
+    for (DashboardItemInfo nextDashboardItem: model.getDashboardItemInfos() ) {
+      if (nextDashboardItem.getItemType().equals(DashboardItemType.MAIL.name())) {
+        Boolean open = ids.contains(nextDashboardItem.getItemReference());
+        if (! open.equals(nextDashboardItem.isOpen())) {
+          nextDashboardItem.setOpen(open);
+          modelChanged = true;
+        }
       }
     }
     return modelChanged;

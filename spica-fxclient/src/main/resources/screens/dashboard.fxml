@@ -49,6 +49,7 @@
             <Label ButtonBar.buttonData="RIGHT"/> <!--Bug in JavaFX when there is no right element the left elements are centered-->
             <ToggleButton styleClass="filterbutton" fx:id="btnFilterMail" ButtonBar.buttonData="LEFT"/>
             <ToggleButton styleClass="filterbutton" fx:id="btnFilterEvent" ButtonBar.buttonData="LEFT"/>
+            <ToggleButton styleClass="filterbutton" fx:id="btnFilterAll" ButtonBar.buttonData="LEFT"/>
         </buttons>
     </ButtonBar>
 
