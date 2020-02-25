@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.spica.commons.DashboardItemType;
 import org.spica.commons.mail.Mail;
-import org.spica.commons.mail.MailReciever;
+import org.spica.commons.mail.MailAdapter;
 import org.spica.javaclient.model.DashboardItemInfo;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.MessageType;
@@ -32,7 +32,7 @@ public class MailImporterTest {
     Date localDate = Date.from( localDateTime.atZone( ZoneId.systemDefault()).toInstant());
 
     MailImporter mailImporter = new MailImporter();
-    MailReciever mailReciever = Mockito.mock(MailReciever.class);
+    MailAdapter mailAdapter = Mockito.mock(MailAdapter.class);
 
     Mail message1 = Mockito.mock(Mail.class);
     Mockito.when(message1.getSentDate()).thenReturn(localDate);
@@ -40,8 +40,8 @@ public class MailImporterTest {
     Mockito.when(message1.getFrom()).thenReturn(mail);
     Mockito.when(message1.getText()).thenReturn("Hello world");
 
-    Mockito.when(mailReciever.recieveMails()).thenReturn(Arrays.asList(message1));
-    mailImporter.setMailReciever(mailReciever);
+    Mockito.when(mailAdapter.recieveMails()).thenReturn(Arrays.asList(message1));
+    mailImporter.setMailAdapter(mailAdapter);
     mailImporter.importMails(model);
     Assert.assertEquals ("Number of message containers invalid:" + model.getMessagecontainerInfos(), 1, model.getMessagecontainerInfos().size());
     Assert.assertEquals ("Number of messages invalid:" + model.getMessagecontainerInfos(), 1, model.getMessagecontainerInfos().get(0).getMessage().size());
@@ -49,9 +49,9 @@ public class MailImporterTest {
     DashboardItemInfo dashboardItemInfo = model.findDashboardItemInfo(DashboardItemType.MAIL, messageID);
     Assert.assertTrue("DashboardItem must be open at first", dashboardItemInfo.isOpen());
 
-    MailReciever mailReciever2 = Mockito.mock(MailReciever.class);
-    Mockito.when(mailReciever.recieveMails()).thenReturn(new ArrayList<>());
-    mailImporter.setMailReciever(mailReciever2);
+    MailAdapter mailAdapter2 = Mockito.mock(MailAdapter.class);
+    Mockito.when(mailAdapter.recieveMails()).thenReturn(new ArrayList<>());
+    mailImporter.setMailAdapter(mailAdapter2);
     mailImporter.importMails(model);
     Assert.assertFalse("DashboardItem was not closed when mail is no longer available", dashboardItemInfo.isOpen());
 
@@ -75,7 +75,7 @@ public class MailImporterTest {
     model.getMessagecontainerInfos().add(messagecontainerInfo);
 
     MailImporter mailImporter = new MailImporter();
-    MailReciever mailReciever = Mockito.mock(MailReciever.class);
+    MailAdapter mailAdapter = Mockito.mock(MailAdapter.class);
 
     Mail message1 = Mockito.mock(Mail.class);
     Mockito.when(message1.getSentDate()).thenReturn(localDate);
@@ -91,9 +91,9 @@ public class MailImporterTest {
     Mockito.when(message2.getText()).thenReturn("Hello world");
 
 
-    Mockito.when(mailReciever.recieveMails()).thenReturn(Arrays.asList(message1, message2));
-    mailImporter.setMailReciever(mailReciever);
-    String message1Id = mailImporter.getId(message1);
+    Mockito.when(mailAdapter.recieveMails()).thenReturn(Arrays.asList(message1, message2));
+    mailImporter.setMailAdapter(mailAdapter);
+    String message1Id = message1.getId();
     messageInfo.setId(message1Id);
     mailImporter.importMails(model);
     Assert.assertEquals ("Number of message containers invalid:" + model.getMessagecontainerInfos(), 1, model.getMessagecontainerInfos().size());
@@ -118,7 +118,7 @@ public class MailImporterTest {
     model.getMessagecontainerInfos().add(messagecontainerInfo);
 
     MailImporter mailImporter = new MailImporter();
-    MailReciever mailReciever = Mockito.mock(MailReciever.class);
+    MailAdapter mailAdapter = Mockito.mock(MailAdapter.class);
 
     Mail message1 = Mockito.mock(Mail.class);
     Mockito.when(message1.getSentDate()).thenReturn(localDate);
@@ -134,9 +134,9 @@ public class MailImporterTest {
     Mockito.when(message2.getText()).thenReturn("Hello world");
 
 
-    Mockito.when(mailReciever.recieveMails()).thenReturn(Arrays.asList(message1, message2));
-    mailImporter.setMailReciever(mailReciever);
-    String message1Id = mailImporter.getId(message1);
+    Mockito.when(mailAdapter.recieveMails()).thenReturn(Arrays.asList(message1, message2));
+    mailImporter.setMailAdapter(mailAdapter);
+    String message1Id = message1.getId();
     messageInfo.setId(message1Id);
     mailImporter.importMails(model);
     Assert.assertEquals ("Number of message containers invalid:" + model.getMessagecontainerInfos(), 1, model.getMessagecontainerInfos().size());
@@ -159,7 +159,7 @@ public class MailImporterTest {
     model.getMessagecontainerInfos().add(messagecontainerInfo);
 
     MailImporter mailImporter = new MailImporter();
-    MailReciever mailReciever = Mockito.mock(MailReciever.class);
+    MailAdapter mailAdapter = Mockito.mock(MailAdapter.class);
 
     Mail message1 = Mockito.mock(Mail.class);
     Mockito.when(message1.getSentDate()).thenReturn(localDate);
@@ -175,9 +175,9 @@ public class MailImporterTest {
     Mockito.when(message2.getText()).thenReturn("Hello world");
 
 
-    Mockito.when(mailReciever.recieveMails()).thenReturn(Arrays.asList(message1, message2));
-    mailImporter.setMailReciever(mailReciever);
-    String message1Id = mailImporter.getId(message1);
+    Mockito.when(mailAdapter.recieveMails()).thenReturn(Arrays.asList(message1, message2));
+    mailImporter.setMailAdapter(mailAdapter);
+    String message1Id = message1.getId();
     messageInfo.setId(message1Id);
     mailImporter.importMails(model);
     Assert.assertEquals ("Number of message containers invalid:" + model.getMessagecontainerInfos(), 2, model.getMessagecontainerInfos().size());

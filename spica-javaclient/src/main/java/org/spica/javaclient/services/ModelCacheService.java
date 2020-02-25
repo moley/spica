@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.Date;
+import java.util.UUID;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -67,6 +68,7 @@ public class ModelCacheService implements Serializable{
       //create an event on dashboard if does not exist yet
       if (model.findDashboardItemInfo(DashboardItemType.EVENT, nextEvent.getId()) == null) {
         DashboardItemInfo dashboardItemInfo = new DashboardItemInfo();
+        dashboardItemInfo.setId(UUID.randomUUID().toString());
         dashboardItemInfo.setCreated(nextEvent.getStart());
         dashboardItemInfo.setDescription(nextEvent.getName());
         dashboardItemInfo.setItemReference(nextEvent.getId());
@@ -85,10 +87,15 @@ public class ModelCacheService implements Serializable{
     //model.getMessagecontainerInfos().clear();
 
     closeEventDashboardsWhenEventIsClosed();
+    forceId();
+  }
 
-
-
-
+  public void forceId () {
+    Model model = get();
+    for (DashboardItemInfo nextDashboardItem : model.getDashboardItemInfos()) {
+      if (nextDashboardItem.getId() == null)
+        nextDashboardItem.setId(UUID.randomUUID().toString());
+    }
   }
 
   public void closeEventDashboardsWhenEventIsClosed () {

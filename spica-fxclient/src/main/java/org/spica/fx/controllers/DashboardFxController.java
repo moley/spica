@@ -124,7 +124,7 @@ public class DashboardFxController extends AbstractFxController {
 
     lviDashboardItems.setCellFactory(new Callback<ListView<DashboardItemInfo>, ListCell<DashboardItemInfo>>() {
       @Override public ListCell<DashboardItemInfo> call(ListView<DashboardItemInfo> param) {
-        return new DashboardListCell();
+        return new DashboardListCell(DashboardFxController.this, getActionContext());
       }
     });
 

@@ -11,7 +11,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -23,10 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.cli.actions.StandaloneActionContext;
 import org.spica.commons.SpicaProperties;
-import org.spica.commons.mail.MailReciever;
+import org.spica.commons.mail.MailAdapter;
 import org.spica.fx.controllers.AbstractFxController;
 import org.spica.javaclient.Configuration;
-import org.spica.javaclient.mail.MailImporter;
 import org.spica.javaclient.services.ModelCacheService;
 
 public class SpicaFxClient extends Application {
@@ -103,8 +101,8 @@ public class SpicaFxClient extends Application {
     resetClockThread.start();
 
     SpicaProperties spicaProperties = actionContext.getProperties();
-    if (spicaProperties.getValue(MailReciever.PROPERTY_MAIL_POP_HOST) != null &&
-        spicaProperties.getValue(MailReciever.PROPERTY_MAIL_POP_PORT) != null) {
+    if (spicaProperties.getValue(MailAdapter.PROPERTY_MAIL_POP_HOST) != null &&
+        spicaProperties.getValue(MailAdapter.PROPERTY_MAIL_POP_PORT) != null) {
 
       RecieveMailsFileThread recieveMailsFileThread = new RecieveMailsFileThread(actionContext, controllers);
       recieveMailsFileThread.start();

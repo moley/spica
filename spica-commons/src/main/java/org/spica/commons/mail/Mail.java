@@ -54,4 +54,8 @@ public class Mail {
   public String getText() {
     return text;
   }
+
+  public String getId() throws MessagingException {
+    return getFrom() + "-" + getSentDate();
+  }
 }

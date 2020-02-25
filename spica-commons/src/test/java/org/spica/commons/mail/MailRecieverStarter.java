@@ -6,8 +6,8 @@ public class MailRecieverStarter {
 
   public static void main(String[] args) throws MessagingException {
 
-    MailReciever mailReciever = new MailReciever();
-    for (Mail next: mailReciever.recieveMails()) {
+    MailAdapter mailAdapter = new MailAdapter();
+    for (Mail next: mailAdapter.recieveMails()) {
       System.out.println ("Number:        " + next.getMessageNumber());
       //System.out.println ("Sent data:     " + next.getSentDate());
       System.out.println ("Topic:         " + next.getSubject());
