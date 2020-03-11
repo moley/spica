@@ -54,6 +54,7 @@ swaggerSources {
       language = 'spring'
       components = ['models', 'apis']
       additionalProperties = [interfaceOnly:'true']
+      configFile = rootProject.file('swagger-config.json')
       rawOptions = ['--api-package=org.spica.server.user.api', '--model-package=org.spica.server.user.model']
     }
   }
@@ -63,6 +64,7 @@ swaggerSources {
       language = 'spring'
       components = ['models', 'apis']
       additionalProperties = [interfaceOnly:'true']
+      configFile = rootProject.file('swagger-config.json')
       rawOptions = ['--api-package=org.spica.server.links.api', '--model-package=org.spica.server.links.model']
     }
   }
@@ -72,6 +74,7 @@ swaggerSources {
       language = 'spring'
       components = ['models', 'apis']
       additionalProperties = [interfaceOnly:'true']
+      configFile = rootProject.file('swagger-config.json')
       rawOptions = ['--api-package=org.spica.server.communication.api', '--model-package=org.spica.server.communication.model']
     }
   }
@@ -82,6 +85,7 @@ swaggerSources {
       language = 'spring'
       components = ['models', 'apis']
       additionalProperties = [interfaceOnly:'true']
+      configFile = rootProject.file('swagger-config.json')
       rawOptions = ['--api-package=org.spica.server.project.api', '--model-package=org.spica.server.project.model']
     }
   }

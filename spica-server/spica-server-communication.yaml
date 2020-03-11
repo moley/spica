@@ -23,7 +23,6 @@ paths:
         name: referenceId
         schema:
           type: string
-          format: "date-time"
         required: true
       responses:
           '200':
