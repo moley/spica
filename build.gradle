@@ -61,6 +61,8 @@ allprojects {
 
       compileOnly 'org.projectlombok:lombok:1.18.2'
 
+      compile 'org.jsoup:jsoup:1.13.1'
+
       compile 'org.slf4j:slf4j-api:1.7.25'
       testCompile 'org.springframework:spring-test:5.1.2.RELEASE'
       testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")

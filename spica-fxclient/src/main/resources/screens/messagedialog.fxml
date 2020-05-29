@@ -1,0 +1,21 @@
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fxclient.controllers.MessageDialogController" alignment="TOP_LEFT" hgap="10" vgap="10" >
+    <stylesheets>
+        <URL value="@/spica.css" />
+    </stylesheets>
+    <padding><Insets top="20" bottom="20" left="20" right="20"/> </padding>
+
+    <ListView fx:id="lviDialog" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS"></ListView>
+    <HBox GridPane.rowIndex="1" GridPane.columnIndex="0"  spacing="5">
+      <TextArea fx:id="txaNewMessage" HBox.hgrow="ALWAYS" ></TextArea>
+      <Button fx:id="btnSend"></Button>
+    </HBox>
+
+
+</GridPane>

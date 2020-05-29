@@ -1,7 +1,12 @@
 package org.spica.cli;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.cli.actions.StandaloneActionContext;
@@ -26,12 +31,26 @@ public class Main {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
-  public final static void main(final String[] args) {
+  public final static void main(final String[] args) throws IOException {
 
     DateUtil dateUtil = new DateUtil();
 
     System.err.close();
     System.setErr(System.out); //to avoid reflection warnings
+
+    //read configuration from gradle properties (proxy...)
+    File gradlePropertiesFile = new File (System.getProperty("user.home"), ".gradle/gradle.properties");
+    if (gradlePropertiesFile.exists()) {
+      Properties gradleProperties = new Properties();
+      gradleProperties.load(new FileInputStream(gradlePropertiesFile));
+      for (String propName: gradleProperties.stringPropertyNames()) {
+        if (propName.startsWith("systemProp")) {
+          String value = gradleProperties.getProperty(propName);
+          LOGGER.info("Using " + propName + "=" + value);
+          System.setProperty(propName.replace("systemProp.", ""), value);
+        }
+      }
+    }
 
     StandaloneActionContext actionContext = new StandaloneActionContext();
     String serverUrl = actionContext.getProperties().getValueOrDefault("spica.cli.serverurl", "http://localhost:8765/api");
@@ -70,6 +89,7 @@ public class Main {
     }
 
     //System.out.println (LogUtil.clearScreen());
+    System.out.println("Java:                 " + System.getProperty("java.version"));
     System.out.println("Current server:       " + Configuration.getDefaultApiClient().getBasePath());
     System.out.println("Current model:        " + actionContext.getServices().getModelCacheService().getConfigFile()
         .getAbsolutePath());

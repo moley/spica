@@ -1,90 +1,36 @@
-.header {
-    -fx-text-fill: #ccd1c6;
-    -fx-font-size: 30pt;
-    -fx-font-weight: bold;
-    -fx-font-family: Arial;
+
+.searchField {
+  -fx-background-radius: 100.0px;
 }
 
-.infopaneheader {
-    -fx-text-fill: #FFFFFF;
-    -fx-font-size: 15pt;
-    -fx-font-weight: bold;
-    -fx-font-family: Arial;
+.buttonSearchClose, .buttonSearchUp, .buttonSearchDown {
+    -fx-background-insets: 0;
+}
+.searchBoxLabel {
+    -fx-padding: 0 2 0 7;
+}
+.searchBoxLabelIcon {
+    -glyph-size: 13;
+    -glyph-name: SEARCH;
+}
+.searchField:fail {
+    -fx-background-color: -colour-search-fail;
 }
 
-
-
-.rootpane {
-    -fx-background-color: #FFFFFF;
-}
-
-.infopane {
-    -fx-background-color: #ccd1c6;
-    -fx-background-radius: 15;
-    -fx-border-radius: 15;
-}
-
-
-.infotype {
-    -fx-text-fill: #000000;
-    -fx-font-size: 18pt;
-    -fx-font-family: Arial;
-}
-
-.infotext {
-    -fx-text-fill: #444444;
-    -fx-font-size: 18pt;
-    -fx-font-weight: bold;
-    -fx-font-family: Arial;
-}
-
-.infolistview {
-    -fx-border-radius: 90%;
-}
-
-.filterbutton {
-    -fx-background-color: #eeeeee;
-}
-.infobutton {
-    -fx-background-color: transparent;
-    -fx-text-fill: rgb(182, 189, 217);
-    -fx-border-color: rgb(50,50,50);
-    -fx-text-fill: black;
-    -fx-font-size: 18pt;
-    -margin: 10px;
-    -fx-border-radius: 90%;
-}
-
-.menubutton {
-    -fx-font-size: 15pt;
-    -fx-font-family: Arial;
-    -fx-background-color: #bebfbc;
-    -fx-content-display: bottom;
-    -fx-alignment: CENTER;
-}
-
-.menu {
-    -fx-background-color: #bebfbc;
-    -fx-spacing: 30;
-    -fx-padding: 5;
-}
-
-.list-cell:filled:selected:focused, .list-cell:filled:selected {
-    -fx-background-color: linear-gradient(#328BDB 0%, #207BCF 25%, #1973C9 75%, #0A65BF 100%);
-    -fx-text-fill: white;
-}
-
-.list-cell {
-        -fx-font-size: 15pt;
-}
-
-.list-cell:even { /* <=== changed to even */
+.chat-bubble-foreign {
     -fx-background-color: white;
-
-
+    -fx-padding: 20;
+    -fx-background-radius: 20 20 20 20;
 }
 
-.list-cell:filled:hover {
-    -fx-background-color: #0093ff;
-    -fx-text-fill: white;
+.chat-bubble-me {
+    -fx-background-color: lightgreen;
+    -fx-padding: 20;
+    -fx-background-radius: 20 20 20 20;
 }
+
+.chat-time {
+     -fx-text-fill: grey;
+     -fx-font-size: 10px;
+}
+

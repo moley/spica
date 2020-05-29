@@ -2,16 +2,18 @@ package org.spica;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.server.demodata.DevelopmentDemoData;
+import org.spica.server.demodata.DemoDataCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableJpaRepositories
+@EnableScheduling
 @Configuration
 @ComponentScan
 public class SpicaServerApplication {
@@ -19,7 +21,7 @@ public class SpicaServerApplication {
   private final static Logger LOGGER = LoggerFactory.getLogger(SpicaServerApplication.class);
 
 
-  public SpicaServerApplication(@Autowired  DevelopmentDemoData developmentDemoData) {
+  public SpicaServerApplication(@Autowired DemoDataCreator developmentDemoData) {
 
 
     String demoDataType = System.getProperty("demodata");

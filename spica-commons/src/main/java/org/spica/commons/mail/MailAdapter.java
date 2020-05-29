@@ -1,5 +1,7 @@
 package org.spica.commons.mail;
 
+import com.sun.mail.util.MailSSLSocketFactory;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -7,9 +9,13 @@ import javax.mail.Authenticator;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
@@ -23,13 +29,30 @@ public class MailAdapter {
   public final static String PROPERTY_MAIL_POP_PORT = "spica.mail.pop.port";
   public final static String PROPERTY_MAIL_POP_USERNAME = "spica.mail.pop.user";
   public final static String PROPERTY_MAIL_POP_PASSWORD = "spica.mail.pop.password";
+  public final static String PROPERTY_MAIL_SMTP_HOST = "spica.mail.smtp.host";
+  public final static String PROPERTY_MAIL_SMTP_PORT = "spica.mail.smtp.port";
+  public final static String PROPERTY_MAIL_SMTP_SENDER = "spica.mail.smtp.sender";
 
-  private Session createSession (SpicaProperties spicaProperties) {
+  private Session createSession (SpicaProperties spicaProperties)  {
     Properties mailProperties = new Properties();
     mailProperties.setProperty("mail.pop3.host", spicaProperties.getValue(PROPERTY_MAIL_POP_HOST));
     mailProperties.setProperty("mail.pop3.port", spicaProperties.getValue(PROPERTY_MAIL_POP_PORT));
     mailProperties.setProperty("mail.pop3.ssl.enable",  Boolean.toString(true));
-    //mailProperties.setProperty("mail.debug", Boolean.toString(true));
+
+    mailProperties.setProperty("mail.smtp.host", spicaProperties.getValue(PROPERTY_MAIL_SMTP_HOST));
+    mailProperties.setProperty("mail.smtp.port", spicaProperties.getValue(PROPERTY_MAIL_SMTP_PORT));
+    mailProperties.setProperty("mail.smtp.auth",  Boolean.toString(true));
+    mailProperties.setProperty("mail.smtp.starttls.enable",  Boolean.toString(true));
+
+    MailSSLSocketFactory sf = null;
+    try {
+      sf = new MailSSLSocketFactory();
+    } catch (GeneralSecurityException e) {
+      throw new IllegalStateException(e);
+    }
+    sf.setTrustAllHosts(true);
+    mailProperties.put("mail.smtp.ssl.trust", "*");
+    mailProperties.put("mail.smtp.ssl.socketFactory", sf);
 
     String username = spicaProperties.getValue(PROPERTY_MAIL_POP_USERNAME);
     String password = spicaProperties.getValue(PROPERTY_MAIL_POP_PASSWORD);
@@ -78,6 +101,21 @@ public class MailAdapter {
     }catch(Exception err){
       throw new IllegalStateException("Error fetching mails: " + err.toString(), err);
     }
+
+  }
+
+  public void sendMail (final String subject, String content, final List<String> to) throws MessagingException {
+    SpicaProperties spicaProperties = new SpicaProperties();
+    Session session = createSession(spicaProperties);
+
+    MimeMessage message = new MimeMessage( session );
+    message.setFrom( new InternetAddress( spicaProperties.getValue(PROPERTY_MAIL_SMTP_SENDER)));
+    for (String nextTo: to) {
+      message.addRecipient(Message.RecipientType.TO, new InternetAddress(nextTo));
+    }
+    message.setSubject( subject, "ISO-8859-1" );
+    message.setText( content, "UTF-8" );
+    Transport.send( message );
 
   }
 

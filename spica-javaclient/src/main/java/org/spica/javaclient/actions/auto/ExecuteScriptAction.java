@@ -48,10 +48,13 @@ public class ExecuteScriptAction extends AbstractAction {
         try {
             scriptEngine.execute();
         } catch (IOException e) {
+            LOGGER.error("Error thrown in script " + file.getAbsolutePath(), e);
             throw new IllegalStateException(e);
         } catch (ResourceException e) {
+            LOGGER.error("Error thrown in script " + file.getAbsolutePath(), e);
             throw new IllegalStateException(e);
         } catch (ScriptException e) {
+            LOGGER.error("Error thrown in script " + file.getAbsolutePath(), e);
             throw new IllegalStateException(e);
         }
 

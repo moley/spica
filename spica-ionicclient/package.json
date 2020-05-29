@@ -24,7 +24,7 @@
     "@ionic-native/splash-screen": "4.16.0",
     "@ionic-native/status-bar": "4.16.0",
     "@ionic/storage": "2.2.0",
-    "cordova-android": "7.1.1",
+    "cordova-android": "8.1.0",
     "cordova-browser": "5.0.4",
     "cordova-plugin-console": "^1.1.0",
     "cordova-plugin-device": "^2.0.3",
@@ -43,6 +43,7 @@
     "zone.js": "0.8.26"
   },
   "devDependencies": {
+    "@angular/cli": "^9.1.4",
     "@ionic/app-scripts": "3.2.0",
     "@ionic/lab": "3.0.0",
     "typescript": "2.7.2"

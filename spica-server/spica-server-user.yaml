@@ -152,9 +152,15 @@ components:
           type: "string"
         email:
           type: "string"
+        username:
+          type: "string"
+        password:
+          type: "string"
         phone:
           type: "string"
         id:
+          type: "string"
+        avatar:
           type: "string"
 
     SkillInfo:

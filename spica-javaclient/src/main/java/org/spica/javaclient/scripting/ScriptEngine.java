@@ -18,7 +18,6 @@ public class ScriptEngine {
   public void execute() throws IOException, ResourceException, ScriptException {
 
     Binding binding = new Binding();
-
     binding.setProperty("spica", actionContext);
     GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine(groovyFile.getAbsolutePath(), ScriptEngine.class.getClassLoader());
 

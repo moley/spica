@@ -17,7 +17,7 @@ public class Model {
 
   private File currentFile;
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(Model.class);
+  private final static Logger log = LoggerFactory.getLogger(Model.class);
 
   private UserInfo me;
 
@@ -40,6 +40,10 @@ public class Model {
   private List<EventInfo> eventInfosPlanned = new ArrayList<>();
 
   private List<SkillInfo> allSkills = new ArrayList<SkillInfo>();
+
+  private MessagecontainerInfo selectedMessageContainer;
+
+  private TopicInfo selectedTopicInfo;
 
 
   public File getCurrentFile() {
@@ -255,6 +259,16 @@ public class Model {
     return me;
   }
 
+  public boolean isMe (final UserInfo userInfo) {
+    if (me == null)
+      throw new IllegalStateException("Me cannot be null");
+
+    if (userInfo == null)
+      throw new IllegalStateException("Argument 'userInfo' must not be null");
+
+    return userInfo.getId().equals(me.getId());
+  }
+
   public void setMe(UserInfo me) {
     this.me = me;
   }
@@ -283,5 +297,33 @@ public class Model {
 
   public void setDashboardItemInfos(List<DashboardItemInfo> dashboardItemInfos) {
     this.dashboardItemInfos = dashboardItemInfos;
+  }
+
+  public MessagecontainerInfo getSelectedMessageContainer() {
+    return selectedMessageContainer;
+  }
+
+  public void setSelectedMessageContainer(MessagecontainerInfo selectedMessageContainer) {
+    this.selectedMessageContainer = selectedMessageContainer;
+  }
+
+  public TopicInfo getSelectedTopicInfo() {
+    return selectedTopicInfo;
+  }
+
+  public void setSelectedTopicInfo(TopicInfo selectedTopicInfo) {
+    this.selectedTopicInfo = selectedTopicInfo;
+  }
+
+  public UserInfo findUserById(String id) {
+    if (id == null)
+      return null;
+
+    for (UserInfo next: userInfos) {
+      if (next.getId().equals(id))
+        return next;
+    }
+    log.error("No user found for id '" + id + "'");
+    return null;
   }
 }

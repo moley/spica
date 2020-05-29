@@ -1,0 +1,40 @@
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import org.controlsfx.control.textfield.CustomTextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<BorderPane fx:id="paRootPane" xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fxclient.controllers.MainController" style="-fx-background-color:transparent">
+    <stylesheets>
+        <URL value="@/spica.css" />
+    </stylesheets>
+    <padding><Insets top="20" bottom="20" left="20" right="20"/> </padding>
+
+    <top>
+
+        <HBox fx:id="panHeader" fillHeight="true">
+            <ToolBar fx:id="barSearch" HBox.hgrow="ALWAYS" >
+                <items>
+                    <Button fx:id="btnCloseSearch" styleClass="buttonSearchClose">
+                    </Button>
+                    <CustomTextField fx:id="txtFieldSearch" HBox.hgrow="ALWAYS" styleClass="searchField">
+                    </CustomTextField>
+                    <Button fx:id="btnSearchUp" styleClass="buttonSearchUp" />
+                    <Button fx:id="btnSearchDown" styleClass="buttonSearchDown"/>
+                    <Label fx:id="lblMatches"/>
+                </items>
+            </ToolBar>
+            <ButtonBar fx:id="btnMainActions" userData="mainpage.btnMainActions"/>
+        </HBox>
+
+    </top>
+
+
+
+
+
+</BorderPane>

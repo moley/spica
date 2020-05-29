@@ -4,7 +4,7 @@ plugins {
 }
 
 javafx {
-    modules = ['javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.swing', 'javafx.media']
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.web', 'javafx.swing', 'javafx.media']
     version = "11.0.2" //12-ea+8"
 }
 
@@ -17,6 +17,14 @@ dependencies {
     compile 'org.openjfx:javafx-graphics:14-ea+2'
     compile 'org.openjfx:javafx-swing:14-ea+2'
     compile 'org.openjfx:javafx-media:14-ea+2'
+
+    compile 'org.springframework:spring-websocket:5.2.2.RELEASE'
+    compile 'org.springframework:spring-messaging:5.2.2.RELEASE'
+    runtime 'javax.websocket:javax.websocket-api:1.1'
+    runtime 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.9'
+
+    compile 'com.calendarfx:view:11.8.3'
+    compile 'org.jsoup:jsoup:1.13.1'
 
     compile project (':spica-cli')
 }
