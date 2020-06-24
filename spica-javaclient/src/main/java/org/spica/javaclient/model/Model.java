@@ -29,7 +29,7 @@ public class Model {
 
   private List<ProjectInfo> projectInfos = new ArrayList<>();
 
-  private List<TopicInfo> topicInfos = new ArrayList<>();
+  private List<TaskInfo> taskInfos = new ArrayList<>();
 
   private List<MessagecontainerInfo> messagecontainerInfos = new ArrayList<MessagecontainerInfo>();
 
@@ -43,7 +43,7 @@ public class Model {
 
   private MessagecontainerInfo selectedMessageContainer;
 
-  private TopicInfo selectedTopicInfo;
+  private TaskInfo selectedTaskInfo;
 
 
   public File getCurrentFile() {
@@ -62,28 +62,28 @@ public class Model {
     this.projectInfos = projectInfos;
   }
 
-  public List<TopicInfo> findTopicInfosByQuery (String query) {
+  public List<TaskInfo> findTaskInfosByQuery (String query) {
     if (query == null)
-      return new ArrayList<TopicInfo>();
+      return new ArrayList<TaskInfo>();
 
-    Predicate<TopicInfo> filter = new Predicate<TopicInfo>() {
+    Predicate<TaskInfo> filter = new Predicate<TaskInfo>() {
       @Override
-      public boolean test(TopicInfo topicInfo) {
-        String nameNotNull = topicInfo.getName() != null ? topicInfo.getName(): "";
-        String externalSystemKeyNotNull = topicInfo.getExternalSystemKey() != null ? topicInfo.getExternalSystemKey(): "" ;
-        String idNotNull = topicInfo.getId() != null ? topicInfo.getId(): "";
+      public boolean test(TaskInfo taskInfoInfo) {
+        String nameNotNull = taskInfoInfo.getName() != null ? taskInfoInfo.getName(): "";
+        String externalSystemKeyNotNull = taskInfoInfo.getExternalSystemKey() != null ? taskInfoInfo.getExternalSystemKey(): "" ;
+        String idNotNull = taskInfoInfo.getId() != null ? taskInfoInfo.getId(): "";
         return nameNotNull.contains(query) || externalSystemKeyNotNull.equals(query) || idNotNull.equals(query);
       }
     };
-    return topicInfos.stream().filter( filter).collect(Collectors.toList());
+    return taskInfos.stream().filter( filter).collect(Collectors.toList());
   }
 
   public List<ProjectInfo> findProjectInfosByQuery (String query) {
     Predicate<ProjectInfo> filter = new Predicate<ProjectInfo>() {
       @Override
-      public boolean test(ProjectInfo topicInfo) {
-        String nameNotNull = topicInfo.getName() != null ? topicInfo.getName(): "";
-        String idNotNull = topicInfo.getId() != null ? topicInfo.getId(): "";
+      public boolean test(ProjectInfo projectInfo) {
+        String nameNotNull = projectInfo.getName() != null ? projectInfo.getName(): "";
+        String idNotNull = projectInfo.getId() != null ? projectInfo.getId(): "";
         return nameNotNull.contains(query) || idNotNull.equals(query);
       }
     };
@@ -94,10 +94,10 @@ public class Model {
   public List<LinkInfo> findLinkInfosByQuery (String query) {
     Predicate<LinkInfo> filter = new Predicate<LinkInfo>() {
       @Override
-      public boolean test(LinkInfo topicInfo) {
-        String nameNotNull = topicInfo.getName() != null ? topicInfo.getName(): "";
-        String idNotNull = topicInfo.getId() != null ? topicInfo.getId(): "";
-        String urlNotNull = topicInfo.getUrl() != null ? topicInfo.getUrl() : "";
+      public boolean test(LinkInfo linkInfo) {
+        String nameNotNull = linkInfo.getName() != null ? linkInfo.getName(): "";
+        String idNotNull = linkInfo.getId() != null ? linkInfo.getId(): "";
+        String urlNotNull = linkInfo.getUrl() != null ? linkInfo.getUrl() : "";
         return nameNotNull.contains(query) || idNotNull.equals(query) || urlNotNull.contains(query);
       }
     };
@@ -105,22 +105,22 @@ public class Model {
 
   }
 
-  public TopicInfo findTopicInfoById (final String id) {
-    return topicInfos.stream().filter(topicInfo -> topicInfo.getId().equals(id)).findAny().orElse(null);
+  public TaskInfo findTaskInfoById (final String id) {
+    return taskInfos.stream().filter(taskInfo -> taskInfo.getId().equals(id)).findAny().orElse(null);
   }
 
 
 
-  public TopicInfo findTopicInfoByExternalSystemKey (final String id) {
-    return topicInfos.stream().filter(topicInfo -> topicInfo.getExternalSystemKey().equals(id)).findAny().orElse(null);
+  public TaskInfo findTaskInfoByExternalSystemKey (final String id) {
+    return taskInfos.stream().filter(taskInfo -> taskInfo.getExternalSystemKey().equals(id)).findAny().orElse(null);
   }
 
-  public List<TopicInfo> getTopicInfos() {
-    return topicInfos;
+  public List<TaskInfo> getTaskInfos() {
+    return taskInfos;
   }
 
-  public void setTopicInfos(List<TopicInfo> topicInfos) {
-    this.topicInfos = topicInfos;
+  public void setTaskInfos(List<TaskInfo> taskInfos) {
+    this.taskInfos = taskInfos;
   }
 
   public List<EventInfo> getEventInfosRealToday () {
@@ -176,10 +176,10 @@ public class Model {
     return null;
   }
 
-  public TopicInfo getCurrentTopic () {
+  public TaskInfo getCurrentTask () {
     EventInfo eventInfo = findLastOpenEventFromToday();
     if (eventInfo != null && eventInfo.getEventType().equals(EventType.TOPIC)) {
-      return findTopicInfoById(eventInfo.getReferenceId());
+      return findTaskInfoById(eventInfo.getReferenceId());
     }
     return null;
   }
@@ -307,23 +307,44 @@ public class Model {
     this.selectedMessageContainer = selectedMessageContainer;
   }
 
-  public TopicInfo getSelectedTopicInfo() {
-    return selectedTopicInfo;
+  public TaskInfo getSelectedTaskInfo() {
+    return selectedTaskInfo;
   }
 
-  public void setSelectedTopicInfo(TopicInfo selectedTopicInfo) {
-    this.selectedTopicInfo = selectedTopicInfo;
+  public void setSelectedTaskInfo(TaskInfo selectedTaskInfo) {
+    this.selectedTaskInfo = selectedTaskInfo;
   }
 
   public UserInfo findUserById(String id) {
     if (id == null)
-      return null;
+      throw new IllegalArgumentException("Parameter id must not be null");
 
     for (UserInfo next: userInfos) {
       if (next.getId().equals(id))
         return next;
     }
-    log.error("No user found for id '" + id + "'");
-    return null;
+    throw new IllegalStateException("No user found for username " + id);
+  }
+
+  public UserInfo findUserByUsername(String username) {
+    if (username == null)
+      throw new IllegalArgumentException("Parameter username must not be null");
+
+    for (UserInfo next: userInfos) {
+      if (next.getUsername() != null && next.getUsername().equals(username))
+        return next;
+    }
+    throw new IllegalStateException("No user found for username " + username);
+  }
+
+  public UserInfo findUserByMail(String mail) {
+    if (mail == null)
+      throw new IllegalArgumentException("Parameter mail must not be null");
+
+    for (UserInfo next: userInfos) {
+      if (next.getEmail() != null && next.getEmail().equalsIgnoreCase(mail))
+        return next;
+    }
+    throw new IllegalStateException("No user found for mail " + mail);
   }
 }

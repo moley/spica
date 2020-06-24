@@ -3,7 +3,7 @@ package org.spica.javaclient.links;
 import org.spica.javaclient.model.LinkInfo;
 import org.spica.javaclient.model.LinkType;
 import org.spica.javaclient.model.Model;
-import org.spica.javaclient.model.TopicInfo;
+import org.spica.javaclient.model.TaskInfo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class LinkFinder {
 
     private Model model = new Model();
 
-    public List<LinkInfo> findMatchingLinks ( final TopicInfo topicInfo,
+    public List<LinkInfo> findMatchingLinks ( final TaskInfo topicInfo,
                                               final File currentDir) {
         List<LinkInfo> matchingLinks = new ArrayList<LinkInfo>();
         for (LinkInfo next: model.getLinkInfos()) {

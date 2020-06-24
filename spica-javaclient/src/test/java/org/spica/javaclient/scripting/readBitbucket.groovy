@@ -3,7 +3,7 @@ package org.spica.javaclient.scripting
 import org.spica.commons.vcs.VcsModuleInfo
 import org.spica.commons.vcs.VcsProjectInfo
 import org.spica.javaclient.actions.ActionContext
-import org.spica.javaclient.services.BitbucketService
+import org.spica.commons.services.bitbucket.BitbucketService
 import org.spica.javaclient.services.Services
 
 ActionContext actionContext = spica

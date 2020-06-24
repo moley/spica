@@ -29,7 +29,7 @@ dependencies {
     compile project (':spica-cli')
 }
 
-mainClassName = 'org.spica.fx.SpicaFxApplication'
+mainClassName = 'org.spica.fx.Main'
 
 def localCliInstallationPath = System.getProperty("user.home") + '/programs/spica-fxclient'
 
@@ -53,6 +53,6 @@ task installLocal(type: Copy) {
     doLast {
         File javaVersionFile = new File (localCliInstallationPath + "/.java-version")
         javaVersionFile.createNewFile()
-        javaVersionFile.text = '11.0'
+        javaVersionFile.text = '14.0'
     }
 }

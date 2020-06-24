@@ -32,7 +32,7 @@ public class ShowStatusAction extends AbstractAction {
         outputDefault("Event infos real       : " + model.getEventInfosReal().size());
         outputDefault("Event infos planned    : " + model.getEventInfosPlanned().size());
         outputDefault("Projects               : " + model.getProjectInfos().size());
-        outputDefault("Topics                 : " + model.getTopicInfos().size());
+        outputDefault("Tasks                 : " + model.getTaskInfos().size());
         outputDefault("MessageContainers      : " + model.getMessagecontainerInfos().size());
         outputDefault("Links                  : " + model.getLinkInfos().size());
         outputDefault("Users                  : " + model.getUserInfos().size());

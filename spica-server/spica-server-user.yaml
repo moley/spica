@@ -5,6 +5,8 @@ info:
   description: "Rest API for the user component of spica communication server"
 servers:
   - url: http://localhost/api
+security:
+  - BasicAuth
 
 paths:
   /skill/create:
@@ -142,6 +144,11 @@ paths:
 
 
 components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+
   schemas:
     UserInfo:
       type: "object"

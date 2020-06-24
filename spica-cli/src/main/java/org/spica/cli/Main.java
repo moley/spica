@@ -2,7 +2,6 @@ package org.spica.cli;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,18 +10,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.cli.actions.StandaloneActionContext;
 import org.spica.cli.actions.StandaloneActionParamFactory;
-import org.spica.commons.SpicaProperties;
 import org.spica.javaclient.Configuration;
 import org.spica.javaclient.actions.ActionGroup;
 import org.spica.javaclient.actions.ActionHandler;
 import org.spica.javaclient.actions.ActionResult;
 import org.spica.javaclient.actions.FoundAction;
-import org.spica.javaclient.actions.booking.StartTopicAction;
+import org.spica.javaclient.actions.booking.StartTaskAction;
+import org.spica.javaclient.auth.HttpBasicAuth;
 import org.spica.javaclient.event.EventDetails;
 import org.spica.javaclient.event.EventDetailsBuilder;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;
-import org.spica.javaclient.model.TopicInfo;
+import org.spica.javaclient.model.TaskInfo;
 import org.spica.javaclient.utils.DateUtil;
 import org.spica.javaclient.utils.LogUtil;
 import org.spica.javaclient.utils.RenderUtil;
@@ -54,8 +53,16 @@ public class Main {
 
     StandaloneActionContext actionContext = new StandaloneActionContext();
     String serverUrl = actionContext.getProperties().getValueOrDefault("spica.cli.serverurl", "http://localhost:8765/api");
-
     Configuration.getDefaultApiClient().setBasePath(serverUrl);
+
+    String username = actionContext.getProperties().getValueNotNull("spica.cli.username");
+    String password = actionContext.getProperties().getValueNotNull("spica.cli.password");
+    HttpBasicAuth httpBasicAuth = (HttpBasicAuth) Configuration.getDefaultApiClient().getAuthentication("basicAuth");
+    httpBasicAuth.setUsername(username);
+    httpBasicAuth.setPassword(password);
+
+    Configuration.getDefaultApiClient().setUsername(username);
+    Configuration.getDefaultApiClient().setPassword(password);
 
     actionContext.setActionHandler(new ActionHandler());
     actionContext.setActionParamFactory(new StandaloneActionParamFactory());
@@ -76,9 +83,9 @@ public class Main {
       if (eventInfo.getEventType().equals(EventType.PAUSE)) {
         task = "Pause";
       } else if (eventInfo.getEventType().equals(EventType.TOPIC)) {
-        TopicInfo topicInfoById = actionContext.getModel().findTopicInfoById(eventInfo.getReferenceId());
+        TaskInfo topicInfoById = actionContext.getModel().findTaskInfoById(eventInfo.getReferenceId());
         RenderUtil renderUtil = new RenderUtil();
-        task = "Topic " + renderUtil.getTopic(topicInfoById);
+        task = "Task " + renderUtil.getTask(topicInfoById);
       } else if (eventInfo.getEventType().equals(EventType.MESSAGE)) {
         task = eventInfo.getName();
       } else {
@@ -124,7 +131,7 @@ public class Main {
 
       //even if we did not provide command line parameters and it is the first call at the day we choose the start topic action
       if (parameter.trim().isEmpty() && eventInfo == null) {
-        foundAction = actionHandler.findAction(StartTopicAction.class);
+        foundAction = actionHandler.findAction(StartTaskAction.class);
       } else {
         foundAction = actionHandler.findAction(parameter);
       }

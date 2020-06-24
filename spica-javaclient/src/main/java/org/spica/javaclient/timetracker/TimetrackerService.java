@@ -102,8 +102,8 @@ public class TimetrackerService {
         }
 
         if (timetrackerCreationParam.getEventType().equals(EventType.TOPIC)) {
-            newStartedEvent.setReferenceId(timetrackerCreationParam.getTopicInfo().getId());
-            newStartedEvent.setName(timetrackerCreationParam.getTopicInfo().getName());
+            newStartedEvent.setReferenceId(timetrackerCreationParam.getTaskInfo().getId());
+            newStartedEvent.setName(timetrackerCreationParam.getTaskInfo().getName());
         }
 
 
@@ -179,7 +179,7 @@ public class TimetrackerService {
 
     }
 
-    public void startWorkOnTopic (final TopicInfo topicInfo) {
+    public void startWorkOnTask (final TaskInfo topicInfo) {
         stopLastOpenEvent(null);
         Model model = getModelCache();
         EventInfo newStartedEvent = new EventInfo();

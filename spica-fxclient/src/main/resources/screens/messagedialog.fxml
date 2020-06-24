@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Button?>
-<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fxclient.controllers.MessageDialogController" alignment="TOP_LEFT" hgap="10" vgap="10" >
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fx.controllers.MessageDialogController" alignment="TOP_LEFT" hgap="10" vgap="10" >
     <stylesheets>
         <URL value="@/spica.css" />
     </stylesheets>

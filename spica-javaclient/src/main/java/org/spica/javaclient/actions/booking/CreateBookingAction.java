@@ -15,7 +15,7 @@ import org.spica.javaclient.actions.Command;
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.MessageType;
-import org.spica.javaclient.model.TopicInfo;
+import org.spica.javaclient.model.TaskInfo;
 import org.spica.javaclient.model.UserInfo;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParamGroup;
@@ -68,7 +68,7 @@ public class CreateBookingAction extends AbstractAction {
         timetrackerCreationParam.setUntil(untilTime);
         timetrackerCreationParam.setDate(LocalDate.now());
         timetrackerCreationParam.setEventType(EventType.fromValue(inputParams.getInputValueAsString(KEY_TYPE)));
-        timetrackerCreationParam.setTopicInfo(inputParams.getInputValue(KEY_TOPIC, TopicInfo.class));
+        timetrackerCreationParam.setTaskInfo(inputParams.getInputValue(KEY_TOPIC, TaskInfo.class));
         TimetrackerService timetrackerService = new TimetrackerService();
         timetrackerService.setModelCacheService(actionContext.getServices().getModelCacheService());
 
@@ -121,17 +121,17 @@ public class CreateBookingAction extends AbstractAction {
         inputParamGroup.getInputParams().add(stopped);
         inputParamGroup.getInputParams().add(type);
 
-        //Topic parameters
-        List<TopicInfo> topicInfos = actionContext.getModel().getTopicInfos();
+        //Task parameters
+        List<TaskInfo> topicInfos = actionContext.getModel().getTaskInfos();
         RenderUtil renderUtil = new RenderUtil();
-        SearchInputParam<TopicInfo> topicSearch = new SearchInputParam<TopicInfo>(KEY_TOPIC, "Topic: ", topicInfos, new Renderer<TopicInfo>() {
+        SearchInputParam<TaskInfo> topicSearch = new SearchInputParam<TaskInfo>(KEY_TOPIC, "Task: ", topicInfos, new Renderer<TaskInfo>() {
             @Override
-            public String toString(TopicInfo topicInfo) {
-                return renderUtil.getTopic(topicInfo);
+            public String toString(TaskInfo topicInfo) {
+                return renderUtil.getTask(topicInfo);
             }
         });
-        InputParamGroup inputParamGroupTopic = new InputParamGroup("Topic", inputParams -> inputParams.getInputValueAsString(KEY_TYPE).equalsIgnoreCase(EventType.TOPIC.getValue()));
-        inputParamGroupTopic.getInputParams().add(topicSearch);
+        InputParamGroup inputParamGroupTask = new InputParamGroup("Task", inputParams -> inputParams.getInputValueAsString(KEY_TYPE).equalsIgnoreCase(EventType.TOPIC.getValue()));
+        inputParamGroupTask.getInputParams().add(topicSearch);
 
         //Message parameters
         TextInputParam summary = new TextInputParam(1, KEY_TEXT, "Message text: ");
@@ -148,6 +148,6 @@ public class CreateBookingAction extends AbstractAction {
         inputParamGroupMessage.getInputParams().add(summary);
         inputParamGroupMessage.getInputParams().add(userInfoSearchInputParam);
 
-        return new InputParams(Arrays.asList(inputParamGroup, inputParamGroupTopic, inputParamGroupMessage));
+        return new InputParams(Arrays.asList(inputParamGroup, inputParamGroupTask, inputParamGroupMessage));
     }
 }

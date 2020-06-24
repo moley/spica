@@ -13,7 +13,7 @@ import org.spica.javaclient.links.LinkFinder;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.model.LinkInfo;
-import org.spica.javaclient.model.TopicInfo;
+import org.spica.javaclient.model.TaskInfo;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.utils.RenderUtil;
@@ -38,8 +38,8 @@ public class ListLinksAction extends AbstractAction {
     boolean showAllLinks = commandLineArguments.hasArgument("--all");
 
     EventInfo eventInfo = actionContext.getModel().findLastOpenEventFromToday();
-    TopicInfo topicInfo = (eventInfo != null && eventInfo.getEventType().equals(EventType.TOPIC)) ?
-        actionContext.getModel().findTopicInfoById(eventInfo.getReferenceId()) :
+    TaskInfo topicInfo = (eventInfo != null && eventInfo.getEventType().equals(EventType.TOPIC)) ?
+        actionContext.getModel().findTaskInfoById(eventInfo.getReferenceId()) :
         null;
     File currentPath = new File("").getAbsoluteFile();
 
@@ -47,7 +47,7 @@ public class ListLinksAction extends AbstractAction {
       outputDefault("Show all links:");
     else {
       outputDefault("Show links for:");
-      outputDefault("- Topic " + renderUtil.getTopic(topicInfo));
+      outputDefault("- Task " + renderUtil.getTask(topicInfo));
       outputDefault("- Path  " + currentPath.getAbsolutePath());
     }
 

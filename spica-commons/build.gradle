@@ -10,7 +10,11 @@ dependencies {
   compile 'com.google.code.gson:gson:2.8.5'
   compile 'commons-io:commons-io:2.6'
 
-  compile 'com.atlassian.jira:jira-rest-java-client-core:5.1.0'
+  compile 'com.offbytwo.jenkins:jenkins-client:0.3.7'
+
+
+  compile 'com.atlassian.jira:jira-rest-java-client-core:5.2.0'
+  compile 'io.atlassian.fugue:fugue:4.7.2'
 
   compile 'com.sun.mail:javax.mail:1.6.2'
 

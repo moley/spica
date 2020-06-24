@@ -14,12 +14,12 @@ import org.spica.javaclient.actions.booking.CloseBookingAction;
 import org.spica.javaclient.actions.booking.CreateBookingAction;
 import org.spica.javaclient.actions.booking.EmptyBookingsAction;
 import org.spica.javaclient.actions.booking.FinishDayAction;
-import org.spica.javaclient.actions.booking.FinishTopicAction;
+import org.spica.javaclient.actions.booking.FinishTaskAction;
 import org.spica.javaclient.actions.booking.ListBookingsAction;
 import org.spica.javaclient.actions.booking.RemoveBookingAction;
 import org.spica.javaclient.actions.booking.StartOrStopPauseAction;
 import org.spica.javaclient.actions.booking.StartPhonecallAction;
-import org.spica.javaclient.actions.booking.StartTopicAction;
+import org.spica.javaclient.actions.booking.StartTaskAction;
 import org.spica.javaclient.actions.configuration.ImportUsersAction;
 import org.spica.javaclient.actions.configuration.ShowStatusAction;
 import org.spica.javaclient.actions.gradle.InitGradleProjectAction;
@@ -42,13 +42,13 @@ import org.spica.javaclient.actions.search.SearchJenkinsAction;
 import org.spica.javaclient.actions.search.SearchJiraAction;
 import org.spica.javaclient.actions.search.SearchProjectPathInBrowserAction;
 import org.spica.javaclient.actions.search.SearchStashAction;
-import org.spica.javaclient.actions.topics.CloseTopicAction;
-import org.spica.javaclient.actions.topics.CreateTopicAction;
-import org.spica.javaclient.actions.topics.EmptyTopicsAction;
-import org.spica.javaclient.actions.topics.ImportTopicAction;
-import org.spica.javaclient.actions.topics.ListTopicsAction;
-import org.spica.javaclient.actions.topics.RemoveTopicAction;
-import org.spica.javaclient.actions.topics.ShowTopicsAction;
+import org.spica.javaclient.actions.tasks.CloseTaskAction;
+import org.spica.javaclient.actions.tasks.CreateTaskAction;
+import org.spica.javaclient.actions.tasks.EmptyTasksAction;
+import org.spica.javaclient.actions.tasks.ImportTaskAction;
+import org.spica.javaclient.actions.tasks.ListTasksAction;
+import org.spica.javaclient.actions.tasks.RemoveTaskAction;
+import org.spica.javaclient.actions.tasks.ShowTasksAction;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.FlagInputParam;
 import org.spica.javaclient.params.InputParam;
@@ -70,9 +70,9 @@ public class ActionHandler {
 
     //booking
     registeredActions.add(new CreateBookingAction());
-    registeredActions.add(new StartTopicAction());
+    registeredActions.add(new StartTaskAction());
     registeredActions.add(new StartOrStopPauseAction());
-    registeredActions.add(new FinishTopicAction());
+    registeredActions.add(new FinishTaskAction());
     registeredActions.add(new StartPhonecallAction());
     registeredActions.add(new ListBookingsAction());
     registeredActions.add(new CloseBookingAction());
@@ -81,13 +81,13 @@ public class ActionHandler {
     registeredActions.add(new EmptyBookingsAction());
 
     //topics
-    registeredActions.add(new CreateTopicAction());
-    registeredActions.add(new ListTopicsAction());
-    registeredActions.add(new ShowTopicsAction());
-    registeredActions.add(new ImportTopicAction());
-    registeredActions.add(new RemoveTopicAction());
-    registeredActions.add(new EmptyTopicsAction());
-    registeredActions.add(new CloseTopicAction());
+    registeredActions.add(new CreateTaskAction());
+    registeredActions.add(new ListTasksAction());
+    registeredActions.add(new ShowTasksAction());
+    registeredActions.add(new ImportTaskAction());
+    registeredActions.add(new RemoveTaskAction());
+    registeredActions.add(new EmptyTasksAction());
+    registeredActions.add(new CloseTaskAction());
 
     //projects
     registeredActions.add(new CreateProjectAction());

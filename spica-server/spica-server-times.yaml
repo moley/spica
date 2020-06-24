@@ -5,6 +5,8 @@ info:
   description: "Rest API for the time component of spica communication server"
 servers:
   - url: http://localhost/api
+security:
+  - BasicAuth
 
 paths:
   /events:
@@ -47,6 +49,11 @@ paths:
 
 
 components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+
   schemas:
 
     EventContainerInfo:

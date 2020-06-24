@@ -5,10 +5,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.spica.SpicaServerApplication;
-import org.spica.server.project.domain.Topic;
-import org.spica.server.project.domain.TopicRepository;
-import org.spica.server.project.service.JiraTopicAdapter;
-import org.spica.server.project.service.TopicImporter;
+import org.spica.server.project.domain.Task;
+import org.spica.server.project.domain.TaskRepository;
+import org.spica.server.project.service.TaskImporter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -33,16 +32,17 @@ public class TopicsControllerTest {
     protected WebApplicationContext context;
 
     @MockBean
-    private TopicImporter mockedJiraTopicImporter;
+    private TaskImporter mockedJiraTaskImporter;
 
     @MockBean
-    private TopicRepository mockedTopicRepository;
+    private TaskRepository mockedTaskRepository;
 
     @Before
     public void setUp() throws InterruptedException {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-        Topic topic = Topic.builder().name("TOPIC").build();
-        Mockito.when(mockedJiraTopicImporter.importTopicsOfUser(Mockito.eq("user"), Mockito.eq("spica"), Mockito.eq("spicaPwd"))).thenReturn(Arrays.asList(topic));
+        Task task = Task.builder().name("TOPIC").build();
+        Mockito.when(mockedJiraTaskImporter.importTasksOfUser(Mockito.eq("user"), Mockito.eq("spica"), Mockito.eq("spicaPwd"))).thenReturn(Arrays.asList(
+            task));
     }
 
     @Test

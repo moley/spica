@@ -3,15 +3,29 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.GridPane?>
-<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fxclient.controllers.TasksController" alignment="TOP_LEFT" hgap="10" vgap="10" >
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fx.controllers.TasksController"
+          alignment="TOP_LEFT" hgap="10" vgap="10">
+    <columnConstraints>
+        <ColumnConstraints percentWidth="30"/>
+        <ColumnConstraints percentWidth="70"/>
+    </columnConstraints>
+
     <stylesheets>
-        <URL value="@/spica.css" />
+        <URL value="@/spica.css"/>
     </stylesheets>
-    <padding><Insets top="20" bottom="20" left="20" right="20"/> </padding>
+    <padding>
+        <Insets top="20" bottom="20" left="20" right="20"/>
+    </padding>
 
-    <TextField fx:id="txtSearch" GridPane.rowIndex="0" GridPane.columnIndex="0"></TextField>
-    <ListView fx:id="lviTasks" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS"></ListView>
-
+    <HBox GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2">
+        <TextField fx:id="txtSearch" minWidth="400"></TextField>
+        <!--<Button text="Add" fx:id="btnNewTask"></Button>-->
+        <!--<Button text="Synchronize" fx:id="btnSynchronize"></Button>-->
+    </HBox >
+    <ListView fx:id="lviLists" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.vgrow="ALWAYS"></ListView>
+    <ListView fx:id="lviTasks" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.fillWidth="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"></ListView>
 
 
 </GridPane>

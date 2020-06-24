@@ -3,7 +3,7 @@ package org.spica.javaclient.timetracker;
 import org.junit.Test;
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.model.MessageInfo;
-import org.spica.javaclient.model.TopicInfo;
+import org.spica.javaclient.model.TaskInfo;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -33,7 +33,7 @@ public class TimetrackerCreationParamTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void topicNoTopicInfo () {
+    public void topicNoTaskInfo () {
         TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
         timetrackerCreationParam.setDate(LocalDate.now());
         timetrackerCreationParam.setFrom(LocalTime.now());
@@ -48,7 +48,7 @@ public class TimetrackerCreationParamTest {
         timetrackerCreationParam.setDate(LocalDate.now());
         timetrackerCreationParam.setFrom(LocalTime.now());
         timetrackerCreationParam.setEventType(EventType.TOPIC);
-        timetrackerCreationParam.setTopicInfo(new TopicInfo());
+        timetrackerCreationParam.setTaskInfo(new TaskInfo());
         timetrackerCreationParam.validate();
     }
 
@@ -58,7 +58,7 @@ public class TimetrackerCreationParamTest {
         timetrackerCreationParam.setDate(LocalDate.now());
         timetrackerCreationParam.setFrom(LocalTime.now());
         timetrackerCreationParam.setEventType(EventType.TOPIC);
-        timetrackerCreationParam.setTopicInfo(new TopicInfo());
+        timetrackerCreationParam.setTaskInfo(new TaskInfo());
         timetrackerCreationParam.setMessageInfo(new MessageInfo());
         timetrackerCreationParam.validate();
     }
@@ -94,11 +94,11 @@ public class TimetrackerCreationParamTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void messageTopicSet () {
+    public void messageTaskSet () {
         TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
         timetrackerCreationParam.setDate(LocalDate.now());
         timetrackerCreationParam.setFrom(LocalTime.now());
-        timetrackerCreationParam.setTopicInfo(new TopicInfo());
+        timetrackerCreationParam.setTaskInfo(new TaskInfo());
         timetrackerCreationParam.setEventType(EventType.MESSAGE);
         timetrackerCreationParam.validate();
     }

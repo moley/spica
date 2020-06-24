@@ -2,7 +2,7 @@ package org.spica.javaclient.timetracker;
 
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.model.MessageInfo;
-import org.spica.javaclient.model.TopicInfo;
+import org.spica.javaclient.model.TaskInfo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,7 +18,7 @@ public class TimetrackerCreationParam {
 
     private EventType eventType;
 
-    private TopicInfo topicInfo;
+    private TaskInfo topicInfo;
 
 
     private MessageInfo messageInfo;
@@ -47,11 +47,11 @@ public class TimetrackerCreationParam {
         this.eventType = eventType;
     }
 
-    public TopicInfo getTopicInfo() {
+    public TaskInfo getTaskInfo() {
         return topicInfo;
     }
 
-    public void setTopicInfo(TopicInfo topicInfo) {
+    public void setTaskInfo(TaskInfo topicInfo) {
         this.topicInfo = topicInfo;
     }
 
@@ -74,14 +74,14 @@ public class TimetrackerCreationParam {
             throw new IllegalArgumentException("Parameter eventType must be set");
 
         if (topicInfo != null && ! eventType.equals(EventType.TOPIC))
-            throw new IllegalArgumentException("Topicinfo must not be set on event type " + eventType.getValue());
+            throw new IllegalArgumentException("Taskinfo must not be set on event type " + eventType.getValue());
 
         if (messageInfo != null && ! eventType.equals(EventType.MESSAGE))
             throw new IllegalArgumentException("MessageInfo must not be set on event type " + eventType.getValue());
 
 
         if (topicInfo == null && eventType.equals(EventType.TOPIC))
-            throw new IllegalArgumentException("TopicInfo must be set on event type " + eventType.getValue());
+            throw new IllegalArgumentException("TaskInfo must be set on event type " + eventType.getValue());
 
         if (messageInfo == null && eventType.equals(EventType.MESSAGE))
             throw new IllegalArgumentException("MessageInfo must be set on event type " + eventType.getValue());

@@ -9,7 +9,7 @@ import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;
-import org.spica.javaclient.model.TopicInfo;
+import org.spica.javaclient.model.TaskInfo;
 
 import java.awt.*;
 import java.io.IOException;
@@ -39,7 +39,7 @@ public class SearchJiraAction extends AbstractAction {
         if (eventInfo != null && eventInfo.getEventType().equals(EventType.TOPIC)) {
             LOGGER.info("Reference ID: " + eventInfo.getReferenceId());
             if (eventInfo.getReferenceId() != null) {
-                TopicInfo newValue = model.findTopicInfoById(eventInfo.getReferenceId());
+                TaskInfo newValue = model.findTaskInfoById(eventInfo.getReferenceId());
                 String key = newValue.getExternalSystemKey();
                 //TODO make multi system able
                 String jiraBaseUrl = spicaProperties.getValue("spica.jira.url");

@@ -2,7 +2,7 @@ package org.spica.javaclient.actions;
 
 public enum ActionGroup {
 
-    TOPIC("t"),
+    TASKS("t"),
     PROJECT("p"),
     SEARCH("s"),
     BOOKING("b"),

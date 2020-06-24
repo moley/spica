@@ -17,7 +17,7 @@ import org.spica.javaclient.params.FlagInputParam;
 import org.spica.javaclient.params.InputParamGroup;
 import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.params.TextInputParam;
-import org.spica.javaclient.services.DownloadService;
+import org.spica.commons.services.download.DownloadService;
 
 public class InitGradleProjectAction extends AbstractAction {
 

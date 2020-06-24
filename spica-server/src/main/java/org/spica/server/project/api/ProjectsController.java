@@ -3,8 +3,8 @@ package org.spica.server.project.api;
 import io.swagger.annotations.ApiParam;
 import org.spica.server.project.domain.Project;
 import org.spica.server.project.domain.ProjectRepository;
-import org.spica.server.project.domain.Topic;
-import org.spica.server.project.domain.TopicRepository;
+import org.spica.server.project.domain.TaskRepository;
+import org.spica.server.project.domain.Task;
 import org.spica.server.project.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,9 +27,9 @@ public class ProjectsController implements ProjectsApi {
   private ProjectsMapper projectsMapper = new ProjectsMapper();
 
   @Autowired
-  private TopicRepository topicRepository;
+  private TaskRepository taskRepository;
 
-  private TopicsMapper topicsMapper = new TopicsMapper();
+  private TasksMapper topicsMapper = new TasksMapper();
 
   @Override
   public ResponseEntity<ProjectInfo> createProject(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "name", required = true) String name) {
@@ -39,18 +39,18 @@ public class ProjectsController implements ProjectsApi {
   }
 
   @Override
-  public ResponseEntity<TopicInfo> createTopic(@ApiParam(value = "",required=true) @PathVariable("projectId") String projectId, @NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "name", required = true) String name) {
+  public ResponseEntity<TaskInfo> createTask(@ApiParam(value = "",required=true) @PathVariable("projectId") String projectId, @NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "name", required = true) String name) {
 
 
     Optional<Project> project = projectRepository.findById(projectId);
     if (! project.isPresent())
       throw new IllegalStateException("Project with id " + projectId + " not found");
 
-    Topic topic = new Topic();
-    topic.setName(name);
-    topic.setProjectID(projectId);
-    topicRepository.save(topic);
-    return new ResponseEntity<TopicInfo>(topicsMapper.toApi(topic), HttpStatus.OK);
+    Task task = new Task();
+    task.setName(name);
+    task.setProjectID(projectId);
+    taskRepository.save(task);
+    return new ResponseEntity<TaskInfo>(topicsMapper.toApi(task), HttpStatus.OK);
   }
 
   @Override
@@ -67,13 +67,13 @@ public class ProjectsController implements ProjectsApi {
   }
 
   @Override
-  public ResponseEntity<TopicContainerInfo> getTopics(@ApiParam(value = "",required=true) @PathVariable("projectId") String projectId) {
+  public ResponseEntity<TaskContainerInfo> getTasks(@ApiParam(value = "",required=true) @PathVariable("projectId") String projectId) {
 
-    List<Topic> topicsByProject = topicRepository.findAllByProjectID(projectId);
-    TopicContainerInfo topicContainerInfo = new TopicContainerInfo();
-    for (Topic next: topicsByProject) {
-      topicContainerInfo.addTopicsItem(topicsMapper.toApi(next));
+    List<Task> topicsByProject = taskRepository.findAllByProjectID(projectId);
+    TaskContainerInfo topicContainerInfo = new TaskContainerInfo();
+    for (Task next: topicsByProject) {
+      topicContainerInfo.addTasksItem(topicsMapper.toApi(next));
     }
-    return new ResponseEntity<TopicContainerInfo>(topicContainerInfo, HttpStatus.OK);
+    return new ResponseEntity<TaskContainerInfo>(topicContainerInfo, HttpStatus.OK);
   }
 }

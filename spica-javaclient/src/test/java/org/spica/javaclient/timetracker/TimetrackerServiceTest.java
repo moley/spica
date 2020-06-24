@@ -38,7 +38,7 @@ public class TimetrackerServiceTest {
         timetrackerCreationParam.setFrom(from);
         timetrackerCreationParam.setUntil(until);
         timetrackerCreationParam.setEventType(EventType.TOPIC);
-        timetrackerCreationParam.setTopicInfo(new TopicInfo().name("New event"));
+        timetrackerCreationParam.setTaskInfo(new TaskInfo().name("New event"));
         return timetrackerCreationParam;
     }
 

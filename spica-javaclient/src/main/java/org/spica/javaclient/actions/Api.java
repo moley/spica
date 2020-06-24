@@ -1,6 +1,5 @@
 package org.spica.javaclient.actions;
 
-import org.spica.javaclient.ApiClient;
 import org.spica.javaclient.api.UserApi;
 
 public class Api {

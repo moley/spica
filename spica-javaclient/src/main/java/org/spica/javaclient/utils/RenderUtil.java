@@ -2,7 +2,7 @@ package org.spica.javaclient.utils;
 
 import org.spica.javaclient.model.LinkInfo;
 import org.spica.javaclient.model.ProjectInfo;
-import org.spica.javaclient.model.TopicInfo;
+import org.spica.javaclient.model.TaskInfo;
 import org.spica.javaclient.model.UserInfo;
 
 public class RenderUtil {
@@ -14,15 +14,15 @@ public class RenderUtil {
           return userinfo.getName() + ", " + userinfo.getFirstname();
     }
 
-    public String getTopic(final TopicInfo topicInfo) {
-        if (topicInfo == null)
+    public String getTask(final TaskInfo taskInfo) {
+        if (taskInfo == null)
             return "";
 
         String asString = "";
-        if (topicInfo.getExternalSystemKey() != null)
-            asString = topicInfo.getExternalSystemKey() + " - ";
+        if (taskInfo.getExternalSystemKey() != null)
+            asString = taskInfo.getExternalSystemKey() + " - ";
 
-        asString += topicInfo.getName() + "(" + topicInfo.getId() + ")";
+        asString += taskInfo.getName() + "(" + taskInfo.getId() + ")";
         return asString;
     }
 

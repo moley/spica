@@ -3,7 +3,7 @@ package org.spica.javaclient.actions;
 import org.junit.Assert;
 import org.junit.Test;
 import org.spica.javaclient.actions.booking.CreateBookingAction;
-import org.spica.javaclient.actions.topics.ListTopicsAction;
+import org.spica.javaclient.actions.tasks.ListTasksAction;
 
 import java.util.Collection;
 
@@ -26,7 +26,7 @@ public class ActionHandlerTest {
     public void findAction () {
         ActionHandler actionHandler = new ActionHandler();
         FoundAction foundAction = actionHandler.findAction("t l");
-        Assert.assertEquals ("Wrong action found: ", ListTopicsAction.class, foundAction.getAction().getClass());
+        Assert.assertEquals ("Wrong action found: ", ListTasksAction.class, foundAction.getAction().getClass());
     }
 
     @Test

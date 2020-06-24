@@ -8,7 +8,7 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Button?>
-<BorderPane fx:id="paRootPane" xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fxclient.controllers.MainController" style="-fx-background-color:transparent">
+<BorderPane fx:id="paRootPane" xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fx.controllers.MainController" style="-fx-background-color:transparent">
     <stylesheets>
         <URL value="@/spica.css" />
     </stylesheets>

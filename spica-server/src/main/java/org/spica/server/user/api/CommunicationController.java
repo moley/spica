@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommunicationController {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(CommunicationController.class);
+  /**private static final Logger LOGGER = LoggerFactory.getLogger(CommunicationController.class);
 
   @Scheduled(fixedDelay=5000)
   @MessageMapping("/chat")
@@ -19,5 +19,5 @@ public class CommunicationController {
   public Greeting greeting() throws Exception {
     LOGGER.info("Send greeting to topic");
     return new Greeting("Hello, it is " + DateTime.now().toString());
-  }
+  }**/
 }

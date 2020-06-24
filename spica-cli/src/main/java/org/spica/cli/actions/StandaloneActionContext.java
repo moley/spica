@@ -47,27 +47,31 @@ public class StandaloneActionContext implements ActionContext {
 
   public void refreshServer () {
     //refresh all skills
+    LOGGER.info("refresh server data from " + getApi().getCurrentServer());
+
+    try {
+      getModel().setUserInfos(getApi().getUserApi().getUsers());
+    } catch (ApiException e) {
+      LOGGER.info("Exception when reading users: " + e.getLocalizedMessage(), e);
+    }
+
+    String usermail = getProperties().getValueNotNull("spica.cli.usermail");
+    getModel().setMe(getModel().findUserByMail(usermail));
+
     UserApi userApi = getApi().getUserApi();
     try {
       List<SkillInfo> skills = userApi.getSkills();
       LOGGER.info("Reloaded " + skills.size() + " skills");
       getModel().setAllSkills(skills);
     } catch (ApiException e) {
-      LOGGER.info("Exception when reading skills: " + e.getLocalizedMessage(), e);
+      LOGGER.info("Exception when reading all skills: " + e.getLocalizedMessage(), e);
     }
 
-    //refresh me
-    String username = getProperties().getValueNotNull("spica.cli.username");
     try {
-      getModel().setMe(getApi().getUserApi().findUser(username));
-
       getModel().setUserSkills(getApi().getUserApi().getUserSkills(getModel().getMe().getId()));
-
     } catch (ApiException e) {
-      LOGGER.info("Exception when requesting me: " + e.getLocalizedMessage(), e);
+      LOGGER.info("Exception when reading userskills of me: " + e.getLocalizedMessage(), e);
     }
-
-
 
   }
 

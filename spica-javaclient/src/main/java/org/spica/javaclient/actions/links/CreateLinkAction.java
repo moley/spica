@@ -16,7 +16,7 @@ import org.spica.javaclient.model.LinkInfo;
 import org.spica.javaclient.model.LinkType;
 import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.ProjectInfo;
-import org.spica.javaclient.model.TopicInfo;
+import org.spica.javaclient.model.TaskInfo;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParamGroup;
 import org.spica.javaclient.params.InputParams;
@@ -54,7 +54,7 @@ public class CreateLinkAction extends AbstractAction {
         String url = getFirstValue(inputParams.getInputValueAsString(KEY_URL));
         LinkType selectedLinkType = inputParams.getInputValue(KEY_TYPE, LinkType.class);
 
-        TopicInfo currentTopic = model.getCurrentTopic() != null ? model.getCurrentTopic() : inputParams.getInputValue(KEY_TOPIC, TopicInfo.class);
+        TaskInfo currentTask = model.getCurrentTask() != null ? model.getCurrentTask() : inputParams.getInputValue(KEY_TOPIC, TaskInfo.class);
         ProjectInfo currentProject = inputParams.getInputValue(KEY_PROJECT, ProjectInfo.class);
 
         LinkInfo linkInfo = new LinkInfo();
@@ -64,10 +64,10 @@ public class CreateLinkAction extends AbstractAction {
         linkInfo.setType(selectedLinkType);
 
         if (selectedLinkType.equals(LinkType.TOPIC)) {
-            linkInfo.setReference(currentTopic.getId());
+            linkInfo.setReference(currentTask.getId());
         }
         else if (selectedLinkType.equals(LinkType.PROJECT)) {
-            currentProject = currentProject != null ? currentProject : currentTopic.getProject();
+            currentProject = currentProject != null ? currentProject : currentTask.getProject();
             if (currentProject == null) {
                 outputError("No project reference found, cannot create project related link");
                 return null;
@@ -118,41 +118,41 @@ public class CreateLinkAction extends AbstractAction {
         });
         inputParamGroupGeneric.getInputParams().add(type);
 
-        //Reference Topic
-        InputParamGroup inputParamGroupReferenceTopic = new InputParamGroup("Reference Topic", new Predicate<InputParams>() {
+        //Reference Task
+        InputParamGroup inputParamGroupReferenceTask = new InputParamGroup("Reference Task", new Predicate<InputParams>() {
             @Override
             public boolean test(InputParams inputParams) {
                 LinkType linkType = inputParams.getInputValue(KEY_TYPE, LinkType.class);
-                boolean linkTypeNeedsTopic = linkType.equals(LinkType.TOPIC) || linkType.equals(LinkType.PROJECT);
+                boolean linkTypeNeedsTask = linkType.equals(LinkType.TOPIC) || linkType.equals(LinkType.PROJECT);
 
-                if (linkTypeNeedsTopic) {
-                    TopicInfo currentTopic = model.getCurrentTopic();
-                    return currentTopic == null;
+                if (linkTypeNeedsTask) {
+                    TaskInfo currentTask = model.getCurrentTask();
+                    return currentTask == null;
                 }
                 return false;
             }
         });
 
-        List<TopicInfo> topicInfos = actionContext.getModel().getTopicInfos();
+        List<TaskInfo> topicInfos = actionContext.getModel().getTaskInfos();
         RenderUtil renderUtil = new RenderUtil();
-        SearchInputParam<TopicInfo> topicSearch = new SearchInputParam<TopicInfo>(KEY_TOPIC, "Topic: ", topicInfos, new Renderer<TopicInfo>() {
+        SearchInputParam<TaskInfo> topicSearch = new SearchInputParam<TaskInfo>(KEY_TOPIC, "Task: ", topicInfos, new Renderer<TaskInfo>() {
             @Override
-            public String toString(TopicInfo topicInfo) {
-                return renderUtil.getTopic(topicInfo);
+            public String toString(TaskInfo topicInfo) {
+                return renderUtil.getTask(topicInfo);
             }
         });
-        inputParamGroupReferenceTopic.getInputParams().add(topicSearch);
+        inputParamGroupReferenceTask.getInputParams().add(topicSearch);
 
         //Reference Project
-        InputParamGroup inputParamGroupReferenceProject = new InputParamGroup("Reference Topic", new Predicate<InputParams>() {
+        InputParamGroup inputParamGroupReferenceProject = new InputParamGroup("Reference Task", new Predicate<InputParams>() {
             @Override
             public boolean test(InputParams inputParams) {
                 LinkType linkType = inputParams.getInputValue(KEY_TYPE, LinkType.class);
                 boolean linkTypeNeedsProject = linkType.equals(LinkType.PROJECT);
 
                 if (linkTypeNeedsProject) {
-                    TopicInfo currentTopic = model.getCurrentTopic();
-                    return currentTopic == null || currentTopic.getProject() == null;
+                    TaskInfo currentTask = model.getCurrentTask();
+                    return currentTask == null || currentTask.getProject() == null;
                 }
                 return false;
             }
@@ -167,7 +167,7 @@ public class CreateLinkAction extends AbstractAction {
         });
         inputParamGroupReferenceProject.getInputParams().add(projectSearch);
 
-        InputParams inputParams = new InputParams(Arrays.asList(inputParamGroupGeneric, inputParamGroupReferenceTopic, inputParamGroupReferenceProject));
+        InputParams inputParams = new InputParams(Arrays.asList(inputParamGroupGeneric, inputParamGroupReferenceTask, inputParamGroupReferenceProject));
 
         return inputParams;
     }

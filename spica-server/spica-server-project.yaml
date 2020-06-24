@@ -5,6 +5,8 @@ info:
   description: "Rest API for the time component of spica communication server"
 servers:
   - url: http://localhost/api
+security:
+  - BasicAuth
 
 paths:
   /projects:
@@ -39,11 +41,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProjectInfo"
 
-  /projects/{projectId}/topics:
+  /projects/{projectId}/tasks:
     get:
       tags:
-        - topic
-      operationId: "getTopics"
+        - task
+      operationId: "getTasks"
       parameters:
         - in: path
           name: projectId
@@ -52,17 +54,17 @@ paths:
           required: true
       responses:
         '200':
-          description: list of topics
+          description: list of tasks
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TopicContainerInfo"
+                $ref: "#/components/schemas/TaskContainerInfo"
 
     post:
       tags:
-        - topic
-      operationId: "createTopic"
-      description: "creates a new topic"
+        - task
+      operationId: "createTask"
+      description: "creates a new task"
       parameters:
         - in: path
           name: projectId
@@ -76,21 +78,21 @@ paths:
           required: true
       responses:
         '200':
-          description: created topic
+          description: created task
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TopicInfo"
+                $ref: "#/components/schemas/TaskInfo"
 
 
 
 
-  /topics/import:
+  /tasks/import:
     post:
       tags:
-        - topic
-      operationId: "importTopics"
-      description: "import topics for user from external system (currently only jira)"
+        - task
+      operationId: "importTasks"
+      description: "import tasks for user from external system (currently only jira)"
       parameters:
         - in: query
           name: userId
@@ -109,17 +111,17 @@ paths:
           required: true
       responses:
         '200':
-          description: created topic
+          description: created task
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TopicContainerInfo"
+                $ref: "#/components/schemas/TaskContainerInfo"
 
-  /topics/{topicId}:
+  /tasks/{taskId}:
     delete:
       tags:
-        - topic
-      operationId: "deleteTopic"
+        - task
+      operationId: "deleteTask"
       parameters:
         - in: query
           name: userId
@@ -127,7 +129,7 @@ paths:
             type: string
           required: true
         - in: path
-          name: topicId
+          name: taskId
           schema:
             type: string
           required: true
@@ -135,12 +137,12 @@ paths:
         '200':
           description: 'Null response'
 
-  /topics/{topicId}/finish:
+  /tasks/{taskId}/finish:
     post:
       tags:
-        - topic
-      operationId: "finishTopic"
-      description: "finish a topic in the database and the external system"
+        - task
+      operationId: "finishTask"
+      description: "finish a task in the database and the external system"
       parameters:
         - in: query
           name: userId
@@ -148,7 +150,7 @@ paths:
             type: string
           required: true
         - in: query
-          name: topicId
+          name: taskId
           schema:
             type: string
           required: true
@@ -157,6 +159,11 @@ paths:
           description: 'Null response'
 
 components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+
   schemas:
     ProjectInfo:
       type: "object"
@@ -193,7 +200,7 @@ components:
             $ref: "#/components/schemas/ProjectInfo"
 
 
-    TopicInfo:
+    TaskInfo:
       type: "object"
       properties:
         id:
@@ -211,13 +218,13 @@ components:
         project:
           $ref: "#/components/schemas/ProjectInfo"
         parent:
-          $ref: "#/components/schemas/TopicInfo"
+          $ref: "#/components/schemas/TaskInfo"
 
 
-    TopicContainerInfo:
+    TaskContainerInfo:
       type: "object"
       properties:
-        topics:
+        tasks:
           type: "array"
           items:
-            $ref: "#/components/schemas/TopicInfo"
+            $ref: "#/components/schemas/TaskInfo"

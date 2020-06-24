@@ -5,6 +5,8 @@ info:
   description: "Rest API for the communication component of spica communication server"
 servers:
   - url: http://localhost/api
+security:
+  - BasicAuth
 
 paths:
 
@@ -33,6 +35,11 @@ paths:
                   $ref: "#/components/schemas/MessagecontainerInfo"
 
 components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+
   schemas:
     MessageInfo:
       type: "object"

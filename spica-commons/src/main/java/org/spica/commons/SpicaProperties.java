@@ -28,6 +28,7 @@ public class SpicaProperties {
   public SpicaProperties() {
     if (properties.isEmpty()) {
       try {
+        //properties from classpath
         Enumeration<URL> resources = getClass().getClassLoader().getResources(FILENAME_SPICA_PROPERTIES);
 
         while (resources.hasMoreElements()) {
@@ -170,12 +171,13 @@ public class SpicaProperties {
       if (local.exists())
         return local;
 
-      File home = new File (System.getProperty("user.home"));
-      String spicaHome = System.getProperty("spica.home");
-      if (spicaHome != null)
-        home = new File (spicaHome);
-      return new File(home, ".spica");
+      return getGlobalSpicaHome();
     }
+  }
+
+  public final static File getGlobalSpicaHome () {
+    File home = new File (System.getProperty("user.home"));
+    return new File(home, ".spica");
   }
 
   public static void close() {

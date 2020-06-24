@@ -1,7 +1,6 @@
 import org.spica.javaclient.actions.ActionContext
 import org.spica.javaclient.model.Model
-import org.spica.javaclient.model.TopicInfo
-import org.spica.javaclient.model.UserInfo
+import org.spica.javaclient.model.TaskInfo
 import org.spica.javaclient.services.Services
 
 ActionContext actionContext = spica
@@ -21,23 +20,23 @@ println "Proxy-Host: " + System.getProperty("http.proxyHost")
 
 println model.projectInfos.size() + " projects available"
 println model.userInfos.size() + " users available"
-println model.topicInfos.size() + " topics available"
+println model.taskInfos.size() + " topics available"
 
-Collection<TopicInfo> topicInfos = model.topicInfos
+Collection<TaskInfo> topicInfos = model.taskInfos
 
 //Make decisions due to model content
 if (topicInfos.find {it.name.contains("Remove")}) {
-    println "Topic which starts with Remove exists"
+    println "Task which starts with Remove exists"
 }
 else {
-    println "Topic which starts with Remove does not exists"
+    println "Task which starts with Remove does not exists"
 }
 
 if (topicInfos.find {it.name.contains("xyz")}) {
-    println "Topic which starts with xyz exists"
+    println "Task which starts with xyz exists"
 }
 else {
-    println "Topic which starts with xyz does not exist"
+    println "Task which starts with xyz does not exist"
 }
 
 //Trigger actions when http site content changes (new versions of something)

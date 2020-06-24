@@ -5,7 +5,9 @@ info:
   description: "Rest API for the time component of spica communication server"
 servers:
   - url: http://localhost/api
-
+security:
+  - BasicAuth
+  -
 paths:
   /dashboard:
     get:
@@ -22,6 +24,11 @@ paths:
                 $ref: "#/components/schemas/DashboardItemInfo"
 
 components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+
   schemas:
     DashboardItemInfo:
       type: "object"
