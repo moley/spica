@@ -5,7 +5,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.DragEvent;
@@ -13,12 +12,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
-import org.spica.fx.Mask;
-import org.spica.fx.MaskLoader;
-import org.spica.fx.filter.InboxTasksView;
-import org.spica.fx.filter.TaskView;
+import org.spica.fx.Reload;
+import org.spica.fx.view.FinishedTasksView;
+import org.spica.fx.view.InboxTasksView;
+import org.spica.fx.view.TaskView;
+import org.spica.fx.renderer.TaskInfoCellFactory;
 import org.spica.fx.renderer.TaskViewCellFactory;
 import org.spica.javaclient.model.TaskInfo;
 
@@ -29,11 +28,11 @@ import org.spica.javaclient.model.TaskInfo;
 
 
   private InboxTasksView inboxTasksView = new InboxTasksView();
+  private FinishedTasksView finishedTasksView = new FinishedTasksView();
 
   @FXML
   public void initialize () {
     lviLists.setCellFactory(cellFactory -> new TaskViewCellFactory());
-
   }
 
   private void addNewTask (final String newTaskIdentifier) {
@@ -42,7 +41,6 @@ import org.spica.javaclient.model.TaskInfo;
     taskInfo.setName(newTaskIdentifier);
 
     getActionContext().getModel().getTaskInfos().add(taskInfo);
-    inboxTasksView.renderTasks(getActionContext().getModel().getTaskInfos());
 
     txtSearch.clear();
     txtSearch.requestFocus();
@@ -53,21 +51,28 @@ import org.spica.javaclient.model.TaskInfo;
 
   private void removeTask (final TaskInfo taskInfo) {
     getActionContext().getModel().getTaskInfos().remove(taskInfo);
-    inboxTasksView.renderTasks(getActionContext().getModel().getTaskInfos());
-
     getActionContext().saveModel("Removed task " + taskInfo.getId() + "-" + taskInfo.getName());
     refreshViews();
   }
 
   public void refreshViews () {
 
-    lviLists.setItems(FXCollections.observableArrayList(inboxTasksView));
     for (TaskView next: lviLists.getItems()) {
       next.renderTasks(getActionContext().getModel().getTaskInfos());
     }
+
+    lviLists.setItems(FXCollections.observableArrayList(inboxTasksView, finishedTasksView));
+    if (! lviLists.getSelectionModel().isEmpty())
+      lviTasks.setItems(FXCollections.observableArrayList(lviLists.getSelectionModel().getSelectedItem().getTaskInfos()));
   }
 
   @Override public void refreshData() {
+
+    lviTasks.setCellFactory(cellfactory -> new TaskInfoCellFactory(getActionContext(), new Reload() {
+      @Override public void reload() {
+        refreshViews();
+      }
+    }));
 
     refreshViews();
 
@@ -110,37 +115,9 @@ import org.spica.javaclient.model.TaskInfo;
 
       }
     });
-    lviTasks.setCellFactory(lv -> {
-      ListCell<TaskInfo> cell = new ListCell<TaskInfo>() {
-        @Override public void updateItem(TaskInfo item, boolean empty) {
-          super.updateItem(item, empty);
-          if (empty) {
-            setText(null);
-          } else {
-            setText(item.getName());
-          }
-        }
-      };
 
-      cell.setOnDragDropped(new EventHandler<DragEvent>() {
-        @Override public void handle(DragEvent event) {
 
-          log.info("Drag in Tasks ListView exited");
-          log.info("Url: " + event.getDragboard().getUrl());
-          log.info("Files: " + event.getDragboard().getFiles());
-          log.info("DragView: " + event.getDragboard().getDragView());
-          log.info("String: " + event.getDragboard().getString());
-          log.info("Accepting object: " + event.getAcceptingObject());
-          log.info("Gesture Source" + event.getGestureSource());
-          log.info("Gesture Target" + event.getGestureTarget());
-          log.info(event.getSceneX() + "-" + event.getSceneY());
-          log.info(event.getSource().toString());
 
-        }
-      });
-
-      return cell;
-    });
 
     lviTasks.setOnDragOver(new EventHandler<DragEvent>() {
       @Override public void handle(DragEvent event) {

@@ -35,7 +35,7 @@ public class CloseTaskAction extends AbstractAction {
         Model model = actionContext.getModel();
         List<TaskInfo> infos = model.findTaskInfosByQuery(query);
         for (TaskInfo next: infos) {
-            next.setState(TaskStatus.CLOSED.name());
+            next.setState(TaskInfo.StateEnum.FINISHED);
             outputDefault("Finishing " + next.getId());
         }
 

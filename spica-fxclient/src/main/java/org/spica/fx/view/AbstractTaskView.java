@@ -1,8 +1,7 @@
-package org.spica.fx.filter;
+package org.spica.fx.view;
 
 import java.util.List;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import org.spica.javaclient.model.TaskInfo;
 
 public abstract class AbstractTaskView implements TaskView {

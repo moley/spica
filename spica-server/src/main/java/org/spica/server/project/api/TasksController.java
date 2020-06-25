@@ -58,6 +58,7 @@ public class TasksController implements TasksApi {
         ExternalSystem externalSystem = new ExternalSystem(jiraUrl, jiraUser, jiraPwd);
         adapter.setStatus(externalSystem, topicId, Integer.valueOf(closedStatus).intValue());
 
+        //TODO do not delete finished tasks, but filter them
         Task finishedTask = taskRepository.findByCurrentUserIDAndExternalSystemKey(userId, topicId);
         taskRepository.delete(finishedTask);
 

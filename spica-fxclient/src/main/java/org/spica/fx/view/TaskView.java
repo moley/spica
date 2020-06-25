@@ -1,4 +1,4 @@
-package org.spica.fx.filter;
+package org.spica.fx.view;
 
 import java.util.List;
 import org.spica.javaclient.model.TaskInfo;

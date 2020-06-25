@@ -1,7 +1,7 @@
 package org.spica.fx.renderer;
 
 import javafx.scene.control.ListCell;
-import org.spica.fx.filter.TaskView;
+import org.spica.fx.view.TaskView;
 
 public class TaskViewCellFactory extends ListCell<TaskView> {
 

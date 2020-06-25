@@ -211,6 +211,7 @@ components:
           type: "string"
         state:
           type: "string"
+          enum: [new, finished]
         externalSystemKey:
           type: "string"
         externalSystemID:
