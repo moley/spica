@@ -56,17 +56,19 @@ import org.spica.javaclient.model.TaskInfo;
   }
 
   public void refreshViews () {
+    log.info("refreshViews with " + getActionContext().getModel().getTaskInfos().size() + " tasks");
 
+    lviLists.setItems(FXCollections.observableArrayList(inboxTasksView, finishedTasksView));
     for (TaskView next: lviLists.getItems()) {
       next.renderTasks(getActionContext().getModel().getTaskInfos());
     }
 
-    lviLists.setItems(FXCollections.observableArrayList(inboxTasksView, finishedTasksView));
     if (! lviLists.getSelectionModel().isEmpty())
       lviTasks.setItems(FXCollections.observableArrayList(lviLists.getSelectionModel().getSelectedItem().getTaskInfos()));
   }
 
   @Override public void refreshData() {
+    log.info("refreshData");
 
     lviTasks.setCellFactory(cellfactory -> new TaskInfoCellFactory(getActionContext(), new Reload() {
       @Override public void reload() {
