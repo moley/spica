@@ -57,13 +57,13 @@ public class MailAdapter {
     String username = spicaProperties.getValue(PROPERTY_MAIL_POP_USERNAME);
     String password = spicaProperties.getValue(PROPERTY_MAIL_POP_PASSWORD);
 
-    //Session: steht für die Verbindung mit dem Mail-Server
-    Session session = Session.getDefaultInstance(mailProperties, new Authenticator() {
+
+    Session mailserverSession = Session.getDefaultInstance(mailProperties, new Authenticator() {
       @Override protected PasswordAuthentication getPasswordAuthentication() {
         return new PasswordAuthentication(username, password);
       }
     });
-    return session;
+    return mailserverSession;
   }
 
   public void deleteMail (final String id) {
@@ -72,13 +72,11 @@ public class MailAdapter {
 
       SpicaProperties spicaProperties = new SpicaProperties();
       Session session = createSession(spicaProperties);
-      //Gibt in der Console Debug-Meldungen zum Verlauf aus
+      //Enable debug message for the communication with the mail server
       //session.setDebug(true);
 
-      //Store: dient dem zum Ablegen der Nachrichten
       Store store = session.getStore("pop3");
       store.connect();
-      //Folder: ist ein Ordner-Object für Mails
       Folder folder = store.getFolder("INBOX");
       folder.open(Folder.READ_WRITE);
 
@@ -126,13 +124,11 @@ public class MailAdapter {
       //Get system properties
       SpicaProperties spicaProperties = new SpicaProperties();
       Session session = createSession(spicaProperties);
-      //Gibt in der Console Debug-Meldungen zum Verlauf aus
+      //Enable debug message for the communication with the mail server
       //session.setDebug(true);
 
-      //Store: dient dem zum Ablegen der Nachrichten
       Store store = session.getStore("pop3");
       store.connect();
-      //Folder: ist ein Ordner-Object für Mails
       Folder folder = store.getFolder("INBOX");
       folder.open(Folder.READ_ONLY);
 
