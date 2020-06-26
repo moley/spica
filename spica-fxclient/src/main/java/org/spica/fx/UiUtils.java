@@ -2,6 +2,7 @@ package org.spica.fx;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -34,7 +35,10 @@ public class UiUtils {
   }
 
   public static void applyCss (final Scene scene) {
-    scene.getStylesheets().add(UiUtils.class.getResource("/adonai.css").toExternalForm());
+    scene.getStylesheets().addAll(
+       // UiUtils.class.getResource("/com/jfoenix/assets/css/jfoenix-design.css").toExternalForm(),
+        // UiUtils.class.getResource("/com/jfoenix/assets/css/jfoenix-fonts.css").toExternalForm(),
+        UiUtils.class.getResource("/css/spica.css").toExternalForm());
   }
 
   public static void close (final Window stage) {
@@ -56,6 +60,15 @@ public class UiUtils {
       }
     });
 
+  }
+
+  public static void requestFocus (final Node node) {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        node.requestFocus();
+      }
+    });
   }
 
   public static void setStyleClass(final Node node, final String cssClass) {

@@ -1,14 +1,21 @@
 package org.spica.fx.controllers;
 
-import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import org.spica.javaclient.model.TaskInfo;
 
 public class TaskDetailController extends AbstractController {
-  public Label lblDetails;
+  public TextArea txaDescription;
+  public TextField txtSummary;
+  public Text txtLinks;
 
   @Override public void refreshData() {
     TaskInfo topicInfo = getActionContext().getModel().getSelectedTaskInfo();
-    lblDetails.setText("Details of task " + topicInfo.getName() + " - " + topicInfo.getDescription());
 
+    txtSummary.setText(topicInfo.getName());
+    txaDescription.setText(topicInfo.getDescription());
+    if (topicInfo.getLinks() != null)
+      txtLinks.setText(String.join("\n", topicInfo.getLinks()));
   }
 }

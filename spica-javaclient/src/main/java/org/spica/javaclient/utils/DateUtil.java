@@ -3,8 +3,16 @@ package org.spica.javaclient.utils;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
+import java.time.temporal.WeekFields;
+import java.util.Locale;
 
 public class DateUtil {
+
+    public int getDayOfWeek (LocalDate localDate) {
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+        int weekNumber = localDate.get(weekFields.weekOfWeekBasedYear());
+        return weekNumber;
+    }
 
     public String getDateAndTimeAsString(LocalDateTime localDateTime) {
         if (localDateTime == null)

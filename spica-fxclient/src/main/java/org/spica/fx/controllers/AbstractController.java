@@ -4,6 +4,7 @@ import java.util.HashMap;
 import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spica.fx.ApplicationContext;
 import org.spica.fx.Mask;
 import org.spica.fx.MaskLoader;
 import org.spica.fx.ScreenManager;
@@ -19,8 +20,8 @@ public abstract class AbstractController {
 
   private ActionContext actionContext;
 
+  private ApplicationContext applicationContext;
 
-  private ScreenManager screenManager = new ScreenManager();
 
 
   public void registerPane (final Pages pages) {
@@ -47,6 +48,7 @@ public abstract class AbstractController {
 
     controller.setPaRootPane(getPaRootPane());
     controller.setActionContext(getActionContext());
+    controller.setApplicationContext(getApplicationContext());
 
     controller.refreshData();
 
@@ -71,8 +73,11 @@ public abstract class AbstractController {
     this.actionContext = actionContext;
   }
 
-  public ScreenManager getScreenManager() {
-    return screenManager;
+  public ApplicationContext getApplicationContext() {
+    return applicationContext;
   }
 
+  public void setApplicationContext(ApplicationContext applicationContext) {
+    this.applicationContext = applicationContext;
+  }
 }

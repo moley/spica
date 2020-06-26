@@ -13,7 +13,7 @@
     </columnConstraints>
 
     <stylesheets>
-        <URL value="@/spica.css"/>
+        <URL value="@/css/spica.css"/>
     </stylesheets>
     <padding>
         <Insets top="20" bottom="20" left="20" right="20"/>

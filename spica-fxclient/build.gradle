@@ -18,6 +18,8 @@ dependencies {
     compile 'org.openjfx:javafx-swing:14-ea+2'
     compile 'org.openjfx:javafx-media:14-ea+2'
 
+    compile 'com.jfoenix:jfoenix:9.0.8'
+
     compile 'org.springframework:spring-websocket:5.2.2.RELEASE'
     compile 'org.springframework:spring-messaging:5.2.2.RELEASE'
     runtime 'javax.websocket:javax.websocket-api:1.1'

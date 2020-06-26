@@ -22,4 +22,5 @@ bin/
 /spica-fxclient/.spica/config*
 /spica-cli/.spica/config*
 /spica-server/.spica/
-/.spica/
+/.spica/config_*
+/.spica/links

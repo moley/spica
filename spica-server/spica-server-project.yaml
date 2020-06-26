@@ -220,7 +220,15 @@ components:
           $ref: "#/components/schemas/ProjectInfo"
         parent:
           $ref: "#/components/schemas/TaskInfo"
-
+        links:
+          type: "array"
+          items:
+            type: "string"
+        priority:
+          type: int
+        plannedDate:
+          type: string
+          format: date
 
     TaskContainerInfo:
       type: "object"

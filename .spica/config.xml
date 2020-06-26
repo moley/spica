@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model>
+    <currentFile>/Users/OleyMa/vcs/spica/spica/.spica/config.xml</currentFile>
+    <selectedTaskInfo>
+        <description></description>
+        <links>/Users/OleyMa/vcs/spica/spica/.spica/links/44b9480a-6cd3-4779-b7d8-62d9fc494170</links>
+        <name>Neuer Fall</name>
+    </selectedTaskInfo>
+    <taskInfos>
+        <name>TaskView Today / This Week</name>
+        <plannedDate>2020-06-26</plannedDate>
+    </taskInfos>
+    <taskInfos>
+        <name>DragAndDrop: Tasks</name>
+        <plannedDate>2020-06-26</plannedDate>
+    </taskInfos>
+    <taskInfos>
+        <name>TestTask1</name>
+        <state>FINISHED</state>
+    </taskInfos>
+    <taskInfos>
+        <name>TestTask2</name>
+    </taskInfos>
+    <taskInfos>
+        <description>see https://stackoverflow.com/questions/21655790/javafx-popover-from-controlfx 
+</description>
+        <name>TestTask3</name>
+    </taskInfos>
+    <taskInfos>
+        <description></description>
+        <name>Hallo</name>
+    </taskInfos>
+</model>

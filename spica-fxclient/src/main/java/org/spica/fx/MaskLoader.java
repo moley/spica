@@ -32,6 +32,7 @@ public class MaskLoader<T extends AbstractController> {
       T controller = loader.getController();
 
       Scene scene = new Scene(parent);
+      UiUtils.applyCss(scene);
       Stage stage = new Stage();
       stage.setScene(scene);
       mask.setStage(stage);

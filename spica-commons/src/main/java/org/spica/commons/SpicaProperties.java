@@ -167,7 +167,7 @@ public class SpicaProperties {
       return customSpicaPath;
     else {
 
-      File local = new File (".spica");
+      File local = new File (".spica").getAbsoluteFile();
       if (local.exists())
         return local;
 

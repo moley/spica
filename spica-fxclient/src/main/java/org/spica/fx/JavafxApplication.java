@@ -1,6 +1,11 @@
 package org.spica.fx;
 
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.image.BufferedImage;
+import java.awt.image.MultiResolutionImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -9,28 +14,28 @@ import java.util.Timer;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spica.fx.clipboard.ClipboardItem;
+import org.spica.fx.clipboard.LinkService;
 import org.spica.fx.controllers.MainController;
 import org.spica.fx.controllers.Pages;
-import org.spica.commons.demodata.DemoDataPropertiesConfigurator;
 
 public class JavafxApplication extends Application {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(JavafxApplication.class);
-
 
   // application stage is stored so that it can be shown and hidden based on system tray icon operations.
   private Stage stage;
@@ -50,14 +55,14 @@ public class JavafxApplication extends Application {
   // a tray icon is setup for the icon, but the main stage remains invisible until the user
   // interacts with the tray icon.
   @Override public void start(final Stage stage) throws IOException {
+
+    Image iconWithNoNotifications = new Image("/spica.png");
+
+    // change the icon when the notifications count changes
+    stage.getIcons().setAll(iconWithNoNotifications);
+    stage.setTitle("Spica FX Client");
     // stores a reference to the stage.
     this.stage = stage;
-
-    if (new File("build.gradle").exists()) {
-      DemoDataPropertiesConfigurator demoDataPropertiesConfigurator = new DemoDataPropertiesConfigurator();
-      demoDataPropertiesConfigurator.main(new String []{});
-    }
-
 
     mask = maskLoader.load("main");
 
@@ -71,30 +76,72 @@ public class JavafxApplication extends Application {
     stage.initStyle(StageStyle.UNDECORATED);
 
     mask.getController().refreshData();
+
     Scene scene = mask.getScene();
 
-
+    scene.setOnDragOver(new EventHandler<DragEvent>() {
+      @Override public void handle(DragEvent event) {
+        event.acceptTransferModes(TransferMode.ANY);
+      }
+    });
     scene.setOnDragDropped(new EventHandler<DragEvent>() {
       @Override public void handle(DragEvent event) {
-        LOGGER.info("Generic drag exited");
-        LOGGER.info("Url: " + event.getDragboard().getUrl());
-        LOGGER.info("Files: " + event.getDragboard().getFiles());
-        LOGGER.info("DragView: " + event.getDragboard().getDragView());
-        LOGGER.info("String: " + event.getDragboard().getString());
-        LOGGER.info("Accepting object: " + event.getAcceptingObject());
+
+        ClipboardItem clipboardItem = new ClipboardItem();
+        clipboardItem.setFiles(event.getDragboard().getFiles());
+        clipboardItem.setString(event.getDragboard().getString());
+        clipboardItem.setUrl(event.getDragboard().getUrl());
+
+        mask.getController().getApplicationContext().getClipboard().getItems().add(clipboardItem);
       }
     });
 
     scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
       @Override public void handle(KeyEvent event) {
-        KeyCodeCombination pasteKeyCodeCombination = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_ANY);
+        LOGGER.info("onKeyPressed of scene");
+
+        LinkService linkService = mask.getController().getApplicationContext().getLinkService();
+        //TODO other operationsystems use CTRL+V
+        KeyCodeCombination pasteKeyCodeCombination = new KeyCodeCombination(KeyCode.V, KeyCombination.META_DOWN);
         if (pasteKeyCodeCombination.match(event)) {
-          System.out.println ("Paste ");
+          Clipboard sysClip = Toolkit.getDefaultToolkit().getSystemClipboard();
+          Transferable clipTf = sysClip.getContents(null);
+
+          //from https://stackoverflow.com/questions/20174462/how-to-do-cut-copy-paste-in-java
+
+          if (clipTf != null) {
+
+            if (clipTf.isDataFlavorSupported(DataFlavor.imageFlavor)) {
+              try {
+                MultiResolutionImage multiResolutionImage = (MultiResolutionImage) clipTf.getTransferData(DataFlavor.imageFlavor);
+                BufferedImage toolkitImage = (BufferedImage) multiResolutionImage.getResolutionVariants().get(0);
+                File imageFile = linkService.createLinkFile();
+                LOGGER.info("Saving image to file " + imageFile.getAbsolutePath());
+                ImageIO.write(toolkitImage, "png", imageFile);
+                ClipboardItem clipboardItem = new ClipboardItem();
+                clipboardItem.setFile(imageFile);
+                mask.getController().getApplicationContext().getClipboard().getItems().add(clipboardItem);
+
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+            }
+
+            if (clipTf.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+              try {
+                String ret = (String) clipTf.getTransferData(DataFlavor.stringFlavor);
+                ClipboardItem clipboardItem = new ClipboardItem();
+                clipboardItem.setString(ret);
+                mask.getController().getApplicationContext().getClipboard().getItems().add(clipboardItem);
+
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+            }
+          }
         }
       }
     });
-
-
 
     // this dummy app just hides itself when the app screen is clicked.
     // a real app might have some interactive UI and a separate icon which hides the app window.
@@ -102,9 +149,9 @@ public class JavafxApplication extends Application {
 
     stage.setScene(scene);
 
-
     screenManager.layoutEdged(stage);
-    LOGGER.info("Stage layouted " + stage.getX() + "-" + stage.getY() + "-" + stage.getWidth() + "-" + stage.getHeight());
+    LOGGER
+        .info("Stage layouted " + stage.getX() + "-" + stage.getY() + "-" + stage.getWidth() + "-" + stage.getHeight());
 
   }
 
@@ -200,21 +247,20 @@ public class JavafxApplication extends Application {
 
       // create a timer which periodically displays a notification message.
       /**notificationTimer.schedule(
-          new TimerTask() {
-            @Override
-            public void run() {
-              javax.swing.SwingUtilities.invokeLater(() ->
-                  trayIcon.displayMessage(
-                      "hello",
-                      "The time is now " + timeFormat.format(new Date()),
-                      java.awt.TrayIcon.MessageType.INFO
-                  )
-              );
-            }
-          },
-          5_000,
-          60_000
-      );**/
+       new TimerTask() {
+      @Override public void run() {
+      javax.swing.SwingUtilities.invokeLater(() ->
+      trayIcon.displayMessage(
+      "hello",
+      "The time is now " + timeFormat.format(new Date()),
+      java.awt.TrayIcon.MessageType.INFO
+      )
+      );
+      }
+      },
+       5_000,
+       60_000
+       );**/
 
       // add the application tray icon to the system tray.
       tray.add(trayIcon);
@@ -224,36 +270,37 @@ public class JavafxApplication extends Application {
     }
   }
 
-  private void hide () {
+  private void hide() {
     stage.hide();
   }
 
-  private void startTask () {
+  private void startTask() {
     LOGGER.info("start task");
 
   }
 
-  private void startPause () {
+  private void startPause() {
     LOGGER.info("start pause");
   }
 
-  private void telephoneCall () {
+  private void telephoneCall() {
     LOGGER.info("telephone call");
 
   }
 
-  private void showDashboard () {
+  private void showDashboard() {
     showMask(Pages.DASHBOARD);
   }
-  private void showPlanning () {
+
+  private void showPlanning() {
     showMask(Pages.PLANNING);
   }
 
-  private void showTasks () {
+  private void showTasks() {
     showMask(Pages.TASKS);
   }
 
-  private void showMessages () {
+  private void showMessages() {
     showMask(Pages.MESSAGES);
   }
 
