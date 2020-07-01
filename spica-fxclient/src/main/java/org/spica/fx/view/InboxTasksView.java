@@ -16,6 +16,9 @@ public class InboxTasksView extends AbstractTaskView {
     log.info("renderTasks " + taskInfos.size());
     getTaskInfos().clear();
     for (TaskInfo next: taskInfos) {
+      if (next.getPlannedDate() != null)
+        continue;
+
       //TODO If no project or no plan date available
       if (next.getState() == null || ! next.getState().equals(TaskInfo.StateEnum.FINISHED))
         getTaskInfos().add(next);

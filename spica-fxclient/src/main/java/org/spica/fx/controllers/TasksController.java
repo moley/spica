@@ -1,39 +1,37 @@
 package org.spica.fx.controllers;
 
 import java.io.File;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.DragEvent;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
-import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 import org.spica.fx.Reload;
 import org.spica.fx.UiUtils;
-import org.spica.fx.clipboard.Clipboard;
 import org.spica.fx.clipboard.ClipboardItem;
+import org.spica.fx.renderer.TaskTreeItem;
+import org.spica.fx.renderer.TaskTreeItemCellFactory;
 import org.spica.fx.view.FinishedTasksView;
 import org.spica.fx.view.InboxTasksView;
 import org.spica.fx.view.NextWeekTasksView;
 import org.spica.fx.view.TaskView;
-import org.spica.fx.renderer.TaskInfoCellFactory;
-import org.spica.fx.renderer.TaskViewCellFactory;
 import org.spica.fx.view.TodayTasksView;
 import org.spica.fx.view.WeekTasksView;
 import org.spica.javaclient.model.TaskInfo;
 
 @Slf4j public class TasksController extends AbstractController {
   public TextField txtSearch;
-  public ListView<TaskView> lviLists;
-  public ListView<TaskInfo> lviTasks;
+  public ListView<TaskView> lviProjects;
+  public TreeView<TaskTreeItem> treTasks;
 
   private InboxTasksView inboxTasksView = new InboxTasksView();
   private TodayTasksView todayTasksView = new TodayTasksView();
@@ -41,9 +39,18 @@ import org.spica.javaclient.model.TaskInfo;
   private NextWeekTasksView nextWeekTasksView = new NextWeekTasksView();
   private FinishedTasksView finishedTasksView = new FinishedTasksView();
 
+  private List<TaskView> allViews = new ArrayList<TaskView>();
+
   @FXML
   public void initialize () {
-    lviLists.setCellFactory(cellFactory -> new TaskViewCellFactory());
+    lviProjects.setPlaceholder(new Text("No projects available"));
+    treTasks.setShowRoot(false);
+    treTasks.setCellFactory(cellFactory -> new TaskTreeItemCellFactory(getActionContext(), new Reload() {
+      @Override public void reload() {
+        refreshViews();
+      }
+    }));
+    allViews.addAll(Arrays.asList(inboxTasksView, todayTasksView, weekTasksView, nextWeekTasksView, finishedTasksView));
 
   }
 
@@ -65,10 +72,6 @@ import org.spica.javaclient.model.TaskInfo;
 
     getActionContext().getModel().getTaskInfos().add(taskInfo);
 
-
-
-
-
     txtSearch.clear();
     txtSearch.requestFocus();
 
@@ -85,13 +88,23 @@ import org.spica.javaclient.model.TaskInfo;
   public void refreshViews () {
     log.info("refreshViews with " + getActionContext().getModel().getTaskInfos().size() + " tasks");
 
-    lviLists.setItems(FXCollections.observableArrayList(inboxTasksView, todayTasksView, weekTasksView, nextWeekTasksView, finishedTasksView));
-    for (TaskView next: lviLists.getItems()) {
-      next.renderTasks(getActionContext().getModel().getTaskInfos());
+    List<TaskInfo> taskInfoList = getActionContext().getModel().getTaskInfos();
+    for (TaskView nextView: allViews) {
+      nextView.renderTasks(taskInfoList);
     }
 
-    if (! lviLists.getSelectionModel().isEmpty())
-      lviTasks.setItems(FXCollections.observableArrayList(lviLists.getSelectionModel().getSelectedItem().getTaskInfos()));
+    TreeItem<TaskTreeItem> rootItem = new TreeItem<TaskTreeItem> (new TaskTreeItem());
+    rootItem.setExpanded(true);
+    for (TaskView nextView: allViews) {
+      TreeItem<TaskTreeItem> viewItem = new TreeItem<TaskTreeItem> (new TaskTreeItem(nextView));
+      viewItem.setExpanded(true);
+      rootItem.getChildren().add(viewItem);
+      for (TaskInfo nextTaskInfo: nextView.getTaskInfos()) {
+        viewItem.getChildren().add(new TreeItem<TaskTreeItem> (new TaskTreeItem(nextTaskInfo)));
+      }
+    }
+    treTasks.setRoot(rootItem);
+
   }
 
   @Override public void refreshData() {
@@ -99,8 +112,9 @@ import org.spica.javaclient.model.TaskInfo;
 
     UiUtils.requestFocus(txtSearch);
 
+    refreshViews();
 
-    lviTasks.setCellFactory(cellfactory -> new TaskInfoCellFactory(getActionContext(), new Reload() {
+    /**lviTasks.setCellFactory(cellfactory -> new TaskInfoCellFactory(getActionContext(), new Reload() {
       @Override public void reload() {
         refreshViews();
       }
@@ -118,12 +132,16 @@ import org.spica.javaclient.model.TaskInfo;
 
     if (lviLists.getSelectionModel().isEmpty()) {
       lviLists.getSelectionModel().selectFirst();
-    }
+    }**/
 
-    lviTasks.setOnKeyPressed(new EventHandler<KeyEvent>() {
+    treTasks.setOnKeyPressed(new EventHandler<KeyEvent>() {
       @Override public void handle(KeyEvent event) {
-        if (event.getCode().equals(KeyCode.SLASH)) {
-          removeTask(lviTasks.getSelectionModel().getSelectedItem());
+        if (! treTasks.getSelectionModel().isEmpty()) {
+          TaskTreeItem taskTreeItem = treTasks.getSelectionModel().getSelectedItem().getValue();
+
+          if (event.getCode().equals(KeyCode.SLASH) && taskTreeItem.isTask()) {
+            removeTask(taskTreeItem.getTaskInfo());
+          }
         }
 
       }
@@ -138,11 +156,16 @@ import org.spica.javaclient.model.TaskInfo;
       }
     });
 
-    lviTasks.setOnMouseClicked(new EventHandler<MouseEvent>() {
+    treTasks.setOnMouseClicked(new EventHandler<MouseEvent>() {
       @Override public void handle(MouseEvent event) {
-        if (event.getClickCount() == 2) {
-          getActionContext().getModel().setSelectedTaskInfo(lviTasks.getSelectionModel().getSelectedItem());
-          stepToPane(Pages.TASKDETAIL);
+        if (! treTasks.getSelectionModel().isEmpty()) {
+          if (event.getClickCount() == 2) {
+            TaskTreeItem taskTreeItem = treTasks.getSelectionModel().getSelectedItem().getValue();
+            if (taskTreeItem.isTask()) {
+              getActionContext().getModel().setSelectedTaskInfo(taskTreeItem.getTaskInfo());
+              stepToPane(Pages.TASKDETAIL);
+            }
+          }
         }
 
       }

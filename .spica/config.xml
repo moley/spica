@@ -2,17 +2,30 @@
 <model>
     <currentFile>/Users/OleyMa/vcs/spica/spica/.spica/config.xml</currentFile>
     <selectedTaskInfo>
-        <description></description>
-        <links>/Users/OleyMa/vcs/spica/spica/.spica/links/44b9480a-6cd3-4779-b7d8-62d9fc494170</links>
-        <name>Neuer Fall</name>
+        <description>see https://www.zeit.de/2020/27/europapolitik-personenfreizuegigkeit-austritt-schweiz-svp-corona-krise?utm_source=pocket-newtab-global-de-DE 
+see GlobalScreen.addNativeKeyListener(new NativeKeyListener() {
+      @Override public void nativeKeyTyped(NativeKeyEvent nativeKeyEvent) {
+
+        if ((((nativeKeyEvent.getModifiers() &amp; ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK)) &amp;&amp; nativeKeyEvent
+            .getKeyChar() == 's') {
+          Platform.runLater(new Runnable() {
+            @Override public void run() {
+              paste();
+              showTasks();
+            }
+          });
+        }
+ 
+</description>
+        <name>Hallo</name>
     </selectedTaskInfo>
     <taskInfos>
         <name>TaskView Today / This Week</name>
         <plannedDate>2020-06-26</plannedDate>
+        <state>FINISHED</state>
     </taskInfos>
     <taskInfos>
         <name>DragAndDrop: Tasks</name>
-        <plannedDate>2020-06-26</plannedDate>
     </taskInfos>
     <taskInfos>
         <name>TestTask1</name>
@@ -28,6 +41,6 @@
     </taskInfos>
     <taskInfos>
         <description></description>
-        <name>Hallo</name>
+        <name>Hello</name>
     </taskInfos>
 </model>

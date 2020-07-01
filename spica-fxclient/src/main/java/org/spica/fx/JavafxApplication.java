@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.MultiResolutionImage;
 import java.io.File;
@@ -26,6 +27,10 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javax.imageio.ImageIO;
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
+import org.jnativehook.keyboard.NativeKeyEvent;
+import org.jnativehook.keyboard.NativeKeyListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.fx.clipboard.ClipboardItem;
@@ -65,6 +70,41 @@ public class JavafxApplication extends Application {
     this.stage = stage;
 
     mask = maskLoader.load("main");
+/**TODO enable again
+    try {
+      GlobalScreen.registerNativeHook();
+    } catch (NativeHookException ex) {
+      System.err.println("There was a problem registering the native hook.");
+      System.err.println(ex.getMessage());
+
+      System.exit(1);
+    }
+
+    GlobalScreen.addNativeKeyListener(new NativeKeyListener() {
+      @Override public void nativeKeyTyped(NativeKeyEvent nativeKeyEvent) {
+
+        if ((((nativeKeyEvent.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK)) && nativeKeyEvent
+            .getKeyChar() == 's') {
+          Platform.runLater(new Runnable() {
+            @Override public void run() {
+              paste();
+              showTasks();
+            }
+          });
+        }
+
+        System.out.println("Key Typed: " + nativeKeyEvent.getKeyText(nativeKeyEvent.getKeyCode()));
+
+      }
+
+      @Override public void nativeKeyPressed(NativeKeyEvent nativeKeyEvent) {
+
+      }
+
+      @Override public void nativeKeyReleased(NativeKeyEvent nativeKeyEvent) {
+
+      }
+    });**/
 
     // instructs the javafx system not to exit implicitly when the last application window is shut.
     Platform.setImplicitExit(false);
@@ -100,45 +140,10 @@ public class JavafxApplication extends Application {
       @Override public void handle(KeyEvent event) {
         LOGGER.info("onKeyPressed of scene");
 
-        LinkService linkService = mask.getController().getApplicationContext().getLinkService();
         //TODO other operationsystems use CTRL+V
         KeyCodeCombination pasteKeyCodeCombination = new KeyCodeCombination(KeyCode.V, KeyCombination.META_DOWN);
         if (pasteKeyCodeCombination.match(event)) {
-          Clipboard sysClip = Toolkit.getDefaultToolkit().getSystemClipboard();
-          Transferable clipTf = sysClip.getContents(null);
-
-          //from https://stackoverflow.com/questions/20174462/how-to-do-cut-copy-paste-in-java
-
-          if (clipTf != null) {
-
-            if (clipTf.isDataFlavorSupported(DataFlavor.imageFlavor)) {
-              try {
-                MultiResolutionImage multiResolutionImage = (MultiResolutionImage) clipTf.getTransferData(DataFlavor.imageFlavor);
-                BufferedImage toolkitImage = (BufferedImage) multiResolutionImage.getResolutionVariants().get(0);
-                File imageFile = linkService.createLinkFile();
-                LOGGER.info("Saving image to file " + imageFile.getAbsolutePath());
-                ImageIO.write(toolkitImage, "png", imageFile);
-                ClipboardItem clipboardItem = new ClipboardItem();
-                clipboardItem.setFile(imageFile);
-                mask.getController().getApplicationContext().getClipboard().getItems().add(clipboardItem);
-
-              } catch (Exception e) {
-                e.printStackTrace();
-              }
-            }
-
-            if (clipTf.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-              try {
-                String ret = (String) clipTf.getTransferData(DataFlavor.stringFlavor);
-                ClipboardItem clipboardItem = new ClipboardItem();
-                clipboardItem.setString(ret);
-                mask.getController().getApplicationContext().getClipboard().getItems().add(clipboardItem);
-
-              } catch (Exception e) {
-                e.printStackTrace();
-              }
-            }
-          }
+          paste();
         }
       }
     });
@@ -153,6 +158,47 @@ public class JavafxApplication extends Application {
     LOGGER
         .info("Stage layouted " + stage.getX() + "-" + stage.getY() + "-" + stage.getWidth() + "-" + stage.getHeight());
 
+  }
+
+  private void paste() {
+
+    Clipboard sysClip = Toolkit.getDefaultToolkit().getSystemClipboard();
+    Transferable clipTf = sysClip.getContents(null);
+    LinkService linkService = mask.getController().getApplicationContext().getLinkService();
+
+    //from https://stackoverflow.com/questions/20174462/how-to-do-cut-copy-paste-in-java
+
+    if (clipTf != null) {
+
+      if (clipTf.isDataFlavorSupported(DataFlavor.imageFlavor)) {
+        try {
+          MultiResolutionImage multiResolutionImage = (MultiResolutionImage) clipTf
+              .getTransferData(DataFlavor.imageFlavor);
+          BufferedImage toolkitImage = (BufferedImage) multiResolutionImage.getResolutionVariants().get(0);
+          File imageFile = linkService.createLinkFile();
+          LOGGER.info("Saving image to file " + imageFile.getAbsolutePath());
+          ImageIO.write(toolkitImage, "png", imageFile);
+          ClipboardItem clipboardItem = new ClipboardItem();
+          clipboardItem.setFile(imageFile);
+          mask.getController().getApplicationContext().getClipboard().getItems().add(clipboardItem);
+
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+
+      if (clipTf.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+        try {
+          String ret = (String) clipTf.getTransferData(DataFlavor.stringFlavor);
+          ClipboardItem clipboardItem = new ClipboardItem();
+          clipboardItem.setString(ret);
+          mask.getController().getApplicationContext().getClipboard().getItems().add(clipboardItem);
+
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+    }
   }
 
   /**

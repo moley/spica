@@ -20,6 +20,8 @@ dependencies {
 
     compile 'com.jfoenix:jfoenix:9.0.8'
 
+    compile 'com.1stleg:jnativehook:2.1.0'
+
     compile 'org.springframework:spring-websocket:5.2.2.RELEASE'
     compile 'org.springframework:spring-messaging:5.2.2.RELEASE'
     runtime 'javax.websocket:javax.websocket-api:1.1'

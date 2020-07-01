@@ -1,0 +1,9 @@
+.tree-cell:view {
+  -fx-font: 14 arial;
+  -fx-font-weight: bold;
+}
+
+.tree-cell {
+    -fx-padding: 0.8em; /* 3 */
+}
+
