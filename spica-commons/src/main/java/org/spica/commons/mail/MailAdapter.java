@@ -35,12 +35,12 @@ public class MailAdapter {
 
   private Session createSession (SpicaProperties spicaProperties)  {
     Properties mailProperties = new Properties();
-    mailProperties.setProperty("mail.pop3.host", spicaProperties.getValue(PROPERTY_MAIL_POP_HOST));
-    mailProperties.setProperty("mail.pop3.port", spicaProperties.getValue(PROPERTY_MAIL_POP_PORT));
+    mailProperties.setProperty("mail.pop3.host", spicaProperties.getValueNotNull(PROPERTY_MAIL_POP_HOST));
+    mailProperties.setProperty("mail.pop3.port", spicaProperties.getValueNotNull(PROPERTY_MAIL_POP_PORT));
     mailProperties.setProperty("mail.pop3.ssl.enable",  Boolean.toString(true));
 
-    mailProperties.setProperty("mail.smtp.host", spicaProperties.getValue(PROPERTY_MAIL_SMTP_HOST));
-    mailProperties.setProperty("mail.smtp.port", spicaProperties.getValue(PROPERTY_MAIL_SMTP_PORT));
+    mailProperties.setProperty("mail.smtp.host", spicaProperties.getValueNotNull(PROPERTY_MAIL_SMTP_HOST));
+    mailProperties.setProperty("mail.smtp.port", spicaProperties.getValueNotNull(PROPERTY_MAIL_SMTP_PORT));
     mailProperties.setProperty("mail.smtp.auth",  Boolean.toString(true));
     mailProperties.setProperty("mail.smtp.starttls.enable",  Boolean.toString(true));
 

@@ -23,6 +23,7 @@ import org.spica.javaclient.actions.booking.StartTaskAction;
 import org.spica.javaclient.actions.configuration.ImportUsersAction;
 import org.spica.javaclient.actions.configuration.ShowStatusAction;
 import org.spica.javaclient.actions.gradle.InitGradleProjectAction;
+import org.spica.javaclient.actions.imports.ImportLogfilesAction;
 import org.spica.javaclient.actions.links.CreateLinkAction;
 import org.spica.javaclient.actions.links.GotoLinkAction;
 import org.spica.javaclient.actions.links.ListLinksAction;
@@ -67,6 +68,9 @@ public class ActionHandler {
   //TODO per reflection
   public ActionHandler() {
     //Register actions
+
+    //import
+    registeredActions.add(new ImportLogfilesAction());
 
     //booking
     registeredActions.add(new CreateBookingAction());

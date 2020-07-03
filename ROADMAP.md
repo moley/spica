@@ -1,19 +1,41 @@
 
 # Use cases
 
-## Tasks (TODOs)
-### Tasks - Add a task
-### Tasks - Finish a task
-### Tasks - Remove a task 
-### Tasks - Start working at a task
-### Tasks - Stop working at a task
-### Tasks - Plan tasks of one day
-### Tasks - Show new tasks in header
+##Commandline
+* 
+
+##Copy&Paste
+* Global key Ctrl+S inserts clipboard to spica clipboard
+* Ctrl+C / CtrlüV inserts something to spica clipboard
+* DragAnd Drop inserts something to spica clipboard
+* Screenshots can be inserted to spica clipboard
+* There are spica-cli-commands which fill the spica clipboard (e.g. spica-cli logs [--all])
+
+## Todos
+### Add todo 
+* Create a todo when pressing ENTER in Textfield, clipboard is added as file or link   
+* Add files / links to the task 
+* Entering @ shows users as auto suggestion
+* Entering # shows tags 
+* Todo is created in priority 3 by default, + sets the prio 2, ++ sets prio1, - sets prio4
+* Entering -> sets planning date e.g ->today, ->tomorrow, ->01.12.,)
+* Entering () sets duration, e.g. (1h) (30min) (5min)
+* Create a voicemessage
+
+### Finish todo
+In the todo overview click on button *finish* or type f
+### Remove todo 
+In the todo overview click on button *remove* or type -
+### Start working at a todo
+In the todo overview click on button *start* or type s
+### Tasks - Stop working at a todo
+### Tasks - Plan todo of one day
+### Tasks - Show new todos in header
 ### Tasks - Fileserver Upload / Download / Link
-### Tasks - Attach file / screenshot / content to task
+### Tasks - Attach file / screenshot / content to todo
 ### Tasks - Jira integration
-A task can be created only in spica, but can even be created in 
-jira and can be linked.
+A task can be created in spica only, optionally be created in 
+jira and linked
  
 ## Booking
 ### Booking - Start a task 

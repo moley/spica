@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
 import javax.xml.bind.JAXBContext;
@@ -19,6 +20,8 @@ import org.spica.commons.SpicaProperties;
 import org.spica.javaclient.model.DashboardItemInfo;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.Model;
+import org.spica.javaclient.model.ProjectInfo;
+import org.spica.javaclient.model.TaskInfo;
 
 public class ModelCacheService implements Serializable{
 
@@ -68,6 +71,27 @@ public class ModelCacheService implements Serializable{
         dashboardItemInfo.setItemType(DashboardItemType.EVENT.name());
         model.getDashboardItemInfos().add(dashboardItemInfo);
       }
+    }
+
+    for (TaskInfo nextTaskInfo: model.getTaskInfos()) {
+      if (nextTaskInfo.getId() == null)
+        nextTaskInfo.setId(UUID.randomUUID().toString());
+    }
+
+    //TODO move to server
+    if (model.getProjectInfos() == null || model.getProjectInfos().isEmpty()) {
+      ProjectInfo projectPrivate = new ProjectInfo();
+      projectPrivate.setId(UUID.randomUUID().toString());
+      projectPrivate.setName("Private");
+      projectPrivate.setColor("626d78");
+
+      ProjectInfo projectWork = new ProjectInfo();
+      projectWork.setId(UUID.randomUUID().toString());
+      projectWork.setName("Job");
+      projectWork.setColor("969677");
+
+      model.getProjectInfos().addAll(Arrays.asList(projectPrivate, projectWork));
+
     }
 
     //TODO temp

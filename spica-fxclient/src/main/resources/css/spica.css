@@ -7,3 +7,10 @@
     -fx-padding: 0.8em; /* 3 */
 }
 
+.tag {
+  -fx-text-fill: rgb(182, 189, 217);
+  -fx-border-color: rgb(201, 199, 187);
+  -fx-text-fill: black;
+  -fx-border-radius: 95%;
+}
+

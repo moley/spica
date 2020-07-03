@@ -24,3 +24,5 @@ bin/
 /spica-server/.spica/
 /.spica/config_*
 /.spica/links
+/.spica/attachments/
+/.spica/siteChanged/

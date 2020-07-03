@@ -58,8 +58,10 @@ public class Main {
     String username = actionContext.getProperties().getValueNotNull("spica.cli.username");
     String password = actionContext.getProperties().getValueNotNull("spica.cli.password");
     HttpBasicAuth httpBasicAuth = (HttpBasicAuth) Configuration.getDefaultApiClient().getAuthentication("basicAuth");
-    httpBasicAuth.setUsername(username);
-    httpBasicAuth.setPassword(password);
+    if (httpBasicAuth != null) {
+      httpBasicAuth.setUsername(username);
+      httpBasicAuth.setPassword(password);
+    }
 
     Configuration.getDefaultApiClient().setUsername(username);
     Configuration.getDefaultApiClient().setPassword(password);
@@ -85,9 +87,9 @@ public class Main {
       } else if (eventInfo.getEventType().equals(EventType.TOPIC)) {
         TaskInfo topicInfoById = actionContext.getModel().findTaskInfoById(eventInfo.getReferenceId());
         RenderUtil renderUtil = new RenderUtil();
-        task = "Task " + renderUtil.getTask(topicInfoById);
+        task = renderUtil.getTask(topicInfoById);
       } else if (eventInfo.getEventType().equals(EventType.MESSAGE)) {
-        task = eventInfo.getName();
+        task = "Message " + eventInfo.getName();
       } else {
         task = eventInfo.getEventType().getValue();
       }

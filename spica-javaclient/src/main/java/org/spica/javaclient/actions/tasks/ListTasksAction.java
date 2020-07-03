@@ -18,12 +18,12 @@ public class ListTasksAction extends AbstractAction {
     private final static Logger LOGGER = LoggerFactory.getLogger(ListTasksAction.class);
 
     @Override public String getDisplayname() {
-        return "List topic";
+        return "List tasks";
     }
 
     @Override
     public String getDescription() {
-        return "List all topics";
+        return "List all tasks";
     }
 
     @Override

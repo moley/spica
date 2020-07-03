@@ -1,7 +1,7 @@
 package org.spica.fx;
 
 import org.spica.fx.clipboard.Clipboard;
-import org.spica.fx.clipboard.LinkService;
+import org.spica.fx.clipboard.AttachmentService;
 
 public class ApplicationContext {
 
@@ -9,7 +9,7 @@ public class ApplicationContext {
 
   private Clipboard clipboard = new Clipboard();
 
-  private LinkService linkService = new LinkService();
+  private AttachmentService attachmentService = new AttachmentService();
 
   public ScreenManager getScreenManager() {
     return screenManager;
@@ -19,7 +19,7 @@ public class ApplicationContext {
     return clipboard;
   }
 
-  public LinkService getLinkService () {
-    return linkService;
+  public AttachmentService getAttachmentService() {
+    return attachmentService;
   }
 }

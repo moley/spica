@@ -4,16 +4,16 @@ import java.io.File;
 import java.util.UUID;
 import org.spica.commons.SpicaProperties;
 
-public class LinkService {
+public class AttachmentService {
 
-  public String createLinkId () {
+  public String createAttachmentID() {
     return UUID.randomUUID().toString();
   }
 
-  public File createLinkFile () {
+  public File createAttachment() {
     File spicaHome = SpicaProperties.getSpicaHome();
-    File linksFile = new File (spicaHome, "links");
+    File linksFile = new File (spicaHome, "attachments");
     linksFile.mkdirs();
-    return new File (linksFile, createLinkId());
+    return new File (linksFile, createAttachmentID());
   }
 }

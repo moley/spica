@@ -15,12 +15,12 @@ public class EmptyTasksAction extends AbstractAction {
     private final static Logger LOGGER = LoggerFactory.getLogger(EmptyTasksAction.class);
 
     @Override public String getDisplayname() {
-        return "Empty topics";
+        return "Empty tasks";
     }
 
     @Override
     public String getDescription() {
-        return "Empties complete list of topics";
+        return "Empties complete list of tasks";
     }
 
     @Override
@@ -29,7 +29,7 @@ public class EmptyTasksAction extends AbstractAction {
         Model model = actionContext.getModel();
         model.setTaskInfos(new ArrayList<TaskInfo>());
 
-        outputOk("Removed all topics");
+        outputOk("Removed all tasks");
 
         actionContext.saveModel(getClass().getName());
 

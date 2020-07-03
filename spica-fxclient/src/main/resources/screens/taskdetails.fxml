@@ -19,6 +19,8 @@
     <Label text="Links:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
     <Text fx:id="txtLinks" GridPane.rowIndex="2" GridPane.columnIndex="1"></Text>
 
+    <Text fx:id="txtTags" GridPane.rowIndex="2" GridPane.columnIndex="1"></Text>
+
 
 
 </GridPane>

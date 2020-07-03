@@ -46,6 +46,7 @@ public class StartTaskAction extends AbstractAction {
         Model model = actionContext.getModel();
 
         String query = commandLineArguments.getOptionalMainArgument();
+
         List<TaskInfo> infos = model.findTaskInfosByQuery(query);
         TaskInfo selectedTaskInfo = infos.size() == 1 ? infos.get(0): (TaskInfo) inputParams.getInputValue(KEY_TOPIC);
 

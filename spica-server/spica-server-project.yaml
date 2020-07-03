@@ -172,6 +172,8 @@ components:
           type: "string"
         name:
           type: "string"
+        color:
+          type: "string"
         parent:
           $ref: "#/components/schemas/ProjectInfo"
         sourceparts:

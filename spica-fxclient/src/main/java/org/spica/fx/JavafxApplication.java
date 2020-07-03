@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.MultiResolutionImage;
 import java.io.File;
@@ -27,17 +26,16 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javax.imageio.ImageIO;
-import org.jnativehook.GlobalScreen;
-import org.jnativehook.NativeHookException;
-import org.jnativehook.keyboard.NativeKeyEvent;
-import org.jnativehook.keyboard.NativeKeyListener;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spica.commons.SpicaProperties;
 import org.spica.fx.clipboard.ClipboardItem;
-import org.spica.fx.clipboard.LinkService;
+import org.spica.fx.clipboard.AttachmentService;
 import org.spica.fx.controllers.MainController;
 import org.spica.fx.controllers.Pages;
 
+@Slf4j
 public class JavafxApplication extends Application {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(JavafxApplication.class);
@@ -61,10 +59,6 @@ public class JavafxApplication extends Application {
   // interacts with the tray icon.
   @Override public void start(final Stage stage) throws IOException {
 
-    Image iconWithNoNotifications = new Image("/spica.png");
-
-    // change the icon when the notifications count changes
-    stage.getIcons().setAll(iconWithNoNotifications);
     stage.setTitle("Spica FX Client");
     // stores a reference to the stage.
     this.stage = stage;
@@ -164,7 +158,7 @@ public class JavafxApplication extends Application {
 
     Clipboard sysClip = Toolkit.getDefaultToolkit().getSystemClipboard();
     Transferable clipTf = sysClip.getContents(null);
-    LinkService linkService = mask.getController().getApplicationContext().getLinkService();
+    AttachmentService attachmentService = mask.getController().getApplicationContext().getAttachmentService();
 
     //from https://stackoverflow.com/questions/20174462/how-to-do-cut-copy-paste-in-java
 
@@ -175,7 +169,7 @@ public class JavafxApplication extends Application {
           MultiResolutionImage multiResolutionImage = (MultiResolutionImage) clipTf
               .getTransferData(DataFlavor.imageFlavor);
           BufferedImage toolkitImage = (BufferedImage) multiResolutionImage.getResolutionVariants().get(0);
-          File imageFile = linkService.createLinkFile();
+          File imageFile = attachmentService.createAttachment();
           LOGGER.info("Saving image to file " + imageFile.getAbsolutePath());
           ImageIO.write(toolkitImage, "png", imageFile);
           ClipboardItem clipboardItem = new ClipboardItem();
@@ -215,9 +209,14 @@ public class JavafxApplication extends Application {
         Platform.exit();
       }
 
+      boolean isTestEnvironment = new File ("build.gradle").exists();
+
+
       // set up a system tray icon.
       java.awt.SystemTray tray = java.awt.SystemTray.getSystemTray();
-      java.awt.Image image = ImageIO.read(getClass().getResource("/spica.png"));
+
+      final String icon = isTestEnvironment ? "/spica_test.png": "/spica.png";
+      java.awt.Image image = ImageIO.read(getClass().getResource(icon));
       java.awt.TrayIcon trayIcon = new java.awt.TrayIcon(image);
 
       // if the user double-clicks on the tray icon, show the main app stage.

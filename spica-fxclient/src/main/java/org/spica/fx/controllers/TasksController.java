@@ -4,8 +4,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
@@ -18,6 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.spica.fx.Reload;
 import org.spica.fx.UiUtils;
 import org.spica.fx.clipboard.ClipboardItem;
+import org.spica.fx.renderer.ProjectCellFactory;
+import org.spica.fx.renderer.ProjectStringConverter;
 import org.spica.fx.renderer.TaskTreeItem;
 import org.spica.fx.renderer.TaskTreeItemCellFactory;
 import org.spica.fx.view.FinishedTasksView;
@@ -26,12 +34,14 @@ import org.spica.fx.view.NextWeekTasksView;
 import org.spica.fx.view.TaskView;
 import org.spica.fx.view.TodayTasksView;
 import org.spica.fx.view.WeekTasksView;
+import org.spica.javaclient.model.ProjectInfo;
 import org.spica.javaclient.model.TaskInfo;
 
 @Slf4j public class TasksController extends AbstractController {
   public TextField txtSearch;
-  public ListView<TaskView> lviProjects;
+  public ListView<ProjectInfo> lviProjects;
   public TreeView<TaskTreeItem> treTasks;
+  public ComboBox<ProjectInfo> cboProjects;
 
   private InboxTasksView inboxTasksView = new InboxTasksView();
   private TodayTasksView todayTasksView = new TodayTasksView();
@@ -43,7 +53,9 @@ import org.spica.javaclient.model.TaskInfo;
 
   @FXML
   public void initialize () {
-    lviProjects.setPlaceholder(new Text("No projects available"));
+    cboProjects.setPlaceholder(new Text("No projects available"));
+    cboProjects.setCellFactory(cellfactory -> new ProjectCellFactory());
+    cboProjects.setConverter(new ProjectStringConverter());
     treTasks.setShowRoot(false);
     treTasks.setCellFactory(cellFactory -> new TaskTreeItemCellFactory(getActionContext(), new Reload() {
       @Override public void reload() {
@@ -57,6 +69,7 @@ import org.spica.javaclient.model.TaskInfo;
   private void addNewTask (final String newTaskIdentifier) {
 
     TaskInfo taskInfo = new TaskInfo();
+    taskInfo.setId(UUID.randomUUID().toString());
     taskInfo.setName(newTaskIdentifier);
     String description = "";
     for (ClipboardItem next: getApplicationContext().getClipboard().getItems()) {
@@ -88,6 +101,8 @@ import org.spica.javaclient.model.TaskInfo;
   public void refreshViews () {
     log.info("refreshViews with " + getActionContext().getModel().getTaskInfos().size() + " tasks");
 
+    ProjectInfo selectedProject = cboProjects.getSelectionModel().getSelectedItem();
+
     List<TaskInfo> taskInfoList = getActionContext().getModel().getTaskInfos();
     for (TaskView nextView: allViews) {
       nextView.renderTasks(taskInfoList);
@@ -100,7 +115,8 @@ import org.spica.javaclient.model.TaskInfo;
       viewItem.setExpanded(true);
       rootItem.getChildren().add(viewItem);
       for (TaskInfo nextTaskInfo: nextView.getTaskInfos()) {
-        viewItem.getChildren().add(new TreeItem<TaskTreeItem> (new TaskTreeItem(nextTaskInfo)));
+        if (selectedProject.getName().equals("All") || (nextTaskInfo.getProject() != null && nextTaskInfo.getProject().equals(selectedProject)))
+          viewItem.getChildren().add(new TreeItem<TaskTreeItem> (new TaskTreeItem(nextTaskInfo)));
       }
     }
     treTasks.setRoot(rootItem);
@@ -112,27 +128,19 @@ import org.spica.javaclient.model.TaskInfo;
 
     UiUtils.requestFocus(txtSearch);
 
+    ObservableList<ProjectInfo> scopeList = FXCollections.observableArrayList(getActionContext().getModel().getProjectInfos());
+    ProjectInfo allScope = new ProjectInfo();
+    allScope.setName("All");
+    scopeList.add(0, allScope);
+    cboProjects.setItems(scopeList);
+    cboProjects.getSelectionModel().selectedItemProperty().addListener( (observable, oldValue, newValue) -> refreshViews());
+    cboProjects.getSelectionModel().selectFirst();
+
     refreshViews();
 
-    /**lviTasks.setCellFactory(cellfactory -> new TaskInfoCellFactory(getActionContext(), new Reload() {
-      @Override public void reload() {
-        refreshViews();
-      }
-    }));
 
-    refreshViews();
 
-    lviLists.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TaskView>() {
-      @Override public void changed(ObservableValue<? extends TaskView> observable, TaskView oldValue,
-          TaskView newValue) {
-        if (newValue != null)
-          lviTasks.setItems(FXCollections.observableArrayList(newValue.getTaskInfos()));
-      }
-    });
 
-    if (lviLists.getSelectionModel().isEmpty()) {
-      lviLists.getSelectionModel().selectFirst();
-    }**/
 
     treTasks.setOnKeyPressed(new EventHandler<KeyEvent>() {
       @Override public void handle(KeyEvent event) {

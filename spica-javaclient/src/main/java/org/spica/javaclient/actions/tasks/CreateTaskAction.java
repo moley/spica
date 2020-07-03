@@ -26,13 +26,13 @@ public class CreateTaskAction extends AbstractAction {
     public final static String ERROR_PARAM_NAME = "You did not define a subject as parameter";
 
     @Override public String getDisplayname() {
-        return "Create topic";
+        return "Create task";
     }
 
 
     @Override
     public String getDescription() {
-        return "Creates a topic (parameter is topic subject)";
+        return "Creates a task (with parameter as name)";
     }
 
     @Override

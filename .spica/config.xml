@@ -1,46 +1,75 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model>
     <currentFile>/Users/OleyMa/vcs/spica/spica/.spica/config.xml</currentFile>
+    <projectInfos>
+        <color>626d78</color>
+        <id>5fd615d5-deeb-4ffa-bb61-d5362ba865ae</id>
+        <name>Private</name>
+    </projectInfos>
+    <projectInfos>
+        <color>969677</color>
+        <id>d73a0f8e-e018-4b08-b436-79d9fd850540</id>
+        <name>Job</name>
+    </projectInfos>
     <selectedTaskInfo>
-        <description>see https://www.zeit.de/2020/27/europapolitik-personenfreizuegigkeit-austritt-schweiz-svp-corona-krise?utm_source=pocket-newtab-global-de-DE 
-see GlobalScreen.addNativeKeyListener(new NativeKeyListener() {
-      @Override public void nativeKeyTyped(NativeKeyEvent nativeKeyEvent) {
-
-        if ((((nativeKeyEvent.getModifiers() &amp; ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK)) &amp;&amp; nativeKeyEvent
-            .getKeyChar() == 's') {
-          Platform.runLater(new Runnable() {
-            @Override public void run() {
-              paste();
-              showTasks();
-            }
-          });
-        }
- 
-</description>
-        <name>Hallo</name>
+        <description></description>
+        <id>cd36cbd3-635d-4005-abbf-fd90ac2430b8</id>
+        <links>/Users/OleyMa/vcs/spica/spica/.spica/attachments/55f95205-3cae-4a30-9721-45e8267cc605</links>
+        <name>Error in marvincore</name>
     </selectedTaskInfo>
     <taskInfos>
+        <id>5df1f25c-ed83-4f39-b8de-c377b2acee3a</id>
         <name>TaskView Today / This Week</name>
         <plannedDate>2020-06-26</plannedDate>
+        <project>
+            <color>626d78</color>
+            <id>5fd615d5-deeb-4ffa-bb61-d5362ba865ae</id>
+            <name>Private</name>
+        </project>
         <state>FINISHED</state>
     </taskInfos>
     <taskInfos>
+        <id>e856e0af-8d48-4b0a-86f8-56818c92cf95</id>
         <name>DragAndDrop: Tasks</name>
+        <project>
+            <color>969677</color>
+            <id>d73a0f8e-e018-4b08-b436-79d9fd850540</id>
+            <name>Job</name>
+        </project>
     </taskInfos>
     <taskInfos>
+        <id>c73e39d9-7b8c-4158-b545-a38a888315e9</id>
         <name>TestTask1</name>
         <state>FINISHED</state>
     </taskInfos>
     <taskInfos>
+        <id>30e51d22-ecd6-4adb-b3f9-ae39066fd873</id>
         <name>TestTask2</name>
+        <project>
+            <color>626d78</color>
+            <id>5fd615d5-deeb-4ffa-bb61-d5362ba865ae</id>
+            <name>Private</name>
+        </project>
     </taskInfos>
     <taskInfos>
         <description>see https://stackoverflow.com/questions/21655790/javafx-popover-from-controlfx 
 </description>
+        <id>668c273b-a508-48f7-93cf-09dce6409f79</id>
         <name>TestTask3</name>
+        <project>
+            <color>626d78</color>
+            <id>5fd615d5-deeb-4ffa-bb61-d5362ba865ae</id>
+            <name>Private</name>
+        </project>
     </taskInfos>
     <taskInfos>
         <description></description>
-        <name>Hello</name>
+        <id>fad09160-7550-4a66-9129-6073e2f469e1</id>
+        <name>Neuer Task</name>
+        <project>
+            <color>969677</color>
+            <id>d73a0f8e-e018-4b08-b436-79d9fd850540</id>
+            <name>Job</name>
+        </project>
     </taskInfos>
 </model>

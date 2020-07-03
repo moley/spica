@@ -19,13 +19,13 @@ public class CloseTaskAction extends AbstractAction {
 
 
     @Override public String getDisplayname() {
-        return "Finish topic";
+        return "Finish task";
     }
 
 
     @Override
     public String getDescription() {
-        return "Finishes a topic (parameter is topic subject)";
+        return "Finishes tasks that match a certain string (in key, description, name or id)";
     }
 
     @Override

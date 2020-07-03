@@ -9,6 +9,7 @@ ActionContext actionContext = spica
 //If page changes, we import the new gradle version into our artifactory
 Services services = actionContext.services
 boolean siteChanged = services.downloadService.siteChanged("https://gradle.org/releases/");
+println "Site changed: " + siteChanged
 if (siteChanged) {
     //Get all versions from attribute of tag of an http page
     List<String> gradleVersions = services.downloadService.getAttributeOfTags("https://gradle.org/releases/", "a", "name", null)

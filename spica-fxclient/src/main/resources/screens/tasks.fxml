@@ -6,13 +6,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.control.TreeView?>
+<?import javafx.scene.control.ComboBox?>
 <GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fx.controllers.TasksController"
           alignment="TOP_LEFT" hgap="10" vgap="10">
-    <columnConstraints>
-        <ColumnConstraints percentWidth="30"/>
-        <ColumnConstraints percentWidth="70"/>
-    </columnConstraints>
-
     <stylesheets>
         <URL value="@/css/spica.css"/>
     </stylesheets>
@@ -20,13 +16,13 @@
         <Insets top="20" bottom="20" left="20" right="20"/>
     </padding>
 
-    <HBox GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2">
+    <HBox GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2" spacing="20">
         <TextField fx:id="txtSearch" minWidth="400"></TextField>
+        <ComboBox fx:id="cboProjects" minWidth="400"></ComboBox>
         <!--<Button text="Add" fx:id="btnNewTask"></Button>-->
         <!--<Button text="Synchronize" fx:id="btnSynchronize"></Button>-->
     </HBox >
-    <ListView fx:id="lviProjects" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.vgrow="ALWAYS"></ListView>
-    <TreeView fx:id="treTasks" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.fillWidth="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"></TreeView>
+    <TreeView fx:id="treTasks" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.fillWidth="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"></TreeView>
 
 
 </GridPane>

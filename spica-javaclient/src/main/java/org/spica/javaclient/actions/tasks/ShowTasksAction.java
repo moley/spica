@@ -17,12 +17,12 @@ public class ShowTasksAction extends AbstractAction {
 
 
     @Override public String getDisplayname() {
-        return "Show topics";
+        return "Show tasks";
     }
 
     @Override
     public String getDescription() {
-        return "Show topics that matches a certain string (in key, description, name or id)";
+        return "Show tasks that matches a certain string (in key, description, name or id)";
     }
 
     @Override

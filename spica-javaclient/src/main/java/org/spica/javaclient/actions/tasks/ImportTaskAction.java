@@ -16,12 +16,12 @@ public class ImportTaskAction extends AbstractAction {
     private final static Logger LOGGER = LoggerFactory.getLogger(ImportTaskAction.class);
 
     @Override public String getDisplayname() {
-        return "Import topic";
+        return "Import tasks";
     }
 
     @Override
     public String getDescription() {
-        return "Imports or refreshes imported topics from an external system";
+        return "Synchronizes tasks from an external system";
     }
 
     @Override

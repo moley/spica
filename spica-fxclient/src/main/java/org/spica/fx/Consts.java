@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +29,14 @@ public class Consts {
   public final static FontIcon createIcon (String name, int iconSize) {
     FontIcon fontIcon =  new FontIcon(name);
     fontIcon.setIconSize(iconSize);
+
+    return fontIcon;
+  }
+
+  public final static FontIcon createIcon (String name, int iconSize, String style) {
+    FontIcon fontIcon =  new FontIcon(name);
+    fontIcon.setIconSize(iconSize);
+    fontIcon.setIconColor(Color.web(style));
     return fontIcon;
   }
 

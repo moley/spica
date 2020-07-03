@@ -17,6 +17,7 @@ import org.controlsfx.control.PopOver;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.spica.cli.actions.StandaloneActionContext;
 import org.spica.fx.ApplicationContext;
+import org.spica.fx.AutoImportThread;
 import org.spica.fx.Consts;
 import org.spica.fx.clipboard.ClipboardItem;
 import org.spica.javaclient.Configuration;
@@ -37,6 +38,8 @@ public class MainController extends AbstractController  {
   @FXML private ButtonBar btnMainActions;
 
   private ListView<ClipboardItem> lviClipboardItems = new ListView<ClipboardItem>();
+
+  private AutoImportThread autoImportThread;
 
   @FXML
   public void initialize () {
@@ -63,12 +66,6 @@ public class MainController extends AbstractController  {
       }
     });
 
-    btnClipboard.setOnMouseExited(mouseEvent -> {
-      //Hide PopOver when mouse exits label
-      popOver.hide();
-    });
-
-
     btnSearchUp.setGraphic(Consts.createIcon("fa-chevron-up", 15));
     btnSearchDown.setGraphic(Consts.createIcon("fa-chevron-down", 15));
 
@@ -92,8 +89,14 @@ public class MainController extends AbstractController  {
     setActionContext(standaloneActionContext);
 
     setApplicationContext(new ApplicationContext());
+
+    autoImportThread = new AutoImportThread(getApplicationContext());
+    autoImportThread.start();
+
+    log.info("Register clipboard");
     getApplicationContext().getClipboard().getItems().addListener(new ListChangeListener<ClipboardItem>() {
       @Override public void onChanged(Change<? extends ClipboardItem> c) {
+        log.info("Clipboard changed");
         badClipboard.setText(String.valueOf(getApplicationContext().getClipboard().getItems().size()));
         badClipboard.setEnabled(! getApplicationContext().getClipboard().getItems().isEmpty());
         badClipboard.refreshBadge();

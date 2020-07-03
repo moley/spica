@@ -180,6 +180,13 @@ public class SpicaProperties {
     return new File(home, ".spica");
   }
 
+  public final static File getImportFolder () {
+    File importFolder =  new File (getGlobalSpicaHome(), "import");
+    if (! importFolder.exists())
+      importFolder.mkdirs();
+    return importFolder;
+  }
+
   public static void close() {
     properties.clear();
     customSpicaPath = null;

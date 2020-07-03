@@ -27,6 +27,12 @@ public abstract class AbstractAction implements Action {
         return this;
     }
 
+    protected AbstractAction outputWarning (final String message) {
+        errors.add(message);
+        System.out.println (LogUtil.yellow(message));
+        return this;
+    }
+
     public void finish () {
         System.exit(1);
     }
