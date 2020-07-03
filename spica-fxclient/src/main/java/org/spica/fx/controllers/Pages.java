@@ -7,7 +7,8 @@ public enum Pages {
   MESSAGES ("messages", "Messages", "fa-envelope", true),
   MESSAGEDIALOG ("messagedialog", "Dialog", "fa-envelope", false),
   TASKS ("tasks", "Tasks", "fa-tasks", true),
-  TASKDETAIL ("taskdetails", "Task Details", "fa-tasks", false);
+  TASKDETAIL ("taskdetails", "Task Details", "fa-tasks", false),
+  PROJECTS ("projects", "Projects", "fa-building", true);
 
   private String filename;
   private String displayname;

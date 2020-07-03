@@ -242,6 +242,10 @@ public class JavafxApplication extends Application {
       openTasks.addActionListener(event -> Platform.runLater(this::showTasks));
       openTasks.setFont(boldFont);
 
+      java.awt.MenuItem openProjects = new java.awt.MenuItem("Show projects");
+      openProjects.addActionListener(event -> Platform.runLater(this::showProjects));
+      openProjects.setFont(boldFont);
+
       java.awt.MenuItem startTask = new java.awt.MenuItem("Start task");
       startTask.addActionListener(event -> Platform.runLater(this::startTask));
       startTask.setFont(boldFont);
@@ -279,6 +283,7 @@ public class JavafxApplication extends Application {
       popup.add(openPlanning);
       popup.add(openMessages);
       popup.add(openTasks);
+      popup.add(openProjects);
       popup.addSeparator();
       popup.add(startTask);
       popup.add(startPause);
@@ -315,6 +320,8 @@ public class JavafxApplication extends Application {
     }
   }
 
+
+
   private void hide() {
     stage.hide();
   }
@@ -347,6 +354,10 @@ public class JavafxApplication extends Application {
 
   private void showMessages() {
     showMask(Pages.MESSAGES);
+  }
+
+  private void showProjects() {
+    showMask(Pages.PROJECTS);
   }
 
   /**

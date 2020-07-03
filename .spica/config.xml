@@ -32,9 +32,13 @@
         <id>e856e0af-8d48-4b0a-86f8-56818c92cf95</id>
         <name>DragAndDrop: Tasks</name>
         <project>
-            <color>969677</color>
-            <id>d73a0f8e-e018-4b08-b436-79d9fd850540</id>
-            <name>Job</name>
+            <id>e7b379fd-bb6b-4d24-9caa-59be36960f7f</id>
+            <name>Maschendrahtzaun</name>
+            <parent>
+                <color>626d78</color>
+                <id>5fd615d5-deeb-4ffa-bb61-d5362ba865ae</id>
+                <name>Private</name>
+            </parent>
         </project>
     </taskInfos>
     <taskInfos>
@@ -57,9 +61,9 @@
         <id>668c273b-a508-48f7-93cf-09dce6409f79</id>
         <name>TestTask3</name>
         <project>
-            <color>626d78</color>
-            <id>5fd615d5-deeb-4ffa-bb61-d5362ba865ae</id>
-            <name>Private</name>
+            <color>969677</color>
+            <id>d73a0f8e-e018-4b08-b436-79d9fd850540</id>
+            <name>Job</name>
         </project>
     </taskInfos>
     <taskInfos>
