@@ -57,6 +57,10 @@ public class CommandLineArguments {
     return mainArguments;
   }
 
+  public boolean hasMainArgument () {
+    return getMainArguments().size() > 0;
+  }
+
   public String getOptionalMainArgument() {
     List<String> mainArguments = getMainArguments();
     if (mainArguments.isEmpty())

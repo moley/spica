@@ -1,0 +1,3 @@
+= Get your things done faster with automations
+:nofooter:
+:toc:

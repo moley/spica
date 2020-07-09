@@ -52,7 +52,7 @@ public class ShowProjectsAction extends AbstractAction {
         for (ProjectInfo next : infos) {
             outputDefault("ID               : " + next.getId());
             outputDefault("Name             : " + next.getName());
-            outputDefault("Parent Project   : " + (next.getParent() != null ? next.getParent().getName() : ""));
+            outputDefault("Parent Project   : " + next.getParentId());
             outputDefault("Enabled modules  : " + getSourceParts(next, true));
             outputDefault("Disabled modules : " + getSourceParts(next, false));
             outputDefault("\n\n");

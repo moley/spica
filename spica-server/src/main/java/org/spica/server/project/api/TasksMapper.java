@@ -18,7 +18,7 @@ public class TasksMapper {
     topicInfo.setExternalSystemKey(task.getExternalSystemKey());
 
     if (task.getParentTask() != null)
-      topicInfo.setParent(toApi(task.getParentTask()));
+      topicInfo.setParentId(toApi(task.getParentTask()).getId());
     //topicInfo.setState();
     //topicInfo.setProject();
 

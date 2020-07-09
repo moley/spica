@@ -1,0 +1,23 @@
+= What is spica?
+:nofooter:
+:toc:
+
+Spica is a suite of tools to improve and ease every days live for people working together on projects.
+It provides todo handling, communication and automation features. Both commandline client and fx client
+improve processes
+
+== Components
+Spica is composed of multiple independent components, which interact directly with each other.
+
+=== Commandline interface
+The commandline interface can be used to work directly in the commandline. It uses consoleui to
+interact with the user.
+
+=== FX client
+The fx client can be used to get a quick overview and visualize things on laptops. Native
+installers are generated to have an easy installation process.
+
+=== Spica server
+The spica server enables working together of different user and synchronizing the model between
+the different clients. It is a spring boot server application distributed in a docker container
+and needs a SQL database (h2 by default) to save the model.

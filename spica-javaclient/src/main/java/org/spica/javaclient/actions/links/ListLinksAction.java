@@ -13,6 +13,7 @@ import org.spica.javaclient.links.LinkFinder;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.model.LinkInfo;
+import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.TaskInfo;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
@@ -37,6 +38,7 @@ public class ListLinksAction extends AbstractAction {
 
     boolean showAllLinks = commandLineArguments.hasArgument("--all");
 
+    Model model = actionContext.getModel();
     EventInfo eventInfo = actionContext.getModel().findLastOpenEventFromToday();
     TaskInfo topicInfo = (eventInfo != null && eventInfo.getEventType().equals(EventType.TOPIC)) ?
         actionContext.getModel().findTaskInfoById(eventInfo.getReferenceId()) :
@@ -57,7 +59,7 @@ public class ListLinksAction extends AbstractAction {
     linkFinder.setModel(actionContext.getModel());
     List<LinkInfo> linkInfos = actionContext.getModel().getLinkInfos();
     if (!showAllLinks)
-      linkInfos = linkFinder.findMatchingLinks(topicInfo, currentPath);
+      linkInfos = linkFinder.findMatchingLinks(model, topicInfo, currentPath);
 
     for (LinkInfo next : linkInfos) {
       outputDefault(renderUtil.getLink(next));

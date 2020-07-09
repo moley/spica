@@ -67,7 +67,7 @@ public class CreateLinkAction extends AbstractAction {
             linkInfo.setReference(currentTask.getId());
         }
         else if (selectedLinkType.equals(LinkType.PROJECT)) {
-            currentProject = currentProject != null ? currentProject : currentTask.getProject();
+            currentProject = model.findProjectInfosById(currentTask.getProjectId());
             if (currentProject == null) {
                 outputError("No project reference found, cannot create project related link");
                 return null;
@@ -152,7 +152,7 @@ public class CreateLinkAction extends AbstractAction {
 
                 if (linkTypeNeedsProject) {
                     TaskInfo currentTask = model.getCurrentTask();
-                    return currentTask == null || currentTask.getProject() == null;
+                    return currentTask == null || currentTask.getProjectId() == null;
                 }
                 return false;
             }

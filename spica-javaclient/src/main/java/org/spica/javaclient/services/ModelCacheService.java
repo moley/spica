@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
@@ -12,6 +13,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,7 @@ import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.ProjectInfo;
 import org.spica.javaclient.model.TaskInfo;
 
+@Slf4j
 public class ModelCacheService implements Serializable{
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ModelCacheService.class);
@@ -79,20 +82,33 @@ public class ModelCacheService implements Serializable{
     }
 
     //TODO move to server
-    if (model.getProjectInfos() == null || model.getProjectInfos().isEmpty()) {
-      ProjectInfo projectPrivate = new ProjectInfo();
-      projectPrivate.setId(UUID.randomUUID().toString());
-      projectPrivate.setName("Private");
-      projectPrivate.setColor("626d78");
-
-      ProjectInfo projectWork = new ProjectInfo();
-      projectWork.setId(UUID.randomUUID().toString());
-      projectWork.setName("Job");
-      projectWork.setColor("969677");
-
-      model.getProjectInfos().addAll(Arrays.asList(projectPrivate, projectWork));
-
+    if (model.getProjectInfos() == null) {
+      model.setProjectInfos(new ArrayList<>());
     }
+
+    if (model.findProjectInfosById(Model.DEFAULTTASK_PRIVATE) == null) {
+      log.info("Creating default task " + Model.DEFAULTTASK_PRIVATE);
+      ProjectInfo projectPrivate = new ProjectInfo();
+      projectPrivate.setId(Model.DEFAULTTASK_PRIVATE);
+      projectPrivate.setName(Model.DEFAULTTASK_PRIVATE);
+      projectPrivate.setColor("0x80b380ff");
+      model.getProjectInfos().add(projectPrivate);
+      set(model, "Create default task " + Model.DEFAULTTASK_PRIVATE);
+    }
+    else
+      log.info("Default task " + Model.DEFAULTTASK_PRIVATE + " already exists");
+
+    if (model.findProjectInfosById(Model.DEFAULTTASK_WORK) == null) {
+      log.info("Creating default task " + Model.DEFAULTTASK_WORK);
+      ProjectInfo projectWork = new ProjectInfo();
+      projectWork.setId(Model.DEFAULTTASK_WORK);
+      projectWork.setName(Model.DEFAULTTASK_WORK);
+      projectWork.setColor("0x8099ffff");
+      model.getProjectInfos().add(projectWork);
+      set(model, "Create default task " + Model.DEFAULTTASK_WORK);
+    }
+    else
+      log.info("Default task " + Model.DEFAULTTASK_WORK + " already exists");
 
     //TODO temp
     //List<DashboardItemInfo> dashboardItemInfos = new ArrayList<DashboardItemInfo>();
@@ -184,7 +200,7 @@ public class ModelCacheService implements Serializable{
       if (toFile == null)
         throw new IllegalStateException("configuration file not set before saving ");
 
-      LOGGER.info("Save configuration " + toFile.getAbsolutePath());
+      LOGGER.info("Save configuration " + toFile.getAbsolutePath() + "(" + action + ")");
       toFile = toFile.getAbsoluteFile();
 
       if (!toFile.getParentFile().exists())

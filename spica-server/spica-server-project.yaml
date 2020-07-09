@@ -174,8 +174,8 @@ components:
           type: "string"
         color:
           type: "string"
-        parent:
-          $ref: "#/components/schemas/ProjectInfo"
+        parentId:
+          type: "string"
         sourceparts:
           type: "array"
           items:
@@ -218,10 +218,10 @@ components:
           type: "string"
         externalSystemID:
           type: "string"
-        project:
-          $ref: "#/components/schemas/ProjectInfo"
-        parent:
-          $ref: "#/components/schemas/TaskInfo"
+        projectId:
+          type: "string"
+        parentId:
+          type: "string"
         links:
           type: "array"
           items:

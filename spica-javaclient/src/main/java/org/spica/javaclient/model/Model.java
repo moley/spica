@@ -15,6 +15,9 @@ import org.spica.commons.DashboardItemType;
 @XmlRootElement
 public class Model {
 
+  public final static String DEFAULTTASK_PRIVATE = "Private";
+  public final static String DEFAULTTASK_WORK = "Work";
+
   private File currentFile;
 
   private final static Logger log = LoggerFactory.getLogger(Model.class);
@@ -78,6 +81,18 @@ public class Model {
     return taskInfos.stream().filter( filter).collect(Collectors.toList());
   }
 
+  public TaskInfo findTaskInfosById (String id) {
+    if (id == null)
+      return null;
+
+    for (TaskInfo next: taskInfos) {
+      if (next.getId().equals(id))
+        return next;
+    }
+
+    throw new IllegalStateException("Task with id " + id + " not found");
+  }
+
   public List<ProjectInfo> findProjectInfosByQuery (String query) {
     Predicate<ProjectInfo> filter = new Predicate<ProjectInfo>() {
       @Override
@@ -89,6 +104,18 @@ public class Model {
     };
     return projectInfos.stream().filter( filter).collect(Collectors.toList());
 
+  }
+
+  public ProjectInfo findProjectInfosById (String id) {
+    if (id == null)
+      return null;
+
+    for (ProjectInfo next: projectInfos) {
+      if (next.getId().equals(id))
+        return next;
+    }
+
+    return null;
   }
 
   public List<LinkInfo> findLinkInfosByQuery (String query) {

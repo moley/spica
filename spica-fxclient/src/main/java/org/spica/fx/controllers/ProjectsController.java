@@ -13,7 +13,6 @@ import javafx.scene.input.KeyEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.spica.fx.Reload;
 import org.spica.fx.renderer.ProjectTreeCellFactory;
-import org.spica.fx.renderer.TaskTreeItem;
 import org.spica.javaclient.model.ProjectInfo;
 
 @Slf4j
@@ -39,7 +38,7 @@ public class ProjectsController extends AbstractController {
     ProjectInfo projectInfo = new ProjectInfo();
     projectInfo.setId(UUID.randomUUID().toString());
     projectInfo.setName(newProjectIdentifier);
-    projectInfo.setParent(parent);
+    projectInfo.setParentId(parent != null ? parent.getParentId(): null);
 
     getActionContext().getModel().getProjectInfos().add(projectInfo);
 
@@ -57,7 +56,7 @@ public class ProjectsController extends AbstractController {
   }
 
   public void refreshViews () {
-    HashMap<ProjectInfo, TreeItem<ProjectInfo>> model = new HashMap<ProjectInfo, TreeItem<ProjectInfo>>();
+    HashMap<String, TreeItem<ProjectInfo>> model = new HashMap<String, TreeItem<ProjectInfo>>();
     log.info("refreshViews with " + getActionContext().getModel().getTaskInfos().size() + " tasks");
 
     TreeItem<ProjectInfo> rootItem = new TreeItem<ProjectInfo> ();
@@ -66,13 +65,13 @@ public class ProjectsController extends AbstractController {
     for (ProjectInfo next: projectInfoList) {
       TreeItem<ProjectInfo> treeItem = new TreeItem<ProjectInfo>(next);
       treeItem.setExpanded(true);
-      model.put(next, treeItem);
+      model.put(next.getId(), treeItem);
     }
 
     for (ProjectInfo next: projectInfoList) {
-      TreeItem<ProjectInfo> treeItem = model.get(next);
-      if (next.getParent() != null) {
-        TreeItem<ProjectInfo> parentTreeItem = model.get(next.getParent());
+      TreeItem<ProjectInfo> treeItem = model.get(next.getId());
+      if (next.getParentId() != null) {
+        TreeItem<ProjectInfo> parentTreeItem = model.get(next.getParentId());
         parentTreeItem.getChildren().add(treeItem);
       }
       else {

@@ -1,0 +1,9 @@
+= Check what you have done with bookings
+:nofooter:
+:toc:
+
+= What is a booking?
+
+A *booking* represents a time interval were a certain task was worked at.
+Tasks can be hierachical.
+A task can be associated to one jira issue

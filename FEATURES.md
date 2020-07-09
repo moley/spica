@@ -1,20 +1,4 @@
 #Wording
-##Project
-A project represents a project in the real world. 
-Projects can be hierachical, so you can handle your departments as project or any 
-private topic
-A project can be associated to one or more project in stash/jira
-
-##Task
-A task represents a thing that must be done (Todo).
-Tasks can be hierachical. 
-A task can be associated to one jira issue
-
-##WorkingSet
-A workingset represents a bunch of modules and their branches
-A workingset is represented to a folder in the local filesystem, where it lives
-
--------
 
 # Import logfiles
 * The commandline command ``spica import logs `` you find all logs in the current folder and all subdirectories. 

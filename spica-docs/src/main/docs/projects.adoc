@@ -1,0 +1,28 @@
+= Structure your work with projects
+:nofooter:
+:toc:
+
+= What is a project?
+
+A *project* represents a project in the real world.
+Projects can be hierachical, so you can handle your departments as project or any
+private topic
+A project can be associated to one projects in stash/jira
+
+= Create a project
+
+There are multiple ways to create a new project:
+
+* On the commandline call ``s p create MyProject`` to create a project named MyProject.
+* In the fxclient call *Show projects* in the tray menu, type your projectname into the textfield of the opened page and press *CR* to finish.
+
+= Show projects
+
+On the commandline call ``s p list`` to show a list of all available projects.
+
+= Remove an existing project
+
+There are multiple ways to remove an existing project:
+
+* On the commandline call ``s p remove MyProject`` to remove a project named MyProject.
+* In the fxclient call *Show projects* in the tray menu, select the project to be removed and press *-* to remove the selected project.

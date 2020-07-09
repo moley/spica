@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -115,7 +113,7 @@ import org.spica.javaclient.model.TaskInfo;
       viewItem.setExpanded(true);
       rootItem.getChildren().add(viewItem);
       for (TaskInfo nextTaskInfo: nextView.getTaskInfos()) {
-        if (selectedProject.getName().equals("All") || (nextTaskInfo.getProject() != null && nextTaskInfo.getProject().equals(selectedProject)))
+        if (selectedProject == null || selectedProject.getName().equals("All") || (nextTaskInfo.getProjectId() != null && nextTaskInfo.getProjectId().equals(selectedProject)))
           viewItem.getChildren().add(new TreeItem<TaskTreeItem> (new TaskTreeItem(nextTaskInfo)));
       }
     }

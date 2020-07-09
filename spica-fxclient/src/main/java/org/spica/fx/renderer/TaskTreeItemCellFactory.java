@@ -1,29 +1,32 @@
 package org.spica.fx.renderer;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TreeCell;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.paint.Color;
 import org.controlsfx.control.PopOver;
 import org.spica.fx.Consts;
 import org.spica.fx.Reload;
-import org.spica.fx.view.TaskView;
 import org.spica.javaclient.actions.ActionContext;
+import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.ProjectInfo;
 import org.spica.javaclient.model.TaskInfo;
 
@@ -33,9 +36,11 @@ public class TaskTreeItemCellFactory extends TreeCell<TaskTreeItem> {
   private Reload reload;
 
   PseudoClass childPseudoClass = PseudoClass.getPseudoClass("view");
+  private Model model;
 
   public TaskTreeItemCellFactory (final ActionContext actionContext, Reload reload) {
     this.actionContext = actionContext;
+    this.model = actionContext.getModel();
     this.reload = reload;
   }
 
@@ -63,11 +68,11 @@ public class TaskTreeItemCellFactory extends TreeCell<TaskTreeItem> {
 
         Label lblName = new Label(taskInfo.getName());
 
-        String projectname = taskInfo.getProject() != null ? taskInfo.getProject().getName(): "no project";
-        String projectstyle = taskInfo.getProject() != null ? "-fx-background-color: #" + taskInfo.getProject().getColor() + ";-fx-text-fill: white;": null;
+        ProjectInfo projectInfo = model.findProjectInfosById(taskInfo.getProjectId());
+        String projectname = projectInfo != null ? projectInfo.getName(): "no project";
         Button btnProjectTag = new Button(projectname);
-        //btnProjectTag.getStyleClass().setAll("tag");
-        btnProjectTag.setStyle(projectstyle);
+        if (projectInfo != null &&  projectInfo.getColor() != null)
+          btnProjectTag.setBackground(new Background(new BackgroundFill(Color.web(projectInfo.getColor()), CornerRadii.EMPTY, Insets.EMPTY)));
 
         ListView<ProjectInfo> lviProjects = new ListView<ProjectInfo>();
         lviProjects.setCellFactory(cellfactory -> new ProjectCellFactory());
@@ -80,9 +85,11 @@ public class TaskTreeItemCellFactory extends TreeCell<TaskTreeItem> {
             @Override public void handle(MouseEvent event) {
                 popOver.hide();
                 ProjectInfo projectInfo = lviProjects.getSelectionModel().getSelectedItem();
-                taskInfo.setProject(projectInfo);
-                actionContext.saveModel("Assign project " + projectInfo.getId() + " to task " + taskInfo.getId());
-                reload.reload();
+                if (projectInfo != null) {
+                  taskInfo.setProjectId(projectInfo.getId());
+                  actionContext.saveModel("Assign project " + projectInfo.getId() + " to task " + taskInfo.getId());
+                  reload.reload();
+                }
             }
           });
           popOver.show(btnProjectTag);

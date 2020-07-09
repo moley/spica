@@ -119,7 +119,7 @@ public class Main {
 
     ActionHandler actionHandler = actionContext.getActionHandler();
 
-    if (args.length == 0 && eventInfo != null) { //if it is not the first call at the time and no params are added
+    if (args.length == 0) { //if no params are added
       System.out.println("Usage: s (ACTIONGROUP) (COMMAND) [PARAMETER1..n]\n");
       System.out.println("Available action groups:\n");
       for (ActionGroup nextGroup : ActionGroup.values()) {
@@ -129,14 +129,7 @@ public class Main {
     } else {
       String parameter = String.join(" ", args);
 
-      FoundAction foundAction = null;
-
-      //even if we did not provide command line parameters and it is the first call at the day we choose the start topic action
-      if (parameter.trim().isEmpty() && eventInfo == null) {
-        foundAction = actionHandler.findAction(StartTaskAction.class);
-      } else {
-        foundAction = actionHandler.findAction(parameter);
-      }
+      FoundAction foundAction = actionHandler.findAction(parameter);
 
       //if no action found we choose the help action for the given action group
       if (foundAction == null || args.length == 1) {

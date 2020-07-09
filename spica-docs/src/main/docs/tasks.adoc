@@ -1,0 +1,12 @@
+= Plan your things to be done with tasks
+:nofooter:
+:toc:
+
+= What is a task?
+
+A *task* represents a thing that must be done (Todo).
+Tasks can be hierachical.
+A task can be associated to one jira issue
+
+= Create a task
+
