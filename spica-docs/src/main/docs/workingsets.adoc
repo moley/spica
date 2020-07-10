@@ -10,8 +10,8 @@ checked out from a code repository
 
 = Create a workingset
 
-A workingset can be created by a commandline call ``s w create [NAME]``. Afterwards you have an empty
-workingset.
+A workingset can be created by a commandline call ``s w create [NAME]``.
+Afterwards you have an empty workingset.
 
 = Show workingsets
 
@@ -22,7 +22,7 @@ enabled or disabled
 
 = Remove an existing workingset
 
-On the commandline call ``s w remove [NAME | ID]`` to remove a certain project.
+On the commandline call ``s w remove [NAME |Â ID]`` to remove a certain project.
 
 = Import sourceparts to workingset
 
@@ -70,13 +70,13 @@ If you want to completely remove a sourcepart you call
 
 Now as you have added sourceparts to the workingset you can check out all sourceparts on your commandline.
 Step to a folder were you want to host all your local sourceparts of the workingset and call
-``s w clone [NAME | URL]``.
+``s w clone [NAME |Â URL]``.
 Afterwards all source parts should be cloned in the current directory.
 
 = Reset workingset
 
 Resets all local changes on all sourceparts of the workingset.
-Call ``s w reset [WORKINGSET]```
+Call ``s w reset [WORKINGSET]``
 
 == Branch workingset TODO
 == Remove branch TODO

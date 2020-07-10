@@ -7,6 +7,6 @@ link:whatis.html[What is spica?] +
 link:projects.html[Structure your work with projects] +
 link:tasks.html[Plan your things to be done with tasks] +
 link:bookings.html[Check what you have done with bookings] +
-link:workingsets.adoc[Handle a set of source at once with workingsets] +
+link:workingsets.html[Handle a set of source at once with workingsets] +
 link:navigation.html[Improve navigations] +
 link:automation.html[Get your things done faster with automations]

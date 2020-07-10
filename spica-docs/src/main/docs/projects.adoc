@@ -25,7 +25,7 @@ On the commandline call ``s p list`` to show a list of all available projects.
 
 There are multiple ways to remove an existing project:
 
-* On the commandline call ``s p remove [NAME | ID]`` to remove a certain project.
+* On the commandline call ``s p remove [NAME |Â ID]`` to remove a certain project.
 * In the fxclient call *Show projects* in the tray menu, select the project to be removed and press *-* to remove the selected project.
 
 = Set parent project of a project
