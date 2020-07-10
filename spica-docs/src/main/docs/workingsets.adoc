@@ -22,7 +22,7 @@ enabled or disabled
 
 = Remove an existing workingset
 
-On the commandline call ``s w remove [NAME | ID]`` to remove a certain project.
+On the commandline call ``s w remove [NAME|ID]`` to remove a certain project.
 
 = Import sourceparts to workingset
 
