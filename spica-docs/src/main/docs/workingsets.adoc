@@ -16,6 +16,7 @@ Afterwards you have an empty workingset.
 = Show workingsets
 
 On the commandline call ``s w list`` to show a list of all available workingsets.
+
 To see details of a workingset call ``s w show [NAME|ID]``.
 This shows a workingset and all its source parts. It shows also if the sourcepart is
 enabled or disabled
