@@ -9,6 +9,7 @@ import org.spica.fx.Mask;
 import org.spica.fx.MaskLoader;
 import org.spica.fx.ScreenManager;
 import org.spica.javaclient.actions.ActionContext;
+import org.spica.javaclient.model.Model;
 
 public abstract class AbstractController {
 
@@ -67,6 +68,14 @@ public abstract class AbstractController {
 
   public ActionContext getActionContext() {
     return actionContext;
+  }
+
+  public Model getModel () {
+    return actionContext.getModel();
+  }
+
+  public void saveModel (final String lastAction) {
+    actionContext.saveModel(lastAction);
   }
 
   public void setActionContext(ActionContext actionContext) {

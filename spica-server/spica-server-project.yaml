@@ -176,12 +176,20 @@ components:
           type: "string"
         parentId:
           type: "string"
+
+    WorkingSetInfo:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        name:
+          type: "string"
         sourceparts:
           type: "array"
           items:
-            $ref: "#/components/schemas/ProjectSourcePartInfo"
+            $ref: "#/components/schemas/WorkingSetSourcePartInfo"
 
-    ProjectSourcePartInfo:
+    WorkingSetSourcePartInfo:
       type: "object"
       properties:
         id:

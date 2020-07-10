@@ -4,6 +4,7 @@ import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -32,6 +33,8 @@ public class Model {
 
   private List<ProjectInfo> projectInfos = new ArrayList<>();
 
+  private List<WorkingSetInfo> workingsetInfos = new ArrayList<>();
+
   private List<TaskInfo> taskInfos = new ArrayList<>();
 
   private List<MessagecontainerInfo> messagecontainerInfos = new ArrayList<MessagecontainerInfo>();
@@ -48,6 +51,8 @@ public class Model {
 
   private TaskInfo selectedTaskInfo;
 
+  private ProjectInfo selectedProjectInfo;
+
 
   public File getCurrentFile() {
     return currentFile;
@@ -58,6 +63,21 @@ public class Model {
   }
 
   public List<ProjectInfo> getProjectInfos() {
+    return projectInfos;
+  }
+
+  public List<WorkingSetInfo> getWorkingsetInfos () {
+    return workingsetInfos;
+  }
+
+  public void setWorkingsetInfos (final List<WorkingSetInfo> workingsetInfos) {
+    this.workingsetInfos = workingsetInfos;
+  }
+
+  public Collection<ProjectInfo> getOtherProjectInfos () {
+    Collection<ProjectInfo> projectInfos = new ArrayList<>();
+    projectInfos.addAll(getProjectInfos());
+    projectInfos.remove(getSelectedProjectInfo());
     return projectInfos;
   }
 
@@ -81,17 +101,6 @@ public class Model {
     return taskInfos.stream().filter( filter).collect(Collectors.toList());
   }
 
-  public TaskInfo findTaskInfosById (String id) {
-    if (id == null)
-      return null;
-
-    for (TaskInfo next: taskInfos) {
-      if (next.getId().equals(id))
-        return next;
-    }
-
-    throw new IllegalStateException("Task with id " + id + " not found");
-  }
 
   public List<ProjectInfo> findProjectInfosByQuery (String query) {
     Predicate<ProjectInfo> filter = new Predicate<ProjectInfo>() {
@@ -106,7 +115,7 @@ public class Model {
 
   }
 
-  public ProjectInfo findProjectInfosById (String id) {
+  public ProjectInfo findProjectInfoById(String id) {
     if (id == null)
       return null;
 
@@ -117,6 +126,33 @@ public class Model {
 
     return null;
   }
+
+  public List<WorkingSetInfo> findWorkingSetInfosByQuery (String query) {
+    Predicate<WorkingSetInfo> filter = new Predicate<WorkingSetInfo>() {
+      @Override
+      public boolean test(WorkingSetInfo projectInfo) {
+        String nameNotNull = projectInfo.getName() != null ? projectInfo.getName(): "";
+        String idNotNull = projectInfo.getId() != null ? projectInfo.getId(): "";
+        return nameNotNull.contains(query) || idNotNull.equals(query);
+      }
+    };
+    return workingsetInfos.stream().filter( filter).collect(Collectors.toList());
+
+  }
+
+  public WorkingSetInfo findWorkingSetInfoById(String id) {
+    if (id == null)
+      return null;
+
+    for (WorkingSetInfo next: workingsetInfos) {
+      if (next.getId().equals(id))
+        return next;
+    }
+
+    return null;
+  }
+
+
 
   public List<LinkInfo> findLinkInfosByQuery (String query) {
     Predicate<LinkInfo> filter = new Predicate<LinkInfo>() {
@@ -338,6 +374,13 @@ public class Model {
     return selectedTaskInfo;
   }
 
+  public Collection<TaskInfo> getOtherTaskInfos () {
+    Collection<TaskInfo> taskInfos = new ArrayList<>();
+    taskInfos.addAll(getTaskInfos());
+    taskInfos.remove(getSelectedTaskInfo());
+    return taskInfos;
+  }
+
   public void setSelectedTaskInfo(TaskInfo selectedTaskInfo) {
     this.selectedTaskInfo = selectedTaskInfo;
   }
@@ -373,5 +416,28 @@ public class Model {
         return next;
     }
     throw new IllegalStateException("No user found for mail " + mail);
+  }
+
+  public ProjectInfo getSelectedProjectInfo() {
+    return selectedProjectInfo;
+  }
+
+  public void setSelectedProjectInfo(ProjectInfo selectedProjectInfo) {
+    this.selectedProjectInfo = selectedProjectInfo;
+  }
+
+  public List<ProjectInfo> getProjectsOfTask(TaskInfo nextTaskInfo) {
+    List<ProjectInfo> projects = new ArrayList<>();
+    if (nextTaskInfo.getProjectId() != null) {
+      ProjectInfo project = findProjectInfoById(nextTaskInfo.getProjectId());
+      projects.add(project);
+      while (project.getParentId() != null) {
+        ProjectInfo parent = findProjectInfoById(project.getParentId());
+        projects.add(parent);
+        project = parent;
+      }
+    }
+
+    return projects;
   }
 }

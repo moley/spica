@@ -37,7 +37,7 @@ public class MessagesController extends AbstractController {
     lviMessages.setOnMouseClicked(new EventHandler<MouseEvent>() {
       @Override public void handle(MouseEvent event) {
         if (event.getClickCount() == 2) {
-          getActionContext().getModel().setSelectedMessageContainer(lviMessages.getSelectionModel().getSelectedItem());
+          getModel().setSelectedMessageContainer(lviMessages.getSelectionModel().getSelectedItem());
           stepToPane(Pages.MESSAGEDIALOG);
         }
 
@@ -46,7 +46,7 @@ public class MessagesController extends AbstractController {
   }
 
   @Override public void refreshData() {
-    lviMessages.setItems(FXCollections.observableArrayList(getActionContext().getModel().getMessagecontainerInfos()));
+    lviMessages.setItems(FXCollections.observableArrayList(getModel().getMessagecontainerInfos()));
 
 
   }

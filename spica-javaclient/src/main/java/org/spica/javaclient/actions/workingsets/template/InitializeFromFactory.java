@@ -1,4 +1,4 @@
-package org.spica.javaclient.actions.projects.template;
+package org.spica.javaclient.actions.workingsets.template;
 
 public class InitializeFromFactory {
 

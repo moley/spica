@@ -1,18 +1,19 @@
 package org.spica.javaclient.actions.tasks;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.*;
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.spica.javaclient.actions.AbstractAction;
+import org.spica.javaclient.actions.ActionContext;
+import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.ActionResult;
+import org.spica.javaclient.actions.Command;
 import org.spica.javaclient.model.Model;
+import org.spica.javaclient.model.TaskInfo;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
-import org.spica.javaclient.model.TaskInfo;
 
-import java.util.List;
-
+@Slf4j
 public class RemoveTaskAction extends AbstractAction {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(RemoveTaskAction.class);
 
     @Override public String getDisplayname() {
         return "Remove task";
@@ -31,7 +32,7 @@ public class RemoveTaskAction extends AbstractAction {
         List<TaskInfo> infos = model.findTaskInfosByQuery(query);
         model.getTaskInfos().removeAll(infos);
 
-        outputOk("Removed " + infos.size() +  " topics");
+        outputOk("Removed " + infos.size() +  " tasks");
 
         actionContext.saveModel(getClass().getName());
 

@@ -1,8 +1,7 @@
 package org.spica.javaclient.actions.tasks;
 
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.spica.javaclient.actions.AbstractAction;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.ActionGroup;
@@ -13,10 +12,8 @@ import org.spica.javaclient.model.TaskInfo;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
 
+@Slf4j
 public class OpenTaskAction extends AbstractAction {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(OpenTaskAction.class);
-
 
     @Override public String getDisplayname() {
         return "Open task";
@@ -36,7 +33,7 @@ public class OpenTaskAction extends AbstractAction {
         List<TaskInfo> infos = model.findTaskInfosByQuery(query);
         for (TaskInfo next: infos) {
             next.setState(TaskInfo.StateEnum.NEW);
-            outputDefault("Opening " + next.getId());
+            outputDefault("Opening task " + next.getId());
         }
 
         actionContext.saveModel(getClass().getName());

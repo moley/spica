@@ -10,9 +10,10 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.spica.fx.Reload;
-import org.spica.fx.renderer.ProjectTreeCellFactory;
+import org.spica.fx.renderer.ProjectInfoTreeCellFactory;
 import org.spica.javaclient.model.ProjectInfo;
 
 @Slf4j
@@ -22,7 +23,7 @@ public class ProjectsController extends AbstractController {
 
   @FXML
   public void initialize () {
-    treProjects.setShowRoot(true);
+    treProjects.setShowRoot(false);
 
 
 
@@ -38,30 +39,30 @@ public class ProjectsController extends AbstractController {
     ProjectInfo projectInfo = new ProjectInfo();
     projectInfo.setId(UUID.randomUUID().toString());
     projectInfo.setName(newProjectIdentifier);
-    projectInfo.setParentId(parent != null ? parent.getParentId(): null);
+    projectInfo.setParentId(parent != null ? parent.getId(): null);
 
-    getActionContext().getModel().getProjectInfos().add(projectInfo);
+    getModel().getProjectInfos().add(projectInfo);
 
     txtSearch.clear();
     txtSearch.requestFocus();
 
-    getActionContext().saveModel("Added project " + newProjectIdentifier);
+    saveModel("Added project " + newProjectIdentifier);
     refreshViews();
   }
 
   private void removeProject (final ProjectInfo projectInfo) {
-    getActionContext().getModel().getProjectInfos().remove(projectInfo);
-    getActionContext().saveModel("Removed project " + projectInfo.getId() + "-" + projectInfo.getName());
+    getModel().getProjectInfos().remove(projectInfo);
+    saveModel("Removed project " + projectInfo.getId() + "-" + projectInfo.getName());
     refreshViews();
   }
 
   public void refreshViews () {
     HashMap<String, TreeItem<ProjectInfo>> model = new HashMap<String, TreeItem<ProjectInfo>>();
-    log.info("refreshViews with " + getActionContext().getModel().getTaskInfos().size() + " tasks");
+    log.info("refreshViews with " + getModel().getTaskInfos().size() + " tasks");
 
     TreeItem<ProjectInfo> rootItem = new TreeItem<ProjectInfo> ();
     rootItem.setExpanded(true);
-    List<ProjectInfo> projectInfoList = getActionContext().getModel().getProjectInfos();
+    List<ProjectInfo> projectInfoList = getModel().getProjectInfos();
     for (ProjectInfo next: projectInfoList) {
       TreeItem<ProjectInfo> treeItem = new TreeItem<ProjectInfo>(next);
       treeItem.setExpanded(true);
@@ -83,7 +84,7 @@ public class ProjectsController extends AbstractController {
   }
 
   @Override public void refreshData() {
-    treProjects.setCellFactory(cellfactory -> new ProjectTreeCellFactory(getActionContext(), new Reload() {
+    treProjects.setCellFactory(cellfactory -> new ProjectInfoTreeCellFactory(getActionContext(), new Reload() {
       @Override public void reload() {
         refreshViews();
       }
@@ -106,6 +107,19 @@ public class ProjectsController extends AbstractController {
 
           if (event.getCode().equals(KeyCode.SLASH) && selectedProject.getName() != null) {
             removeProject(selectedProject);
+          }
+        }
+
+      }
+    });
+
+    treProjects.setOnMouseClicked(new EventHandler<MouseEvent>() {
+      @Override public void handle(MouseEvent event) {
+        if (! treProjects.getSelectionModel().isEmpty()) {
+          if (event.getClickCount() == 2) {
+            ProjectInfo selectedProject = treProjects.getSelectionModel().getSelectedItem().getValue();
+            getModel().setSelectedProjectInfo(selectedProject);
+            stepToPane(Pages.PROJECTDETAIL);
           }
         }
 

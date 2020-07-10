@@ -68,14 +68,14 @@ public class TaskTreeItemCellFactory extends TreeCell<TaskTreeItem> {
 
         Label lblName = new Label(taskInfo.getName());
 
-        ProjectInfo projectInfo = model.findProjectInfosById(taskInfo.getProjectId());
+        ProjectInfo projectInfo = model.findProjectInfoById(taskInfo.getProjectId());
         String projectname = projectInfo != null ? projectInfo.getName(): "no project";
         Button btnProjectTag = new Button(projectname);
         if (projectInfo != null &&  projectInfo.getColor() != null)
           btnProjectTag.setBackground(new Background(new BackgroundFill(Color.web(projectInfo.getColor()), CornerRadii.EMPTY, Insets.EMPTY)));
 
         ListView<ProjectInfo> lviProjects = new ListView<ProjectInfo>();
-        lviProjects.setCellFactory(cellfactory -> new ProjectCellFactory());
+        lviProjects.setCellFactory(cellfactory -> new ProjectInfoCellFactory());
         PopOver popOver = new PopOver(lviProjects);
         popOver.setArrowLocation(PopOver.ArrowLocation.TOP_CENTER);
         btnProjectTag.setOnMouseClicked(mouseEvent -> {

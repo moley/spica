@@ -48,10 +48,10 @@ public class MessageDialogController extends AbstractController {
 
   private void addMessage () {
     //TODO real implementation
-    MessagecontainerInfo selectedMessageContainer = getActionContext().getModel().getSelectedMessageContainer();
+    MessagecontainerInfo selectedMessageContainer = getModel().getSelectedMessageContainer();
     MessageInfo messageInfo = new MessageInfo();
     messageInfo.setCreationtime(LocalDateTime.now());
-    messageInfo.setCreator(getActionContext().getModel().getMe().getId());
+    messageInfo.setCreator(getModel().getMe().getId());
     messageInfo.setMessage(txaNewMessage.getText());
     messageInfo.setType(MessageType.CHAT); //TODO use messagetype of last message by default
     selectedMessageContainer.addMessageItem(messageInfo);
@@ -63,7 +63,7 @@ public class MessageDialogController extends AbstractController {
   }
 
   @Override public void refreshData() {
-    MessagecontainerInfo selectedMessageContainer = getActionContext().getModel().getSelectedMessageContainer();
+    MessagecontainerInfo selectedMessageContainer = getModel().getSelectedMessageContainer();
     if (selectedMessageContainer != null)
       lviDialog.setItems(FXCollections.observableArrayList(selectedMessageContainer.getMessage()));
     else

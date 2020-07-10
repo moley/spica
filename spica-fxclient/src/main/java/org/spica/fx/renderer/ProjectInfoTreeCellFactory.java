@@ -1,36 +1,26 @@
 package org.spica.fx.renderer;
 
-import java.time.LocalDate;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TreeCell;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
-import org.controlsfx.control.PopOver;
-import org.spica.fx.Consts;
 import org.spica.fx.Reload;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.model.ProjectInfo;
-import org.spica.javaclient.model.TaskInfo;
 
-public class ProjectTreeCellFactory extends TreeCell<ProjectInfo> {
+public class ProjectInfoTreeCellFactory extends TreeCell<ProjectInfo> {
 
   private ActionContext actionContext;
   private Reload reload;
 
-  public ProjectTreeCellFactory(final ActionContext actionContext, Reload reload) {
+  public ProjectInfoTreeCellFactory(final ActionContext actionContext, Reload reload) {
     this.actionContext = actionContext;
     this.reload = reload;
   }
@@ -53,7 +43,7 @@ public class ProjectTreeCellFactory extends TreeCell<ProjectInfo> {
 
 
       ListView<ProjectInfo> lviProjects = new ListView<ProjectInfo>();
-      lviProjects.setCellFactory(cellfactory -> new ProjectCellFactory());
+      lviProjects.setCellFactory(cellfactory -> new ProjectInfoCellFactory());
 
 
       ColorPicker colorPicker = new ColorPicker();

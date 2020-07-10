@@ -8,7 +8,7 @@ import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.ProjectInfo;
 
-public class ListProjectsAction extends AbstractAction {
+public class ListProjectsAction extends AbstractProjectAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ListProjectsAction.class);
 
@@ -35,11 +35,6 @@ public class ListProjectsAction extends AbstractAction {
         return null;
     }
 
-
-    @Override
-    public ActionGroup getGroup() {
-        return ActionGroup.PROJECT;
-    }
 
     @Override
     public Command getCommand() {

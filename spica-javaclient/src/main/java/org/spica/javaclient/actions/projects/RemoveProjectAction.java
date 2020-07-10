@@ -10,7 +10,7 @@ import org.spica.javaclient.model.ProjectInfo;
 
 import java.util.List;
 
-public class RemoveProjectAction extends AbstractAction {
+public class RemoveProjectAction extends AbstractProjectAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(RemoveProjectAction.class);
 
@@ -37,11 +37,6 @@ public class RemoveProjectAction extends AbstractAction {
         return null;
     }
 
-
-    @Override
-    public ActionGroup getGroup() {
-        return ActionGroup.PROJECT;
-    }
 
     @Override
     public Command getCommand() {

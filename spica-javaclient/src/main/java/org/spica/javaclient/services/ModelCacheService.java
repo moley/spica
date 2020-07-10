@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
 import javax.xml.bind.JAXBContext;
@@ -86,7 +85,7 @@ public class ModelCacheService implements Serializable{
       model.setProjectInfos(new ArrayList<>());
     }
 
-    if (model.findProjectInfosById(Model.DEFAULTTASK_PRIVATE) == null) {
+    if (model.findProjectInfoById(Model.DEFAULTTASK_PRIVATE) == null) {
       log.info("Creating default task " + Model.DEFAULTTASK_PRIVATE);
       ProjectInfo projectPrivate = new ProjectInfo();
       projectPrivate.setId(Model.DEFAULTTASK_PRIVATE);
@@ -98,7 +97,7 @@ public class ModelCacheService implements Serializable{
     else
       log.info("Default task " + Model.DEFAULTTASK_PRIVATE + " already exists");
 
-    if (model.findProjectInfosById(Model.DEFAULTTASK_WORK) == null) {
+    if (model.findProjectInfoById(Model.DEFAULTTASK_WORK) == null) {
       log.info("Creating default task " + Model.DEFAULTTASK_WORK);
       ProjectInfo projectWork = new ProjectInfo();
       projectWork.setId(Model.DEFAULTTASK_WORK);

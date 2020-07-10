@@ -2,8 +2,7 @@ package org.spica.javaclient.actions.tasks;
 
 import java.util.Arrays;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.spica.javaclient.actions.AbstractAction;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.ActionGroup;
@@ -16,9 +15,8 @@ import org.spica.javaclient.params.InputParamGroup;
 import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.params.TextInputParam;
 
+@Slf4j
 public class CreateTaskAction extends AbstractAction {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(CreateTaskAction.class);
 
     public final static String KEY_SUMMARY = "summary";
     public final static String KEY_DESCRIPTION = "description";
@@ -50,7 +48,7 @@ public class CreateTaskAction extends AbstractAction {
             model.getTaskInfos().add(topicInfo);
             actionResult.setUserObject(topicInfo);
 
-            outputOk("Created topic " + topicInfo.getName() + "(" + topicInfo.getId() + ")");
+            outputOk("Created task " + topicInfo.getName() + "(" + topicInfo.getId() + ")");
 
             actionContext.saveModel(getClass().getName());
         }

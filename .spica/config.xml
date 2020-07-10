@@ -15,12 +15,27 @@
         <color>0xff9999ff</color>
         <id>d412bc55-823e-4514-9f2f-8079a933d4fc</id>
         <name>Spica</name>
+        <parentId>Work</parentId>
     </projectInfos>
+    <projectInfos>
+        <color>0xb399ffff</color>
+        <id>bcd51753-5447-496e-b6a8-789e33755ae2</id>
+        <name>Plan holiday</name>
+        <parentId>Private</parentId>
+    </projectInfos>
+    <selectedProjectInfo>
+        <color>0xb399ffff</color>
+        <id>bcd51753-5447-496e-b6a8-789e33755ae2</id>
+        <name>Plan holiday</name>
+        <parentId>Private</parentId>
+    </selectedProjectInfo>
     <selectedTaskInfo>
-        <description></description>
-        <id>cd36cbd3-635d-4005-abbf-fd90ac2430b8</id>
-        <links>/Users/OleyMa/vcs/spica/spica/.spica/attachments/55f95205-3cae-4a30-9721-45e8267cc605</links>
-        <name>Error in marvincore</name>
+        <description>see https://stackoverflow.com/questions/21655790/javafx-popover-from-controlfx 
+</description>
+        <id>668c273b-a508-48f7-93cf-09dce6409f79</id>
+        <name>TestTask3 </name>
+        <parentId>e856e0af-8d48-4b0a-86f8-56818c92cf95</parentId>
+        <projectId>d412bc55-823e-4514-9f2f-8079a933d4fc</projectId>
     </selectedTaskInfo>
     <taskInfos>
         <id>5df1f25c-ed83-4f39-b8de-c377b2acee3a</id>
@@ -49,7 +64,8 @@
         <description>see https://stackoverflow.com/questions/21655790/javafx-popover-from-controlfx 
 </description>
         <id>668c273b-a508-48f7-93cf-09dce6409f79</id>
-        <name>TestTask3</name>
+        <name>TestTask3 </name>
+        <parentId>e856e0af-8d48-4b0a-86f8-56818c92cf95</parentId>
         <projectId>d412bc55-823e-4514-9f2f-8079a933d4fc</projectId>
     </taskInfos>
     <taskInfos>

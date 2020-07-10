@@ -4,7 +4,7 @@ import javafx.scene.control.ListCell;
 import org.spica.fx.Consts;
 import org.spica.javaclient.model.ProjectInfo;
 
-public class ProjectCellFactory extends ListCell<ProjectInfo> {
+public class ProjectInfoCellFactory extends ListCell<ProjectInfo> {
 
   @Override protected void updateItem(ProjectInfo item, boolean empty) {
     super.updateItem(item, empty);

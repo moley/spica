@@ -1,21 +1,22 @@
 package org.spica.javaclient.actions.tasks;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.*;
+import lombok.extern.slf4j.Slf4j;
+import org.spica.javaclient.actions.AbstractAction;
+import org.spica.javaclient.actions.ActionContext;
+import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.ActionResult;
+import org.spica.javaclient.actions.Command;
 import org.spica.javaclient.model.Model;
+import org.spica.javaclient.model.TaskInfo;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.FlagInputParam;
 import org.spica.javaclient.params.InputParamGroup;
 import org.spica.javaclient.params.InputParams;
-import org.spica.javaclient.model.TaskInfo;
 
+@Slf4j
 public class ListTasksAction extends AbstractAction {
 
     private final static String KEY_ALL = "all";
-
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(ListTasksAction.class);
 
     @Override public String getDisplayname() {
         return "List tasks";

@@ -1,8 +1,7 @@
 package org.spica.javaclient.actions.tasks;
 
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.spica.javaclient.actions.AbstractAction;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.ActionGroup;
@@ -13,9 +12,8 @@ import org.spica.javaclient.model.TaskInfo;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
 
+@Slf4j
 public class CloseTaskAction extends AbstractAction {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(CloseTaskAction.class);
 
 
     @Override public String getDisplayname() {
@@ -36,7 +34,7 @@ public class CloseTaskAction extends AbstractAction {
         List<TaskInfo> infos = model.findTaskInfosByQuery(query);
         for (TaskInfo next: infos) {
             next.setState(TaskInfo.StateEnum.FINISHED);
-            outputDefault("Finishing " + next.getId());
+            outputDefault("Finishing task " + next.getId());
         }
 
         actionContext.saveModel(getClass().getName());

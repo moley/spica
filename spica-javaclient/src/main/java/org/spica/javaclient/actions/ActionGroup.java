@@ -10,7 +10,8 @@ public enum ActionGroup {
     LINKS("l"),
     CONFIGURATION("c"),
     GRADLE ("g"),
-    AUTOMATION ("a");
+    AUTOMATION ("a"),
+    WORKINGSET ("w");
 
     private String shortkey;
 

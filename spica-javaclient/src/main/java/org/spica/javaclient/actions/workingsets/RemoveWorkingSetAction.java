@@ -1,6 +1,7 @@
-package org.spica.javaclient.actions.projects;
+package org.spica.javaclient.actions.workingsets;
 
-import java.util.ArrayList;
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.AbstractAction;
@@ -9,43 +10,41 @@ import org.spica.javaclient.actions.ActionGroup;
 import org.spica.javaclient.actions.ActionResult;
 import org.spica.javaclient.actions.Command;
 import org.spica.javaclient.model.Model;
-import org.spica.javaclient.model.ProjectInfo;
+import org.spica.javaclient.model.TaskInfo;
+import org.spica.javaclient.model.WorkingSetInfo;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
 
-public class EmptyProjectsAction extends AbstractAction {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(EmptyProjectsAction.class);
+@Slf4j
+public class RemoveWorkingSetAction extends AbstractWorkingSetAction {
 
     @Override public String getDisplayname() {
-        return "Empty projects";
+        return "Remove workingset";
     }
 
     @Override
-    public String getDescription() {
-        return "Empties complete list of projects";
+    public String getDescription() { return "Remove workingset that match a certain string (in name or id)";
     }
 
     @Override
     public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
-        Model model = actionContext.getModel();
-        model.setProjectInfos(new ArrayList<ProjectInfo>());
+        String query = commandLineArguments.getMandatoryMainArgument("You have to add an parameter containing a name, id or external id to your command");
 
-        outputOk("Removed all projects");
+        Model model = actionContext.getModel();
+        List<WorkingSetInfo> infos = model.findWorkingSetInfosByQuery(query);
+        model.getWorkingsetInfos().removeAll(infos);
+
+        outputOk("Removed " + infos.size() +  " workingsets");
 
         actionContext.saveModel(getClass().getName());
+
         return null;
-    }
-
-
-    @Override
-    public ActionGroup getGroup() {
-        return ActionGroup.PROJECT;
     }
 
     @Override
     public Command getCommand() {
-        return new Command ("empty", "e");
+        return new Command ("remove", "r");
     }
+
 }

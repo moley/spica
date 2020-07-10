@@ -1,7 +1,6 @@
 package org.spica.fx.controllers;
 
 import com.jfoenix.controls.JFXBadge;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -12,7 +11,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
-import org.controlsfx.control.Notifications;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.spica.cli.actions.StandaloneActionContext;
@@ -21,8 +19,6 @@ import org.spica.fx.AutoImportThread;
 import org.spica.fx.Consts;
 import org.spica.fx.clipboard.ClipboardItem;
 import org.spica.javaclient.Configuration;
-import org.spica.javaclient.actions.Api;
-import org.spica.javaclient.auth.HttpBasicAuth;
 
 @Slf4j
 public class MainController extends AbstractController  {

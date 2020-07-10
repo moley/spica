@@ -1,19 +1,21 @@
 package org.spica.javaclient.actions.tasks;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.spica.commons.SpicaProperties;
 import org.spica.javaclient.ApiException;
-import org.spica.javaclient.actions.*;
-import org.spica.javaclient.params.CommandLineArguments;
-import org.spica.javaclient.params.InputParams;
+import org.spica.javaclient.actions.AbstractAction;
+import org.spica.javaclient.actions.ActionContext;
+import org.spica.javaclient.actions.ActionGroup;
+import org.spica.javaclient.actions.ActionResult;
+import org.spica.javaclient.actions.Command;
 import org.spica.javaclient.api.TaskApi;
 import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.TaskContainerInfo;
+import org.spica.javaclient.params.CommandLineArguments;
+import org.spica.javaclient.params.InputParams;
 
+@Slf4j
 public class ImportTaskAction extends AbstractAction {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(ImportTaskAction.class);
 
     @Override public String getDisplayname() {
         return "Import tasks";
@@ -37,7 +39,7 @@ public class ImportTaskAction extends AbstractAction {
         try {
             TaskContainerInfo topicContainerInfo = topicApi.importTasks(jiraUser, jiraUser, jiraPassword);
             model.setTaskInfos(topicContainerInfo.getTasks());
-            outputOk("Imported " + topicContainerInfo.getTasks().size() + " topics");
+            outputOk("Imported " + topicContainerInfo.getTasks().size() + " taks");
         } catch (ApiException e) {
             LOGGER.error("Error importing jira topics: " + e.getResponseBody(), e);
         }

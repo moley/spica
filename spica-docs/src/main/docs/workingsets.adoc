@@ -1,0 +1,82 @@
+= Handle a set of source at once with workingsets
+:nofooter:
+:toc:
+
+= What is a workingset?
+
+A *workingset* represents all things you need working on a special task.
+For example it contains a set of source part infos, each represents a part of source which is
+checked out from a code repository
+
+= Create a workingset
+
+A workingset can be created by a commandline call ``s w create [NAME]``. Afterwards you have an empty
+workingset.
+
+= Show workingsets
+
+On the commandline call ``s w list`` to show a list of all available workingsets.
+To see details of a workingset call ``s w show [NAME|ID]``.
+This shows a workingset and all its source parts. It shows also if the sourcepart is
+enabled or disabled
+
+= Remove an existing workingset
+
+On the commandline call ``s w remove [NAME | ID]`` to remove a certain project.
+
+= Import sourceparts to workingset
+
+On the commandline call ``s w import [URL TO BITBUCKET PROJECT] [BRANCH]``
+to add all branches named [BRANCH] from this bitbucket project.
+If a part of your branch name represents your project or module you can use variables to be
+replaced:
+
+* \#project# -> the projectname
+* \#module# -> the modulename in the project
+* \#projectLower# -> the projectname lowercase
+* \#moduleLower# -> the modulename in the project lowercase
+
+====
+*Example1:* If you want to import all branches *master* in the project ABC type
+``s w import [BITBUCKET_URL] ABC master``
+====
+
+====
+*Example2:* If you have a project PROJECT and two modules module1 and module2 and you want to add branches
+
+* project_module1_0 from module1
+* project_module2_0 from module2
+
+you use variable replacement the following way:
+
+``s w import [BITBUCKET_URL] ABC '#project#_#repo#_0'``
+====
+
+
+= Enable, disable or remove a sourcepart
+
+A disabled sourcepart is ignored when calling actions on the workingset.
+If you want to disable a sourcepart you call
+``s w modules [WORKINGSET] -disable [MODULEID]
+
+If you want to reenable a disabled sourcepart you call
+``s w modules [WORKINGSET] -enable [MODULEID]
+
+If you want to completely remove a sourcepart you call
+``s w modules [WORKINGSET] -remove [MODULEID]
+
+
+= Clone all sourceparts of a workingset
+
+Now as you have added sourceparts to the workingset you can check out all sourceparts on your commandline.
+Step to a folder were you want to host all your local sourceparts of the workingset and call
+``s w clone [NAME | URL]``.
+Afterwards all source parts should be cloned in the current directory.
+
+= Reset workingset
+
+Resets all local changes on all sourceparts of the workingset.
+Call ``s w reset [WORKINGSET]```
+
+== Branch workingset TODO
+== Remove branch TODO

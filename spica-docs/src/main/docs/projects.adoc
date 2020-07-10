@@ -5,16 +5,17 @@
 = What is a project?
 
 A *project* represents a project in the real world.
-Projects can be hierachical, so you can handle your departments as project or any
-private topic
+Projects can be hierachical, so you can handle your departments as project or any private topic.
 A project can be associated to one projects in stash/jira
 
 = Create a project
 
 There are multiple ways to create a new project:
 
-* On the commandline call ``s p create MyProject`` to create a project named MyProject.
-* In the fxclient call *Show projects* in the tray menu, type your projectname into the textfield of the opened page and press *CR* to finish.
+* On the commandline call ``s p create [NAME]`` to create a project and name it [NAME]
+* In the fxclient call *Show projects* in the tray menu, type your projectname into the textfield of the
+opened page and press *CR* to finish.
+If you select another project before the new project is created as subproject of the selected project.
 
 = Show projects
 
@@ -24,5 +25,11 @@ On the commandline call ``s p list`` to show a list of all available projects.
 
 There are multiple ways to remove an existing project:
 
-* On the commandline call ``s p remove MyProject`` to remove a project named MyProject.
+* On the commandline call ``s p remove [NAME | ID]`` to remove a certain project.
 * In the fxclient call *Show projects* in the tray menu, select the project to be removed and press *-* to remove the selected project.
+
+= Set parent project of a project
+
+As said projects can be hierarchical. If you want to change the parent project
+of a project call "Show projects", double click on a project in the list and in the details view change
+the parent project.

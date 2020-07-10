@@ -1,56 +1,50 @@
-package org.spica.javaclient.actions.projects;
+package org.spica.javaclient.actions.workingsets;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.ActionGroup;
 import org.spica.javaclient.actions.ActionResult;
 import org.spica.javaclient.actions.Command;
-import org.spica.javaclient.model.ProjectInfo;
-import org.spica.javaclient.model.ProjectSourcePartInfo;
+import org.spica.javaclient.model.WorkingSetInfo;
+import org.spica.javaclient.model.WorkingSetSourcePartInfo;
 import org.spica.javaclient.params.CommandLineArguments;
-import org.spica.javaclient.params.FlagInputParam;
 import org.spica.javaclient.params.InputParamGroup;
 import org.spica.javaclient.params.InputParams;
+import org.spica.javaclient.params.TextInputParam;
 
-public class ResetProjectAction extends AbstractProjectAction {
+@Slf4j
+public class RemoveBranchProjectAction extends AbstractWorkingSetAction {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(ResetProjectAction.class);
-
-  private static String KEY_CLEAN = "clean";
+  private static String KEY_BRANCH = "branch";
 
 
   @Override public String getDisplayname() {
-    return "Reset project";
+    return "Remove branches of a workingset";
   }
 
   @Override public String getDescription() {
-    return "Reset all sourcemodules of a project. All local changes are removed";
+    return "Removes all branches which are used in the source parts of this working set";
   }
 
   @Override public ActionResult execute(ActionContext actionContext, InputParams inputParams,
       CommandLineArguments commandLineArguments) {
 
-    boolean clean = inputParams.isInputParamAvailable(KEY_CLEAN);
+    final String branch = inputParams.getInputValueAsString(KEY_BRANCH);
 
-    ProjectInfo projectInfo = getProject(actionContext.getModel(), commandLineArguments);
+    WorkingSetInfo workingSetInfo = getWorkingSet(actionContext.getModel(), commandLineArguments);
 
-    for (ProjectSourcePartInfo nextModule : projectInfo.getSourceparts()) {
+    for (WorkingSetSourcePartInfo nextModule : workingSetInfo.getSourceparts()) {
       if (nextModule.isEnabled()) {
         File toDir = new File(nextModule.getId()).getAbsoluteFile();
         try {
           Git git = Git.open(toDir);
-          outputDefault("Reset " + toDir.getAbsolutePath() + " (clean " + clean + ")");
-          git.reset().setMode(ResetCommand.ResetType.HARD).call();
-          if (clean)
-            git.clean().call();
-
+          outputDefault("Delete branch " + branch + " in " + toDir.getAbsolutePath());
+          git.branchDelete().setBranchNames(branch).call();
         } catch (GitAPIException | IOException e) {
           throw new IllegalStateException("Error resetting " + toDir.getAbsolutePath(), e);
         }
@@ -61,12 +55,8 @@ public class ResetProjectAction extends AbstractProjectAction {
 
   }
 
-  @Override public ActionGroup getGroup() {
-    return ActionGroup.PROJECT;
-  }
-
   @Override public Command getCommand() {
-    return new Command("reset", "r");
+    return new Command("removebranch", "r");
   }
 
   @Override public InputParams getInputParams(ActionContext actionContext, CommandLineArguments commandLineArguments) {
@@ -74,7 +64,8 @@ public class ResetProjectAction extends AbstractProjectAction {
     InputParamGroup inputParamGroup = new InputParamGroup();
     InputParams inputParams = new InputParams(Arrays.asList(inputParamGroup));
 
-    inputParamGroup.getInputParams().add(new FlagInputParam(KEY_CLEAN));
+    TextInputParam branch = new TextInputParam(1, KEY_BRANCH, "Branch");
+    inputParamGroup.getInputParams().add(branch);
 
     return inputParams;
   }

@@ -2,10 +2,11 @@ package org.spica.fx.renderer;
 
 import javafx.util.StringConverter;
 import org.spica.javaclient.model.ProjectInfo;
+import org.spica.javaclient.model.TaskInfo;
 
-public class ProjectStringConverter extends StringConverter<ProjectInfo> {
+public class TaskInfoStringConverter extends StringConverter<TaskInfo> {
 
-  @Override public String toString(ProjectInfo scopItem) {
+  @Override public String toString(TaskInfo scopItem) {
     if (scopItem == null){
       return null;
     } else {
@@ -13,7 +14,7 @@ public class ProjectStringConverter extends StringConverter<ProjectInfo> {
     }
   }
 
-  @Override public ProjectInfo fromString(String string) {
+  @Override public TaskInfo fromString(String string) {
     return null;
   }
 }

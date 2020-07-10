@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.auto.ExecuteScriptAction;
 import org.spica.javaclient.actions.booking.CloseBookingAction;
 import org.spica.javaclient.actions.booking.CreateBookingAction;
-import org.spica.javaclient.actions.booking.EmptyBookingsAction;
 import org.spica.javaclient.actions.booking.FinishDayAction;
 import org.spica.javaclient.actions.booking.FinishTaskAction;
 import org.spica.javaclient.actions.booking.ListBookingsAction;
@@ -28,15 +27,18 @@ import org.spica.javaclient.actions.links.CreateLinkAction;
 import org.spica.javaclient.actions.links.GotoLinkAction;
 import org.spica.javaclient.actions.links.ListLinksAction;
 import org.spica.javaclient.actions.links.RemoveLinkAction;
-import org.spica.javaclient.actions.projects.BranchProjectAction;
-import org.spica.javaclient.actions.projects.CloneProjectAction;
+import org.spica.javaclient.actions.workingsets.BranchWorkingSetAction;
+import org.spica.javaclient.actions.workingsets.CloneWorkingSetAction;
 import org.spica.javaclient.actions.projects.CreateProjectAction;
-import org.spica.javaclient.actions.projects.EmptyProjectsAction;
 import org.spica.javaclient.actions.projects.ListProjectsAction;
-import org.spica.javaclient.actions.projects.ModulesInProjectAction;
-import org.spica.javaclient.actions.projects.RemoveBranchProjectAction;
+import org.spica.javaclient.actions.workingsets.CreateWorkingSetAction;
+import org.spica.javaclient.actions.workingsets.ImportSourceToWorkingsSetAction;
+import org.spica.javaclient.actions.workingsets.ListWorkingSetsAction;
+import org.spica.javaclient.actions.workingsets.ModulesInWorkingSetAction;
+import org.spica.javaclient.actions.workingsets.RemoveBranchProjectAction;
 import org.spica.javaclient.actions.projects.RemoveProjectAction;
-import org.spica.javaclient.actions.projects.ResetProjectAction;
+import org.spica.javaclient.actions.workingsets.RemoveWorkingSetAction;
+import org.spica.javaclient.actions.workingsets.ResetWorkingSetAction;
 import org.spica.javaclient.actions.projects.ShowProjectsAction;
 import org.spica.javaclient.actions.search.SearchGoogleAction;
 import org.spica.javaclient.actions.search.SearchJenkinsAction;
@@ -45,11 +47,11 @@ import org.spica.javaclient.actions.search.SearchProjectPathInBrowserAction;
 import org.spica.javaclient.actions.search.SearchStashAction;
 import org.spica.javaclient.actions.tasks.CloseTaskAction;
 import org.spica.javaclient.actions.tasks.CreateTaskAction;
-import org.spica.javaclient.actions.tasks.EmptyTasksAction;
 import org.spica.javaclient.actions.tasks.ImportTaskAction;
 import org.spica.javaclient.actions.tasks.ListTasksAction;
 import org.spica.javaclient.actions.tasks.RemoveTaskAction;
 import org.spica.javaclient.actions.tasks.ShowTasksAction;
+import org.spica.javaclient.actions.workingsets.ShowWorkingSetsAction;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.FlagInputParam;
 import org.spica.javaclient.params.InputParam;
@@ -65,10 +67,7 @@ public class ActionHandler {
 
   public final static String HELP_TASKNAME = "help";
 
-  //TODO per reflection
   public ActionHandler() {
-    //Register actions
-
     //import
     registeredActions.add(new ImportLogfilesAction());
 
@@ -82,28 +81,32 @@ public class ActionHandler {
     registeredActions.add(new CloseBookingAction());
     registeredActions.add(new FinishDayAction());
     registeredActions.add(new RemoveBookingAction());
-    registeredActions.add(new EmptyBookingsAction());
 
-    //topics
+    //tasks
     registeredActions.add(new CreateTaskAction());
     registeredActions.add(new ListTasksAction());
     registeredActions.add(new ShowTasksAction());
     registeredActions.add(new ImportTaskAction());
     registeredActions.add(new RemoveTaskAction());
-    registeredActions.add(new EmptyTasksAction());
     registeredActions.add(new CloseTaskAction());
 
     //projects
     registeredActions.add(new CreateProjectAction());
     registeredActions.add(new ListProjectsAction());
     registeredActions.add(new ShowProjectsAction());
-    registeredActions.add(new ModulesInProjectAction());
-    registeredActions.add(new CloneProjectAction());
-    registeredActions.add(new BranchProjectAction());
-    registeredActions.add(new ResetProjectAction());
-    registeredActions.add(new RemoveBranchProjectAction());
     registeredActions.add(new RemoveProjectAction());
-    registeredActions.add(new EmptyProjectsAction());
+
+    //workingsets
+    registeredActions.add(new CreateWorkingSetAction());
+    registeredActions.add(new ListWorkingSetsAction());
+    registeredActions.add(new ShowWorkingSetsAction());
+    registeredActions.add(new RemoveWorkingSetAction());
+    registeredActions.add(new ImportSourceToWorkingsSetAction());
+    registeredActions.add(new CloneWorkingSetAction());
+    registeredActions.add(new ModulesInWorkingSetAction());
+    registeredActions.add(new BranchWorkingSetAction());
+    registeredActions.add(new ResetWorkingSetAction());
+    registeredActions.add(new RemoveBranchProjectAction());
 
     //links
     registeredActions.add(new CreateLinkAction());
