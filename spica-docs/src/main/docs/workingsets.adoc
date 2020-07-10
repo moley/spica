@@ -4,7 +4,7 @@
 
 = What is a workingset?
 
-A *workingset* represents all things you need working on a special task.
+A *workingset* represents all things you need to work on a special task.
 For example it contains a set of source part infos, each represents a part of source which is
 checked out from a code repository
 
