@@ -74,4 +74,4 @@ If you want to finish the day call
 = Remove booking TODO
 
 If you want to remove a booking call
-``s b remove [ID]``. This removed the booking with the given ID. 
+``s b remove [ID]``. This removed the booking with the given ID.

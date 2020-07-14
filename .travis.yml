@@ -4,7 +4,6 @@ install: true
 os:
   - linux
   - osx
-  - windows
 
 jdk:
   - openjdk14
