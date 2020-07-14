@@ -2,6 +2,7 @@ package org.spica.javaclient.actions.booking;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.AbstractAction;
@@ -21,23 +22,22 @@ import org.spica.javaclient.params.SelectInputParam;
 import org.spica.javaclient.timetracker.TimetrackerService;
 import org.spica.javaclient.utils.RenderUtil;
 
+@Slf4j
 public class StartTaskAction extends AbstractAction {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(StartTaskAction.class);
 
     private final static String SPECIAL_TASK_NEW = "_NEW";
 
     private RenderUtil renderUtil = new RenderUtil();
 
-    public final static String KEY_TOPIC = "topic";
+    public final static String KEY_TOPIC = "task";
 
     @Override public String getDisplayname() {
-        return "Start topic";
+        return "Start task";
     }
 
     @Override
     public String getDescription() {
-        return "Starts to work on a topic";
+        return "Starts working on a task";
     }
 
     @Override
@@ -107,6 +107,6 @@ public class StartTaskAction extends AbstractAction {
 
     @Override
     public Command getCommand() {
-        return new Command("topic", "t");
+        return new Command("task", "t");
     }
 }

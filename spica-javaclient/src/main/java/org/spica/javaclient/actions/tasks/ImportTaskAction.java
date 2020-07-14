@@ -35,9 +35,9 @@ public class ImportTaskAction extends AbstractAction {
         String jiraUser = spicaProperties.getValue("spica.jira.user");
         String jiraPassword = spicaProperties.getValue("spica.jira.password");
 
-        TaskApi topicApi = new TaskApi();
+        TaskApi taskApi = actionContext.getApi().getTaskApi();
         try {
-            TaskContainerInfo topicContainerInfo = topicApi.importTasks(jiraUser, jiraUser, jiraPassword);
+            TaskContainerInfo topicContainerInfo = taskApi.importTasks(jiraUser, jiraUser, jiraPassword);
             model.setTaskInfos(topicContainerInfo.getTasks());
             outputOk("Imported " + topicContainerInfo.getTasks().size() + " taks");
         } catch (ApiException e) {

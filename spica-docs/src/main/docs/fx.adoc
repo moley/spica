@@ -1,0 +1,29 @@
+= How to use the fx client
+:nofooter:
+:toc:
+
+= Installation
+
+= Clipboard
+
+If you want to copy data from outside into the spica fx client you can use the clipboard.
+*Drag and Drop* and *Copy and Paste*.
+
+Spica implements a global key listener. This means if you are outside of spica, press Ctrl+C to
+copy something and afterwards press Ctrl+S you step to spica (if the shortcut does not overlap with a
+shortcut in the application you are using) and the copied things are inserted
+in spicas clipboard. The clipboard button shows the number of things, which are copied to the clipboard.
+A double click clears ist again.
+
+If you do Ctrl+C outside spica and manually step to spica and press Ctrl+V the things are also copied
+to the clipboard.
+
+You can also drag some things outside spica and drop it to spica, which also fills it to the clipboard.
+
+There are also some spica cli commands, which can fill the spica clipboard
+
+====
+*The things in the clipboard are automatically used if doing special actions*.
+For example if you have filled the clipboard and create a task afterwards the clipboard things are automatically
+inserted as link in the task.
+====

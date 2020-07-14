@@ -16,11 +16,21 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.spica.commons.SpicaProperties;
 
+
+/**
+ * The jira service encapsulates all actions which can be called against an jira instance
+ */
 @Slf4j
 public class JiraService {
 
   private AsynchronousJiraRestClientFactory jiraRestClientFactory = new AsynchronousJiraRestClientFactory();
 
+  /**
+   * connect to the jira server
+   * Needs properties JiraConfiguration.PROPERTY_SPICA_JIRA_URL, JiraConfiguration.PROPERTY_SPICA_JIRA_USER and
+   * JiraConfiguration.PROPERTY_SPICA_JIRA_PWD to be set
+   * @return jira server instance
+   */
   public Jira connectToServer () {
 
     SpicaProperties spicaProperties = new SpicaProperties();
@@ -34,6 +44,11 @@ public class JiraService {
     return jira;
   }
 
+  /**
+   * get a list of accessible projects from the jira server
+   * @param jira jira server
+   * @return list of projects
+   */
   public List<JiraProject> getProjects (final Jira jira) {
     JiraRestClient jiraRestClient = jira.getJiraRestClient();
     List<JiraProject> jiraProjects = new ArrayList<JiraProject>();
@@ -44,6 +59,12 @@ public class JiraService {
     return jiraProjects;
   }
 
+  /**
+   * get a list of components from project in jira server
+   * @param jira        jira server to get infos from
+   * @param projectKey  project to get components from
+   * @return list of components
+   */
   public List<JiraComponent> getComponents (final Jira jira, final String projectKey) {
     JiraRestClient jiraRestClient = jira.getJiraRestClient();
     List<JiraProject> jiraProjects = new ArrayList<JiraProject>();
@@ -55,6 +76,15 @@ public class JiraService {
     return components;
   }
 
+  /**
+   * create a new issue
+   * @param jira          jira server
+   * @param summary       summary text
+   * @param description   description text
+   * @param projectKey    projectkey to use
+   * @param componentName componentname to use
+   * @return created jira issue
+   */
   public JiraIssue createIssue (final Jira jira, final String summary, final String description, final String projectKey, final String componentName) {
     log.info("Create jira issue with summary " + summary + ", description " + description + ", projectKey " + projectKey + ", componentName " + componentName);
     JiraRestClient jiraRestClient = jira.getJiraRestClient();

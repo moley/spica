@@ -1,0 +1,9 @@
+= Working with gradle
+:nofooter:
+:toc:
+
+= Init gradle project TODO: use gradle import
+
+If you want to init a gradle project step into your projectfolder and call ``s g init``.
+You are asked for the gradle version to be used. Afterwards all files are created which are necessary
+to have a gradle project

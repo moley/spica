@@ -1,0 +1,18 @@
+= Global configurations
+:nofooter:
+:toc:
+
+= Import users
+
+If you want to work with different users you can import them from your spica server.
+The spica server must be configured to connect to ldap to use this feature.
+
+Call ``s c users`` to import all users from spica server.
+
+= Show status
+
+If you want detailed infos about the current state call ``s c state``.
+
+
+
+

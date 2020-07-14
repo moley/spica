@@ -13,6 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.DashboardItemType;
 
+/**
+ * the spica model root element
+ */
 @XmlRootElement
 public class Model {
 
@@ -53,27 +56,52 @@ public class Model {
 
   private ProjectInfo selectedProjectInfo;
 
-
+  /**
+   * getter
+   * @return current model file
+   */
   public File getCurrentFile() {
     return currentFile;
   }
 
+  /**
+   * setter
+   * <b>This method should not be used in groovy scripts</b>
+   * @param currentFile current model file
+   */
   public void setCurrentFile(File currentFile) {
     this.currentFile = currentFile;
   }
 
+  /**
+   * getter
+   * @return list of all projects
+   */
   public List<ProjectInfo> getProjectInfos() {
     return projectInfos;
   }
 
+  /**
+   * getter
+   * @return list of all workingsets
+   */
   public List<WorkingSetInfo> getWorkingsetInfos () {
     return workingsetInfos;
   }
 
+  /**
+   * setter
+   * <b>ATTENTION! overrides the current data</b>
+   * @param workingsetInfos list of workingsets
+   */
   public void setWorkingsetInfos (final List<WorkingSetInfo> workingsetInfos) {
     this.workingsetInfos = workingsetInfos;
   }
 
+  /**
+   * get all project infos excluding the one that is selected
+   * @return other projects
+   */
   public Collection<ProjectInfo> getOtherProjectInfos () {
     Collection<ProjectInfo> projectInfos = new ArrayList<>();
     projectInfos.addAll(getProjectInfos());
@@ -81,10 +109,22 @@ public class Model {
     return projectInfos;
   }
 
+  /**
+   * setter
+   * <b>ATTENTION! overrides the current data</b>
+   * @param projectInfos  list of projects
+   */
   public void setProjectInfos(List<ProjectInfo> projectInfos) {
     this.projectInfos = projectInfos;
   }
 
+  /**
+   * find tasks by name, external system key or id
+   *
+   * @param query searchstring
+   *
+   * @return list of found tasks
+   */
   public List<TaskInfo> findTaskInfosByQuery (String query) {
     if (query == null)
       return new ArrayList<TaskInfo>();
@@ -101,7 +141,11 @@ public class Model {
     return taskInfos.stream().filter( filter).collect(Collectors.toList());
   }
 
-
+  /**
+   * find projects by name or id
+   * @param query  searchstring
+   * @return list of found projects
+   */
   public List<ProjectInfo> findProjectInfosByQuery (String query) {
     Predicate<ProjectInfo> filter = new Predicate<ProjectInfo>() {
       @Override
@@ -115,6 +159,11 @@ public class Model {
 
   }
 
+  /**
+   * find project by id
+   * @param id  project id
+   * @return project or <code>null</code>
+   */
   public ProjectInfo findProjectInfoById(String id) {
     if (id == null)
       return null;
@@ -127,6 +176,11 @@ public class Model {
     return null;
   }
 
+  /**
+   * find workingsets by name or id
+   * @param query searchstring
+   * @return list of found workings sets
+   */
   public List<WorkingSetInfo> findWorkingSetInfosByQuery (String query) {
     Predicate<WorkingSetInfo> filter = new Predicate<WorkingSetInfo>() {
       @Override
@@ -140,6 +194,11 @@ public class Model {
 
   }
 
+  /**
+   * find workingset by id
+   * @param id  working set id
+   * @return the workingset or <code>null</code>
+   */
   public WorkingSetInfo findWorkingSetInfoById(String id) {
     if (id == null)
       return null;
@@ -152,8 +211,11 @@ public class Model {
     return null;
   }
 
-
-
+  /**
+   * find links by name, url or id
+   * @param query searchstring
+   * @return list of found links
+   */
   public List<LinkInfo> findLinkInfosByQuery (String query) {
     Predicate<LinkInfo> filter = new Predicate<LinkInfo>() {
       @Override
@@ -168,57 +230,110 @@ public class Model {
 
   }
 
+  /**
+   * find task by ID
+   * @param id  ID to find
+   * @return task or <code>null</code>
+   */
   public TaskInfo findTaskInfoById (final String id) {
     return taskInfos.stream().filter(taskInfo -> taskInfo.getId().equals(id)).findAny().orElse(null);
   }
 
-
-
-  public TaskInfo findTaskInfoByExternalSystemKey (final String id) {
-    return taskInfos.stream().filter(taskInfo -> taskInfo.getExternalSystemKey().equals(id)).findAny().orElse(null);
+  /**
+   * find task by external system key
+   * @param key  key
+   * @return task info or <code>null</code>
+   */
+  public TaskInfo findTaskInfoByExternalSystemKey (final String key) {
+    return taskInfos.stream().filter(taskInfo -> taskInfo.getExternalSystemKey().equals(key)).findAny().orElse(null);
   }
 
+  /**
+   * getter
+   * @return list of all tasks
+   */
   public List<TaskInfo> getTaskInfos() {
     return taskInfos;
   }
 
+  /**
+   * setter
+   * <b>ATTENTION! Overrids current data</b>
+   * @param taskInfos list of tasks
+   */
   public void setTaskInfos(List<TaskInfo> taskInfos) {
     this.taskInfos = taskInfos;
   }
 
+  /**
+   * get real events from today
+   * @return list of events
+   */
   public List<EventInfo> getEventInfosRealToday () {
     LocalDate today = LocalDate.now();
     return getEventInfosReal().stream().filter(info->info.getStart().toLocalDate().equals(today)).collect(Collectors.toList());
   }
 
+  /**
+   * get list of all real events
+   * @return list of events
+   */
   public List<EventInfo> getEventInfosReal() {
     return eventInfosReal;
   }
 
-
-
-
+  /**
+   * find the real event by id
+   * @param id id of event
+   * @return real event or <code>null</code>
+   */
   public EventInfo findEventInfoRealById (final String id) {
     return eventInfosReal.stream().filter(eventInfo -> eventInfo.getId().equals(id)).findAny().orElse(null);
   }
 
+  /**
+   * find link by id
+   *
+   * @param id link id
+   * @return link or <code>null</code>
+   */
   public LinkInfo findLinkInfoById (final String id) {
     return linkInfos.stream().filter(linkInfo -> linkInfo.getId().equals(id)).findAny().orElse(null);
   }
 
-
+  /**
+   * setter event infos real
+   * <b>ATTENTION! Overrids current data</b>
+   * @param eventInfosReal list of event infos
+   */
   public void setEventInfosReal(List<EventInfo> eventInfosReal) {
     this.eventInfosReal = eventInfosReal;
   }
 
+  /**
+   * getter events planned
+   * @return list of planned events
+   */
   public List<EventInfo> getEventInfosPlanned() {
     return eventInfosPlanned;
   }
 
+  /**
+   * setter event infos planned
+   * <b>ATTENTION! Overrids current data</b>
+   * @param eventInfosPlanned list of event infos
+   */
   public void setEventInfosPlanned(List<EventInfo> eventInfosPlanned) {
     this.eventInfosPlanned = eventInfosPlanned;
   }
 
+  /**
+   * find the last started event relative to the timestamp
+   *
+   * @param currentDateTime timestamp
+   *
+   * @return event
+   */
   public EventInfo findEventBefore (LocalDateTime currentDateTime) {
     EventInfo last = null;
     for (EventInfo next: getEventInfosRealToday()) {
@@ -230,6 +345,13 @@ public class Model {
     return last;
   }
 
+  /**
+   * find the first event started after the timestamp
+   *
+   * @param currentDateTime timestamp
+   *
+   * @return event
+   */
   public EventInfo findEventAfter (LocalDateTime currentDateTime) {
     for (EventInfo next: getEventInfosRealToday()) {
       if (next.getStart().isAfter(currentDateTime)) {
@@ -239,6 +361,10 @@ public class Model {
     return null;
   }
 
+  /**
+   * find the current task
+   * @return current task
+   */
   public TaskInfo getCurrentTask () {
     EventInfo eventInfo = findLastOpenEventFromToday();
     if (eventInfo != null && eventInfo.getEventType().equals(EventType.TOPIC)) {
@@ -247,6 +373,12 @@ public class Model {
     return null;
   }
 
+  /**
+   * find old open events, which means
+   * events from before today, which are not closed
+   *
+   * @return list of old open events
+   */
   public List<EventInfo> findOldOpenEvents () {
     LocalDate today = LocalDate.now();
     List<EventInfo> oldEventInfos = new ArrayList<EventInfo>();
@@ -259,6 +391,10 @@ public class Model {
     return oldEventInfos;
   }
 
+  /**
+   * find the last open event from today
+   * @return event
+   */
   public EventInfo findLastOpenEventFromToday() {
     EventInfo last = null;
     for (EventInfo next: getEventInfosRealToday()) {
@@ -274,37 +410,74 @@ public class Model {
 
   }
 
-
+  /**
+   * get list of all users
+   * @return users
+   */
   public List<UserInfo> getUserInfos() {
     return userInfos;
   }
 
+  /**
+   * setter users
+   * <b>ATTENTION! Overrids current data</b>
+   * @param userInfos list of users
+   */
   public void setUserInfos(List<UserInfo> userInfos) {
     this.userInfos = userInfos;
   }
 
+  /**
+   * get all message containers
+   * @return message container
+   */
   public List<MessagecontainerInfo> getMessagecontainerInfos() {
     return messagecontainerInfos;
   }
 
+  /**
+   * setter messagecontainers
+   *
+   * <b>ATTENTION! Overrids current data</b>
+   * @param messagecontainerInfos  list of messagecontainers
+   */
   public void setMessagecontainerInfos(List<MessagecontainerInfo> messagecontainerInfos) {
     this.messagecontainerInfos = messagecontainerInfos;
   }
 
+  /**
+   * get all links
+   * @return list of links
+   */
   public List<LinkInfo> getLinkInfos() {
     return linkInfos;
   }
 
+  /**
+   * setter links
+   *
+   * <b>ATTENTION! Overrids current data</b>
+   * @param linkInfos links
+   */
   public void setLinkInfos(List<LinkInfo> linkInfos) {
     this.linkInfos = linkInfos;
   }
 
+  /**
+   * getter all skills
+   * @return list of all skills
+   */
   public List<SkillInfo> getAllSkills() {
     if (allSkills == null)
       allSkills = new ArrayList<>();
     return allSkills;
   }
 
+  /**
+   * find user skill by name
+   * @param name  name to be found
+   * @return skill
+   */
   public SkillInfo findSkillByName (final String name) {
     for (SkillInfo next: allSkills) {
       if (next.getName().trim().equalsIgnoreCase(name.trim())) {
@@ -314,14 +487,29 @@ public class Model {
     return null;
   }
 
+  /**
+   * setter skills
+   *
+   * <b>ATTENTION! Overrids current data</b>
+   * @param allSkills skills
+   */
   public void setAllSkills(List<SkillInfo> allSkills) {
     this.allSkills = allSkills;
   }
 
+  /**
+   * getter
+   * @return logged in user
+   */
   public UserInfo getMe() {
     return me;
   }
 
+  /**
+   * checks if user is the currently logged in user
+   * @param userInfo  user
+   * @return true: is the logged in user, false: is not the logged in user
+   */
   public boolean isMe (final UserInfo userInfo) {
     if (me == null)
       throw new IllegalStateException("Me cannot be null");
@@ -332,22 +520,47 @@ public class Model {
     return userInfo.getId().equals(me.getId());
   }
 
+  /**
+   * set the logged in user
+   * @param me logged in user
+   */
   public void setMe(UserInfo me) {
     this.me = me;
   }
 
+  /**
+   * getter
+   * @return all user skills of the currently logged in user
+   */
   public List<SkillInfo> getUserSkills() {
     return userSkills;
   }
 
+  /**
+   * setter userskill
+   *
+   * <b>ATTENTION! Overrids current data</b>
+   * @param userSkills skills
+   */
   public void setUserSkills(List<SkillInfo> userSkills) {
     this.userSkills = userSkills;
   }
 
+  /**
+   * getter
+   * @return all dashboard items
+   */
   public List<DashboardItemInfo> getDashboardItemInfos() {
     return dashboardItemInfos;
   }
 
+  /**
+   * find dashboard item by type and reference
+   *
+   * @param dashboardItemType   type
+   * @param referenceId  reference id
+   * @return dashboarditem
+   */
   public DashboardItemInfo findDashboardItemInfo (final DashboardItemType dashboardItemType, final String referenceId) {
 
     for (DashboardItemInfo next: dashboardItemInfos) {
@@ -358,22 +571,45 @@ public class Model {
     return null;
   }
 
+  /**
+   * setter dasboarditems
+   *
+   * <b>ATTENTION! Overrids current data</b>
+   * @param dashboardItemInfos dashboardItems
+   */
   public void setDashboardItemInfos(List<DashboardItemInfo> dashboardItemInfos) {
     this.dashboardItemInfos = dashboardItemInfos;
   }
 
+  /**
+   * get the selected message container
+   * @return message container
+   */
   public MessagecontainerInfo getSelectedMessageContainer() {
     return selectedMessageContainer;
   }
 
+  /**
+   * select the message container
+   * @param selectedMessageContainer message container
+   */
   public void setSelectedMessageContainer(MessagecontainerInfo selectedMessageContainer) {
     this.selectedMessageContainer = selectedMessageContainer;
   }
 
+  /**
+   * get the selected task
+   * @return selected task
+   */
   public TaskInfo getSelectedTaskInfo() {
     return selectedTaskInfo;
   }
 
+  /**
+   * get other tasks (excludes the currently selected one)
+   *
+   * @return other tasks
+   */
   public Collection<TaskInfo> getOtherTaskInfos () {
     Collection<TaskInfo> taskInfos = new ArrayList<>();
     taskInfos.addAll(getTaskInfos());
@@ -381,10 +617,19 @@ public class Model {
     return taskInfos;
   }
 
+  /**
+   * selected a task
+   * @param selectedTaskInfo selected task
+   */
   public void setSelectedTaskInfo(TaskInfo selectedTaskInfo) {
     this.selectedTaskInfo = selectedTaskInfo;
   }
 
+  /**
+   * find user by ID
+   * @param id user id
+   * @return user or throws {@link IllegalStateException}
+   */
   public UserInfo findUserById(String id) {
     if (id == null)
       throw new IllegalArgumentException("Parameter id must not be null");
@@ -396,6 +641,11 @@ public class Model {
     throw new IllegalStateException("No user found for username " + id);
   }
 
+  /**
+   * find user by usernmae
+   * @param username  username
+   * @return user or {@link IllegalStateException}
+   */
   public UserInfo findUserByUsername(String username) {
     if (username == null)
       throw new IllegalArgumentException("Parameter username must not be null");
@@ -406,6 +656,12 @@ public class Model {
     }
     throw new IllegalStateException("No user found for username " + username);
   }
+
+  /**
+   * find user by mail
+   * @param mail  mail
+   * @return user or {@link IllegalStateException}
+   */
 
   public UserInfo findUserByMail(String mail) {
     if (mail == null)
@@ -418,14 +674,28 @@ public class Model {
     throw new IllegalStateException("No user found for mail " + mail);
   }
 
+  /**
+   * get the selected project
+   * @return selected project
+   */
   public ProjectInfo getSelectedProjectInfo() {
     return selectedProjectInfo;
   }
 
+  /**
+   * select a project
+   * @param selectedProjectInfo project to select
+   */
   public void setSelectedProjectInfo(ProjectInfo selectedProjectInfo) {
     this.selectedProjectInfo = selectedProjectInfo;
   }
 
+  /**
+   * get projects of task
+   * This means the assigned project and all its parents
+   * @param nextTaskInfo task
+   * @return list of projects
+   */
   public List<ProjectInfo> getProjectsOfTask(TaskInfo nextTaskInfo) {
     List<ProjectInfo> projects = new ArrayList<>();
     if (nextTaskInfo.getProjectId() != null) {

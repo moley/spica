@@ -1,3 +1,46 @@
 = Get your things done faster with automations
 :nofooter:
 :toc:
+
+= Write an 'HELLO WORLD' automation script
+
+Spica can be extended with groovy scripts.
+For example write the following script:
+
+.Hello world script
+----
+println "Hello world from spica..."
+----
+
+and save it.
+
+= Call an automation script
+
+If you have an automation script written you can call it with ``s a execute [PATH]``.
+
+= Using the API
+
+In your groovy script you have access to the complete model via a variable *spica*.
+This variable is mapped to the interface link:../javadoc/spica-javaclient/org/spica/javaclient/actions/ActionContext.html[org.spica.javaclient.actions.ActionContext]
+
+.Groovy Script which has access to the complete spica model
+----
+import org.spica.javaclient.actions.ActionContext
+import org.spica.javaclient.services.Services
+
+ActionContext actionContext = spica  // <1>
+
+//If page changes, we send a mail with the new version to be up to date.
+Services services = actionContext.services  //<2>
+boolean siteChanged = services.downloadService.siteChanged("https://gradle.org/releases/");<3>
+println "Site changed: " + siteChanged
+if (siteChanged) {
+  services.mailService.sendMail("Spica detected a new gradle version", "Bla",
+                                Arrays.asList("user1@spica.org"))
+}
+----
+<1> Get the implementation class of the api
+<2> Get services
+<3> Use a special service
+
+= Examples

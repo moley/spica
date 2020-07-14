@@ -22,11 +22,11 @@ public class FinishTaskAction extends AbstractAction {
   private final static Logger LOGGER = LoggerFactory.getLogger(FinishTaskAction.class);
 
   @Override public String getDescription() {
-    return "Finish current topic";
+    return "Finish current task";
   }
 
   @Override public String getDisplayname() {
-    return "Finish current topic";
+    return "Finish current task";
   }
 
   @Override public ActionResult execute(ActionContext actionContext, InputParams inputParams,

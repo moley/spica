@@ -53,7 +53,6 @@ you use variable replacement the following way:
 ``s w import [BITBUCKET_URL] ABC '#project#_#repo#_0'``
 ====
 
-
 = Enable, disable or remove a sourcepart
 
 A disabled sourcepart is ignored when calling actions on the workingset.
@@ -65,7 +64,6 @@ If you want to reenable a disabled sourcepart you call
 
 If you want to completely remove a sourcepart you call
 ``s w modules [WORKINGSET] -remove [MODULEID]
-
 
 = Clone all sourceparts of a workingset
 

@@ -34,7 +34,7 @@ public class StartPhonecallAction extends AbstractAction {
 
     public final static String KEY_FOREIGN_USER = "foreignUser";
     public final static String KEY_MESSAGE = "description";
-    public final static String KEY_FINISH = "finish";
+    public final static String KEY_CONTINUE = "finish";
 
     @Override public String getDisplayname() {
         return "Start phonecall";
@@ -52,6 +52,7 @@ public class StartPhonecallAction extends AbstractAction {
 
         UserInfo selectedUser = (UserInfo) inputParams.getInputValue(KEY_FOREIGN_USER);
         String message = inputParams.getInputValueAsString(KEY_MESSAGE);
+        boolean continuePreviousWork = inputParams.getInputValueAsBoolean(KEY_CONTINUE, false);
 
         MessageInfo messageInfo = new MessageInfo();
         if (selectedUser != null)
@@ -67,10 +68,12 @@ public class StartPhonecallAction extends AbstractAction {
         model.getMessagecontainerInfos().add(messagecontainerInfo);
 
         timetrackerService.setModelCacheService(actionContext.getServices().getModelCacheService());
-        timetrackerService.finishTelephoneCall(messageInfo, selectedUser);
+        timetrackerService.finishTelephoneCall(messageInfo, selectedUser, continuePreviousWork);
 
         actionContext.saveModel(getClass().getName());
         outputOk("Saved phonecall with " + renderUtil.getUser(selectedUser) + " with message " + message);
+        if (continuePreviousWork)
+            outputOk("Previous work is continued");
 
         return null;
 
@@ -104,7 +107,7 @@ public class StartPhonecallAction extends AbstractAction {
         });
 
         TextInputParam description = new TextInputParam(5, KEY_MESSAGE, "Description");
-        ConfirmInputParam confirmInputParam = new ConfirmInputParam(KEY_FINISH, "Finish call and continue previous work", null);
+        ConfirmInputParam confirmInputParam = new ConfirmInputParam(KEY_CONTINUE, "Continue previous work", null);
 
         InputParamGroup inputParamGroup = new InputParamGroup();
         inputParamGroup.getInputParams().add(userInfoSearchInputParam);

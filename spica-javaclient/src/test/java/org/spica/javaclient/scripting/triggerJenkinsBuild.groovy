@@ -9,7 +9,7 @@ ActionContext actionContext = spica
 
 //If page changes, we import the new gradle version into our artifactory
 Services services = actionContext.services
-Jenkins jenkins = services.jenkinsService.connectToJenkinsServer();
+Jenkins jenkins = services.jenkinsService.connectToServer();
 services.jenkinsService.triggerBuild(jenkins, "sam", "jenkinsPipelineCredentials")
 
 //Trigger build with params

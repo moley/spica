@@ -1,1 +1,1 @@
-println "Hello world from groovy..."
+println "Hello world from spica (groovy)..."

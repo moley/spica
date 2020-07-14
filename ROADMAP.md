@@ -5,9 +5,9 @@
 * 
 
 ##Copy&Paste
-* Global key Ctrl+S inserts clipboard to spica clipboard
-* Ctrl+C / CtrlüV inserts something to spica clipboard
-* DragAnd Drop inserts something to spica clipboard
+* Global key Ctrl+S inserts clipboard to spica clipboard *DONE*
+* Ctrl+C / CtrlüV inserts something to spica clipboard *DONE*
+* DragAnd Drop inserts something to spica clipboard *DONE*
 * Screenshots can be inserted to spica clipboard
 * There are spica-cli-commands which fill the spica clipboard (e.g. spica-cli logs [--all])
 

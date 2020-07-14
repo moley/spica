@@ -78,13 +78,7 @@ public class StandaloneActionContext implements ActionContext {
   @Override public Model getModel() {
     return services.getModelCacheService().get();
   }
-
-
-  @Override
-  public Model reloadModel () {
-    services.getModelCacheService().close();
-    return services.getModelCacheService().get();
-  }
+  
 
   @Override public void saveModel(String lastAction) {
     ModelCacheService modelCacheService = services.getModelCacheService();

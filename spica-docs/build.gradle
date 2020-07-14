@@ -2,6 +2,8 @@ apply {
     plugin 'org.asciidoctor.convert'
 }
 
+def docPath = file('build/docs')
+
 asciidoctor {
     sourceDir = file('src/main/docs')
     sources {
@@ -12,6 +14,36 @@ asciidoctor {
     options attributes: ['source-highlighter': 'prettify' ,
                          'stylesheet': "$projectDir/src/main/docs/themes/spica.css".toString(),
                          'encoding': 'ISO-8859-15']
+
+    doLast {
+        copy {
+            from file('build/asciidoc/html5')
+            into file (docPath.absolutePath + '/userdoc')
+        }
+    }
 }
 
-tasks.build.dependsOn tasks.asciidoctor
+
+tasks.build.dependsOn rootProject.getTasksByName('javadoc', true)
+
+task docsCopyJavadoc {
+    doLast {
+
+        //Copy all javadocs into userdoc submodule
+        rootProject.subprojects {
+            println "Copy from " + it.file('build/docs/javadoc').absolutePath + " to " + project.project(':spica-docs').file('build/docs/leguan/reference/' + it.name)
+
+            //javadocs
+            File fromDir = it.file('build/docs/javadoc')
+            File toDir = project.project(':spica-docs').file(docPath.absolutePath + '/javadoc/' + it.name)
+            toDir.mkdirs()
+            copy {
+                from fromDir
+                into toDir
+            }
+        }
+    }
+    dependsOn   project.rootProject.getTasksByName('javadoc', true)
+}
+
+tasks.build.dependsOn tasks.asciidoctor, tasks.docsCopyJavadoc

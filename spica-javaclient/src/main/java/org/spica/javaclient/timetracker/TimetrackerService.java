@@ -205,7 +205,7 @@ public class TimetrackerService {
         modelCacheService.set(model, "Start telephone call");
     }
 
-    public void finishTelephoneCall (final MessageInfo messageInfo, UserInfo userInfo) {
+    public void finishTelephoneCall (final MessageInfo messageInfo, UserInfo userInfo, final boolean restartPreviousWork) {
         EventInfo eventInfo = getModelCache().findLastOpenEventFromToday();
         if (eventInfo == null)
             throw new IllegalStateException("Message not found, but " + eventInfo + "-" + getModelCache().getEventInfosRealToday());
@@ -222,7 +222,8 @@ public class TimetrackerService {
 
         Model model = getModelCache();
 
-        restartLastRealEvent(model, EventType.MESSAGE);
+        if (restartPreviousWork)
+          restartLastRealEvent(model, EventType.MESSAGE);
 
         modelCacheService.closeEventDashboardsWhenEventIsClosed();
 

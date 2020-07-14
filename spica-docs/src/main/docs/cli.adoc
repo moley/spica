@@ -1,0 +1,17 @@
+= How to use the commandline interface
+:nofooter:
+:toc:
+
+= Installation
+TODO
+
+= Import logfiles into spica
+You can call ``s i logs``to zip logs together and insert them into the clipboard of the spica
+fx client.
+
+* ``s i logs --all`` copies all logfiles
+
+* ``s i logs --stack`` copies only logfiles which contain stacktraces
+
+If you have imported it into fxclient you can e.g. create a task or send it to another user
+

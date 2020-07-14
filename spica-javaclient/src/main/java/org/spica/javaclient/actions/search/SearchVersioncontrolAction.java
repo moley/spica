@@ -14,17 +14,17 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-public class SearchStashAction extends AbstractAction {
+public class SearchVersioncontrolAction extends AbstractAction {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(SearchStashAction.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(SearchVersioncontrolAction.class);
 
     @Override public String getDisplayname() {
-        return "Goto bitbucket";
+        return "Goto versioncontrol";
     }
 
     @Override
     public String getDescription() {
-        return "Navigates to bitbucket of your current working dir";
+        return "Navigates to versioncontrol system of your current working dir";
     }
 
     File getNextGitProject (final File currentWorkingDir) {
@@ -83,6 +83,6 @@ public class SearchStashAction extends AbstractAction {
 
     @Override
     public Command getCommand() {
-        return new Command("stash", "s");
+        return new Command("versioncontrol", "v");
     }
 }

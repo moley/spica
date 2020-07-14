@@ -2,6 +2,6 @@ defaultTasks 'helloWorld'
 
 task helloWorld {
    doList {
-     println 'Hello world from gradle'
+     println 'Hello world from spica (gradle)'
    }
 }

@@ -7,3 +7,71 @@
 A *booking* represents a time interval were a certain task was worked at.
 Tasks can be hierachical.
 A task can be associated to one jira issue
+
+
+= Create a booking TODO
+
+If you manually want to create a booking call ``s b create``.
+The time you *Stopped" the booking is an optional input.
+
+= Start working on a task
+
+Call ``s b task`` and select a task to work on.
+If you have started a booking before this is getting closed and a new booking which shows you are
+working on the task is created.
+
+= Start / Stop a pause
+
+Call ``s b pause`` to notify spica that you are making a break.
+Afterwards *Current task* shows that you are in a break and how long.
+
+Call ``s b pause`` again to notify spica that you are stopping the break. Spica continues
+the previous booking again.
+
+= Finish the current task
+
+If you call ``s b finish`` your current booking is finished and no other booking is started.
+You have to start a new booking on your own.
+
+= Start a phonecall
+
+If your phone rings and you start a new phonecall you interrupt your current task.
+If you call ``s b call`` you are asked for the *user* you are talking with (which is optional) and
+the description of your topic to find afterwards the reason of your communication.
+The booking is written from the start point of your call until you answered the question *Continue previous work?*.
+If you want the previous work to be restarted type *j*. If you type *n* then telephone call is finished and
+no other booking is started. You have to start a new booking on your own.
+
+= Show all bookings of a special period
+
+You can show all bookings of today if you call ``s b list``
+
+``s b list today`` shows all bookings of today
+``s b list week`` shows all bookings of the current week
+``s b list week-1`` shows all bookings of the last week
+``s b list week-2`` shows all bookings of the week before the last week
+``s b list month`` shows all bookings of the current month
+``s b list month-1`` shows all bookings of the last month
+``s b list month-2`` shows all bookings of the month before the last month
+``s b all`` shows really all bookings ever made
+``s b 0607`` shows bookings of 6th of july this year.
+
+= Close booking with a certain
+
+If you have forgotte to close bookings you can close them manually calling
+
+``s b close``.
+
+This steps through all non closed bookings and you can add a finish time.
+The last booking to be shown is the current open booking. If you don't want to finish it, leave empty
+and press *CR* to finish action. If you add a finish time for the current open booking, it will be closed.
+
+= Finish day
+
+If you want to finish the day call
+``s b day``. This closes the last open booking, you are done.
+
+= Remove booking TODO
+
+If you want to remove a booking call
+``s b remove [ID]``. This removed the booking with the given ID. 

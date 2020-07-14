@@ -13,7 +13,7 @@ ActionContext actionContext = spica
 Services services = actionContext.services
 BitbucketService bitbucketService = services.bitbucketService;
 
-bitbucketService.connectToBitbucket();
+bitbucketService.connectToServer();
 
 for (VcsProjectInfo next: bitbucketService.getProjects()) {
     println next.name

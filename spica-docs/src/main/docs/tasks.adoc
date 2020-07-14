@@ -25,7 +25,7 @@ There are multiple ways to show your tasks:
 
 There are multiple ways to remove an existing task:
 
-* On the commandline call ``s t remove [NAME | ID]]`` to remove a certain task.
+* On the commandline call ``s t remove [NAME | ID]]`` to remove a specific task.
 * In the fxclient call *Show tasks* in the tray menu, select the task to be removed and press *-* to remove the selected task.
 
 = Set parent task of a task
@@ -33,3 +33,23 @@ There are multiple ways to remove an existing task:
 As said tasks can be hierarchical. If you want to change the parent task of any task call "Show tasks"
 in the fx-client, double click on a task in the list and in the details view change the parent task.
 
+= Finish a task
+
+There are multiple ways to finish an open task:
+
+* On the commandline call ``s t finish [NAME|ID]`` to finish a specific task.
+* In the fxclient call *Show tasks* in the tray menu, and click the button *Finish* on the specific task. Afterwards
+the task is moved to *"Finished" view*
+
+= Import tasks (TODO)
+
+You can import tasks from an external issue tracker, like jira.
+Configure the following in ``~/.spica/spica.properties``:
+
+```
+spica.jira.url = [URL TO YOUR JIRA INSTANCE]
+spica.jira.user = [YOUR JIRA USER]
+spica.jira.password = [YOUR JIRA PASSWORD]
+```
+
+Afterwards you can import the tasks with the commandline call ``s t import``.

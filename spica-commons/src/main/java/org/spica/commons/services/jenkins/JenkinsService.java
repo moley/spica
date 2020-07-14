@@ -8,10 +8,15 @@ import com.offbytwo.jenkins.model.QueueReference;
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
 
+/**
+ * The jenkins service encapsulates all actions which can be called against an jenkins instance
+ */
+@Slf4j
 public class JenkinsService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(JenkinsService.class);
@@ -21,8 +26,13 @@ public class JenkinsService {
   public final static String PROPERTY_JENKINS_USER = "spica.jenkins.user";
   public final static String PROPERTY_JENKINS_PASSWORD = "spica.jenkins.password";
 
-
-  public Jenkins connectToJenkinsServer() throws JenkinsException {
+  /**
+   * connect to the jenkins server
+   * Needs properties {@link JenkinsService#PROPERTY_JENKINS_URL} {@link JenkinsService#PROPERTY_JENKINS_USER} and
+   * {@link JenkinsService#PROPERTY_JENKINS_PASSWORD} to be set
+   * @return jenkins server instance
+   */
+  public Jenkins connectToServer() throws JenkinsException {
 
     SpicaProperties spicaProperties = new SpicaProperties();
 
@@ -40,10 +50,27 @@ public class JenkinsService {
     return jenkins;
   }
 
+  /**
+   * trigger build in jenkins
+   *
+   * @param jenkins     jenkins server
+   * @param foldername  foldername to be used, can be <code>null</code> if no folder is used
+   * @param jobname     jobname to be triggered
+   * @return url part
+   */
   public String triggerBuild (Jenkins jenkins, String foldername, String jobname) {
     return triggerBuild(jenkins, foldername, jobname, null);
   }
 
+  /**
+   * trigger parameterized build in jenkins
+   *
+   * @param jenkins       jenkins server
+   * @param foldername    foldername to be used, can be <code>null</code> if no folder is used
+   * @param jobname       jobname to be triggered
+   * @param parameters    parameters to be used to trigger this job
+   * @return url part
+   */
   public String triggerBuild (Jenkins jenkins, String foldername, String jobname, final HashMap<String, String> parameters) {
     LOGGER.info("Trigger build in folder " + foldername + ":" + jobname);
     JenkinsServer jenkinsServer = jenkins.getJenkinsServer();

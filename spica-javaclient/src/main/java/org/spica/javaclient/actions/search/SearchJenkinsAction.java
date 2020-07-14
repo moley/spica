@@ -50,20 +50,23 @@ public class SearchJenkinsAction extends AbstractAction {
         if (jenkinsFile.exists()) {
             try {
                 List<String> lines = FileUtils.readLines(jenkinsFile, Charset.defaultCharset());
-                String link = lines.get(1);
+                String link = lines.get(0).startsWith("#") ? lines.get(1): lines.get(0); //in the first line after optional shebang
                 if (link.startsWith("//")) {
                     link = link.substring(2).replace("//", "/");
-                    Desktop.getDesktop().browse(new URI(link + detailsSite));
+                    String completeLink = (link + detailsSite).trim();
+                    Desktop.getDesktop().browse(new URI(completeLink));
                     return null;
                 }
+                else
+                    outputError("In file " + jenkinsFile.getAbsolutePath() + " there is no or no commented link in this file available. Please create one and put the url to the buildjob as comment in the line after shebang.");
 
             } catch (IOException | URISyntaxException e) {
                 throw new IllegalStateException(e);
             }
 
         }
-
-        outputError("In path " + currentWorkingDir.getAbsolutePath() + " there is no Jenkinsfile or no commented link in this file available. Please create one and put the url to the buildjob as comment in the line after shebang");
+        else
+            outputError("In path " + currentWorkingDir.getAbsolutePath() + " there is no Jenkinsfile available");
 
         return null;
     }
