@@ -15,7 +15,7 @@ public class MessagecontainerMapper {
 
   public MessageInfo toApi (final Message message) {
     MessageInfo messageInfo = new MessageInfo();
-    messageInfo.setCreator(message.getCreatorId().toString());
+    messageInfo.setCreatorId(message.getCreatorId().toString());
     messageInfo.setId(message.getId().toString());
     messageInfo.setMessage(message.getMessage());
     return messageInfo;

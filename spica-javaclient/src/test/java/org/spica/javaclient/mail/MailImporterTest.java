@@ -69,7 +69,7 @@ public class MailImporterTest {
     Date localDate = Date.from( localDateTime.atZone( ZoneId.systemDefault()).toInstant());
 
     MessagecontainerInfo messagecontainerInfo = new MessagecontainerInfo().topic(topic);
-    MessageInfo messageInfo = new MessageInfo().message("Hello world").creator(mail).type(MessageType.MAIL).creationtime(localDateTime);
+    MessageInfo messageInfo = new MessageInfo().message("Hello world").creatorId(mail).type(MessageType.MAIL).creationtime(localDateTime);
     messagecontainerInfo.addMessageItem(messageInfo);
     Model model = new Model();
     model.getMessagecontainerInfos().add(messagecontainerInfo);
@@ -112,7 +112,7 @@ public class MailImporterTest {
     Date laterDate = Date.from( laterLocalDateTime.atZone( ZoneId.systemDefault()).toInstant());
 
     MessagecontainerInfo messagecontainerInfo = new MessagecontainerInfo().topic(topic);
-    MessageInfo messageInfo = new MessageInfo().message("Hello world").creator(mail).type(MessageType.MAIL).creationtime(localDateTime);
+    MessageInfo messageInfo = new MessageInfo().message("Hello world").creatorId(mail).type(MessageType.MAIL).creationtime(localDateTime);
     messagecontainerInfo.addMessageItem(messageInfo);
     Model model = new Model();
     model.getMessagecontainerInfos().add(messagecontainerInfo);
@@ -153,7 +153,7 @@ public class MailImporterTest {
     Date localDate = Date.from( localDateTime.atZone( ZoneId.systemDefault()).toInstant());
 
     MessagecontainerInfo messagecontainerInfo = new MessagecontainerInfo().topic(topic);
-    MessageInfo messageInfo = new MessageInfo().message("Hello world").creator(mail).type(MessageType.MAIL).creationtime(localDateTime);
+    MessageInfo messageInfo = new MessageInfo().message("Hello world").creatorId(mail).type(MessageType.MAIL).creationtime(localDateTime);
     messagecontainerInfo.addMessageItem(messageInfo);
     Model model = new Model();
     model.getMessagecontainerInfos().add(messagecontainerInfo);

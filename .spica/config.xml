@@ -74,4 +74,8 @@
         <name>Neuer Task</name>
         <projectId>d412bc55-823e-4514-9f2f-8079a933d4fc</projectId>
     </taskInfos>
+    <taskInfos>
+        <id>0efb210d-2ad7-4d1a-89a8-8be84d90a6c3</id>
+        <name>Synchronize model on the fly</name>
+    </taskInfos>
 </model>

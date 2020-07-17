@@ -24,6 +24,8 @@ asciidoctor {
 }
 
 
+
+
 tasks.build.dependsOn rootProject.getTasksByName('javadoc', true)
 
 task docsCopyJavadoc {

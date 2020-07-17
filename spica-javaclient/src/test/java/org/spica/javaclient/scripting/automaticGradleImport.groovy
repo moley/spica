@@ -13,6 +13,6 @@ println "Site changed: " + siteChanged
 if (siteChanged) {
     //Get all versions from attribute of tag of an http page
     List<String> gradleVersions = services.downloadService.getAttributeOfTags("https://gradle.org/releases/", "a", "name", null)
-    services.mailService.sendMail("Spica detected a new gradle version", "Gradle versions: " + gradleVersions.get(0), Arrays.asList("markus.oley@vsa.de"))
+    services.mailService.sendMail("Spica detected a new gradle version", "Gradle versions: " + gradleVersions.get(0), Arrays.asList("TODO"))
 }
 

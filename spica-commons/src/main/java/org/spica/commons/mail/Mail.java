@@ -5,8 +5,11 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
 
 public class Mail {
 
@@ -24,7 +27,33 @@ public class Mail {
     creationDate = message.getSentDate();
     messageNumber = message.getMessageNumber();
     from = message.getFrom()[0].toString();
-    text = message.getContent().toString();
+
+    if (message.getContent() instanceof String) {
+      text = message.getContent().toString();
+    }
+    else if (message.getContent() instanceof MimeMultipart) {
+      String multiPartText = "";
+      String multiPartHtml = "";
+      MimeMultipart mimeMultipart = (MimeMultipart) message.getContent();
+      for (int i = 0; i < mimeMultipart.getCount(); i++) {
+        BodyPart bodyPart = mimeMultipart.getBodyPart(i);
+        String nextString;
+        if (bodyPart instanceof MimeBodyPart) {
+          MimeBodyPart mimeBodyPart = (MimeBodyPart) bodyPart;
+          nextString =  mimeBodyPart.getContent().toString();
+        }
+        else
+          nextString = mimeMultipart.getBodyPart(i).toString();
+
+        if (nextString.contains("<html"))
+          multiPartHtml += nextString;
+        else
+          multiPartText += nextString;
+      }
+      text = ! multiPartHtml.isEmpty() ? multiPartHtml : multiPartText;
+    }
+    else
+      throw new IllegalStateException("Message with content of type " + message.getContent().getClass() + " is not supported yet");
   }
 
   public String getSubject() {

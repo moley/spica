@@ -3,6 +3,9 @@
   -fx-font-weight: bold;
 }
 
+.root {
+    -fx-font-family: "Arial";
+}
 .tree-cell {
     -fx-padding: 0.8em; /* 3 */
 }

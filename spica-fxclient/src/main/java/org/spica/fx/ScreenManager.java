@@ -65,9 +65,9 @@ public class ScreenManager {
   }
 
   public void layoutEdged (final Stage stage) {
-    stage.setX(primary.getBounds().getMaxX() - 1005);
+    stage.setX(primary.getBounds().getMaxX() - 1405);
     stage.setY(primary.getBounds().getMinY() + 40);
-    stage.setWidth(1000);
+    stage.setWidth(1400);
     stage.setHeight(primary.getBounds().getMaxY()- 80);
   }
 

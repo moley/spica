@@ -8,20 +8,25 @@
 Spica is an extensible, **project-oriented** development and communication platform. 
 We set our focus on the efficency of the development process. The **use cases** are:
 
-- TODO 
+* Handle todos and tasks  
+* Improve communication
+* Improve navigation to external systems (jenkins, stash, bitbucket...)
+* Improve booking of tasks 
+* Ease working with multi module projects
+* Automate routine tasks 
+
 
 # Development
 
-Client im Browser starten: 		    ```ionic cordova run browser```                                           
-Client in Lab starten:			     ```ionic serve -l```                                                      
-Client auf Smartphone deployen:	 	```ionic cordova run android --device --prod```                             
-Server starten:                      ```gradle bootRun```                                                       
-DockerImage erzeugen:                TODO ```docker build -t spica-server . -f Dockerfile.server```   
-Docker Container starten:            ```docker run -p 8765:8765 -it spica-server```   
-InMemory-H2-Console-URL:             ```http://localhost:8765/h2```   
-InMemory-H2-URL:					 ```jdbc:h2:mem:testdb```    
+Start the spica server locally:         ```./gradlew :spica-server:bootRun``` 
 
-Supported JDK: 12
+Create and upload a new docker image:   ```./gradlew :spica-server:dockerPushImage ```
+                                                     
+InMemory-H2-Console-URL:                ```http://localhost:8765/h2```
+   
+InMemory-H2-URL:					    ```jdbc:h2:mem:testdb```    
+
+
 
 
 

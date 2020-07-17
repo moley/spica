@@ -8,7 +8,7 @@
     </stylesheets>
     <padding><Insets top="20" bottom="20" left="20" right="20"/> </padding>
 
-    <Label fx:id="lblDashboard" text="Dashboard"/>
+    <Label fx:id="lblDashboard" text="Dashboard" style="-fx-font-weight: bold"/>
 
 
 </GridPane>

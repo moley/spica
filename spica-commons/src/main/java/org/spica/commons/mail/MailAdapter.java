@@ -16,13 +16,11 @@ import javax.mail.Store;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.spica.commons.SpicaProperties;
 
+@Slf4j
 public class MailAdapter {
-
-  private final static Logger LOGGER = LoggerFactory.getLogger(MailAdapter.class);
 
 
   public final static String PROPERTY_MAIL_POP_HOST = "spica.mail.pop.host";
@@ -51,8 +49,12 @@ public class MailAdapter {
       throw new IllegalStateException(e);
     }
     sf.setTrustAllHosts(true);
+    mailProperties.put("mail.pop3.ssl.trust", "*");
+    mailProperties.put("mail.pop3.ssl.socketFactory", sf);
     mailProperties.put("mail.smtp.ssl.trust", "*");
     mailProperties.put("mail.smtp.ssl.socketFactory", sf);
+
+    log.info("MailProperties: " + mailProperties.toString().replace(",", "\n"));
 
     String username = spicaProperties.getValue(PROPERTY_MAIL_POP_USERNAME);
     String password = spicaProperties.getValue(PROPERTY_MAIL_POP_PASSWORD);
@@ -88,7 +90,7 @@ public class MailAdapter {
         Message m = message[i];
         Mail mail = new Mail(m);
         if (mail.getId().equals(id)) {
-          LOGGER.info("Set deleted flag on id " + mail.getId());
+          log.info("Set deleted flag on id " + mail.getId());
           m.setFlag(Flags.Flag.DELETED, true);
         }
       }
@@ -112,12 +114,16 @@ public class MailAdapter {
       message.addRecipient(Message.RecipientType.TO, new InternetAddress(nextTo));
     }
     message.setSubject( subject, "ISO-8859-1" );
-    message.setText( content, "UTF-8" );
+    if (content.contains("<html"))
+      message.setContent(content, "text/html");
+    else
+      message.setText( content, "UTF-8" );
     Transport.send( message );
 
   }
 
   public List<Mail> recieveMails () {
+    log.info("recieveMails started");
 
 
     try{
@@ -125,7 +131,7 @@ public class MailAdapter {
       SpicaProperties spicaProperties = new SpicaProperties();
       Session session = createSession(spicaProperties);
       //Enable debug message for the communication with the mail server
-      //session.setDebug(true);
+      //ession.setDebug(true);
 
       Store store = session.getStore("pop3");
       store.connect();
@@ -150,8 +156,12 @@ public class MailAdapter {
 
 
     }catch(Exception err){
+      log.error(err.getLocalizedMessage(), err);
       throw new IllegalStateException("Error fetching mails: " + err.toString(), err);
+    } finally  {
+      log.info("recieveMails finished");
     }
+
 
   }
 }

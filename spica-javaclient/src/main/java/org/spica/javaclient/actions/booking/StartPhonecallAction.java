@@ -56,7 +56,7 @@ public class StartPhonecallAction extends AbstractAction {
 
         MessageInfo messageInfo = new MessageInfo();
         if (selectedUser != null)
-          messageInfo.setCreator(selectedUser.getId());
+          messageInfo.setCreatorMailadresse(selectedUser.getEmail());
         messageInfo.setMessage(message);
         messageInfo.setType(MessageType.PHONECALL);
         messageInfo.setId(UUID.randomUUID().toString());

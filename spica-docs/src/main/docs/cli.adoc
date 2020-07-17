@@ -6,12 +6,17 @@
 TODO
 
 = Import logfiles into spica
-You can call ``s i logs``to zip logs together and insert them into the clipboard of the spica
+
+If you want to easily create a task and want to add logfiles to it or you want to communicate with
+a collegue about an error this is just two steps away.
+
+Call ``s i logs``to zip logs together and insert them into the clipboard of the spica
 fx client.
 
 * ``s i logs --all`` copies all logfiles
 
 * ``s i logs --stack`` copies only logfiles which contain stacktraces
 
-If you have imported it into fxclient you can e.g. create a task or send it to another user
-
+Afterwards the clipboard in spica has notified that you have added a document and should show a small _1_.
+With this done you can e.g. create a task. Afterwards the clipboard is empty again and the task you have
+created contains an attachment with the zipfile.

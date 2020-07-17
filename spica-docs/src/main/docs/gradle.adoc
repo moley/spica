@@ -2,8 +2,10 @@
 :nofooter:
 :toc:
 
-= Init gradle project TODO: use gradle import
+= Init gradle project
 
-If you want to init a gradle project step into your projectfolder and call ``s g init``.
-You are asked for the gradle version to be used. Afterwards all files are created which are necessary
-to have a gradle project
+If you want to init a gradle project, step into your projectfolder and call ``s g init [VERSION|URL] [-all|-bin]``.
+Afterwards all files, which are necessary to have a gradle project, are created if they do not exist.
+
+If you only call ``s g init`` you are asked for the version to be used and bin distribution is used as default.
+

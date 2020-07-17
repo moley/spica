@@ -13,7 +13,11 @@ buildscript {
 
 plugins {
   id 'org.asciidoctor.convert' version '2.4.0'
+  id "com.github.breadmoirai.github-release" version "2.2.12"
 }
+
+apply plugin: "com.github.breadmoirai.github-release"
+
 
 allprojects {
   ext.junitJupiterVersion = '5.3.1'
@@ -31,11 +35,10 @@ allprojects {
     jcenter()
   }
 
-
   pluginManager.withPlugin('java', {
 
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_14
+    targetCompatibility = JavaVersion.VERSION_14
 
     apply plugin: 'jacoco'
 
@@ -95,3 +98,15 @@ subprojects {
 
 println "Java-Version " + System.properties.get("java.home")
 
+
+githubRelease {
+  token System.getProperty ('github.password', '')
+  owner System.getProperty ('github.username', '')
+
+  repo 'spica'
+
+  releaseAssets project.files("spica-cli/build/dmg/SpicaCLI-${version}.dmg",
+          "spica-fxclient/build/dmg/SpicaFX-${version}.dmg")
+}
+
+tasks.githubRelease.dependsOn getTasksByName('createDmg', true)

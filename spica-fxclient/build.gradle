@@ -35,28 +35,55 @@ dependencies {
 
 mainClassName = 'org.spica.fx.Main'
 
-def localCliInstallationPath = System.getProperty("user.home") + '/programs/spica-fxclient'
 
-task clearLocalCliInstallationPath(type: Delete) {
-    delete localCliInstallationPath
-    followSymlinks = true
+task prepareDmg {
+    doFirst {
+
+        file('build/dmgInput').deleteDir()
+
+        if (file('build/libs/').listFiles().length > 1)
+            throw new IllegalStateException("More than one jar file exists")
+
+        copy {
+            from sourceSets.main.runtimeClasspath
+            into 'build/dmgInput'
+        }
+        copy {
+            from file('build/libs')
+
+            into 'build/dmgInput'
+            eachFile {
+                String nameWithoutVersion = it.name.substring(0, project.name.length()) + ".jar"
+                it.name = nameWithoutVersion
+            }
+        }
+    }
+    dependsOn tasks.jar
+}
+
+task createDmg(type: Exec) {
+    doFirst {
+        file('build/dmg').deleteDir()
+    }
+
+    println "Using version $version"
+
+    commandLine 'jpackage', '--verbose', '--icon', '../spica.icns',
+            '--app-version', version.replace('-SNAPSHOT', ''), '--dest', 'build/dmg', '--input', 'build/dmgInput',
+            '--name', 'SpicaFX', '--main-jar', 'spica-fxclient.jar',
+            '--main-class', 'org.spica.fx.Main', '--type', 'dmg'
+
+    dependsOn tasks.prepareDmg
+
 }
 
 task installLocal(type: Copy) {
-    def zipFile = project(':spica-fxclient').file("build/distributions/spica-fxclient-${version}.zip")
-    println zipFile.absolutePath
-    dependsOn 'clearLocalCliInstallationPath'
-    from zipTree(zipFile)
+    def localCliInstallationPath = '/Applications/SpicaFX.app/Contents/app/'
+    from file('build/dmgInput')
     eachFile {
-        path = path.substring(path.indexOf("/"), path.length())
+        println "Install $it"
     }
     into localCliInstallationPath
     includeEmptyDirs = false
-    dependsOn tasks.distZip
-
-    doLast {
-        File javaVersionFile = new File (localCliInstallationPath + "/.java-version")
-        javaVersionFile.createNewFile()
-        javaVersionFile.text = '14.0'
-    }
+    dependsOn tasks.prepareDmg
 }

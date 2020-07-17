@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebView;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -45,30 +46,40 @@ public class MessageInfoCellFactory extends ListCell<MessageInfo> {
       Document document = Jsoup.parseBodyFragment(item.getMessage());
       Elements ps = document.select("p");
 
-      String completeString = ps.text();
-      String multilineString = UiUtils.createMultilineString(completeString, 120);
+      Node node;
 
-      Label bubbledLabel = new Label();
+      if (item.getMessage().contains("<html")) {
+        WebView webView = new WebView();
+        webView.getEngine().loadContent(item.getMessage());
+        node = webView;
+      }
+      else {
+        Label label = new Label();
+        label.setText(item.getMessage());
+        node = label;
+      }
 
-      bubbledLabel.setText(multilineString);
+      HBox.setHgrow(node, Priority.ALWAYS);
 
-      bubbledLabel.setText(item.getMessage());
+//      bubbledLabel.setText(multilineString);
 
-      HBox.setHgrow(bubbledLabel, Priority.ALWAYS);
+      //      bubbledLabel.setText(item.getMessage());
+
+
       HBox hBox = new HBox(10);
 
 
       //WebView webView = new WebView();
       //webView.getEngine().loadContent(item.getMessage());
 
-      UserInfo userInfo = model.findUserById (item.getCreator());
+      UserInfo userInfo = item.getCreatorId() != null ? model.findUserById (item.getCreatorId()) : null;
 
-      boolean isFromMe = model.isMe(userInfo);
+      boolean isFromMe = userInfo != null && model.isMe(userInfo);
 
-      String username = userInfo != null ? userInfo.getUsername() : "n.a.";
+      String username = userInfo != null ? userInfo.getDisplayname() : item.getCreatorMailadresse();
       if (isFromMe)
         username = "Me";
-      Node icon = userInfo != null ? new ImageView(Consts.createImage(userInfo.getAvatar(), Consts.ICON_SIZE_MEDIUM)) : null;
+      Node icon = (userInfo != null && userInfo.getAvatar() != null) ? new ImageView(Consts.createImage(userInfo.getAvatar(), Consts.ICON_SIZE_MEDIUM)) : Consts.createIcon("fa-user", Consts.ICON_SIZE_MEDIUM);
 
       VBox userAndTime = new VBox();
       userAndTime.getChildren().add(new Label(username, icon));
@@ -77,15 +88,15 @@ public class MessageInfoCellFactory extends ListCell<MessageInfo> {
       userAndTime.getChildren().add(chatTimeLabel);
 
       if (isFromMe) {
-        bubbledLabel.getStyleClass().setAll("chat-bubble-me");
+        node.getStyleClass().setAll("chat-bubble-me");
         hBox.setAlignment(Pos.CENTER_RIGHT);
-        hBox.getChildren().add(bubbledLabel);
+        hBox.getChildren().add(node);
         hBox.getChildren().add(userAndTime);
       }
       else {
-        bubbledLabel.getStyleClass().setAll("chat-bubble-foreign");
+        node.getStyleClass().setAll("chat-bubble-foreign");
         hBox.getChildren().add(userAndTime);
-        hBox.getChildren().add(bubbledLabel);
+        hBox.getChildren().add(node);
         hBox.setAlignment(Pos.CENTER_LEFT);
       }
       setGraphic(hBox);

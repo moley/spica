@@ -15,6 +15,7 @@ import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.MessageType;
 import org.spica.javaclient.model.MessagecontainerInfo;
 import org.spica.javaclient.model.Model;
+import org.spica.javaclient.model.UserInfo;
 
 public class MailImporter {
 
@@ -24,12 +25,17 @@ public class MailImporter {
 
   private MailAdapter mailAdapter = new MailAdapter();
 
+  private String extractMailAdresse (final String from) {
+    return from.substring(from.indexOf("<") + 1, from.indexOf(">"));
+  }
+
   public boolean importMails(Model model) throws MessagingException, IOException {
 
     boolean modelChanged = false;
     Collection<String> ids = new ArrayList<String>();
 
     for (Mail nextMail : mailAdapter.recieveMails()) {
+      LOGGER.info("Checking mail " + nextMail.getSubject() + " - " + nextMail.getFrom() + "-" + nextMail.getId());
 
       ids.add(nextMail.getId());
 
@@ -44,8 +50,6 @@ public class MailImporter {
       if (messageInfo == null) {
         messageInfo = new MessageInfo();
         messageInfo.setId(nextMail.getId());
-        messageInfo.setCreator(nextMail.getFrom());
-        messageInfo.setMessage(nextMail.getText());
         messageInfo.setType(MessageType.MAIL);
         messageInfo.setCreationtime(nextMail.getCreationDateAsLocalDateTime());
         messagecontainerInfo.getMessage().add(messageInfo);
@@ -64,6 +68,13 @@ public class MailImporter {
         }
 
       }
+
+      String mailFrom = extractMailAdresse(nextMail.getFrom());
+      UserInfo userInfo = model.findUserByMail(mailFrom);
+      messageInfo.setCreatorId(userInfo != null ? userInfo.getId(): null);
+      messageInfo.setCreatorMailadresse(mailFrom);
+      messageInfo.setMessage(nextMail.getText());
+
     }
 
     //close open mails if not imported anymore

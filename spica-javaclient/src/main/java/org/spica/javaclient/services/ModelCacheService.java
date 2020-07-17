@@ -23,6 +23,7 @@ import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.ProjectInfo;
 import org.spica.javaclient.model.TaskInfo;
+import org.spica.javaclient.model.UserInfo;
 
 @Slf4j
 public class ModelCacheService implements Serializable{
@@ -74,6 +75,10 @@ public class ModelCacheService implements Serializable{
         model.getDashboardItemInfos().add(dashboardItemInfo);
       }
     }
+
+
+
+
 
     for (TaskInfo nextTaskInfo: model.getTaskInfos()) {
       if (nextTaskInfo.getId() == null)

@@ -18,14 +18,14 @@ import org.spica.fx.clipboard.ClipboardItem;
 import org.spica.fx.clipboard.AttachmentService;
 
 @Slf4j
-public class AutoImportThread extends Thread {
+public class AutoImportClipboardThread extends Thread {
 
   private ApplicationContext applicationContext;
 
   private AttachmentService attachmentService = new AttachmentService();
 
 
-  public AutoImportThread (final ApplicationContext applicationContext) {
+  public AutoImportClipboardThread(final ApplicationContext applicationContext) {
     this.applicationContext = applicationContext;
 
   }

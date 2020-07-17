@@ -10,7 +10,7 @@ Model model = actionContext.model
 Services services = actionContext.services
 
 //Use api
-/**UserInfo userInfo = actionContext.api.userApi.findUser("OleyMa")
+/**UserInfo userInfo = actionContext.api.userApi.findUser("test")
 
 println ("Users firstname " + userInfo.firstname)
 println ("Users lastname " + userInfo.name)
@@ -40,7 +40,7 @@ else {
 }
 
 //Trigger actions when http site content changes (new versions of something)
-boolean siteChanged = services.downloadService.siteChanged("http://eclipse.intra.vsa.de/eclipseDev/staging/build.gradle");
+boolean siteChanged = services.downloadService.siteChanged("http://someSillySite.com");
 println "Site changed: " + siteChanged
 
 //Get versions from text of tag of an http page
@@ -50,5 +50,5 @@ println "Current version of Idea: " + String.join("\n", ideaVersions);
 //Get all versions from attribute of tag of an http page
 List<String> gradleVersions = services.downloadService.getAttributeOfTags("https://gradle.org/releases/", "a", "name", null)
 println "All versions of gradle: " + String.join("\n", gradleVersions);
-services.mailService.sendMail("Spica wants to speek with you", "Gradle versions: " + gradleVersions, Arrays.asList("markus.oley@vsa.de"))
+services.mailService.sendMail("Spica wants to speek with you", "Gradle versions: " + gradleVersions, Arrays.asList("TODO"))
 

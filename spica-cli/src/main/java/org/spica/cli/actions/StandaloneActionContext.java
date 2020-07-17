@@ -16,6 +16,7 @@ import org.spica.javaclient.model.UserInfo;
 import org.spica.javaclient.params.ActionParamFactory;
 import org.spica.javaclient.services.ModelCacheService;
 import org.spica.javaclient.services.Services;
+import org.spica.javaclient.services.UserDisplayName;
 
 public class StandaloneActionContext implements ActionContext {
 
@@ -50,7 +51,18 @@ public class StandaloneActionContext implements ActionContext {
     LOGGER.info("refresh server data from " + getApi().getCurrentServer());
 
     try {
-      getModel().setUserInfos(getApi().getUserApi().getUsers());
+
+
+      UserDisplayName userDisplayName = new UserDisplayName();
+
+      List<UserInfo> users = getApi().getUserApi().getUsers();
+      for (UserInfo next: users) {
+        String newDisplayname = userDisplayName.getDisplayname(next);
+        if (next.getDisplayname() == null || ! newDisplayname.equals(next.getDisplayname())) {
+          next.setDisplayname(userDisplayName.getDisplayname(next));
+        }
+      }
+      getModel().setUserInfos(users);
     } catch (ApiException e) {
       LOGGER.info("Exception when reading users: " + e.getLocalizedMessage(), e);
     }

@@ -14,6 +14,7 @@ public class Services {
 
   private MailService mailService = new MailService();
 
+
   private JenkinsService jenkinsService = new JenkinsService();
 
   private JiraService jiraService = new JiraService();

@@ -50,9 +50,14 @@ components:
           type: "string"
         type:
           $ref: "#/components/schemas/MessageType"
-        creator:
+        creatorMailadresse:
+          type: "string"
+        creatorId:
           type: "string"
         creationtime:
+          type: "string"
+          format: "date-time"
+        readtime:
           type: "string"
           format: "date-time"
         documents:

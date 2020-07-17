@@ -592,9 +592,18 @@ public class Model {
   /**
    * select the message container
    * @param selectedMessageContainer message container
+   * @return true: read time was added, caller should save the model
    */
-  public void setSelectedMessageContainer(MessagecontainerInfo selectedMessageContainer) {
+  public boolean setSelectedMessageContainer(MessagecontainerInfo selectedMessageContainer) {
+    boolean readtimeSet = false;
+    for (MessageInfo nextMessage: selectedMessageContainer.getMessage()) {
+      if (nextMessage.getReadtime() == null) {
+        nextMessage.setReadtime(LocalDateTime.now());
+        readtimeSet = true;
+      }
+    }
     this.selectedMessageContainer = selectedMessageContainer;
+    return readtimeSet;
   }
 
   /**
@@ -660,7 +669,7 @@ public class Model {
   /**
    * find user by mail
    * @param mail  mail
-   * @return user or {@link IllegalStateException}
+   * @return user or <code>null</code>>
    */
 
   public UserInfo findUserByMail(String mail) {
@@ -671,7 +680,7 @@ public class Model {
       if (next.getEmail() != null && next.getEmail().equalsIgnoreCase(mail))
         return next;
     }
-    throw new IllegalStateException("No user found for mail " + mail);
+    return null;
   }
 
   /**

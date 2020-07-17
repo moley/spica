@@ -19,20 +19,6 @@ public class UiUtils {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(UiUtils.class);
 
-  public static String createMultilineString (final String completeString, final int length) {
-    String remainingString = completeString;
-    List<String> lines = new ArrayList<String>();
-    do {
-      if (! remainingString.isEmpty()) {
-        lines.add(remainingString.substring(0, length));
-        remainingString = remainingString.substring(length);
-      }
-    } while (remainingString.length() > length);
-
-    if (! remainingString.isEmpty())
-      lines.add(remainingString);
-    return String.join("\n",lines);
-  }
 
   public static void applyCss (final Scene scene) {
     scene.getStylesheets().addAll(
