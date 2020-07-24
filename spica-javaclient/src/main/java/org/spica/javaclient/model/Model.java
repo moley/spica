@@ -706,7 +706,7 @@ public class Model {
   /**
    * find user by mail
    * @param mail  mail
-   * @return user or <code>null</code>>
+   * @return user or <code>null</code>
    */
 
   public UserInfo findUserByMail(String mail) {
