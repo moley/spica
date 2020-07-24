@@ -21,6 +21,8 @@ import org.spica.javaclient.actions.booking.StartPhonecallAction;
 import org.spica.javaclient.actions.booking.StartTaskAction;
 import org.spica.javaclient.actions.configuration.ImportUsersAction;
 import org.spica.javaclient.actions.configuration.ShowStatusAction;
+import org.spica.javaclient.actions.gradle.ExecuteParallelAction;
+import org.spica.javaclient.actions.gradle.ExecuteSequentialAction;
 import org.spica.javaclient.actions.gradle.InitGradleProjectAction;
 import org.spica.javaclient.actions.imports.ImportLogfilesAction;
 import org.spica.javaclient.actions.links.CreateLinkAction;
@@ -45,7 +47,7 @@ import org.spica.javaclient.actions.tasks.ShowTasksAction;
 import org.spica.javaclient.actions.workingsets.BranchWorkingSetAction;
 import org.spica.javaclient.actions.workingsets.CloneWorkingSetAction;
 import org.spica.javaclient.actions.workingsets.CreateWorkingSetAction;
-import org.spica.javaclient.actions.workingsets.ImportSourceToWorkingsSetAction;
+import org.spica.javaclient.actions.workingsets.ImportSourceToWorkingSetAction;
 import org.spica.javaclient.actions.workingsets.ListWorkingSetsAction;
 import org.spica.javaclient.actions.workingsets.ModulesInWorkingSetAction;
 import org.spica.javaclient.actions.workingsets.RemoveBranchProjectAction;
@@ -101,7 +103,7 @@ public class ActionHandler {
     registeredActions.add(new ListWorkingSetsAction());
     registeredActions.add(new ShowWorkingSetsAction());
     registeredActions.add(new RemoveWorkingSetAction());
-    registeredActions.add(new ImportSourceToWorkingsSetAction());
+    registeredActions.add(new ImportSourceToWorkingSetAction());
     registeredActions.add(new CloneWorkingSetAction());
     registeredActions.add(new ModulesInWorkingSetAction());
     registeredActions.add(new BranchWorkingSetAction());
@@ -127,6 +129,8 @@ public class ActionHandler {
 
     //gradle
     registeredActions.add(new InitGradleProjectAction());
+    registeredActions.add(new ExecuteParallelAction());
+    registeredActions.add(new ExecuteSequentialAction());
 
     //automatication
     registeredActions.add(new ExecuteScriptAction());

@@ -36,6 +36,10 @@ public abstract class AbstractController {
 
   }
 
+  public Mask getMask (final Pages pages) {
+    return registeredPanes.get(pages);
+  }
+
   public void stepToPane (final Pages page) {
     LOGGER.info("step to pane " +  page.getDisplayname());
     for (Mask nextMask : registeredPanes.values()) {

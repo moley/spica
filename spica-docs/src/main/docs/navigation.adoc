@@ -2,21 +2,21 @@
 :nofooter:
 :toc:
 
-= Navigate to versioncontrol
+== Navigate to versioncontrol
 
 If you call ``s s versioncontrol`` a browser, which links to versioncontrol of the current project opens.
 
-= Navigate to jira
+== Navigate to jira
 
 If you have started a task, which is linked to jira as external system and call
 ``s s jira`` a browser opens, which links to the jira issue you are currently working on.
 
-= Navigate to google
+== Navigate to google
 
 If you want to search anything in google just Copy the thing to look for and type s s google.
 Then a browser were google is asked with your content
 
-= Navigate to jenkins
+== Navigate to jenkins
 
 If you want to easily navigate to a jenkins job you have to insert a commented line with a link
 to your jenkins job url into the first line of your *Jenkinsfile* like

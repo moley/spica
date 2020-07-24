@@ -195,6 +195,43 @@ public class Model {
   }
 
   /**
+   * find a workingset sourcepart due to it's branch and clone url
+   *
+   * @param workingSetInfo    searching in this workingset
+   * @param url               url to be searched
+   * @param branch            branch to be searched
+   * @return a found workingset sourcepart or <code>null</code>
+   */
+  public WorkingSetSourcePartInfo findWorkingSetSourcePart (final WorkingSetInfo workingSetInfo, final String url, final String branch) {
+    if (workingSetInfo.getSourceparts() == null)
+      return null;
+
+    for (WorkingSetSourcePartInfo nextSourcePart: workingSetInfo.getSourceparts()) {
+      if (nextSourcePart.getUrl().equalsIgnoreCase(url) && nextSourcePart.getBranch().equalsIgnoreCase(branch))
+        return nextSourcePart;
+    }
+
+    return null;
+
+  }
+
+  /**
+   * finds the workingset which is associated with the folder
+   * @param folder    folder, which is associated to a workingset
+   * @return workingset or <code>null</code> if no matching working set was found
+   */
+  public WorkingSetInfo findWorkingSetInfoByFolder (final File folder) {
+
+    for (WorkingSetInfo nextWorkingsSet: workingsetInfos) {
+      if (nextWorkingsSet.getLocalFolder().equalsIgnoreCase(folder.getAbsolutePath()))
+        return nextWorkingsSet;
+    }
+
+    return null;
+
+  }
+
+  /**
    * find workingset by id
    * @param id  working set id
    * @return the workingset or <code>null</code>

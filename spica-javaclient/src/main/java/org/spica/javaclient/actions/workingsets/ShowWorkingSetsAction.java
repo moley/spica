@@ -38,9 +38,14 @@ public class ShowWorkingSetsAction extends AbstractAction {
             outputDefault("Name             : " + next.getName());
             if (next.getSourceparts() != null) {
                 outputDefault("SourceParts      : " + next.getSourceparts().size());
+                outputDefault("");
                 for (WorkingSetSourcePartInfo sourcePartInfo : next.getSourceparts()) {
                     String state = (sourcePartInfo.isEnabled() != null && sourcePartInfo.isEnabled()) ? "enabled" : "disabled";
-                    outputDefault("                   " + sourcePartInfo.getUrl() + "-" + sourcePartInfo.getBranch() + " (" + state + ")");
+                    String sourcepartInfo = String.format("  %-9s %-40s   %-20s %s", state, sourcePartInfo.getId(), sourcePartInfo.getBranch(), sourcePartInfo.getUrl());
+                    if (sourcePartInfo.isEnabled())
+                      outputOk(sourcepartInfo);
+                    else
+                      outputWarning(sourcepartInfo);
                 }
             }
             outputDefault("\n\n");

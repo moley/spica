@@ -33,14 +33,6 @@ public class AutoImportMailsTask extends TimerTask {
             return o2.getMessage().get(0).getCreationtime().compareTo(o1.getMessage().get(0).getCreationtime());
           }
         });
-
-        Platform.runLater(new Runnable() {
-          @Override public void run() {
-            Notifications.create().text("You have recieved new mails").showInformation();
-          }
-        });
-
-
         actionContext.saveModel("Mails imported");
       }
     } catch (MessagingException e) {

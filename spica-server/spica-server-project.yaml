@@ -184,6 +184,8 @@ components:
           type: "string"
         name:
           type: "string"
+        localFolder:
+          type: "string"
         sourceparts:
           type: "array"
           items:

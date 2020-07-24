@@ -2,10 +2,28 @@
 :nofooter:
 :toc:
 
-= Init gradle project
+== Init gradle project
 
 If you want to init a gradle project, step into your projectfolder and call ``s g init [VERSION|URL] [-all|-bin]``.
 Afterwards all files, which are necessary to have a gradle project, are created if they do not exist.
 
 If you only call ``s g init`` you are asked for the version to be used and bin distribution is used as default.
 
+== Execute gradle builds
+
+As soon as your current working dir is a directory associated with a workingset you can
+call one or more gradle tasks on every sourcepart of this workingset.
+At the end you get a small view of statistics that shows how many builds have failed and
+some performance measurements.
+
+=== Sequentially
+
+Call ``s g sequential [1..n tasks] `` to call these tasks against all source parts of a
+workingset in sequential order.
+
+
+=== In Parallel
+
+Call ``s g parallel [1..n tasks] `` to call these tasks against all source parts of a
+workingset maximum in parallel. Spica uses the number of processors available to parallelize
+the actions.

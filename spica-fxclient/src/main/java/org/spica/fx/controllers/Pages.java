@@ -9,7 +9,8 @@ public enum Pages {
   TASKS ("tasks", "Tasks", "fa-tasks", true),
   TASKDETAIL ("taskdetails", "Task Details", "fa-tasks", false),
   PROJECTS ("projects", "Projects", "fa-building", true),
-  PROJECTDETAIL ("projectdetails", "Project Details", "fa-building", false);
+  PROJECTDETAIL ("projectdetails", "Project Details", "fa-building", false),
+  SEARCHBOX ("searchbox", "SearchDialog", "fa-building", false);
 
 
   private String filename;

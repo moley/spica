@@ -8,6 +8,7 @@ public class UserMapper {
     UserInfo toApi (User user) {
         UserInfo userInfo = new UserInfo();
         userInfo.setName(user.getName());
+        userInfo.setUsername(user.getUsername());
         userInfo.setFirstname(user.getFirstname());
         userInfo.setEmail(user.getEmail());
         userInfo.setPhone(user.getPhone());

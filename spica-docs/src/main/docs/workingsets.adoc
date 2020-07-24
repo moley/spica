@@ -6,7 +6,8 @@
 
 A *workingset* represents all things you need to work on a special task.
 For example it contains a set of source part infos, each represents a part of source which is
-checked out from a code repository
+checked out from a code repository. A workingset is always associated with a concrete folder,
+were all source parts are locally checked out.
 
 = Create a workingset
 
@@ -25,10 +26,29 @@ enabled or disabled
 
 On the commandline call ``s w remove [NAME|ID]`` to remove a certain project.
 
-= Import sourceparts to workingset from bitbucket project
+= Import sourceparts to workingset
+
+Importing sourceparts fills the workingset with live.
+
+====
+If you import sourceparts to workingset be aware that the current working dir is used as
+associated folder where the workingset is stored on local filesystem.
+====
+
+
+== ...from bitbucket project
 
 On the commandline call ``s w import [URL TO BITBUCKET PROJECT] [BRANCH]``
 to add all branches named [BRANCH] from this bitbucket project.
+
+Afterwards spica shows which source parts are imported and
+which sourceparts already exist in the workingset.
+
+====
+*Example1:* If you want to import all branches *master* from all repos in the project PROJECT type
+``s w import [BITBUCKET_URL] PROJECT master``
+====
+
 If a part of your branch name represents your project or module you can use variables to be
 replaced:
 
@@ -38,11 +58,6 @@ replaced:
 * \#moduleLower# -> the modulename in the project lowercase
 
 ====
-*Example1:* If you want to import all branches *master* in the project ABC type
-``s w import [BITBUCKET_URL] ABC master``
-====
-
-====
 *Example2:* If you have a project PROJECT and two modules module1 and module2 and you want to add branches
 
 * project_module1_0 from module1
@@ -50,8 +65,16 @@ replaced:
 
 you use variable replacement the following way:
 
-``s w import [BITBUCKET_URL] ABC '#project#_#repo#_0'``
+``s w import [BITBUCKET_URL] PROJECT '#project#_#repo#_0'``
 ====
+
+== ...from local filesystem
+
+If you already have a collection of modules checked out in a specific folder you can also
+import these modules from filesystem. Step to the folder, which contain the source modules
+and call ``s w import [FOLDER]``. Afterwards spica shows which source parts are imported and
+which sourceparts already exist in the workingset.
+
 
 = Enable, disable or remove a sourcepart
 

@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 import javax.mail.MessagingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.spica.commons.DashboardItemType;
 import org.spica.commons.mail.Mail;
 import org.spica.commons.mail.MailAdapter;
@@ -17,16 +16,18 @@ import org.spica.javaclient.model.MessagecontainerInfo;
 import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.UserInfo;
 
+@Slf4j
 public class MailImporter {
-
-
-  private final static Logger LOGGER = LoggerFactory.getLogger(MailImporter.class);
 
 
   private MailAdapter mailAdapter = new MailAdapter();
 
   private String extractMailAdresse (final String from) {
-    return from.substring(from.indexOf("<") + 1, from.indexOf(">"));
+    try {
+      return from.substring(from.indexOf("<") + 1, from.indexOf(">"));
+    } catch (Exception e) {
+      return from;
+    }
   }
 
   public boolean importMails(Model model) throws MessagingException, IOException {
@@ -35,7 +36,7 @@ public class MailImporter {
     Collection<String> ids = new ArrayList<String>();
 
     for (Mail nextMail : mailAdapter.recieveMails()) {
-      LOGGER.info("Checking mail " + nextMail.getSubject() + " - " + nextMail.getFrom() + "-" + nextMail.getId());
+      log.info("Checking mail " + nextMail.getSubject() + " - " + nextMail.getFrom() + "-" + nextMail.getId());
 
       ids.add(nextMail.getId());
 

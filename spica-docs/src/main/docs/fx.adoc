@@ -2,9 +2,11 @@
 :nofooter:
 :toc:
 
-= Installation
+== Installation
 
-= Clipboard
+TODO
+
+== Clipboard
 
 If you want to copy data from outside into the spica fx client you can use the clipboard.
 *Drag and Drop* and *Copy and Paste*.

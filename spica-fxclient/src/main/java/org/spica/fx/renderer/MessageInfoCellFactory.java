@@ -38,7 +38,7 @@ public class MessageInfoCellFactory extends ListCell<MessageInfo> {
   @Override protected void updateItem(MessageInfo item, boolean empty) {
     super.updateItem(item, empty);
 
-    if (empty || item == null) {
+    if (empty || item == null || item.getMessage() == null) {
       setText(null);
       setGraphic(null);
     }

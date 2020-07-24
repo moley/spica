@@ -2,7 +2,7 @@
 :nofooter:
 :toc:
 
-= Write an 'HELLO WORLD' automation script
+== Write an 'HELLO WORLD' automation script
 
 Spica can be extended with groovy scripts.
 For example write the following script:
@@ -14,11 +14,11 @@ println "Hello world from spica..."
 
 and save it.
 
-= Call an automation script
+== Call an automation script
 
 If you have an automation script written you can call it with ``s a execute [PATH]``.
 
-= Using the API
+== Using the API
 
 In your groovy script you have access to the complete model via a variable *spica*.
 This variable is mapped to the interface link:../javadoc/spica-javaclient/org/spica/javaclient/actions/ActionContext.html[org.spica.javaclient.actions.ActionContext]
@@ -43,4 +43,6 @@ if (siteChanged) {
 <2> Get services
 <3> Use a special service
 
-= Examples
+== Examples
+
+TODO

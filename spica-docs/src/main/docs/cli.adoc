@@ -2,10 +2,10 @@
 :nofooter:
 :toc:
 
-= Installation
+== Installation
 TODO
 
-= Import logfiles into spica
+== Import logfiles into spica
 
 If you want to easily create a task and want to add logfiles to it or you want to communicate with
 a collegue about an error this is just two steps away.

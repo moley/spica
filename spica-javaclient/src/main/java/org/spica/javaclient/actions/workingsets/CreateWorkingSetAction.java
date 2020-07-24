@@ -1,5 +1,6 @@
 package org.spica.javaclient.actions.workingsets;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ public class CreateWorkingSetAction extends AbstractWorkingSetAction {
     WorkingSetInfo workingSetInfo = new WorkingSetInfo();
     workingSetInfo.setId(UUID.randomUUID().toString());
     workingSetInfo.setName(name);
+    workingSetInfo.setSourceparts(new ArrayList<>());
 
     Model model = actionContext.getModel();
     model.getWorkingsetInfos().add(workingSetInfo);

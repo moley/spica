@@ -1,0 +1,16 @@
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<VBox fx:id="panDialog" xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fx.controllers.SearchboxController" alignment="TOP_LEFT" spacing="10">
+    <stylesheets>
+        <URL value="@/css/spica.css" />
+    </stylesheets>
+    <padding><Insets top="20" bottom="20" left="20" right="20"/> </padding>
+
+    <TextField fx:id="txtSearch"/>
+    <ListView fx:id="lviSearchResults"/>
+
+
+</VBox>
