@@ -17,9 +17,12 @@ public class AutoImportMailsTask extends TimerTask {
 
   private ActionContext actionContext;
 
+  private Reload reload;
 
-  public AutoImportMailsTask(final ActionContext actionContext) {
+
+  public AutoImportMailsTask(final ActionContext actionContext, Reload reload) {
     this.actionContext = actionContext;
+    this.reload = reload;
 
   }
   @Override public void run() {
@@ -33,6 +36,8 @@ public class AutoImportMailsTask extends TimerTask {
             return o2.getMessage().get(0).getCreationtime().compareTo(o1.getMessage().get(0).getCreationtime());
           }
         });
+        if (reload != null)
+          reload.reload();
         actionContext.saveModel("Mails imported");
       }
     } catch (MessagingException e) {

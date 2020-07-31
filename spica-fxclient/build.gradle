@@ -87,3 +87,6 @@ task installLocal(type: Copy) {
     includeEmptyDirs = false
     dependsOn tasks.prepareDmg
 }
+
+build.dependsOn installDist
+publish.dependsOn createDmg

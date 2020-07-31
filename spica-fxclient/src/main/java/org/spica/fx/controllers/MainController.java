@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Timer;
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -30,6 +31,8 @@ import org.spica.fx.ApplicationContext;
 import org.spica.fx.AutoImportClipboardThread;
 import org.spica.fx.AutoImportMailsTask;
 import org.spica.fx.Consts;
+import org.spica.fx.Mask;
+import org.spica.fx.Reload;
 import org.spica.fx.clipboard.ClipboardItem;
 import org.spica.javaclient.Configuration;
 import org.spica.javaclient.model.MessageInfo;
@@ -112,7 +115,24 @@ public class MainController extends AbstractController  {
     autoImportThread.start();
 
     Timer autoImportMailsTimer = new Timer();
-    autoImportMailsTask = new AutoImportMailsTask(getActionContext());
+
+
+
+
+    autoImportMailsTask = new AutoImportMailsTask(getActionContext(), new Reload() {
+      @Override public void reload() {
+
+        Platform.runLater(new Runnable() {
+          @Override
+          public void run() {
+            Mask<MessagesController> mask = getMask(Pages.MESSAGES);
+            MessagesController messagesController = mask.getController();
+            messagesController.refreshData();
+          }
+        });
+
+      }
+    });
     autoImportMailsTimer.scheduleAtFixedRate(autoImportMailsTask, 0, 60000);
 
 

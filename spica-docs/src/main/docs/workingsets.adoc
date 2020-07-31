@@ -97,8 +97,27 @@ Afterwards all source parts should be cloned in the current directory.
 
 = Reset workingset
 
-Resets all local changes on all sourceparts of the workingset.
+If you have worked on a feature and you notice that you should restart from scratch you can reset your workingset.
+This calls a  git reset on all sourceparts of a workingset.
 Call ``s w reset [WORKINGSET]``
 
-== Branch workingset TODO
-== Remove branch TODO
+== Branch workingset
+
+If you want to create a branch for all sourceparts of a workingset you can do it with
+ ``s w branch [WORKINGSET]``
+You are asked for a branchname.
+Afterwards all sourceparts of your workingset contain a locally created branch with the name you have specified and this
+branch is checked out in all modules.
+
+== Switch branch in workingset
+If you want to switch your current branch for all sourceparts of a workingset you can to it with
+``s w checkout [WORKINGSET]``.
+You are asked for the branch you want to switch to.
+Afterwards all sourceparts of your workingset have this target branch checked out.
+
+
+== Remove branch
+If you want to remove a branch for all sourceparts of a workingset locally and in remote you can do it with
+Call ``s w removebranch [WORKINGSET]``
+You are asked for a branchname.
+Afterwards this branch is removed locally in all sourceparts of your workingset.

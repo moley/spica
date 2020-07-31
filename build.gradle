@@ -35,6 +35,9 @@ allprojects {
     jcenter()
   }
 
+  tasks.create('publish')
+
+
   pluginManager.withPlugin('java', {
 
     sourceCompatibility = JavaVersion.VERSION_11
@@ -80,6 +83,7 @@ allprojects {
       testRuntime 'com.h2database:h2:1.4.179'
 
     }
+
   })
 }
 
@@ -106,7 +110,13 @@ githubRelease {
   repo 'spica'
 
   releaseAssets project.files("spica-cli/build/dmg/SpicaCLI-${version}.dmg",
-          "spica-fxclient/build/dmg/SpicaFX-${version}.dmg")
+                              "spica-fxclient/build/dmg/SpicaFX-${version}.dmg",
+                              "spica-docs/build/libs/spica-docs-${version}.jar")
 }
 
-tasks.githubRelease.dependsOn getTasksByName('createDmg', true)
+tasks.githubRelease.dependsOn getTasksByName('createDmg', true), getTasksByName('publish', true)
+
+def releasetask = tasks.create('release')
+releasetask.dependsOn tasks.githubRelease, tasks.findByPath(':spica-server:dockerPushImage')
+
+

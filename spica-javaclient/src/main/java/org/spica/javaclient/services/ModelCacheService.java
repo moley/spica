@@ -23,7 +23,6 @@ import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.ProjectInfo;
 import org.spica.javaclient.model.TaskInfo;
-import org.spica.javaclient.model.UserInfo;
 
 @Slf4j
 public class ModelCacheService implements Serializable{
@@ -161,7 +160,6 @@ public class ModelCacheService implements Serializable{
       if (configFile.exists()) {
         LOGGER.info("Load configuration from " + configFile.getAbsolutePath());
         currentConfiguration = (Model) unmarshaller.unmarshal(configFile);
-        currentConfiguration.setCurrentFile(configFile);
       }
       else {
         LOGGER.info("Create new configuration because " + configFile.getAbsolutePath() + " does not exist");
@@ -171,7 +169,6 @@ public class ModelCacheService implements Serializable{
     } catch (Exception e) {
       LOGGER.error("Error loading configurations from " + configFile.getAbsolutePath() + ":" + e.getLocalizedMessage(), e);
       currentConfiguration = new Model();
-      currentConfiguration.setCurrentFile(configFile);
     }
 
 
@@ -200,7 +197,7 @@ public class ModelCacheService implements Serializable{
       Marshaller marshaller = jc.createMarshaller();
       marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-      File toFile = configuration.getCurrentFile() != null ? configuration.getCurrentFile(): getConfigFile();
+      File toFile = getConfigFile();
       if (toFile == null)
         throw new IllegalStateException("configuration file not set before saving ");
 

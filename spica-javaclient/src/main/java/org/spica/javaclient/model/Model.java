@@ -22,8 +22,6 @@ public class Model {
   public final static String DEFAULTTASK_PRIVATE = "Private";
   public final static String DEFAULTTASK_WORK = "Work";
 
-  private File currentFile;
-
   private final static Logger log = LoggerFactory.getLogger(Model.class);
 
   private UserInfo me;
@@ -55,23 +53,6 @@ public class Model {
   private TaskInfo selectedTaskInfo;
 
   private ProjectInfo selectedProjectInfo;
-
-  /**
-   * getter
-   * @return current model file
-   */
-  public File getCurrentFile() {
-    return currentFile;
-  }
-
-  /**
-   * setter
-   * <b>This method should not be used in groovy scripts</b>
-   * @param currentFile current model file
-   */
-  public void setCurrentFile(File currentFile) {
-    this.currentFile = currentFile;
-  }
 
   /**
    * getter

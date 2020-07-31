@@ -18,13 +18,41 @@ We set our focus on the efficency of the development process. The **use cases** 
 
 # Development
 
-Start the spica server locally:         ```./gradlew :spica-server:bootRun``` 
+##Build everything
+Calling `./gradlew build` creates: 
+- runnable fxclient (see below), 
+- runnable cli-client (see below), 
+- startable server (see below)
+- documentation in `spica-docs/build/docs
 
-Create and upload a new docker image:   ```./gradlew :spica-server:dockerPushImage ```
+##Publish everything
+First you have to add releasenodes in releasenotes.md. 
+Afterwards call `./gradlew publish` to release the following artifacts: 
+- platform dependend fx client
+- platform dependend cli client
+- server as docker container on https://hub.docker.com/repository/docker/markusoley/spica
+
+##Start the spica server locally:         
+`./gradlew :spica-server:bootRun`
+
+##Create and upload a new docker image:   
+`./gradlew :spica-server:dockerPushImage `
                                                      
-InMemory-H2-Console-URL:                ```http://localhost:8765/h2```
-   
-InMemory-H2-URL:					    ```jdbc:h2:mem:testdb```    
+##Working with the h2 database
+- InMemory-H2-Console-URL: `http://localhost:8765/h2` 
+- InMemory-H2-URL:					    `jdbc:h2:mem:testdb`
+
+##Start the cli client locally           
+- `./gradlew :spica-cli:installDist`
+- start from *spica/spica-cli/build/install/spica-cli/bin/spica-cli* (you can define an alias to this program)
+
+##Start the fx client locally           
+- `./gradlew :spica-fxclient:installDist`
+- start from *spica/spica-cli/build/install/spica-fxclient/bin/spica-fxclient* (you can define an alias to this program)
+
+##Create demo data 
+- `./gradlew :spica-testutils:demoData`
+                                   
 
 
 

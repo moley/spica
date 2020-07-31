@@ -45,6 +45,7 @@ import org.spica.javaclient.actions.tasks.ListTasksAction;
 import org.spica.javaclient.actions.tasks.RemoveTaskAction;
 import org.spica.javaclient.actions.tasks.ShowTasksAction;
 import org.spica.javaclient.actions.workingsets.BranchWorkingSetAction;
+import org.spica.javaclient.actions.workingsets.CheckoutBranchProjectAction;
 import org.spica.javaclient.actions.workingsets.CloneWorkingSetAction;
 import org.spica.javaclient.actions.workingsets.CreateWorkingSetAction;
 import org.spica.javaclient.actions.workingsets.ImportSourceToWorkingSetAction;
@@ -109,6 +110,7 @@ public class ActionHandler {
     registeredActions.add(new BranchWorkingSetAction());
     registeredActions.add(new ResetWorkingSetAction());
     registeredActions.add(new RemoveBranchProjectAction());
+    registeredActions.add(new CheckoutBranchProjectAction());
 
     //links
     registeredActions.add(new CreateLinkAction());

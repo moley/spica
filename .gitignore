@@ -26,3 +26,4 @@ bin/
 /.spica/links
 /.spica/attachments/
 /.spica/siteChanged/
+/demospace/**/**

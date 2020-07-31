@@ -1,0 +1,18 @@
+apply plugin: 'java'
+
+dependencies {
+  compile project (':spica-commons')
+  compile project (':spica-javaclient')
+  compile 'org.mockito:mockito-core:2.28.2'
+}
+
+tasks.register("demoData", JavaExec) {
+  dependsOn testClasses
+  classpath = sourceSets.test.runtimeClasspath
+  workingDir = rootProject.projectDir
+  main = 'org.spica.testutils.DemoDataCreator'
+}
+
+build.dependsOn demoData
+
+

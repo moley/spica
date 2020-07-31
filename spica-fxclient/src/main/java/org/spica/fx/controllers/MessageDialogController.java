@@ -41,7 +41,7 @@ public class MessageDialogController extends AbstractController {
       @Override public void handle(KeyEvent event) {
         if (new KeyCodeCombination(KeyCode.ENTER, KeyCombination.SHORTCUT_DOWN).match(event)) {
 
-          addMessage();
+          sendMessage();
         }
       }
     });
@@ -49,39 +49,51 @@ public class MessageDialogController extends AbstractController {
     btnSend.setGraphic(Consts.createIcon("fa-paper-plane", Consts.ICON_SIZE_TOOLBAR));
     btnSend.setOnAction(new EventHandler<ActionEvent>() {
       @Override public void handle(ActionEvent event) {
-        addMessage();
+        sendMessage();
       }
     });
   }
 
-  private void addMessage() {
+  private void sendMessage() {
     MessageType messageType = getCurrentMessageType();
     MessagecontainerInfo selectedMessageContainer = getModel().getSelectedMessageContainer();
+
     MessageInfo messageInfo = new MessageInfo();
-    messageInfo.setCreationtime(LocalDateTime.now());
+
+    if (selectedMessageContainer.getMessage().get(0).getSendtime() == null) { //Created messagecontainer but did not send any mail
+      messageInfo = selectedMessageContainer.getMessage().get(0);
+    } else {
+      messageInfo = new MessageInfo();
+      messageInfo.setType(messageType);
+      messageInfo.setCreationtime(LocalDateTime.now());
+    }
+
     messageInfo.setCreatorId(getModel().getMe().getId());
     messageInfo.setMessage((messageType != null && messageType.equals(MessageType.MAIL)) ? hedNewMail.getHtmlText() : txaNewMessage.getText());
-    messageInfo.setType(messageType);
+
+    boolean firstMail = selectedMessageContainer.getMessage().get(0).equals(messageInfo);
+
     selectedMessageContainer.addMessageItem(messageInfo);
     getActionContext().saveModel("Added new message to messagecontainer " + selectedMessageContainer.getTopic());
 
     if (messageType.equals(MessageType.MAIL)) {
 
       HashSet<String> recipients = new HashSet<>();
-      for (MessageInfo nextMessage: selectedMessageContainer.getMessage()) {
-        if (nextMessage.getCreatorMailadresse() != null && ! getModel().getMe().getEmail().equalsIgnoreCase(nextMessage.getCreatorMailadresse()))
-          recipients.add(nextMessage.getCreatorMailadresse());
-      }
+      recipients.add(messageInfo.getRecipientMailadresse()); //TODO send mail to all
 
       MailService mailService = new MailService();
       try {
-        mailService.sendMail("Re: " + selectedMessageContainer.getTopic(), messageInfo.getMessage(), new ArrayList<>(recipients));
+        String subject = (firstMail ? selectedMessageContainer.getTopic() : "Re: " + selectedMessageContainer.getTopic());
+        mailService.sendMail(subject, messageInfo.getMessage(), new ArrayList<>(recipients));
         Notifications.create().text("Mail sent to " + recipients).showInformation();
       } catch (MessagingException e) {
         log.error(e.getLocalizedMessage(), e);
         Notifications.create().text("Error on sending mail: " + e.getLocalizedMessage()).showError();
       }
 
+    }
+    else {
+      Notifications.create().text("MessageType " + messageType + " not yet supported");
     }
 
     txaNewMessage.clear();

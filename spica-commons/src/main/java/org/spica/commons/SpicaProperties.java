@@ -171,6 +171,10 @@ public class SpicaProperties {
       if (local.exists())
         return local;
 
+      File parent = new File (new File ("").getAbsoluteFile().getParentFile(), ".spica").getAbsoluteFile();
+      if (parent.exists())
+        return parent;
+
       return getGlobalSpicaHome();
     }
   }

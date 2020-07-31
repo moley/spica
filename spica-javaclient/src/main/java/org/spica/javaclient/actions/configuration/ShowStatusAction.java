@@ -36,7 +36,7 @@ public class ShowStatusAction extends AbstractAction {
         outputDefault("MessageContainers      : " + model.getMessagecontainerInfos().size());
         outputDefault("Links                  : " + model.getLinkInfos().size());
         outputDefault("Users                  : " + model.getUserInfos().size());
-        outputDefault("Model file             : " + model.getCurrentFile().getAbsolutePath());
+        outputDefault("Model file             : " + actionContext.getServices().getModelCacheService().getConfigFile().getAbsolutePath());
 
         try {
             URL leguanVersion = getClass().getClassLoader().getResource("spica-cli.version");

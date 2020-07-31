@@ -32,7 +32,11 @@ public class CloneWorkingSetAction extends AbstractWorkingSetAction {
 
     final String username = actionContext.getProperties().getValue("spica.stash.user");
     final String password = actionContext.getProperties().getValue("spica.stash.password");
-    UsernamePasswordCredentialsProvider usernamePasswordCredentialsProvider = new UsernamePasswordCredentialsProvider(username, password);
+
+    UsernamePasswordCredentialsProvider usernamePasswordCredentialsProvider = null;
+
+    if (username != null && password != null)
+      usernamePasswordCredentialsProvider = new UsernamePasswordCredentialsProvider(username, password);
 
     WorkingSetInfo workingSetInfo = getWorkingSet(actionContext.getModel(), commandLineArguments);
 

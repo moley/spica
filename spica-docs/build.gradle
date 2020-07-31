@@ -1,5 +1,6 @@
 apply {
     plugin 'org.asciidoctor.convert'
+    plugin 'java-library'
 }
 
 def docPath = file('build/docs')
@@ -23,11 +24,6 @@ asciidoctor {
     }
 }
 
-
-
-
-tasks.build.dependsOn rootProject.getTasksByName('javadoc', true)
-
 task docsCopyJavadoc {
     doLast {
 
@@ -45,7 +41,14 @@ task docsCopyJavadoc {
             }
         }
     }
-    dependsOn   project.rootProject.getTasksByName('javadoc', true)
+    dependsOn project.rootProject.getTasksByName('javadoc', true)
+}
+
+jar {
+    from('build/docs') {
+
+    }
 }
 
 tasks.build.dependsOn tasks.asciidoctor, tasks.docsCopyJavadoc
+tasks.publish.dependsOn tasks.jar

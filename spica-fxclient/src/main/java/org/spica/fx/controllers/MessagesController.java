@@ -32,6 +32,7 @@ import org.spica.fx.renderer.MessageContainerInfoCellFactory;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.MessageType;
 import org.spica.javaclient.model.MessagecontainerInfo;
+import org.spica.javaclient.model.ProjectInfo;
 import org.spica.javaclient.model.UserInfo;
 
 @Slf4j
@@ -54,6 +55,15 @@ public class MessagesController extends AbstractController {
       }
     });
 
+    lviMessages.setOnKeyPressed(new EventHandler<KeyEvent>() {
+      @Override public void handle(KeyEvent event) {
+          if (event.getCode().equals(KeyCode.SLASH)) {
+            removeMessage(lviMessages.getSelectionModel().getSelectedItem());
+          }
+        }
+
+    });
+
     lviMessages.setOnMouseClicked(new EventHandler<MouseEvent>() {
       @Override public void handle(MouseEvent event) {
         if (event.getClickCount() == 2) {
@@ -74,7 +84,10 @@ public class MessagesController extends AbstractController {
 
           String [] tokens = txtSearch.getText().split(" ");
           String type = tokens[0];
-          String recipient = tokens[1].substring(1);
+          String recipient = tokens[1];
+          if (recipient.startsWith("#"))
+            recipient = recipient.substring(1);
+
           String subject = String.join(" ", Arrays.copyOfRange(tokens, 2, tokens.length));
 
           String recipientMail = recipient.contains("@") ? recipient: null;
@@ -97,11 +110,13 @@ public class MessagesController extends AbstractController {
           getModel().getMessagecontainerInfos().add(newMessageContainer);
           saveModel("Created new messagecontainer with type " + type + " and recipient " + recipient);
           getModel().setSelectedMessageContainer(newMessageContainer);
+
+          Notifications.create().text("Creating a new message of type " + messageInfo.getType() + " for recipient " + messageInfo.getRecipientMailadresse() + "-" + messageInfo.getRecipientId()).show();
           stepToPane(Pages.MESSAGEDIALOG);
 
 
         }
-        if (event.getText().equalsIgnoreCase("@")) {
+        if (event.getText().equalsIgnoreCase("#")) {
 
           MaskLoader<SearchboxController> maskLoader = new MaskLoader<SearchboxController>();
           Mask<SearchboxController> mask = maskLoader.load("searchbox");
@@ -129,6 +144,12 @@ public class MessagesController extends AbstractController {
         }
       }
     });
+  }
+
+  private void removeMessage (final MessagecontainerInfo messagecontainerInfo) {
+    getModel().getMessagecontainerInfos().remove(messagecontainerInfo);
+    saveModel("Removed message " + messagecontainerInfo.getTopic() + " with " + messagecontainerInfo.getMessage().size() + " messages");
+    refreshData();
   }
 
   @Override public void refreshData() {

@@ -77,10 +77,6 @@ task installLocal(type: Copy) {
   dependsOn tasks.prepareDmg
 }
 
-tasks.register("demoData", JavaExec) {
-  dependsOn testClasses
-  classpath = sourceSets.test.runtimeClasspath
-
-  main = 'org.spica.cli.demodata.CreateDemoData'
-}
+build.dependsOn installDist
+publish.dependsOn createDmg
 
