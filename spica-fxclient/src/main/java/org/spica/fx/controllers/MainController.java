@@ -59,8 +59,6 @@ public class MainController extends AbstractController  {
 
   private AutoImportMailsTask autoImportMailsTask;
 
-  private XMPPAdapter xmppAdapter = new XMPPAdapter();
-
   @FXML
   public void initialize () {
     setPaRootPane(paRootPane);
@@ -166,6 +164,7 @@ public class MainController extends AbstractController  {
     }
 
     try {
+      XMPPAdapter xmppAdapter = getActionContext().getServices().getXmppAdapter();
       xmppAdapter.login(getActionContext().getProperties(), new IncomingChatMessageListener() {
         @Override public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
           Model model = getModel();

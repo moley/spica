@@ -5,6 +5,7 @@ import org.spica.commons.services.download.DownloadService;
 import org.spica.commons.services.jenkins.JenkinsService;
 import org.spica.commons.services.jira.JiraService;
 import org.spica.commons.services.mail.MailService;
+import org.spica.commons.xmpp.XMPPAdapter;
 
 public class Services {
 
@@ -13,6 +14,9 @@ public class Services {
   private DownloadService downloadService = new DownloadService();
 
   private MailService mailService = new MailService();
+
+
+  private XMPPAdapter xmppAdapter = new XMPPAdapter();
 
 
   private JenkinsService jenkinsService = new JenkinsService();
@@ -75,6 +79,15 @@ public class Services {
   public BitbucketService getBitbucketService () {
     return bitbucketService;
   }
+
+  /**
+   * get the XMPP adapter to be able to chat
+   * @return xmpp adapter
+   */
+  public XMPPAdapter getXmppAdapter() {
+    return xmppAdapter;
+  }
+
 
 
 }

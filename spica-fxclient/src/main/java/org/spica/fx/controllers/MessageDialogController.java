@@ -1,5 +1,6 @@
 package org.spica.fx.controllers;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,15 +20,17 @@ import javafx.scene.web.HTMLEditor;
 import javax.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.controlsfx.control.Notifications;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
 import org.spica.commons.services.mail.MailService;
+import org.spica.commons.xmpp.XMPPAdapter;
 import org.spica.fx.Consts;
 import org.spica.fx.renderer.MessageInfoCellFactory;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.MessageType;
 import org.spica.javaclient.model.MessagecontainerInfo;
 
-@Slf4j
-public class MessageDialogController extends AbstractController {
+@Slf4j public class MessageDialogController extends AbstractController {
 
   @FXML private HTMLEditor hedNewMail;
   @FXML private StackPane panEditor;
@@ -55,25 +58,30 @@ public class MessageDialogController extends AbstractController {
   }
 
   private void sendMessage() {
+
     MessageType messageType = getCurrentMessageType();
     MessagecontainerInfo selectedMessageContainer = getModel().getSelectedMessageContainer();
 
     MessageInfo messageInfo = new MessageInfo();
 
-    if (selectedMessageContainer.getMessage().get(0).getSendtime() == null) { //Created messagecontainer but did not send any mail
+    if (selectedMessageContainer.getMessage().get(0)
+        .getSendtime() == null) { //Created messagecontainer but did not send any mail
       messageInfo = selectedMessageContainer.getMessage().get(0);
     } else {
       messageInfo = new MessageInfo();
       messageInfo.setType(messageType);
       messageInfo.setCreationtime(LocalDateTime.now());
+      selectedMessageContainer.addMessageItem(messageInfo);
     }
 
     messageInfo.setCreatorId(getModel().getMe().getId());
-    messageInfo.setMessage((messageType != null && messageType.equals(MessageType.MAIL)) ? hedNewMail.getHtmlText() : txaNewMessage.getText());
+    messageInfo.setMessage((messageType != null && messageType.equals(MessageType.MAIL)) ?
+        hedNewMail.getHtmlText() :
+        txaNewMessage.getText());
 
     boolean firstMail = selectedMessageContainer.getMessage().get(0).equals(messageInfo);
 
-    selectedMessageContainer.addMessageItem(messageInfo);
+    
     getActionContext().saveModel("Added new message to messagecontainer " + selectedMessageContainer.getTopic());
 
     if (messageType.equals(MessageType.MAIL)) {
@@ -81,18 +89,29 @@ public class MessageDialogController extends AbstractController {
       HashSet<String> recipients = new HashSet<>();
       recipients.add(messageInfo.getRecipientMailadresse()); //TODO send mail to all
 
-      MailService mailService = new MailService();
       try {
-        String subject = (firstMail ? selectedMessageContainer.getTopic() : "Re: " + selectedMessageContainer.getTopic());
+        String subject = (firstMail ?
+            selectedMessageContainer.getTopic() :
+            "Re: " + selectedMessageContainer.getTopic());
+        MailService mailService = getActionContext().getServices().getMailService();
         mailService.sendMail(subject, messageInfo.getMessage(), new ArrayList<>(recipients));
+        messageInfo.setSendtime(LocalDateTime.now());
         Notifications.create().text("Mail sent to " + recipients).showInformation();
       } catch (MessagingException e) {
         log.error(e.getLocalizedMessage(), e);
         Notifications.create().text("Error on sending mail: " + e.getLocalizedMessage()).showError();
       }
 
-    }
-    else {
+    } else if (messageType.equals(MessageType.CHAT)) {
+      XMPPAdapter xmppAdapter = getActionContext().getServices().getXmppAdapter();
+      try {
+        xmppAdapter.sendMessage(getActionContext().getProperties(), "OleyMa", messageInfo.getMessage()); //TODO get user id
+        messageInfo.setSendtime(LocalDateTime.now());
+      } catch (InterruptedException | SmackException | IOException | XMPPException e) {
+        log.error(e.getLocalizedMessage(), e);
+        Notifications.create().text("Error on sending chat message: " + e.getLocalizedMessage()).showError();
+      }
+    } else {
       Notifications.create().text("MessageType " + messageType + " not yet supported");
     }
 
@@ -102,15 +121,14 @@ public class MessageDialogController extends AbstractController {
 
   }
 
-  private MessageType getCurrentMessageType () {
+  private MessageType getCurrentMessageType() {
     if (getModel().getSelectedMessageContainer() == null)
       throw new IllegalStateException("No messagecontainer selected");
 
     MessagecontainerInfo selectedMessageContainer = getModel().getSelectedMessageContainer();
     if (selectedMessageContainer.getMessage().isEmpty()) {
       return null;
-    }
-    else
+    } else
       return selectedMessageContainer.getMessage().get(0).getType();
   }
 
@@ -121,14 +139,12 @@ public class MessageDialogController extends AbstractController {
       if (getCurrentMessageType().equals(MessageType.MAIL)) {
         hedNewMail.setHtmlText("");
         hedNewMail.toFront();
-      }
-      else {
+      } else {
         txaNewMessage.setText("");
         txaNewMessage.toFront();
       }
       lviDialog.setItems(FXCollections.observableArrayList(selectedMessageContainer.getMessage()));
-    }
-    else
+    } else
       lviDialog.setItems(FXCollections.emptyObservableList());
   }
 }
