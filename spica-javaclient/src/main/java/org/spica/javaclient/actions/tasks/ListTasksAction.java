@@ -36,7 +36,7 @@ public class ListTasksAction extends AbstractAction {
         Model model = actionContext.getModel();
         for (TaskInfo next: model.getTaskInfos()) {
 
-            boolean topicIsOpen = next.getState() == null || !next.getState().equals(TaskInfo.StateEnum.FINISHED);
+            boolean topicIsOpen = next.getTaskState() == null || !next.getTaskState().equals(TaskInfo.TaskStateEnum.FINISHED);
             if (topicIsOpen || all){
 
                 String externalSystemID = next.getExternalSystemID() != null ? next.getExternalSystemID() : "";

@@ -168,36 +168,11 @@ public class MainController extends AbstractController  {
       xmppAdapter.login(getActionContext().getProperties(), new IncomingChatMessageListener() {
         @Override public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
           Model model = getModel();
-          /**for (MessagecontainerInfo messageContainerInfo : model.getMessagecontainerInfos()) {
-            for (MessageInfo nextMessage : messageContainerInfo.getMessage()) {
-              if (nextMessage.getType().equals(MessageType.CHAT) && nextMessage.getCreatorMailadresse().equalsIgnoreCase("TODO")) {
-
-                MessageInfo messageInfo = new MessageInfo();
-                messageInfo.setType(MessageType.CHAT);
-                messageInfo.setCreatorMailadresse(from.toString());
-                messageInfo.setMessage(message.getBody());
-                messageInfo.setCreationtime(LocalDateTime.now());
-                messageContainerInfo.getMessage().add(messageInfo);
-                Collections
-                    .sort(getModel().getMessagecontainerInfos(), new Comparator<MessagecontainerInfo>() {
-                      @Override public int compare(MessagecontainerInfo o1, MessagecontainerInfo o2) {
-                        return o2.getMessage().get(0).getCreationtime().compareTo(o1.getMessage().get(0).getCreationtime());
-                      }
-                    });
-                saveModel("Added new chatmessage from " + from.toString());
-
-                //TODO speichern
-
-                return;
-
-
-              }
-            }
-
-          }**/
-
-          //if no open conversation found so far
-          MessagecontainerInfo newMessageContainer = new MessagecontainerInfo();
+          
+          MessagecontainerInfo openMesssageContainer = getModel().findOpenMessageContainer(MessageType.CHAT, from.toString());
+          
+          //if no open conversation found so far create new one
+          MessagecontainerInfo newMessageContainer = openMesssageContainer != null ? openMesssageContainer : new MessagecontainerInfo();
           newMessageContainer.setTopic("Chat with " + from.toString());
           MessageInfo messageInfo = new MessageInfo();
           messageInfo.setType(MessageType.CHAT);
@@ -205,7 +180,9 @@ public class MainController extends AbstractController  {
           messageInfo.setMessage(message.getBody());
           messageInfo.setCreationtime(LocalDateTime.now());
           newMessageContainer.addMessageItem(messageInfo);
-          model.getMessagecontainerInfos().add(newMessageContainer);
+          if (openMesssageContainer == null)
+            model.getMessagecontainerInfos().add(newMessageContainer);
+          
           Collections
               .sort(getModel().getMessagecontainerInfos(), new Comparator<MessagecontainerInfo>() {
                 @Override public int compare(MessagecontainerInfo o1, MessagecontainerInfo o2) {

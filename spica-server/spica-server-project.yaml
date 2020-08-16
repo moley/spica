@@ -221,7 +221,7 @@ components:
           type: "string"
         description:
           type: "string"
-        state:
+        taskState:
           type: "string"
           enum: [new, finished]
         externalSystemKey:

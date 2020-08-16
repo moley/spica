@@ -32,7 +32,7 @@ public class OpenTaskAction extends AbstractAction {
         Model model = actionContext.getModel();
         List<TaskInfo> infos = model.findTaskInfosByQuery(query);
         for (TaskInfo next: infos) {
-            next.setState(TaskInfo.StateEnum.NEW);
+            next.setTaskState(TaskInfo.TaskStateEnum.NEW);
             outputDefault("Opening task " + next.getId());
         }
 

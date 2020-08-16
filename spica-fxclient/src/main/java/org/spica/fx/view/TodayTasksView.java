@@ -18,7 +18,7 @@ public class TodayTasksView extends AbstractTaskView {
     getTaskInfos().clear();
     for (TaskInfo next: taskInfos) {
       //TODO If no project or no plan date available
-      if (next.getState() == null || ! next.getState().equals(TaskInfo.StateEnum.FINISHED)) {
+      if (next.getTaskState() == null || ! next.getTaskState().equals(TaskInfo.TaskStateEnum.FINISHED)) {
         if (next.getPlannedDate() != null && next.getPlannedDate().equals(LocalDate.now()))
           getTaskInfos().add(next);
       }

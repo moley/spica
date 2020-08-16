@@ -36,7 +36,7 @@ public class ShowTasksAction extends AbstractAction {
             outputDefault("ID               : " + next.getId());
             outputDefault("Name             : " + next.getName());
             outputDefault("Description      : " + next.getDescription());
-            outputDefault("State            : " + next.getState());
+            outputDefault("State            : " + next.getTaskState());
             outputDefault("Project          : " + next.getProjectId());
             outputDefault("External key     : " + (next.getExternalSystemKey() != null ? next.getExternalSystemKey(): "none"));
             outputDefault("External system  : " + (next.getExternalSystemID() != null ? next.getExternalSystemID(): "none"));

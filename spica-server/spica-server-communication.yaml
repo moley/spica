@@ -82,6 +82,9 @@ components:
             $ref: "#/components/schemas/MessageInfo"
         topic:
           type: "string"
+        messagecontainerState:
+          type: "string"
+          enum: [new, finished]  
 
     MessageType:
       type: string

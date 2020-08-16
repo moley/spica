@@ -21,7 +21,7 @@ public class NextWeekTasksView extends AbstractTaskView {
     for (TaskInfo next: taskInfos) {
       //TODO If no project or no plan date available
 
-      if (next.getState() == null || ! next.getState().equals(TaskInfo.StateEnum.FINISHED)) {
+      if (next.getTaskState() == null || ! next.getTaskState().equals(TaskInfo.TaskStateEnum.FINISHED)) {
         if (next.getPlannedDate() != null) {
           int weekOfYearNext = dateUtil.getDayOfWeek(next.getPlannedDate());
           int weekOfToday = dateUtil.getDayOfWeek(LocalDate.now());

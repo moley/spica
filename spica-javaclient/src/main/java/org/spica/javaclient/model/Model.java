@@ -8,10 +8,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
 import javax.xml.bind.annotation.XmlRootElement;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.DashboardItemType;
+import org.spica.javaclient.model.MessagecontainerInfo.MessagecontainerStateEnum;
 
 /**
  * the spica model root element
@@ -98,6 +101,30 @@ public class Model {
   public void setProjectInfos(List<ProjectInfo> projectInfos) {
     this.projectInfos = projectInfos;
   }
+  
+  /**
+   * finds an open message container which contains a message with the given message type and 
+   * the mail address matching from
+   * 
+   * @param messageType   message type found
+   * @param from          from found
+   * @return found message container or <code>null</code> if none is found
+   */
+	public MessagecontainerInfo findOpenMessageContainer(final MessageType messageType, final String from) {
+		for (MessagecontainerInfo nextContainer : messagecontainerInfos) {
+			if (nextContainer.getMessagecontainerState() == null || !nextContainer.getMessagecontainerState().equals(MessagecontainerStateEnum.FINISHED)) {
+				for (MessageInfo nextMessage : nextContainer.getMessage()) {
+					if (nextMessage.getType() != null && nextMessage.getType().equals(messageType)) {
+					  if (nextMessage.getCreatorMailadresse() != null && (nextMessage.getCreatorMailadresse().equals(from) || nextMessage.getRecipientMailadresse().equals(from)))
+					    return nextContainer;
+					}
+				}
+			}
+		}
+		
+		return null;
+
+	}
 
   /**
    * find tasks by name, external system key or id

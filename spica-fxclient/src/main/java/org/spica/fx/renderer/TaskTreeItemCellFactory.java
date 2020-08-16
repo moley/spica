@@ -112,7 +112,7 @@ public class TaskTreeItemCellFactory extends TreeCell<TaskTreeItem> {
         btnFinish.setGraphic(Consts.createIcon("fa-check-circle", Consts.ICON_SIZE_TOOLBAR));
         btnFinish.setOnAction(new EventHandler<ActionEvent>() {
           @Override public void handle(ActionEvent event) {
-            taskInfo.setState(TaskInfo.StateEnum.FINISHED);
+            taskInfo.setTaskState(TaskInfo.TaskStateEnum.FINISHED);
             actionContext.saveModel("Finish task " + taskInfo.getId());
             reload.reload();
           }

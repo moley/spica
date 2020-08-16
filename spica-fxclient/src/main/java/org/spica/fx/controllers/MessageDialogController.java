@@ -105,7 +105,7 @@ import org.spica.javaclient.model.MessagecontainerInfo;
     } else if (messageType.equals(MessageType.CHAT)) {
       XMPPAdapter xmppAdapter = getActionContext().getServices().getXmppAdapter();
       try {
-        xmppAdapter.sendMessage(getActionContext().getProperties(), "OleyMa", messageInfo.getMessage()); //TODO get user id
+        xmppAdapter.sendMessage(getActionContext().getProperties(), messageInfo.getCreatorMailadresse().replace("@", ""), messageInfo.getMessage()); 
         messageInfo.setSendtime(LocalDateTime.now());
       } catch (InterruptedException | SmackException | IOException | XMPPException e) {
         log.error(e.getLocalizedMessage(), e);
