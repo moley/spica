@@ -75,7 +75,7 @@ public abstract class AbstractController {
   }
 
   public Model getModel () {
-    return actionContext.getModel();
+    return actionContext != null ? actionContext.getModel(): null;
   }
 
   public void saveModel (final String lastAction) {

@@ -17,6 +17,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
+import org.controlsfx.control.Notifications;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.jivesoftware.smack.SmackException;
@@ -35,10 +36,12 @@ import org.spica.fx.Mask;
 import org.spica.fx.Reload;
 import org.spica.fx.clipboard.ClipboardItem;
 import org.spica.javaclient.Configuration;
+import org.spica.javaclient.exceptions.NotFoundException;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.MessageType;
 import org.spica.javaclient.model.MessagecontainerInfo;
 import org.spica.javaclient.model.Model;
+import org.spica.javaclient.model.UserInfo;
 
 @Slf4j
 public class MainController extends AbstractController  {
@@ -67,7 +70,6 @@ public class MainController extends AbstractController  {
     Label lbl = new Label();
     lbl.setGraphic(Consts.createIcon("fa-search", 15));
     txtFieldSearch.setLeft(lbl);
-
 
 
     PopOver popOver = new PopOver(lviClipboardItems);
@@ -113,9 +115,6 @@ public class MainController extends AbstractController  {
     autoImportThread.start();
 
     Timer autoImportMailsTimer = new Timer();
-
-
-
 
     autoImportMailsTask = new AutoImportMailsTask(getActionContext(), new Reload() {
       @Override public void reload() {
@@ -168,8 +167,15 @@ public class MainController extends AbstractController  {
       xmppAdapter.login(getActionContext().getProperties(), new IncomingChatMessageListener() {
         @Override public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
           Model model = getModel();
-          
-          MessagecontainerInfo openMesssageContainer = getModel().findOpenMessageContainer(MessageType.CHAT, from.toString());
+
+          String username = from.toString().split("@")[0];
+          UserInfo userInfo = null;
+          try {
+            userInfo = getModel().findUserByUsername(username);
+          } catch (NotFoundException e) {
+            Notifications.create().text("User " + username + " not found").showError();
+          }
+          MessagecontainerInfo openMesssageContainer = getModel().findOpenMessageContainerByUser(MessageType.CHAT, userInfo);
           
           //if no open conversation found so far create new one
           MessagecontainerInfo newMessageContainer = openMesssageContainer != null ? openMesssageContainer : new MessagecontainerInfo();
@@ -183,13 +189,9 @@ public class MainController extends AbstractController  {
           if (openMesssageContainer == null)
             model.getMessagecontainerInfos().add(newMessageContainer);
           
-          Collections
-              .sort(getModel().getMessagecontainerInfos(), new Comparator<MessagecontainerInfo>() {
-                @Override public int compare(MessagecontainerInfo o1, MessagecontainerInfo o2) {
-                  return o2.getMessage().get(0).getCreationtime().compareTo(o1.getMessage().get(0).getCreationtime());
-                }
-              });
+          getModel().sortMessages();
           saveModel("Added new chatmessage to existing chat from " + from.toString());
+
 
 
         }

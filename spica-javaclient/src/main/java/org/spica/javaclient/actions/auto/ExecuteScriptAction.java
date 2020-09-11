@@ -1,9 +1,6 @@
 package org.spica.javaclient.actions.auto;
 
-import groovy.util.ResourceException;
-import groovy.util.ScriptException;
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,13 +44,7 @@ public class ExecuteScriptAction extends AbstractAction {
         scriptEngine.setGroovyFile(file);
         try {
             scriptEngine.execute();
-        } catch (IOException e) {
-            LOGGER.error("Error thrown in script " + file.getAbsolutePath(), e);
-            throw new IllegalStateException(e);
-        } catch (ResourceException e) {
-            LOGGER.error("Error thrown in script " + file.getAbsolutePath(), e);
-            throw new IllegalStateException(e);
-        } catch (ScriptException e) {
+        }  catch (Exception e) {
             LOGGER.error("Error thrown in script " + file.getAbsolutePath(), e);
             throw new IllegalStateException(e);
         }

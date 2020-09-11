@@ -29,6 +29,7 @@ import org.spica.fx.renderer.MessageInfoCellFactory;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.MessageType;
 import org.spica.javaclient.model.MessagecontainerInfo;
+import org.spica.javaclient.model.UserInfo;
 
 @Slf4j public class MessageDialogController extends AbstractController {
 
@@ -105,7 +106,9 @@ import org.spica.javaclient.model.MessagecontainerInfo;
     } else if (messageType.equals(MessageType.CHAT)) {
       XMPPAdapter xmppAdapter = getActionContext().getServices().getXmppAdapter();
       try {
-        xmppAdapter.sendMessage(getActionContext().getProperties(), messageInfo.getCreatorMailadresse().replace("@", ""), messageInfo.getMessage()); 
+
+        UserInfo recipient = getModel().getUsersOrMe(getModel().getSelectedMessageContainer());
+        xmppAdapter.sendMessage(getActionContext().getProperties(), recipient.getUsername(), messageInfo.getMessage());
         messageInfo.setSendtime(LocalDateTime.now());
       } catch (InterruptedException | SmackException | IOException | XMPPException e) {
         log.error(e.getLocalizedMessage(), e);

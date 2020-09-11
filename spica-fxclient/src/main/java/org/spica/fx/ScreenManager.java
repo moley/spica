@@ -65,6 +65,7 @@ public class ScreenManager {
   }
 
   public void layoutEdged (final Stage stage) {
+    Screen primary = getExternalOrPrimaryScreen();
     stage.setX(primary.getBounds().getMaxX() - 1405);
     stage.setY(primary.getBounds().getMinY() + 40);
     stage.setWidth(1400);

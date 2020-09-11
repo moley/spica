@@ -5,6 +5,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -14,6 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.DashboardItemType;
+import org.spica.javaclient.exceptions.NotFoundException;
 import org.spica.javaclient.model.MessagecontainerInfo.MessagecontainerStateEnum;
 
 /**
@@ -110,12 +114,13 @@ public class Model {
    * @param from          from found
    * @return found message container or <code>null</code> if none is found
    */
-	public MessagecontainerInfo findOpenMessageContainer(final MessageType messageType, final String from) {
+	public MessagecontainerInfo findOpenMessageContainerByUser(final MessageType messageType, final UserInfo from) {
 		for (MessagecontainerInfo nextContainer : messagecontainerInfos) {
 			if (nextContainer.getMessagecontainerState() == null || !nextContainer.getMessagecontainerState().equals(MessagecontainerStateEnum.FINISHED)) {
 				for (MessageInfo nextMessage : nextContainer.getMessage()) {
 					if (nextMessage.getType() != null && nextMessage.getType().equals(messageType)) {
-					  if (nextMessage.getCreatorMailadresse() != null && (nextMessage.getCreatorMailadresse().equals(from) || nextMessage.getRecipientMailadresse().equals(from)))
+					  if (nextMessage.getCreatorId() != null && (nextMessage.getCreatorId().equalsIgnoreCase(from.getId()) ||
+                nextMessage.getRecipientId().equalsIgnoreCase(from.getId())))
 					    return nextContainer;
 					}
 				}
@@ -125,6 +130,26 @@ public class Model {
 		return null;
 
 	}
+
+	public UserInfo getUsersOrMe (final MessagecontainerInfo messagecontainerInfo) {
+	  UserInfo me = getMe();
+	  Collection<UserInfo> userInfos = new HashSet<>();
+	  for (MessageInfo nextMessage: messagecontainerInfo.getMessage()) {
+	    if (nextMessage.getRecipientId() != null && ! nextMessage.getRecipientId().equals(me.getId()))
+	      userInfos.add(findUserById(nextMessage.getRecipientId()));
+
+      if (nextMessage.getCreatorId() != null && ! nextMessage.getCreatorId().equals(me.getId()))
+        userInfos.add(findUserById(nextMessage.getCreatorId()));
+    }
+
+	  if (userInfos.size() > 1)
+	    throw new IllegalStateException("More than one user found, which is not me in messagecontainer " + messagecontainerInfo.getTopic());
+	  else if (userInfos.isEmpty())
+	    return getMe();
+
+	  return userInfos.iterator().next();
+
+  }
 
   /**
    * find tasks by name, external system key or id
@@ -698,17 +723,17 @@ public class Model {
   /**
    * find user by usernmae
    * @param username  username
-   * @return user or {@link IllegalStateException}
+   * @return user or {@link NotFoundException}
    */
-  public UserInfo findUserByUsername(String username) {
+  public UserInfo findUserByUsername(String username) throws NotFoundException {
     if (username == null)
       throw new IllegalArgumentException("Parameter username must not be null");
 
     for (UserInfo next: userInfos) {
-      if (next.getUsername() != null && next.getUsername().equals(username))
+      if (next.getUsername() != null && next.getUsername().equalsIgnoreCase(username))
         return next;
     }
-    throw new IllegalStateException("No user found for username " + username);
+    throw new NotFoundException("No user found for username " + username + " in list of " + userInfos.size() + " users");
   }
 
   /**
@@ -763,5 +788,17 @@ public class Model {
     }
 
     return projects;
+  }
+
+  public void sortMessages () {
+    Collections
+        .sort(getMessagecontainerInfos(), new Comparator<MessagecontainerInfo>() {
+          @Override public int compare(MessagecontainerInfo o1, MessagecontainerInfo o2) {
+            MessageInfo lastMessage1 = o1.getMessage().get(o1.getMessage().size() - 1);
+            MessageInfo lastMessage2 = o2.getMessage().get(o2.getMessage().size() - 1);
+            return lastMessage2.getCreationtime().compareTo(lastMessage1.getCreationtime());
+          }
+        });
+
   }
 }

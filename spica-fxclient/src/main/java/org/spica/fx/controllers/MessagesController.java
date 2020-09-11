@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.spica.fx.Mask;
 import org.spica.fx.MaskLoader;
 import org.spica.fx.renderer.MessageContainerInfoCellFactory;
+import org.spica.javaclient.exceptions.NotFoundException;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.MessageType;
 import org.spica.javaclient.model.MessagecontainerInfo;
@@ -91,7 +92,20 @@ public class MessagesController extends AbstractController {
           String subject = String.join(" ", Arrays.copyOfRange(tokens, 2, tokens.length));
 
           String recipientMail = recipient.contains("@") ? recipient: null;
-          UserInfo recipientUser = (recipientMail == null ? getModel().findUserByUsername(recipient): null);
+          UserInfo recipientUser = null;
+
+          if (recipientMail == null) { //if no mail adress we expect an internal user
+            try {
+              recipientUser = getModel().findUserByUsername(recipient);
+            } catch (NotFoundException e) {
+              Notifications.create().text("User " + recipient + " not found").showError();
+              return;
+            }
+            recipientMail = recipientUser.getEmail();
+          } else {
+            recipientUser = getModel().findUserByMail(recipientMail);
+          }
+
 
           if (recipientMail == null && recipientUser == null)
             Notifications.create().text("User " + recipient + " not found").showError();
@@ -154,6 +168,7 @@ public class MessagesController extends AbstractController {
 
   @Override public void refreshData() {
 
+    if (getModel() != null)
     lviMessages.setItems(FXCollections.observableArrayList(getModel().getMessagecontainerInfos()));
 
 

@@ -38,7 +38,7 @@ dependencies {
 
   compile project (':spica-commons')
 
-  compile 'org.codehaus.groovy:groovy:2.5.9'
+  compile 'org.codehaus.groovy:groovy:2.5.13'
 
   testCompile 'org.mockito:mockito-core:2.28.2'
 }
