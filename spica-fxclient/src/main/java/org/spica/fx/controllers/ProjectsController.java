@@ -84,6 +84,8 @@ public class ProjectsController extends AbstractController {
   }
 
   @Override public void refreshData() {
+    getMainController().refreshData();
+
     treProjects.setCellFactory(cellfactory -> new ProjectInfoTreeCellFactory(getActionContext(), new Reload() {
       @Override public void reload() {
         refreshViews();

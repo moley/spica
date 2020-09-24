@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import org.controlsfx.control.textfield.CustomTextField?>
+<?import javafx.scene.control.TextField?>
 <BorderPane fx:id="paRootPane" xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fx.controllers.MainController" style="-fx-background-color:transparent">
     <stylesheets>
         <URL value="@/css/spica.css" />
@@ -35,6 +36,9 @@
             </JFXBadge>
 
             <ButtonBar fx:id="btnMainActions" userData="mainpage.btnMainActions"/>
+
+            <Button fx:id="btnState"></Button>
+            <TextField fx:id="txtCurrentAction"></TextField>
         </HBox>
 
     </top>

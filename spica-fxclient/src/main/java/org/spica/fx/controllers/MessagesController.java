@@ -12,20 +12,19 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.VBox;
 import javafx.stage.PopupWindow;
 import lombok.extern.slf4j.Slf4j;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.PopOver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spica.commons.mail.MailAdapter;
 import org.spica.fx.Mask;
 import org.spica.fx.MaskLoader;
 import org.spica.fx.renderer.MessageContainerInfoCellFactory;
@@ -33,7 +32,6 @@ import org.spica.javaclient.exceptions.NotFoundException;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.MessageType;
 import org.spica.javaclient.model.MessagecontainerInfo;
-import org.spica.javaclient.model.ProjectInfo;
 import org.spica.javaclient.model.UserInfo;
 
 @Slf4j
@@ -97,6 +95,7 @@ public class MessagesController extends AbstractController {
           if (recipientMail == null) { //if no mail adress we expect an internal user
             try {
               recipientUser = getModel().findUserByUsername(recipient);
+              Notifications.create().text("Found user " + recipientUser.getDisplayname()).showInformation();
             } catch (NotFoundException e) {
               Notifications.create().text("User " + recipient + " not found").showError();
               return;
@@ -136,8 +135,6 @@ public class MessagesController extends AbstractController {
           Mask<SearchboxController> mask = maskLoader.load("searchbox");
 
           SearchboxController controller = mask.getController();
-          controller.setActionContext(getActionContext());
-          controller.setApplicationContext(getApplicationContext());
           controller.refreshData();
 
           PopOver popOver = new PopOver(mask.getParent());
@@ -161,16 +158,25 @@ public class MessagesController extends AbstractController {
   }
 
   private void removeMessage (final MessagecontainerInfo messagecontainerInfo) {
+
+    MailAdapter mailAdapter = getActionContext().getServices().getMailImporter().getMailAdapter();
     getModel().getMessagecontainerInfos().remove(messagecontainerInfo);
+    for (MessageInfo nextMessage: messagecontainerInfo.getMessage()) {
+      if (nextMessage.getType().equals(MessageType.MAIL)) {
+        mailAdapter.deleteMail(nextMessage.getId());
+      }
+    }
     saveModel("Removed message " + messagecontainerInfo.getTopic() + " with " + messagecontainerInfo.getMessage().size() + " messages");
     refreshData();
   }
 
+
+
   @Override public void refreshData() {
 
     if (getModel() != null)
-    lviMessages.setItems(FXCollections.observableArrayList(getModel().getMessagecontainerInfos()));
+      lviMessages.setItems(FXCollections.observableArrayList(getModel().getMessagecontainerInfos()));
 
-
+    getMainController().refreshData();
   }
 }

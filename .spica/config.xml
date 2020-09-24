@@ -41,7 +41,6 @@
         <name>TaskView Today / This Week</name>
         <plannedDate>2020-06-26</plannedDate>
         <projectId>d412bc55-823e-4514-9f2f-8079a933d4fc</projectId>
-        <state>FINISHED</state>
     </taskInfos>
     <taskInfos>
         <id>e856e0af-8d48-4b0a-86f8-56818c92cf95</id>
@@ -52,7 +51,6 @@
         <id>c73e39d9-7b8c-4158-b545-a38a888315e9</id>
         <name>TestTask1</name>
         <projectId>d412bc55-823e-4514-9f2f-8079a933d4fc</projectId>
-        <state>FINISHED</state>
     </taskInfos>
     <taskInfos>
         <id>30e51d22-ecd6-4adb-b3f9-ae39066fd873</id>
@@ -78,7 +76,7 @@
         <name>Synchronize model on the fly</name>
     </taskInfos>
     <workingsetInfos>
-        <id>72f1f741-22a9-4d8a-8436-e6c27ce6be4b</id>
+        <id>2557be1b-0f2d-4dbc-a1c7-f4902a647e37</id>
         <name>testWorkingSet</name>
         <sourceparts>
             <branch>master</branch>

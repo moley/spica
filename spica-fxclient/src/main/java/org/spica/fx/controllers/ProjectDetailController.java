@@ -25,6 +25,8 @@ public class ProjectDetailController extends AbstractController{
   }
 
   @Override public void refreshData() {
+    getMainController().refreshData();
+
     ProjectInfo projectInfo = getModel().getSelectedProjectInfo();
 
     txtName.setText(projectInfo.getName());

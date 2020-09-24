@@ -12,23 +12,22 @@ import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.mail.MailImporter;
 import org.spica.javaclient.model.MessagecontainerInfo;
 
-@Slf4j
-public class AutoImportMailsTask extends TimerTask {
+@Slf4j public class AutoImportMailsTask extends TimerTask {
 
   private ActionContext actionContext;
 
   private Reload reload;
-
 
   public AutoImportMailsTask(final ActionContext actionContext, Reload reload) {
     this.actionContext = actionContext;
     this.reload = reload;
 
   }
+
   @Override public void run() {
     log.info("Import mails started");
 
-    MailImporter mailImporter = new MailImporter();
+    MailImporter mailImporter = actionContext.getServices().getMailImporter();
     try {
       if (mailImporter.importMails(actionContext.getModel())) {
         Collections.sort(actionContext.getModel().getMessagecontainerInfos(), new Comparator<MessagecontainerInfo>() {
@@ -36,9 +35,10 @@ public class AutoImportMailsTask extends TimerTask {
             return o2.getMessage().get(0).getCreationtime().compareTo(o1.getMessage().get(0).getCreationtime());
           }
         });
-        if (reload != null)
+        if (reload != null) {
           reload.reload();
-        actionContext.saveModel("Mails imported");
+          actionContext.saveModel("Mails imported");
+        }
       }
     } catch (MessagingException e) {
       log.error("Error importing mails: " + e.getLocalizedMessage(), e);

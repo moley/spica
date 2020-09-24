@@ -64,6 +64,7 @@ public class JavafxApplication extends Application {
     this.stage = stage;
 
     mask = maskLoader.load("main");
+
 /**TODO enable again
     try {
       GlobalScreen.registerNativeHook();
@@ -106,25 +107,29 @@ public class JavafxApplication extends Application {
     // sets up the tray icon (using awt code run on the swing thread).
     javax.swing.SwingUtilities.invokeLater(this::addAppToTray);
 
+
     // out stage will be translucent, so give it a transparent style.
     stage.initStyle(StageStyle.UNDECORATED);
 
-    mask.getController().refreshData();
+    mask.getController().init();
 
     Scene scene = mask.getScene();
 
     scene.setOnDragOver(new EventHandler<DragEvent>() {
       @Override public void handle(DragEvent event) {
+        LOGGER.info("onDragOver called");
         event.acceptTransferModes(TransferMode.ANY);
       }
     });
     scene.setOnDragDropped(new EventHandler<DragEvent>() {
       @Override public void handle(DragEvent event) {
+        LOGGER.info("OnDragDropped called");
 
         ClipboardItem clipboardItem = new ClipboardItem();
         clipboardItem.setFiles(event.getDragboard().getFiles());
         clipboardItem.setString(event.getDragboard().getString());
-        clipboardItem.setUrl(event.getDragboard().getUrl());
+        if (event.getDragboard().getUrl() != null)
+          clipboardItem.setUrl(event.getDragboard().getUrl());
 
         mask.getController().getApplicationContext().getClipboard().getItems().add(clipboardItem);
       }
@@ -145,6 +150,7 @@ public class JavafxApplication extends Application {
     // this dummy app just hides itself when the app screen is clicked.
     // a real app might have some interactive UI and a separate icon which hides the app window.
     scene.setFill(Color.TRANSPARENT);
+    stage.setAlwaysOnTop(true);
 
     stage.setScene(scene);
 

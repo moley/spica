@@ -1,19 +1,21 @@
 package org.spica.fx.controllers;
 
 import java.util.HashMap;
+import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.fx.ApplicationContext;
 import org.spica.fx.Mask;
 import org.spica.fx.MaskLoader;
-import org.spica.fx.ScreenManager;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.model.Model;
 
 public abstract class AbstractController {
 
-  private static HashMap<Pages, Mask> registeredPanes = new HashMap<Pages, Mask>();
+
+
+  private static HashMap<Pages, Mask> registeredMasks = new HashMap<Pages, Mask>();
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AbstractController.class);
 
@@ -23,38 +25,22 @@ public abstract class AbstractController {
 
   private ApplicationContext applicationContext;
 
-
-
-  public void registerPane (final Pages pages) {
-    MaskLoader maskLoader = new MaskLoader();
-    try {
-      Mask mask = maskLoader.load(pages.getFilename());
-      registeredPanes.put(pages, mask);
-    } catch (Exception e) {
-      LOGGER.error("Error loading page " + pages.getFilename(), e);
-    }
-
-  }
+  private MainController mainController;
 
   public Mask getMask (final Pages pages) {
-    return registeredPanes.get(pages);
+    return registeredMasks.get(pages);
   }
 
   public void stepToPane (final Pages page) {
     LOGGER.info("step to pane " +  page.getDisplayname());
-    for (Mask nextMask : registeredPanes.values()) {
+    for (Mask nextMask : registeredMasks.values()) {
       nextMask.getParent().setVisible(false);
     }
 
-    Mask mask = registeredPanes.get(page);
+    Mask mask = registeredMasks.get(page);
     paRootPane.setCenter(mask.getParent());
 
     AbstractController controller = mask.getController();
-
-    controller.setPaRootPane(getPaRootPane());
-    controller.setActionContext(getActionContext());
-    controller.setApplicationContext(getApplicationContext());
-
     controller.refreshData();
 
     mask.getParent().setVisible(true);
@@ -92,5 +78,17 @@ public abstract class AbstractController {
 
   public void setApplicationContext(ApplicationContext applicationContext) {
     this.applicationContext = applicationContext;
+  }
+
+  public static HashMap<Pages, Mask> getRegisteredMasks() {
+    return registeredMasks;
+  }
+
+  public MainController getMainController() {
+    return mainController;
+  }
+
+  public void setMainController(MainController mainController) {
+    this.mainController = mainController;
   }
 }

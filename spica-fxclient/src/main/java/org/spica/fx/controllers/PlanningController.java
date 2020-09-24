@@ -86,6 +86,7 @@ public class PlanningController extends AbstractController {
   }
 
   @Override public void refreshData() {
+    getMainController().refreshData();
 
   }
 }

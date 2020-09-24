@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -19,6 +20,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
+import org.controlsfx.control.Notifications;
 import org.spica.fx.Reload;
 import org.spica.fx.UiUtils;
 import org.spica.fx.clipboard.ClipboardItem;
@@ -63,6 +65,8 @@ import org.spica.javaclient.model.TaskInfo;
     allViews.addAll(Arrays.asList(inboxTasksView, todayTasksView, weekTasksView, nextWeekTasksView, finishedTasksView));
 
   }
+
+
 
   private void addNewTask (final String newTaskIdentifier) {
 
@@ -133,6 +137,8 @@ import org.spica.javaclient.model.TaskInfo;
 
   @Override public void refreshData() {
     log.info("refreshData");
+
+    getMainController().refreshData();
 
     UiUtils.requestFocus(txtSearch);
 

@@ -1,11 +1,16 @@
 package org.spica.commons.mail;
 
 import com.sun.mail.util.MailSSLSocketFactory;
+import java.io.File;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.Authenticator;
+import javax.mail.BodyPart;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -15,7 +20,9 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import lombok.extern.slf4j.Slf4j;
 import org.spica.commons.SpicaProperties;
 
@@ -104,20 +111,35 @@ public class MailAdapter {
 
   }
 
-  public void sendMail (final String subject, String content, final List<String> to) throws MessagingException {
+  public void sendMail (final String subject, String content, final List<String> to, final List<File> files) throws MessagingException {
     SpicaProperties spicaProperties = new SpicaProperties();
     Session session = createSession(spicaProperties);
 
     MimeMessage message = new MimeMessage( session );
     message.setFrom( new InternetAddress( spicaProperties.getValue(PROPERTY_MAIL_SMTP_SENDER)));
+
     for (String nextTo: to) {
       message.addRecipient(Message.RecipientType.TO, new InternetAddress(nextTo));
     }
+
     message.setSubject( subject, "ISO-8859-1" );
-    if (content.contains("<html"))
-      message.setContent(content, "text/html");
-    else
-      message.setText( content, "UTF-8" );
+
+    MimeMultipart mimeMultipart = new MimeMultipart();
+    BodyPart bodyPart = new MimeBodyPart();
+    bodyPart.setContent(content, "text/html");
+    mimeMultipart.addBodyPart(bodyPart);
+
+    for (File nextFile: files) {
+      MimeBodyPart messageBodyPart = new MimeBodyPart();
+      String filename = nextFile.getAbsolutePath();
+      DataSource source = new FileDataSource(filename);
+      messageBodyPart.setDataHandler(new DataHandler(source));
+      messageBodyPart.setFileName(filename);
+      mimeMultipart.addBodyPart(messageBodyPart);
+    }
+
+    message.setContent(mimeMultipart);
+
     Transport.send( message );
 
   }
