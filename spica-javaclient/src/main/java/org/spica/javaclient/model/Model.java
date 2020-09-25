@@ -132,17 +132,23 @@ public class Model {
 
 	}
 
-	public UserInfo getUsersOrMe (final MessagecontainerInfo messagecontainerInfo) {
-	  UserInfo me = getMe();
-	  Collection<UserInfo> userInfos = new HashSet<>();
-	  for (MessageInfo nextMessage: messagecontainerInfo.getMessage()) {
-	    if (nextMessage.getRecipientId() != null && ! nextMessage.getRecipientId().equals(me.getId()))
-	      userInfos.add(findUserById(nextMessage.getRecipientId()));
+  public List<UserInfo> getOtherUsers (final MessagecontainerInfo messagecontainerInfo) {
+    UserInfo me = getMe();
+    Collection<UserInfo> userInfos = new HashSet<>();
+    for (MessageInfo nextMessage: messagecontainerInfo.getMessage()) {
+      if (nextMessage.getRecipientId() != null && ! nextMessage.getRecipientId().equals(me.getId()))
+        userInfos.add(findUserById(nextMessage.getRecipientId()));
 
       if (nextMessage.getCreatorId() != null && ! nextMessage.getCreatorId().equals(me.getId()))
         userInfos.add(findUserById(nextMessage.getCreatorId()));
     }
 
+    return new ArrayList<>(userInfos);
+  }
+
+	public UserInfo getUsersOrMe (final MessagecontainerInfo messagecontainerInfo) {
+	  UserInfo me = getMe();
+	  Collection<UserInfo> userInfos = getOtherUsers(messagecontainerInfo);
 	  if (userInfos.size() > 1)
 	    throw new IllegalStateException("More than one user found, which is not me in messagecontainer " + messagecontainerInfo.getTopic());
 	  else if (userInfos.isEmpty())

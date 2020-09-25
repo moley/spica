@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
+import org.spica.commons.filestore.FilestoreService;
 import org.spica.javaclient.ApiException;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.ActionHandler;
@@ -27,6 +28,8 @@ public class StandaloneActionContext implements ActionContext {
   private Services services = new Services();
 
   private ActionHandler actionHandler = new ActionHandler();
+
+
 
 
   private ActionParamFactory actionParamFactory;

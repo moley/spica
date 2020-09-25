@@ -47,7 +47,7 @@ public class MessagesController extends AbstractController {
   private final ObjectProperty<ListCell<String>> dragSource = new SimpleObjectProperty<>();
 
   @FXML public void initialize() {
-    lviMessages.setCellFactory(cellfactory -> new MessageContainerInfoCellFactory());
+    lviMessages.setCellFactory(cellfactory -> new MessageContainerInfoCellFactory(getModel()));
     lviMessages.setOnDragOver(new EventHandler<DragEvent>() {
       @Override public void handle(DragEvent event) {
         event.acceptTransferModes(TransferMode.ANY);

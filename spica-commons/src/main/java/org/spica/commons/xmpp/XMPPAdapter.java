@@ -50,7 +50,8 @@ import static java.lang.Thread.sleep;
 
   private Roster roster;
 
-  public void login(SpicaProperties spicaProperties, IncomingChatMessageListener incomingChatMessageListener)
+  public void login(SpicaProperties spicaProperties, IncomingChatMessageListener incomingChatMessageListener,
+      FileTransferListener fileTransferListener)
       throws IOException, InterruptedException, XMPPException, SmackException {
 
     SmackConfiguration.DEBUG = true;
@@ -110,21 +111,7 @@ import static java.lang.Thread.sleep;
     fileTransferManager = FileTransferManager.getInstanceFor(connection);
     //FileTransferNegotiator.IBB_ONLY = true;
 
-    fileTransferManager.addFileTransferListener(new FileTransferListener() {
-      @Override public void fileTransferRequest(FileTransferRequest request) {
-        System.out.println ("recieved a file transfer request " + request.getDescription() + "-" + request.getFileName() + " from " + request.getRequestor().toString());
-        IncomingFileTransfer incomingFileTransfer = request.accept();
-        try {
-          String homeDir = System.getProperty("user.home");
-          incomingFileTransfer.receiveFile(new File (homeDir + "/Downloads/hosts"));
-        } catch (SmackException e) {
-          throw new IllegalStateException(e);
-        } catch (IOException e) {
-          throw new IllegalStateException(e);
-        }
-
-      }
-    });
+    fileTransferManager.addFileTransferListener(fileTransferListener);
 
     chatManager.addIncomingListener(incomingChatMessageListener);
   }

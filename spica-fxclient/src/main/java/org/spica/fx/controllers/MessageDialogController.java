@@ -138,6 +138,10 @@ public class MessageDialogController extends AbstractController {
         hedNewMail.getHtmlText() :
         txaNewMessage.getText());
 
+    for (File nextFile: files) {
+      messageInfo.addDocumentsItem(nextFile.getAbsolutePath());
+    }
+
     boolean firstMail = selectedMessageContainer.getMessage().get(0).equals(messageInfo);
 
     //set all former message to read

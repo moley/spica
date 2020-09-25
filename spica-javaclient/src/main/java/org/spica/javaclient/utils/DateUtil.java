@@ -18,7 +18,7 @@ public class DateUtil {
         if (localDateTime == null)
             return "";
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YY HH:mm");
         return localDateTime.format(formatter);
     }
 
@@ -34,7 +34,7 @@ public class DateUtil {
         if (localDateTime == null)
             return "";
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YY");
         return localDateTime.format(formatter);
     }
 
@@ -42,7 +42,7 @@ public class DateUtil {
         if (localDate == null)
             return "";
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy");
         return localDate.format(formatter);
     }
 

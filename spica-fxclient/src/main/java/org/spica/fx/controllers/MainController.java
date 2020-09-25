@@ -1,6 +1,7 @@
 package org.spica.fx.controllers;
 
 import com.jfoenix.controls.JFXBadge;
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -28,10 +29,14 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smackx.filetransfer.FileTransferListener;
+import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
+import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
 import org.jxmpp.jid.EntityBareJid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.cli.actions.StandaloneActionContext;
+import org.spica.commons.filestore.FilestoreService;
 import org.spica.commons.xmpp.XMPPAdapter;
 import org.spica.fx.ApplicationContext;
 import org.spica.fx.AutoImportClipboardThread;
@@ -77,6 +82,8 @@ public class MainController extends AbstractController  {
   private AutoImportMailsTask autoImportMailsTask;
 
   private StandaloneActionContext standaloneActionContext = new StandaloneActionContext();
+
+
 
 
   @FXML
@@ -244,7 +251,7 @@ public class MainController extends AbstractController  {
             Notifications.create().text("User " + username + " not found").showError();
           }
           MessagecontainerInfo openMesssageContainer = getModel().findOpenMessageContainerByUser(MessageType.CHAT, userInfo);
-          
+
           //if no open conversation found so far create new one
           MessagecontainerInfo newMessageContainer = openMesssageContainer != null ? openMesssageContainer : new MessagecontainerInfo();
           newMessageContainer.setTopic("Chat with " + from.toString());
@@ -258,7 +265,7 @@ public class MainController extends AbstractController  {
           newMessageContainer.addMessageItem(messageInfo);
           if (openMesssageContainer == null)
             model.getMessagecontainerInfos().add(newMessageContainer);
-          
+
           getModel().sortMessages();
           saveModel("Added new chatmessage to existing chat from " + from.toString());
 
@@ -267,7 +274,6 @@ public class MainController extends AbstractController  {
               Mask<MessagesController> mask = getMask(Pages.MESSAGES);
               MessagesController messagesController = mask.getController();
               messagesController.refreshData();
-
 
               showMessageNotifications();
 
@@ -278,10 +284,71 @@ public class MainController extends AbstractController  {
             }
           });
 
+        }
+      }, new FileTransferListener() {
+          @Override public void fileTransferRequest(FileTransferRequest request) {
+            System.out.println ("recieved a file transfer request " + request.getDescription() + "-" + request.getFileName() + " from " + request.getRequestor().toString());
+            IncomingFileTransfer incomingFileTransfer = request.accept();
 
+            String from = request.getRequestor().toString();
 
+            Model model = getModel();
 
+            String username = from.toString().split("@")[0];
+            UserInfo userInfo = null;
+            try {
+              userInfo = getModel().findUserByUsername(username);
+            } catch (NotFoundException e) {
+              Notifications.create().text("User " + username + " not found").showError();
+            }
+            MessagecontainerInfo openMesssageContainer = getModel().findOpenMessageContainerByUser(MessageType.CHAT, userInfo);
 
+            //if no open conversation found so far create new one
+            MessagecontainerInfo newMessageContainer = openMesssageContainer != null ? openMesssageContainer : new MessagecontainerInfo();
+            newMessageContainer.setTopic("Chat with " + from.toString());
+            MessageInfo messageInfo = new MessageInfo();
+            messageInfo.setType(MessageType.CHAT);
+            messageInfo.setCreatorMailadresse(from.toString());
+            if (userInfo != null)
+              messageInfo.setCreatorId(userInfo.getId());
+
+            FilestoreService filestoreService = standaloneActionContext.getServices().getFilestoreService();
+
+            String fileId = "filetransfer_" + userInfo.getUsername() + "_" + request.getFileName();
+            messageInfo.addDocumentsItem(fileId);
+
+            File fileInFileStore = filestoreService.file(fileId);
+
+            try {
+              incomingFileTransfer.receiveFile(fileInFileStore);
+            } catch (SmackException e) {
+              throw new IllegalStateException(e);
+            } catch (IOException e) {
+              throw new IllegalStateException(e);
+            }
+
+            messageInfo.setCreationtime(LocalDateTime.now());
+            newMessageContainer.addMessageItem(messageInfo);
+            if (openMesssageContainer == null)
+              model.getMessagecontainerInfos().add(newMessageContainer);
+
+            getModel().sortMessages();
+            saveModel("Added new chatmessage to existing chat from " + from.toString());
+
+            Platform.runLater(new Runnable() {
+              @Override public void run() {
+                Mask<MessagesController> mask = getMask(Pages.MESSAGES);
+                MessagesController messagesController = mask.getController();
+                messagesController.refreshData();
+
+                showMessageNotifications();
+
+                Mask<MessageDialogController> detailMask = getMask(Pages.MESSAGEDIALOG);
+                MessageDialogController controller = detailMask.getController();
+                controller.refreshData();
+
+              }
+            });
 
         }
       });

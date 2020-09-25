@@ -24,6 +24,9 @@ dependencies {
   compile "org.igniterealtime.smack:smack-extensions:${smackVersion}"
   compile "org.igniterealtime.smack:smack-java7:${smackVersion}"
 
+  implementation 'com.microsoft.graph:microsoft-graph:2.2.0'
+  implementation 'com.microsoft.graph:microsoft-graph-auth:0.2.0'
+
   compile 'com.migesok:jaxb-java-time-adapters:1.1.3'
 
   runtime 'org.glassfish.jaxb:jaxb-runtime:2.3.2'

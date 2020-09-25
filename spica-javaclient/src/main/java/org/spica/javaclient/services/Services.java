@@ -1,6 +1,7 @@
 package org.spica.javaclient.services;
 
 import lombok.Data;
+import org.spica.commons.filestore.FilestoreService;
 import org.spica.commons.services.bitbucket.BitbucketService;
 import org.spica.commons.services.download.DownloadService;
 import org.spica.commons.services.jenkins.JenkinsService;
@@ -62,6 +63,8 @@ public class Services {
   private BitbucketService bitbucketService = new BitbucketService();
 
   private MailImporter mailImporter = new MailImporter();
+
+  private FilestoreService filestoreService = new FilestoreService();
 
   public Services() {
     modelCacheService.migrateOnDemand();
