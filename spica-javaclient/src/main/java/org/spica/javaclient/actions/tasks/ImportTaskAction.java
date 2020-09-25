@@ -32,8 +32,8 @@ public class ImportTaskAction extends AbstractAction {
         Model model = actionContext.getModel();
 
         SpicaProperties spicaProperties = actionContext.getProperties();
-        String jiraUser = spicaProperties.getValue("spica.jira.user");
-        String jiraPassword = spicaProperties.getValue("spica.jira.password");
+        String jiraUser = spicaProperties.getValueNotNull("spica.jira.user");
+        String jiraPassword = spicaProperties.getValueNotNull("spica.jira.password");
 
         TaskApi taskApi = actionContext.getApi().getTaskApi();
         try {

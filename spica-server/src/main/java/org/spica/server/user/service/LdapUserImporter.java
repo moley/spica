@@ -43,6 +43,7 @@ public class LdapUserImporter implements UserImporter {
 
         if (spicaProperties.getValueAsBoolean(LdapConfiguration.PROPERTY_LDAP_USERIMPORT_ENABLED)) {
             String host = spicaProperties.getValueNotNull(LdapConfiguration.PROPERTY_LDAP_HOST);
+            final boolean isSSl = spicaProperties.getValueAsBoolean(LdapConfiguration.PROPERTY_LDAP_SSL);
             final String bindDn = spicaProperties.getValueNotNull(LdapConfiguration.PROPERTY_LDAP_BIND_DN);
             final String pw = spicaProperties.getValueNotNull(LdapConfiguration.PROPERTY_LDAP_BIND_PASSWORD);
             String stammDn = spicaProperties.getValueNotNull(LdapConfiguration.PROPERTY_LDAP_BASE_DN);
@@ -61,6 +62,7 @@ public class LdapUserImporter implements UserImporter {
 
             LOGGER.info("Starting importing users from LDAP with following configurations");
             LOGGER.info("Host              : " + host);
+            LOGGER.info("SSL               : " + isSSl);
             LOGGER.info("BindDn            : " + bindDn);
             LOGGER.info("Password          : " + new PasswordMask().getMaskedPassword(pw));
             LOGGER.info("BaseDn            : " + stammDn);

@@ -10,6 +10,11 @@ public interface LdapConfiguration {
    */
   String PROPERTY_LDAP_HOST = "spica.ldap.host";
 
+  /**
+   * boolean configuration if ssl is used
+   */
+  String PROPERTY_LDAP_SSL = "spica.ldap.ssl";
+
   String PROPERTY_LDAP_USERIMPORT_ENABLED = "spica.ldap.userimport.enabled";
 
   /**
