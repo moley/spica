@@ -1,4 +1,4 @@
-**0.6**
+**0.7**
 - enable secure ldap connection
 
 **0.5**
