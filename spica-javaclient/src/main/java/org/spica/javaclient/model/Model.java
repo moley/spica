@@ -724,7 +724,7 @@ public class Model {
       if (next.getId().equals(id))
         return next;
     }
-    throw new IllegalStateException("No user found for username " + id);
+    throw new IllegalStateException("No user found for id " + id);
   }
 
   /**
