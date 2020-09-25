@@ -58,7 +58,7 @@ public class LdapUserImporter implements UserImporter {
 
             int port = Integer.valueOf(spicaProperties.getValueOrDefault(LdapConfiguration.PROPERTY_LDAP_PORT, "3268"));
 
-            LdapConnection connection = new LdapNetworkConnection(host, port, false);
+            LdapConnection connection = new LdapNetworkConnection(host, port, isSSl);
 
             LOGGER.info("Starting importing users from LDAP with following configurations");
             LOGGER.info("Host              : " + host);
@@ -115,7 +115,8 @@ public class LdapUserImporter implements UserImporter {
                                 mailKey + "=" + mail + "," +
                                 phoneKey + "=" + phone + ")");
 
-                            User user = userRepository.findByUsername(username);
+
+                            User user = userRepository != null ? userRepository.findByUsername(username): null;
                             if (user == null) {
                                 user = new User();
                                 user.setUsername(username);
@@ -128,7 +129,8 @@ public class LdapUserImporter implements UserImporter {
                             user.setName(surename);
                             user.setPhone(phone);
                             users.add(user);
-                            userRepository.save(user);
+                            if (userRepository != null)
+                              userRepository.save(user);
 
                             number++;
                             if (LOGGER.isDebugEnabled())
@@ -147,7 +149,7 @@ public class LdapUserImporter implements UserImporter {
 
                     time = System.currentTimeMillis() - from;
                 } else
-                    throw new IllegalStateException("Invalid binding");
+                    throw new IllegalStateException("Could not authenticate " + bindDn + " with password " + pw );
 
             } catch (Exception e) {
                 throw new IllegalStateException(e);
