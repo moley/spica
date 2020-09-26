@@ -27,3 +27,5 @@ bin/
 /.spica/attachments/
 /.spica/siteChanged/
 /demospace/**/**
+
+/config/examples/dockerPostgres/postgres_db/

@@ -1,3 +1,4 @@
+- Establish postgres db
 - Some mails are not imported correctly
 - Show status of users 
 - If a message with a user is opened all old chats with this user must be closed
