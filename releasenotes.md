@@ -1,4 +1,4 @@
-**0.11**
+**0.12**
 - add postgres support
 
 **0.8**

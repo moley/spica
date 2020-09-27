@@ -16,6 +16,11 @@ services:
       - ./postgres_db:/var/lib/postgresql/data
     networks: 
       - default
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U spica"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   adminer:
     image: adminer
@@ -26,7 +31,7 @@ services:
       - default
 
   spica:
-    image: markusoley/spica:0.10
+    image: markusoley/spica:0.12
     container_name: spica
     restart: unless-stopped
     environment: 
@@ -35,6 +40,10 @@ services:
       - SPRING_DATASOURCE_USERNAME=spica
       - SPRING_DATASOURCE_PASSWORD=spica
       - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
+      - SPRING_JPA_HIBERNATE_DDL-AUTO=update
+    depends_on:
+      postgres:
+        condition: service_healthy
 
     ports: 
       - 8765:8765

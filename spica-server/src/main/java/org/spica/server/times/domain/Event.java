@@ -24,7 +24,7 @@ public class Event implements Idable {
 
   private LocalDateTime beginning;
 
-  private LocalDateTime end;
+  private LocalDateTime finish;
 
   private Long referenceID;
 
