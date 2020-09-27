@@ -33,6 +33,8 @@ dependencies {
 
 
   runtime 'com.h2database:h2:1.4.179'
+  runtime 'org.postgresql:postgresql:42.2.16.jre7'
+
   runtime 'ch.qos.logback:logback-core:1.2.3'
   runtime 'ch.qos.logback:logback-classic:1.2.3'
 

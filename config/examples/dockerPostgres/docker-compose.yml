@@ -9,14 +9,40 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_USER: spica
-      POSTGRES_PASSWORD: spica
-      POSTGRES_DB: spica
+      - POSTGRES_USER=spica
+      - POSTGRES_PASSWORD=spica
+      - POSTGRES_DB=spica
     volumes:
       - ./postgres_db:/var/lib/postgresql/data
+    networks: 
+      - default
 
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
+    networks: 
+      - default
+
+  spica:
+    image: markusoley/spica:0.10
+    container_name: spica
+    restart: unless-stopped
+    environment: 
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/spica
+      - SPRING_DATASOURCE_PLATFORM=postgres
+      - SPRING_DATASOURCE_USERNAME=spica
+      - SPRING_DATASOURCE_PASSWORD=spica
+      - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
+
+    ports: 
+      - 8765:8765
+      
+    volumes:
+      - ./conf/spica.properties:/app/.spica/spica.properties
+    networks: 
+      - default
+
+networks: 
+  default: 
