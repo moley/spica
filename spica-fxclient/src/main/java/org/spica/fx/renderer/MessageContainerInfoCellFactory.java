@@ -1,5 +1,6 @@
 package org.spica.fx.renderer;
 
+import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -8,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
+import lombok.extern.slf4j.Slf4j;
 import org.spica.fx.Consts;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.MessageType;
@@ -16,6 +18,7 @@ import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.UserInfo;
 import org.spica.javaclient.utils.DateUtil;
 
+@Slf4j
 public class MessageContainerInfoCellFactory extends ListCell<MessagecontainerInfo> {
 
   private Model model;
@@ -52,7 +55,13 @@ public class MessageContainerInfoCellFactory extends ListCell<MessagecontainerIn
 
       String date = "";
 
-      List<UserInfo> userInfos = model.getOtherUsers(item);
+      List<UserInfo> userInfos;
+      try {
+        userInfos = model.getOtherUsers(item);
+      } catch (Exception e) {
+        log.error("Error get other users of " + item.getTopic() + ":" + e.getLocalizedMessage(), e);
+        userInfos = new ArrayList<>();
+      }
       for (UserInfo next: userInfos) {
         Button btnUser = new Button(next.getUsername());
         ButtonBar.setButtonData(btnUser, ButtonBar.ButtonData.LEFT);
