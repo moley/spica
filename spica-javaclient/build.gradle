@@ -33,8 +33,8 @@ dependencies {
   runtime 'com.fasterxml.jackson.core:jackson-databind:2.9.5'       //for @JsonIgnore
 
 
-  runtime 'ch.qos.logback:logback-core:1.2.3'
-  runtime 'ch.qos.logback:logback-classic:1.2.3'
+  compile 'ch.qos.logback:logback-core:1.2.3' //must be compile because in ShowStatusAction we use implementations to detect logfile
+  compile 'ch.qos.logback:logback-classic:1.2.3'
 
   compile project (':spica-commons')
 

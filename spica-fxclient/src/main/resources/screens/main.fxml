@@ -2,49 +2,63 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.textfield.CustomTextField?>
-<?import javafx.scene.control.TextField?>
-<BorderPane fx:id="paRootPane" xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fx.controllers.MainController" style="-fx-background-color:transparent">
+<BorderPane fx:id="paRootPane" xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fx.controllers.MainController"
+            style="-fx-background-color:transparent">
     <stylesheets>
-        <URL value="@/css/spica.css" />
+        <URL value="@/css/spica.css"/>
     </stylesheets>
-    <padding><Insets top="20" bottom="20" left="20" right="20"/> </padding>
+    <padding>
+        <Insets top="5" bottom="5" left="5" right="5"/>
+    </padding>
 
     <top>
 
-        <HBox fx:id="panHeader" fillHeight="true">
-            <ToolBar fx:id="barSearch" HBox.hgrow="ALWAYS" >
-                <items>
-                    <Button fx:id="btnCloseSearch" styleClass="buttonSearchClose">
-                    </Button>
-                    <CustomTextField fx:id="txtFieldSearch" HBox.hgrow="ALWAYS" styleClass="searchField">
-                    </CustomTextField>
-                    <Button fx:id="btnSearchUp" styleClass="buttonSearchUp" />
-                    <Button fx:id="btnSearchDown" styleClass="buttonSearchDown"/>
-                    <Label fx:id="lblMatches"/>
-                </items>
-            </ToolBar>
-            <Pane HBox.hgrow="ALWAYS"></Pane>
-            <JFXBadge fx:id="badClipboard" userData="mainpage.btnClipboard">
-                <Button fx:id="btnClipboard"></Button>
-            </JFXBadge>
+        <HBox fx:id="panTop" fillHeight="true">
 
-            <ButtonBar fx:id="btnMainActions" userData="mainpage.btnMainActions"/>
+            <Label fx:id="lblAppname" text="SPICA" >
+                <padding>
+                    <Insets top="10" bottom="30"/>
+                </padding>
+            </Label>
+            <HBox fx:id="panHeader" fillHeight="true" spacing="10">
 
-            <Button fx:id="btnState"></Button>
-            <TextField fx:id="txtCurrentAction"></TextField>
+                <ToolBar fx:id="barSearch" HBox.hgrow="ALWAYS">
+                    <items>
+                        <Button fx:id="btnCloseSearch" styleClass="buttonSearchClose">
+                        </Button>
+                        <CustomTextField fx:id="txtFieldSearch" HBox.hgrow="ALWAYS" styleClass="searchField">
+                        </CustomTextField>
+                        <Button fx:id="btnSearchUp" styleClass="buttonSearchUp"/>
+                        <Button fx:id="btnSearchDown" styleClass="buttonSearchDown"/>
+                        <Label fx:id="lblMatches"/>
+                    </items>
+                </ToolBar>
+                <Pane HBox.hgrow="ALWAYS"></Pane>
+                <JFXBadge fx:id="badClipboard" userData="mainpage.btnClipboard">
+                    <Button fx:id="btnClipboard"></Button>
+                </JFXBadge>
+
+
+                <TextField fx:id="txtCurrentAction"></TextField>
+            </HBox>
         </HBox>
 
     </top>
-
-
-
+    <left>
+        <VBox spacing="10" alignment="TOP_CENTER">
+            <Button fx:id="btnToggleVisibility"></Button>
+            <Button fx:id="btnState"></Button>
+            <ToolBar fx:id="btnMainActions" orientation="VERTICAL" userData="mainpage.btnMainActions"/>
+        </VBox>
+    </left>
 
 
 </BorderPane>

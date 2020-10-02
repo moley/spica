@@ -2,6 +2,7 @@ package org.spica.cli.actions;
 
 import java.io.File;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
@@ -19,9 +20,9 @@ import org.spica.javaclient.services.ModelCacheService;
 import org.spica.javaclient.services.Services;
 import org.spica.javaclient.services.UserDisplayName;
 
+@Slf4j
 public class StandaloneActionContext implements ActionContext {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(StandaloneActionContext.class);
 
   private SpicaProperties spicaProperties = new SpicaProperties();
 
@@ -51,7 +52,7 @@ public class StandaloneActionContext implements ActionContext {
 
   public void refreshServer () {
     //refresh all skills
-    LOGGER.info("refresh server data from " + getApi().getCurrentServer());
+    log.info("refresh server data from " + getApi().getCurrentServer());
 
     try {
 
@@ -67,7 +68,7 @@ public class StandaloneActionContext implements ActionContext {
       }
       getModel().setUserInfos(users);
     } catch (ApiException e) {
-      LOGGER.info("Exception when reading users: " + e.getLocalizedMessage(), e);
+      log.info("Exception when reading users: " + e.getLocalizedMessage(), e);
     }
 
     String usermail = getProperties().getValueNotNull("spica.cli.usermail");
@@ -76,16 +77,16 @@ public class StandaloneActionContext implements ActionContext {
     UserApi userApi = getApi().getUserApi();
     try {
       List<SkillInfo> skills = userApi.getSkills();
-      LOGGER.info("Reloaded " + skills.size() + " skills");
+      log.info("Reloaded " + skills.size() + " skills");
       getModel().setAllSkills(skills);
     } catch (ApiException e) {
-      LOGGER.info("Exception when reading all skills: " + e.getLocalizedMessage(), e);
+      log.info("Exception when reading all skills: " + e.getLocalizedMessage(), e);
     }
 
     try {
       getModel().setUserSkills(getApi().getUserApi().getUserSkills(getModel().getMe().getId()));
     } catch (ApiException e) {
-      LOGGER.info("Exception when reading userskills of me: " + e.getLocalizedMessage(), e);
+      log.info("Exception when reading userskills of me: " + e.getLocalizedMessage(), e);
     }
 
   }

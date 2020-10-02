@@ -7,35 +7,32 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Timer;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.ToolBar;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javax.imageio.ImageIO;
 import lombok.extern.slf4j.Slf4j;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.chat2.Chat;
-import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
-import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smackx.filetransfer.FileTransferListener;
-import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
 import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
-import org.jxmpp.jid.EntityBareJid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.cli.actions.StandaloneActionContext;
+import org.spica.commons.UserPresence;
 import org.spica.commons.filestore.FilestoreService;
 import org.spica.commons.xmpp.XMPPAdapter;
 import org.spica.fx.ApplicationContext;
@@ -44,9 +41,8 @@ import org.spica.fx.AutoImportMailsTask;
 import org.spica.fx.Consts;
 import org.spica.fx.MainMenuEntry;
 import org.spica.fx.Mask;
-import org.spica.commons.UserPresence;
 import org.spica.fx.MaskLoader;
-import org.spica.fx.Reload;
+import org.spica.fx.ScreenManager;
 import org.spica.fx.clipboard.ClipboardItem;
 import org.spica.javaclient.Configuration;
 import org.spica.javaclient.exceptions.NotFoundException;
@@ -60,7 +56,10 @@ import org.spica.javaclient.model.UserInfo;
 public class MainController extends AbstractController  {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
-  @FXML private  TextField txtCurrentAction;
+  @FXML private Label lblAppname;
+  @FXML private HBox panHeader;
+  @FXML private TextField txtCurrentAction;
+  @FXML private Button btnToggleVisibility;
   @FXML private Button btnState;
   @FXML private JFXBadge badClipboard;
   @FXML private Button btnClipboard;
@@ -68,51 +67,57 @@ public class MainController extends AbstractController  {
   @FXML private CustomTextField txtFieldSearch;
   @FXML private Button btnSearchUp;
   @FXML private Button btnSearchDown;
-  @FXML private Label lblMatches;
-  @FXML private CustomTextField txtSearch;
   @FXML private BorderPane paRootPane;
-  @FXML private ButtonBar btnMainActions;
+  @FXML private ToolBar btnMainActions;
 
-  private HashMap<Pages, MainMenuEntry> menuEntries = new HashMap<Pages, MainMenuEntry>();
+  private final HashMap<Pages, MainMenuEntry> menuEntries = new HashMap<>();
 
-  private ListView<ClipboardItem> lviClipboardItems = new ListView<ClipboardItem>();
+  private final ListView<ClipboardItem> lviClipboardItems = new ListView<>();
 
-  private AutoImportClipboardThread autoImportThread;
+  private final StandaloneActionContext standaloneActionContext = new StandaloneActionContext();
 
-  private AutoImportMailsTask autoImportMailsTask;
-
-  private StandaloneActionContext standaloneActionContext = new StandaloneActionContext();
-
-
-
+  private boolean foldedOut = true;
 
   @FXML
   public void initialize () {
+    lblAppname.setMinWidth(ScreenManager.HALF_WIDTH);
+    lblAppname.setGraphic(new ImageView(Consts.createImage("/spica.png", 40)));
+
     setPaRootPane(paRootPane);
     btnCloseSearch.setGraphic(Consts.createIcon("fa-close", 15));
+    btnToggleVisibility.setGraphic(Consts.createIcon("fa-chevron-left", Consts.ICON_SIZE_TOOLBAR));
 
-
-
-
-    btnState.setOnAction(new EventHandler<ActionEvent>() {
+    btnToggleVisibility.setOnAction(new EventHandler<ActionEvent>() {
       @Override public void handle(ActionEvent event) {
+        foldedOut = !foldedOut;
+        paRootPane.getCenter().setVisible(foldedOut);
+        panHeader.setVisible(foldedOut);
 
-        UserPresence currentPresence = getApplicationContext().getPresence();
-        if (currentPresence.equals(UserPresence.ONLINE)) {
-          getApplicationContext().setPresence(UserPresence.OFFLINE);
-        }
-        else
-          getApplicationContext().setPresence(UserPresence.ONLINE);
+        btnToggleVisibility.setGraphic(Consts.createIcon((foldedOut ?"fa-chevron-left" :"fa-chevron-right"), Consts.ICON_SIZE_TOOLBAR));
 
-        XMPPAdapter xmppAdapter = getActionContext().getServices().getXmppAdapter();
-        xmppAdapter.setPresence(getApplicationContext().getPresence(), txtCurrentAction.getText());
+        double width = foldedOut ? ScreenManager.FULL_WIDTH : ScreenManager.HALF_WIDTH;
 
-        getApplicationContext().presencePropertyProperty().setValue(getApplicationContext().getPresence().toString());
+        getStage().setMaxWidth(width);
+        getStage().setMinWidth(width);
       }
     });
 
+    btnState.setOnAction(event -> {
+
+      UserPresence currentPresence = getApplicationContext().getPresence();
+      if (currentPresence.equals(UserPresence.ONLINE)) {
+        getApplicationContext().setPresence(UserPresence.OFFLINE);
+      } else
+        getApplicationContext().setPresence(UserPresence.ONLINE);
+
+      XMPPAdapter xmppAdapter = getActionContext().getServices().getXmppAdapter();
+      xmppAdapter.setPresence(getApplicationContext().getPresence(), txtCurrentAction.getText());
+
+      getApplicationContext().presencePropertyProperty().setValue(getApplicationContext().getPresence().toString());
+    });
+
     txtCurrentAction.focusedProperty().addListener((observable, oldValue, newValue) -> {
-      if (oldValue == true && newValue == false) {
+      if (oldValue && !newValue) {
         XMPPAdapter xmppAdapter = getActionContext().getServices().getXmppAdapter();
         xmppAdapter.setPresence(getApplicationContext().getPresence(), txtCurrentAction.getText());
       }
@@ -129,12 +134,10 @@ public class MainController extends AbstractController  {
       popOver.show(btnClipboard);
     });
 
-    btnClipboard.setOnMouseClicked(new EventHandler<MouseEvent>() {
-      @Override public void handle(MouseEvent event) {
-        if (event.getClickCount() == 2) {
-          getApplicationContext().getClipboard().clear();
+    btnClipboard.setOnMouseClicked(event -> {
+      if (event.getClickCount() == 2) {
+        getApplicationContext().getClipboard().clear();
 
-        }
       }
     });
 
@@ -153,9 +156,11 @@ public class MainController extends AbstractController  {
 
         JFXBadge jfxBadge = new JFXBadge();
         Button menuItem = new Button(next.getDisplayname(), Consts.createIcon(next.getIcon(), Consts.ICON_SIZE_TOOLBAR));
+        menuItem.setMaxWidth(ScreenManager.HALF_WIDTH - 20);
+        menuItem.setContentDisplay(ContentDisplay.TOP);
         menuItem.setOnAction(event -> stepToPane(next));
         jfxBadge.setControl(menuItem);
-        btnMainActions.getButtons().add(jfxBadge);
+        btnMainActions.getItems().add(jfxBadge);
 
         MainMenuEntry mainMenuEntry = new MainMenuEntry();
         mainMenuEntry.setButton(menuItem);
@@ -167,11 +172,12 @@ public class MainController extends AbstractController  {
   }
 
   public void registerPane (final Pages pages) {
-    MaskLoader maskLoader = new MaskLoader();
+    MaskLoader<?> maskLoader = new MaskLoader<>();
     try {
-      Mask mask = maskLoader.load(pages.getFilename());
+      Mask<?> mask = maskLoader.load(pages.getFilename());
       AbstractController controller = mask.getController();
       controller.setPaRootPane(getPaRootPane());
+      controller.setStage(getStage());
       controller.setActionContext(getActionContext());
       controller.setApplicationContext(getApplicationContext());
       controller.setMainController(this);
@@ -185,39 +191,29 @@ public class MainController extends AbstractController  {
 
   public void init() {
 
-    autoImportThread = new AutoImportClipboardThread(getApplicationContext());
+    AutoImportClipboardThread autoImportThread = new AutoImportClipboardThread(getApplicationContext());
     autoImportThread.start();
 
     Timer autoImportMailsTimer = new Timer();
 
-    autoImportMailsTask = new AutoImportMailsTask(getActionContext(), new Reload() {
-      @Override public void reload() {
-
-        Platform.runLater(new Runnable() {
-          @Override
-          public void run() {
-            Mask<MessagesController> mask = getMask(Pages.MESSAGES);
-            MessagesController messagesController = mask.getController();
-            showMessageNotifications();
-            messagesController.refreshData();
-          }
-        });
-
-      }
-    });
+    AutoImportMailsTask autoImportMailsTask = new AutoImportMailsTask(getActionContext(), () -> Platform.runLater(
+        () -> {
+          Mask<MessagesController> mask = getMask(Pages.MESSAGES);
+          MessagesController messagesController = mask.getController();
+          showMessageNotifications();
+          messagesController.refreshData();
+        }));
     autoImportMailsTimer.scheduleAtFixedRate(autoImportMailsTask, 0, 60000);
 
 
     log.info("Register clipboard");
-    getApplicationContext().getClipboard().getItems().addListener(new ListChangeListener<ClipboardItem>() {
-      @Override public void onChanged(Change<? extends ClipboardItem> c) {
-        log.info("Clipboard changed");
-        badClipboard.setText(String.valueOf(getApplicationContext().getClipboard().getItems().size()));
-        badClipboard.setEnabled(! getApplicationContext().getClipboard().getItems().isEmpty());
-        badClipboard.refreshBadge();
-        lviClipboardItems.setItems(getApplicationContext().getClipboard().getItems());
+    getApplicationContext().getClipboard().getItems().addListener((ListChangeListener<ClipboardItem>) c -> {
+      log.info("Clipboard changed");
+      badClipboard.setText(String.valueOf(getApplicationContext().getClipboard().getItems().size()));
+      badClipboard.setEnabled(! getApplicationContext().getClipboard().getItems().isEmpty());
+      badClipboard.refreshBadge();
+      lviClipboardItems.setItems(getApplicationContext().getClipboard().getItems());
 
-      }
     });
 
 
@@ -225,11 +221,11 @@ public class MainController extends AbstractController  {
       String serverUrl = standaloneActionContext.getProperties().getValueOrDefault("spica.cli.serverurl", "http://localhost:8765/api");
       Configuration.getDefaultApiClient().setBasePath(serverUrl);
 
-      /**String username = standaloneActionContext.getProperties().getValueNotNull("spica.cli.username");
+      /*String username = standaloneActionContext.getProperties().getValueNotNull("spica.cli.username");
       String password = standaloneActionContext.getProperties().getValueNotNull("spica.cli.password");
       HttpBasicAuth httpBasicAuth = (HttpBasicAuth) Configuration.getDefaultApiClient().getAuthentication("basicAuth");
       httpBasicAuth.setUsername(username);
-      httpBasicAuth.setPassword(password);**/
+      httpBasicAuth.setPassword(password);*/
 
       standaloneActionContext.refreshServer();
     } catch (Exception e) {
@@ -239,127 +235,111 @@ public class MainController extends AbstractController  {
 
     try {
       XMPPAdapter xmppAdapter = getActionContext().getServices().getXmppAdapter();
-      xmppAdapter.login(getActionContext().getProperties(), new IncomingChatMessageListener() {
-        @Override public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
-          Model model = getModel();
+      xmppAdapter.login(getActionContext().getProperties(), (from, message, chat) -> {
+        Model model = getModel();
 
-          String username = from.toString().split("@")[0];
-          UserInfo userInfo = null;
-          try {
-            userInfo = getModel().findUserByUsername(username);
-          } catch (NotFoundException e) {
-            Notifications.create().text("User " + username + " not found").showError();
-          }
-          MessagecontainerInfo openMesssageContainer = getModel().findOpenMessageContainerByUser(MessageType.CHAT, userInfo);
-
-          //if no open conversation found so far create new one
-          MessagecontainerInfo newMessageContainer = openMesssageContainer != null ? openMesssageContainer : new MessagecontainerInfo();
-          newMessageContainer.setTopic("Chat with " + from.toString());
-          MessageInfo messageInfo = new MessageInfo();
-          messageInfo.setType(MessageType.CHAT);
-          messageInfo.setCreatorMailadresse(from.toString());
-          if (userInfo != null)
-            messageInfo.setCreatorId(userInfo.getId());
-          messageInfo.setMessage(message.getBody());
-          messageInfo.setCreationtime(LocalDateTime.now());
-          newMessageContainer.addMessageItem(messageInfo);
-          if (openMesssageContainer == null)
-            model.getMessagecontainerInfos().add(newMessageContainer);
-
-          getModel().sortMessages();
-          saveModel("Added new chatmessage to existing chat from " + from.toString());
-
-          Platform.runLater(new Runnable() {
-            @Override public void run() {
-              Mask<MessagesController> mask = getMask(Pages.MESSAGES);
-              MessagesController messagesController = mask.getController();
-              messagesController.refreshData();
-
-              showMessageNotifications();
-
-              Mask<MessageDialogController> detailMask = getMask(Pages.MESSAGEDIALOG);
-              MessageDialogController controller = detailMask.getController();
-              controller.refreshData();
-
-            }
-          });
-
+        String username = from.toString().split("@")[0];
+        UserInfo userInfo = null;
+        try {
+          userInfo = getModel().findUserByUsername(username);
+        } catch (NotFoundException e) {
+          Notifications.create().text("User " + username + " not found").showError();
         }
-      }, new FileTransferListener() {
-          @Override public void fileTransferRequest(FileTransferRequest request) {
-            System.out.println ("recieved a file transfer request " + request.getDescription() + "-" + request.getFileName() + " from " + request.getRequestor().toString());
-            IncomingFileTransfer incomingFileTransfer = request.accept();
+        MessagecontainerInfo openMesssageContainer = getModel().findOpenMessageContainerByUser(MessageType.CHAT, userInfo);
 
-            String from = request.getRequestor().toString();
+        //if no open conversation found so far create new one
+        MessagecontainerInfo newMessageContainer = openMesssageContainer != null ? openMesssageContainer : new MessagecontainerInfo();
+        newMessageContainer.setTopic("Chat with " + from.toString());
+        MessageInfo messageInfo = new MessageInfo();
+        messageInfo.setType(MessageType.CHAT);
+        messageInfo.setCreatorMailadresse(from.toString());
+        if (userInfo != null)
+          messageInfo.setCreatorId(userInfo.getId());
+        messageInfo.setMessage(message.getBody());
+        messageInfo.setCreationtime(LocalDateTime.now());
+        newMessageContainer.addMessageItem(messageInfo);
+        if (openMesssageContainer == null)
+          model.getMessagecontainerInfos().add(newMessageContainer);
 
-            Model model = getModel();
+        getModel().sortMessages();
+        saveModel("Added new chatmessage to existing chat from " + from.toString());
 
-            String username = from.toString().split("@")[0];
-            UserInfo userInfo = null;
-            try {
-              userInfo = getModel().findUserByUsername(username);
-            } catch (NotFoundException e) {
-              Notifications.create().text("User " + username + " not found").showError();
-            }
-            MessagecontainerInfo openMesssageContainer = getModel().findOpenMessageContainerByUser(MessageType.CHAT, userInfo);
+        Platform.runLater(() -> {
+          Mask<MessagesController> mask = getMask(Pages.MESSAGES);
+          MessagesController messagesController = mask.getController();
+          messagesController.refreshData();
 
-            //if no open conversation found so far create new one
-            MessagecontainerInfo newMessageContainer = openMesssageContainer != null ? openMesssageContainer : new MessagecontainerInfo();
-            newMessageContainer.setTopic("Chat with " + from.toString());
-            MessageInfo messageInfo = new MessageInfo();
-            messageInfo.setType(MessageType.CHAT);
-            messageInfo.setCreatorMailadresse(from.toString());
-            if (userInfo != null)
-              messageInfo.setCreatorId(userInfo.getId());
+          showMessageNotifications();
 
-            FilestoreService filestoreService = standaloneActionContext.getServices().getFilestoreService();
+          Mask<MessageDialogController> detailMask = getMask(Pages.MESSAGEDIALOG);
+          MessageDialogController controller = detailMask.getController();
+          controller.refreshData();
 
-            String fileId = "filetransfer_" + userInfo.getUsername() + "_" + request.getFileName();
-            messageInfo.addDocumentsItem(fileId);
+        });
 
-            File fileInFileStore = filestoreService.file(fileId);
+      }, request -> {
+        System.out.println ("recieved a file transfer request " + request.getDescription() + "-" + request.getFileName() + " from " + request.getRequestor().toString());
+        IncomingFileTransfer incomingFileTransfer = request.accept();
 
-            try {
-              incomingFileTransfer.receiveFile(fileInFileStore);
-            } catch (SmackException e) {
-              throw new IllegalStateException(e);
-            } catch (IOException e) {
-              throw new IllegalStateException(e);
-            }
+        String from = request.getRequestor().toString();
 
-            messageInfo.setCreationtime(LocalDateTime.now());
-            newMessageContainer.addMessageItem(messageInfo);
-            if (openMesssageContainer == null)
-              model.getMessagecontainerInfos().add(newMessageContainer);
+        Model model = getModel();
 
-            getModel().sortMessages();
-            saveModel("Added new chatmessage to existing chat from " + from.toString());
-
-            Platform.runLater(new Runnable() {
-              @Override public void run() {
-                Mask<MessagesController> mask = getMask(Pages.MESSAGES);
-                MessagesController messagesController = mask.getController();
-                messagesController.refreshData();
-
-                showMessageNotifications();
-
-                Mask<MessageDialogController> detailMask = getMask(Pages.MESSAGEDIALOG);
-                MessageDialogController controller = detailMask.getController();
-                controller.refreshData();
-
-              }
-            });
-
+        String username = from.split("@")[0];
+        UserInfo userInfo = null;
+        try {
+          userInfo = getModel().findUserByUsername(username);
+        } catch (NotFoundException e) {
+          Notifications.create().text("User " + username + " not found").showError();
         }
-      });
-    } catch (IOException e) {
-      log.error(e.getLocalizedMessage(), e);
-    } catch (InterruptedException e) {
-      log.error(e.getLocalizedMessage(), e);
-    } catch (XMPPException e) {
-      log.error(e.getLocalizedMessage(), e);
-    } catch (SmackException e) {
-      log.error(e.getLocalizedMessage(), e);
+        MessagecontainerInfo openMesssageContainer = getModel().findOpenMessageContainerByUser(MessageType.CHAT, userInfo);
+
+        //if no open conversation found so far create new one
+        MessagecontainerInfo newMessageContainer = openMesssageContainer != null ? openMesssageContainer : new MessagecontainerInfo();
+        newMessageContainer.setTopic("Chat with " + from);
+        MessageInfo messageInfo = new MessageInfo();
+        messageInfo.setType(MessageType.CHAT);
+        messageInfo.setCreatorMailadresse(from);
+        if (userInfo != null)
+          messageInfo.setCreatorId(userInfo.getId());
+
+        FilestoreService filestoreService = standaloneActionContext.getServices().getFilestoreService();
+
+        String fileId = "filetransfer_" + (userInfo != null ? userInfo.getUsername() : "unknown") + "_" + request.getFileName();
+        messageInfo.addDocumentsItem(fileId);
+
+        File fileInFileStore = filestoreService.file(fileId);
+
+        try {
+          incomingFileTransfer.receiveFile(fileInFileStore);
+        } catch (SmackException | IOException e) {
+          throw new IllegalStateException(e);
+        }
+
+        messageInfo.setCreationtime(LocalDateTime.now());
+        newMessageContainer.addMessageItem(messageInfo);
+        if (openMesssageContainer == null)
+          model.getMessagecontainerInfos().add(newMessageContainer);
+
+        getModel().sortMessages();
+        saveModel("Added new chatmessage to existing chat from " + from);
+
+        Platform.runLater(() -> {
+          Mask<MessagesController> mask = getMask(Pages.MESSAGES);
+          MessagesController messagesController = mask.getController();
+          messagesController.refreshData();
+
+          showMessageNotifications();
+
+          Mask<MessageDialogController> detailMask = getMask(Pages.MESSAGEDIALOG);
+          MessageDialogController controller = detailMask.getController();
+          controller.refreshData();
+
+        });
+
+    });
+    } catch (Exception e) {
+      log.error("Error login to xmpp", e.getLocalizedMessage(), e);
     }
 
     btnState.textProperty().bindBidirectional(getApplicationContext().presencePropertyProperty());

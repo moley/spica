@@ -29,7 +29,6 @@ import org.spica.commons.SpicaProperties;
 @Slf4j
 public class MailAdapter {
 
-
   public final static String PROPERTY_MAIL_POP_HOST = "spica.mail.pop.host";
   public final static String PROPERTY_MAIL_POP_PORT = "spica.mail.pop.port";
   public final static String PROPERTY_MAIL_POP_USERNAME = "spica.mail.pop.user";
@@ -178,11 +177,13 @@ public class MailAdapter {
 
 
     }catch(Exception err){
-      log.error(err.getLocalizedMessage(), err);
-      throw new IllegalStateException("Error fetching mails: " + err.toString(), err);
+      log.error("Error fetching mails: " + err.getLocalizedMessage(), err);
+      //TODO make visible in ui
     } finally  {
       log.info("recieveMails finished");
     }
+
+    return new ArrayList<>();
 
 
   }

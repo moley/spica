@@ -3,6 +3,7 @@ package org.spica.fx.controllers;
 import java.util.HashMap;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.fx.ApplicationContext;
@@ -26,6 +27,8 @@ public abstract class AbstractController {
   private ApplicationContext applicationContext;
 
   private MainController mainController;
+
+  private Stage stage;
 
   public Mask getMask (final Pages pages) {
     return registeredMasks.get(pages);
@@ -90,5 +93,13 @@ public abstract class AbstractController {
 
   public void setMainController(MainController mainController) {
     this.mainController = mainController;
+  }
+
+  public Stage getStage() {
+    return stage;
+  }
+
+  public void setStage(Stage stage) {
+    this.stage = stage;
   }
 }

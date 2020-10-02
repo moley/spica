@@ -6,6 +6,7 @@ import de.codeshelf.consoleui.prompt.builder.CheckboxPromptBuilder;
 import de.codeshelf.consoleui.prompt.builder.ListPromptBuilder;
 import de.codeshelf.consoleui.prompt.builder.PromptBuilder;
 import jline.console.completer.StringsCompleter;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.ActionContext;
@@ -16,17 +17,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+@Slf4j
 public class StandaloneActionParamFactory implements ActionParamFactory {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(StandaloneActionParamFactory.class);
 
 
     @Override
     public InputParams build(ActionContext actionContext, InputParams inputParams, FoundAction foundAction) {
 
         ConsolePrompt prompt = new ConsolePrompt();
-
-
 
         List<InputParamGroup> inputParamGroups = inputParams.getInputParamGroups();
         for (InputParamGroup nextGroup : inputParamGroups) {
@@ -105,7 +103,7 @@ public class StandaloneActionParamFactory implements ActionParamFactory {
 
                 }
             } catch (IOException e) {
-                LOGGER.error(e.getLocalizedMessage(), e);
+                log.error(e.getLocalizedMessage(), e);
             }
         }
 

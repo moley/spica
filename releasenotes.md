@@ -1,3 +1,7 @@
+**0.13**
+- toggle spica fx 
+- bugfixing  reading mail content
+
 **0.12**
 - add postgres support
 

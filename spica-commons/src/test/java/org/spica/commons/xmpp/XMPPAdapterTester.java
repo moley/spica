@@ -2,13 +2,9 @@ package org.spica.commons.xmpp;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.chat2.Chat;
-import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
-import org.jivesoftware.smack.packet.Message;
-import org.jxmpp.jid.EntityBareJid;
 import org.spica.commons.SpicaProperties;
 
 public class XMPPAdapterTester {
@@ -18,12 +14,10 @@ public class XMPPAdapterTester {
     XMPPAdapter adapter = new XMPPAdapter();
     SpicaProperties spicaProperties = new SpicaProperties();
     String remoteUser = spicaProperties.getValue("spica.xmpp.remoteUser");
-    adapter.login(spicaProperties, new IncomingChatMessageListener() {
-      @Override public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
-        System.out.println ("Incoming message from " + from.toString() + ":" + message.toString());
-      }
-    });
-    System.out.println ("Login successfull");
+    adapter.login(spicaProperties,
+        (from, message, chat) -> System.out.println("Incoming message from " + from.toString() + ":" + message.toString()),
+        request -> System.out.println("Incoming file from " + request.toString() + ":" + request.getFileName()));
+    System.out.println ("Login successful");
 
 
     File file = new File("/etc/hosts");
@@ -31,7 +25,8 @@ public class XMPPAdapterTester {
     adapter.sendMessage(spicaProperties, remoteUser, "This is a message");
     System.out.println ("Sent message");
 
-    adapter.sendMessage(spicaProperties, remoteUser, "And a message together with a file " + file.getAbsolutePath(), Arrays.asList(file));
+    adapter.sendMessage(spicaProperties, remoteUser, "And a message together with a file " + file.getAbsolutePath(),
+        Collections.singletonList(file));
     System.out.println ("Sent message with file");
 
     do {

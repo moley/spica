@@ -1,5 +1,10 @@
 package org.spica.fx;
 
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.FileAppender;
+import ch.qos.logback.core.recovery.ResilientFileOutputStream;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -10,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Iterator;
 import java.util.Timer;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -59,11 +65,28 @@ public class JavafxApplication extends Application {
   // interacts with the tray icon.
   @Override public void start(final Stage stage) throws IOException {
 
+    LoggerContext context = (LoggerContext)LoggerFactory.getILoggerFactory();
+
+    for (ch.qos.logback.classic.Logger logger : context.getLoggerList()) {
+      for (Iterator<Appender<ILoggingEvent>> index = logger.iteratorForAppenders(); index.hasNext();) {
+        Appender<ILoggingEvent> appender = index.next();
+
+        if (appender instanceof FileAppender) {
+          FileAppender<ILoggingEvent> fa = (FileAppender<ILoggingEvent>)appender;
+          ResilientFileOutputStream rfos = (ResilientFileOutputStream)fa.getOutputStream();
+          File file = rfos.getFile();
+
+          System.out.println(file.getAbsolutePath());
+        }
+      }
+    }
+
     stage.setTitle("Spica FX Client");
     // stores a reference to the stage.
     this.stage = stage;
 
     mask = maskLoader.load("main");
+    mask.getController().setStage(stage);
 
 /**TODO enable again
     try {
@@ -154,6 +177,8 @@ public class JavafxApplication extends Application {
 
     stage.setScene(scene);
 
+    showMessages();
+
     screenManager.layoutEdged(stage);
     LOGGER
         .info("Stage layouted " + stage.getX() + "-" + stage.getY() + "-" + stage.getWidth() + "-" + stage.getHeight());
@@ -232,26 +257,6 @@ public class JavafxApplication extends Application {
       java.awt.Font boldFont = defaultFont.deriveFont(java.awt.Font.BOLD);
 
       // show the main app stage.
-      java.awt.MenuItem openDashboard = new java.awt.MenuItem("Show dashboard");
-      openDashboard.addActionListener(event -> Platform.runLater(this::showDashboard));
-      openDashboard.setFont(boldFont);
-
-      java.awt.MenuItem openPlanning = new java.awt.MenuItem("Show planning");
-      openPlanning.addActionListener(event -> Platform.runLater(this::showPlanning));
-      openPlanning.setFont(boldFont);
-
-      java.awt.MenuItem openMessages = new java.awt.MenuItem("Show messages");
-      openMessages.addActionListener(event -> Platform.runLater(this::showMessages));
-      openMessages.setFont(boldFont);
-
-      java.awt.MenuItem openTasks = new java.awt.MenuItem("Show tasks");
-      openTasks.addActionListener(event -> Platform.runLater(this::showTasks));
-      openTasks.setFont(boldFont);
-
-      java.awt.MenuItem openProjects = new java.awt.MenuItem("Show projects");
-      openProjects.addActionListener(event -> Platform.runLater(this::showProjects));
-      openProjects.setFont(boldFont);
-
       java.awt.MenuItem startTask = new java.awt.MenuItem("Start task");
       startTask.addActionListener(event -> Platform.runLater(this::startTask));
       startTask.setFont(boldFont);
@@ -268,9 +273,6 @@ public class JavafxApplication extends Application {
       finishDay.addActionListener(event -> Platform.runLater(this::startTask));
       finishDay.setFont(boldFont);
 
-      java.awt.MenuItem hideItem = new java.awt.MenuItem("Hide");
-      hideItem.addActionListener(event -> Platform.runLater(this::hide));
-
       // to really exit the application, the user must go to the system tray icon
       // and select the exit option, this will shutdown JavaFX and remove the
       // tray icon (removing the tray icon will also shut down AWT).
@@ -285,11 +287,6 @@ public class JavafxApplication extends Application {
 
       // setup the popup menu for the application.
       final java.awt.PopupMenu popup = new java.awt.PopupMenu();
-      popup.add(openDashboard);
-      popup.add(openPlanning);
-      popup.add(openMessages);
-      popup.add(openTasks);
-      popup.add(openProjects);
       popup.addSeparator();
       popup.add(startTask);
       popup.add(startPause);
@@ -297,7 +294,6 @@ public class JavafxApplication extends Application {
       popup.add(finishDay);
 
       popup.addSeparator();
-      popup.add(hideItem);
       popup.add(exitItem);
       trayIcon.setPopupMenu(popup);
 

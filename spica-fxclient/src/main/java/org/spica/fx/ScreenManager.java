@@ -1,9 +1,7 @@
 package org.spica.fx;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -17,6 +15,9 @@ public class ScreenManager {
   private Screen primary;
 
   private List<Screen> externalScreens = new ArrayList<>();
+
+  public final static double FULL_WIDTH = 1400;
+  public final static double HALF_WIDTH = 110;
 
   public ScreenManager() {
     primary = Screen.getPrimary();
@@ -66,9 +67,9 @@ public class ScreenManager {
 
   public void layoutEdged (final Stage stage) {
     Screen primary = getExternalOrPrimaryScreen();
-    stage.setX(primary.getBounds().getMaxX() - 1405);
+    stage.setX(primary.getBounds().getMinX());
     stage.setY(primary.getBounds().getMinY() + 40);
-    stage.setWidth(1400);
+    stage.setWidth(FULL_WIDTH);
     stage.setHeight(primary.getBounds().getMaxY()- 80);
   }
 

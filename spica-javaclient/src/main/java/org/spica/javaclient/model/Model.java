@@ -5,18 +5,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spica.commons.DashboardItemType;
 import org.spica.javaclient.exceptions.NotFoundException;
 import org.spica.javaclient.model.MessagecontainerInfo.MessagecontainerStateEnum;
@@ -30,11 +23,9 @@ public class Model {
   public final static String DEFAULTTASK_PRIVATE = "Private";
   public final static String DEFAULTTASK_WORK = "Work";
 
-  private final static Logger log = LoggerFactory.getLogger(Model.class);
-
   private UserInfo me;
 
-  private List<DashboardItemInfo> dashboardItemInfos = new ArrayList<DashboardItemInfo>();
+  private List<DashboardItemInfo> dashboardItemInfos = new ArrayList<>();
 
   private List<SkillInfo> userSkills = new ArrayList<>();
 
@@ -46,15 +37,15 @@ public class Model {
 
   private List<TaskInfo> taskInfos = new ArrayList<>();
 
-  private List<MessagecontainerInfo> messagecontainerInfos = new ArrayList<MessagecontainerInfo>();
+  private List<MessagecontainerInfo> messagecontainerInfos = new ArrayList<>();
 
-  private List<LinkInfo> linkInfos = new ArrayList<LinkInfo>();
+  private List<LinkInfo> linkInfos = new ArrayList<>();
 
   private List<EventInfo> eventInfosReal = new ArrayList<>();
 
   private List<EventInfo> eventInfosPlanned = new ArrayList<>();
 
-  private List<SkillInfo> allSkills = new ArrayList<SkillInfo>();
+  private List<SkillInfo> allSkills = new ArrayList<>();
 
   private MessagecontainerInfo selectedMessageContainer;
 
@@ -92,8 +83,7 @@ public class Model {
    * @return other projects
    */
   public Collection<ProjectInfo> getOtherProjectInfos () {
-    Collection<ProjectInfo> projectInfos = new ArrayList<>();
-    projectInfos.addAll(getProjectInfos());
+    Collection<ProjectInfo> projectInfos = new ArrayList<>(getProjectInfos());
     projectInfos.remove(getSelectedProjectInfo());
     return projectInfos;
   }
@@ -147,7 +137,6 @@ public class Model {
   }
 
 	public UserInfo getUsersOrMe (final MessagecontainerInfo messagecontainerInfo) {
-	  UserInfo me = getMe();
 	  Collection<UserInfo> userInfos = getOtherUsers(messagecontainerInfo);
 	  if (userInfos.size() > 1)
 	    throw new IllegalStateException("More than one user found, which is not me in messagecontainer " + messagecontainerInfo.getTopic());
@@ -167,16 +156,15 @@ public class Model {
    */
   public List<TaskInfo> findTaskInfosByQuery (String query) {
     if (query == null)
-      return new ArrayList<TaskInfo>();
+      return new ArrayList<>();
 
-    Predicate<TaskInfo> filter = new Predicate<TaskInfo>() {
-      @Override
-      public boolean test(TaskInfo taskInfoInfo) {
-        String nameNotNull = taskInfoInfo.getName() != null ? taskInfoInfo.getName(): "";
-        String externalSystemKeyNotNull = taskInfoInfo.getExternalSystemKey() != null ? taskInfoInfo.getExternalSystemKey(): "" ;
-        String idNotNull = taskInfoInfo.getId() != null ? taskInfoInfo.getId(): "";
-        return nameNotNull.contains(query) || externalSystemKeyNotNull.equals(query) || idNotNull.equals(query);
-      }
+    Predicate<TaskInfo> filter = taskInfoInfo -> {
+      String nameNotNull = taskInfoInfo.getName() != null ? taskInfoInfo.getName() : "";
+      String externalSystemKeyNotNull = taskInfoInfo.getExternalSystemKey() != null ?
+          taskInfoInfo.getExternalSystemKey() :
+          "";
+      String idNotNull = taskInfoInfo.getId() != null ? taskInfoInfo.getId() : "";
+      return nameNotNull.contains(query) || externalSystemKeyNotNull.equals(query) || idNotNull.equals(query);
     };
     return taskInfos.stream().filter( filter).collect(Collectors.toList());
   }
@@ -187,13 +175,10 @@ public class Model {
    * @return list of found projects
    */
   public List<ProjectInfo> findProjectInfosByQuery (String query) {
-    Predicate<ProjectInfo> filter = new Predicate<ProjectInfo>() {
-      @Override
-      public boolean test(ProjectInfo projectInfo) {
-        String nameNotNull = projectInfo.getName() != null ? projectInfo.getName(): "";
-        String idNotNull = projectInfo.getId() != null ? projectInfo.getId(): "";
-        return nameNotNull.contains(query) || idNotNull.equals(query);
-      }
+    Predicate<ProjectInfo> filter = projectInfo -> {
+      String nameNotNull = projectInfo.getName() != null ? projectInfo.getName(): "";
+      String idNotNull = projectInfo.getId() != null ? projectInfo.getId(): "";
+      return nameNotNull.contains(query) || idNotNull.equals(query);
     };
     return projectInfos.stream().filter( filter).collect(Collectors.toList());
 
@@ -222,13 +207,10 @@ public class Model {
    * @return list of found workings sets
    */
   public List<WorkingSetInfo> findWorkingSetInfosByQuery (String query) {
-    Predicate<WorkingSetInfo> filter = new Predicate<WorkingSetInfo>() {
-      @Override
-      public boolean test(WorkingSetInfo projectInfo) {
-        String nameNotNull = projectInfo.getName() != null ? projectInfo.getName(): "";
-        String idNotNull = projectInfo.getId() != null ? projectInfo.getId(): "";
-        return nameNotNull.contains(query) || idNotNull.equals(query);
-      }
+    Predicate<WorkingSetInfo> filter = projectInfo -> {
+      String nameNotNull = projectInfo.getName() != null ? projectInfo.getName() : "";
+      String idNotNull = projectInfo.getId() != null ? projectInfo.getId() : "";
+      return nameNotNull.contains(query) || idNotNull.equals(query);
     };
     return workingsetInfos.stream().filter( filter).collect(Collectors.toList());
 
@@ -294,14 +276,11 @@ public class Model {
    * @return list of found links
    */
   public List<LinkInfo> findLinkInfosByQuery (String query) {
-    Predicate<LinkInfo> filter = new Predicate<LinkInfo>() {
-      @Override
-      public boolean test(LinkInfo linkInfo) {
-        String nameNotNull = linkInfo.getName() != null ? linkInfo.getName(): "";
-        String idNotNull = linkInfo.getId() != null ? linkInfo.getId(): "";
-        String urlNotNull = linkInfo.getUrl() != null ? linkInfo.getUrl() : "";
-        return nameNotNull.contains(query) || idNotNull.equals(query) || urlNotNull.contains(query);
-      }
+    Predicate<LinkInfo> filter = linkInfo -> {
+      String nameNotNull = linkInfo.getName() != null ? linkInfo.getName() : "";
+      String idNotNull = linkInfo.getId() != null ? linkInfo.getId() : "";
+      String urlNotNull = linkInfo.getUrl() != null ? linkInfo.getUrl() : "";
+      return nameNotNull.contains(query) || idNotNull.equals(query) || urlNotNull.contains(query);
     };
     return linkInfos.stream().filter( filter).collect(Collectors.toList());
 
@@ -458,7 +437,7 @@ public class Model {
    */
   public List<EventInfo> findOldOpenEvents () {
     LocalDate today = LocalDate.now();
-    List<EventInfo> oldEventInfos = new ArrayList<EventInfo>();
+    List<EventInfo> oldEventInfos = new ArrayList<>();
     for (EventInfo next: getEventInfosReal()) {
       if (next.getStop() == null && next.getStart().toLocalDate().isBefore(today)) {
         oldEventInfos.add(next);
@@ -673,10 +652,12 @@ public class Model {
    */
   public boolean setSelectedMessageContainer(MessagecontainerInfo selectedMessageContainer) {
     boolean readtimeSet = false;
-    for (MessageInfo nextMessage: selectedMessageContainer.getMessage()) {
-      if (nextMessage.getReadtime() == null) {
-        nextMessage.setReadtime(LocalDateTime.now());
-        readtimeSet = true;
+    if (selectedMessageContainer != null) {
+      for (MessageInfo nextMessage : selectedMessageContainer.getMessage()) {
+        if (nextMessage.getReadtime() == null) {
+          nextMessage.setReadtime(LocalDateTime.now());
+          readtimeSet = true;
+        }
       }
     }
     this.selectedMessageContainer = selectedMessageContainer;
@@ -697,8 +678,7 @@ public class Model {
    * @return other tasks
    */
   public Collection<TaskInfo> getOtherTaskInfos () {
-    Collection<TaskInfo> taskInfos = new ArrayList<>();
-    taskInfos.addAll(getTaskInfos());
+    Collection<TaskInfo> taskInfos = new ArrayList<>(getTaskInfos());
     taskInfos.remove(getSelectedTaskInfo());
     return taskInfos;
   }
@@ -798,14 +778,11 @@ public class Model {
   }
 
   public void sortMessages () {
-    Collections
-        .sort(getMessagecontainerInfos(), new Comparator<MessagecontainerInfo>() {
-          @Override public int compare(MessagecontainerInfo o1, MessagecontainerInfo o2) {
-            MessageInfo lastMessage1 = o1.getMessage().get(o1.getMessage().size() - 1);
-            MessageInfo lastMessage2 = o2.getMessage().get(o2.getMessage().size() - 1);
-            return lastMessage2.getCreationtime().compareTo(lastMessage1.getCreationtime());
-          }
-        });
+    getMessagecontainerInfos().sort((o1, o2) -> {
+      MessageInfo lastMessage1 = o1.getMessage().get(o1.getMessage().size() - 1);
+      MessageInfo lastMessage2 = o2.getMessage().get(o2.getMessage().size() - 1);
+      return lastMessage2.getCreationtime().compareTo(lastMessage1.getCreationtime());
+    });
 
   }
 

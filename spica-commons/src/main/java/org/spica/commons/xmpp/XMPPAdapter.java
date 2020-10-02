@@ -60,9 +60,6 @@ import static java.lang.Thread.sleep;
     host = spicaProperties.getValueNotNull(PROPERTY_XMPP_URL);
     user = spicaProperties.getValueNotNull(PROPERTY_XMPP_USER);
     password = spicaProperties.getValueNotNull(PROPERTY_XMPP_PASSWORD);
-    System.out.println (host);
-    System.out.println (user);
-    System.out.println (password);
 
     XMPPTCPConnectionConfiguration.Builder builder = XMPPTCPConnectionConfiguration.builder();
     builder = builder.setUsernameAndPassword(user, password).setXmppDomain(host).setHost(host);

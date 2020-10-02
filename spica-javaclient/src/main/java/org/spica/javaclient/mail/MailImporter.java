@@ -43,7 +43,7 @@ public class MailImporter {
       MessagecontainerInfo messagecontainerInfo = getMessageContainer(model, nextMail);
       if (messagecontainerInfo == null) {
         messagecontainerInfo = new MessagecontainerInfo().message(new ArrayList<MessageInfo>());
-        messagecontainerInfo.setTopic(nextMail.getSubject());
+        messagecontainerInfo.setTopic(normalizeMailSubject(nextMail.getSubject()));
         model.getMessagecontainerInfos().add(messagecontainerInfo);
         modelChanged = true;
       }
@@ -104,13 +104,19 @@ public class MailImporter {
   }
 
 
+  public String normalizeMailSubject (final String subject) {
+    return subject.replaceAll("Re:", "").replaceAll("AW:", "").trim();
+  }
+
 
   private MessagecontainerInfo getMessageContainer(final Model model, Mail mail) throws MessagingException {
     for (MessagecontainerInfo nextInfo : model.getMessagecontainerInfos()) {
       if (nextInfo.getTopic() == null)
         continue;
 
-      if (nextInfo.getTopic().equals(mail.getSubject()))
+      String normalizedTopic = normalizeMailSubject(nextInfo.getTopic());
+      String normalizedSubject = normalizeMailSubject(mail.getSubject());
+      if (normalizedTopic.equals(normalizedSubject))
         return nextInfo;
     }
 

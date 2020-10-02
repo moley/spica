@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.spica.cli.actions.StandaloneActionContext;
 import org.spica.cli.actions.StandaloneActionParamFactory;
 import org.spica.javaclient.Configuration;
@@ -15,7 +15,6 @@ import org.spica.javaclient.actions.ActionGroup;
 import org.spica.javaclient.actions.ActionHandler;
 import org.spica.javaclient.actions.ActionResult;
 import org.spica.javaclient.actions.FoundAction;
-import org.spica.javaclient.actions.booking.StartTaskAction;
 import org.spica.javaclient.auth.HttpBasicAuth;
 import org.spica.javaclient.event.EventDetails;
 import org.spica.javaclient.event.EventDetailsBuilder;
@@ -26,11 +25,12 @@ import org.spica.javaclient.utils.DateUtil;
 import org.spica.javaclient.utils.LogUtil;
 import org.spica.javaclient.utils.RenderUtil;
 
+@Slf4j
 public class Main {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(Main.class);
-
   public final static void main(final String[] args) throws IOException {
+
+    log.info("Started cli application with parameters " + Arrays.asList(args));
 
     DateUtil dateUtil = new DateUtil();
 
@@ -45,7 +45,7 @@ public class Main {
       for (String propName: gradleProperties.stringPropertyNames()) {
         if (propName.startsWith("systemProp")) {
           String value = gradleProperties.getProperty(propName);
-          LOGGER.info("Using " + propName + "=" + value);
+          log.info("Using " + propName + "=" + value);
           System.setProperty(propName.replace("systemProp.", ""), value);
         }
       }
@@ -98,10 +98,7 @@ public class Main {
     }
 
     //System.out.println (LogUtil.clearScreen());
-    System.out.println("Java:                 " + System.getProperty("java.version"));
-    System.out.println("Current server:       " + Configuration.getDefaultApiClient().getBasePath());
-    System.out.println("Current model:        " + actionContext.getServices().getModelCacheService().getConfigFile()
-        .getAbsolutePath());
+
     System.out.println("Current time:         " + LogUtil.cyan(dateUtil.getTimeAsString(LocalDateTime.now())));
     System.out.println("Working since:        " + LogUtil
         .cyan(firstTaskOfDay != null ? dateUtil.getTimeAsString(firstTaskOfDay.getStart()) : ""));
@@ -120,6 +117,7 @@ public class Main {
     ActionHandler actionHandler = actionContext.getActionHandler();
 
     if (args.length == 0) { //if no params are added
+      System.out.println("Type 's' to show all actiongroups, 's [ACTIONGROUP]' to show all commands of a specific actiongroup or 's c state' to show details about your configuration");
       System.out.println("Usage: s (ACTIONGROUP) (COMMAND) [PARAMETER1..n]\n");
       System.out.println("Available action groups:\n");
       for (ActionGroup nextGroup : ActionGroup.values()) {
