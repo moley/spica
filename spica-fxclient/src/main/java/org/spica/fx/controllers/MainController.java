@@ -78,6 +78,23 @@ public class MainController extends AbstractController  {
 
   private boolean foldedOut = true;
 
+  public void toggleVisibility (final boolean toVisibility) {
+    log.info("toggle visibility to " + toVisibility + "(folded out == " + foldedOut + ")");
+    if (foldedOut == toVisibility)
+      return;
+
+    paRootPane.getCenter().setVisible(toVisibility);
+    panHeader.setVisible(toVisibility);
+
+    btnToggleVisibility.setGraphic(Consts.createIcon((toVisibility ?"fa-chevron-left" :"fa-chevron-right"), Consts.ICON_SIZE_TOOLBAR));
+
+    double width = toVisibility ? ScreenManager.FULL_WIDTH : ScreenManager.HALF_WIDTH;
+
+    getStage().setMaxWidth(width);
+    getStage().setMinWidth(width);
+    foldedOut = toVisibility;
+  }
+
   @FXML
   public void initialize () {
     lblAppname.setMinWidth(ScreenManager.HALF_WIDTH);
@@ -89,16 +106,7 @@ public class MainController extends AbstractController  {
 
     btnToggleVisibility.setOnAction(new EventHandler<ActionEvent>() {
       @Override public void handle(ActionEvent event) {
-        foldedOut = !foldedOut;
-        paRootPane.getCenter().setVisible(foldedOut);
-        panHeader.setVisible(foldedOut);
-
-        btnToggleVisibility.setGraphic(Consts.createIcon((foldedOut ?"fa-chevron-left" :"fa-chevron-right"), Consts.ICON_SIZE_TOOLBAR));
-
-        double width = foldedOut ? ScreenManager.FULL_WIDTH : ScreenManager.HALF_WIDTH;
-
-        getStage().setMaxWidth(width);
-        getStage().setMinWidth(width);
+        toggleVisibility(!foldedOut);
       }
     });
 

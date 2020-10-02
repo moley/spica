@@ -45,6 +45,7 @@ public abstract class AbstractController {
 
     AbstractController controller = mask.getController();
     controller.refreshData();
+    controller.getMainController().toggleVisibility(true);
 
     mask.getParent().setVisible(true);
   }
