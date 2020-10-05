@@ -1,14 +1,11 @@
 package org.spica.fx.controllers;
 
-import java.util.function.Predicate;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import org.spica.fx.renderer.UserInfoCellFactory;
 import org.spica.javaclient.model.UserInfo;
@@ -30,39 +27,28 @@ public class SearchboxController extends AbstractController {
   @Override public void refreshData() {
 
     selectedUser = null;
-    filteredList = new FilteredList<UserInfo>(FXCollections.observableArrayList(getModel().getUserInfos()),
-        userInfo -> true);
+    filteredList = new FilteredList<>(FXCollections.observableArrayList(getModel().getUserInfos()), userInfo -> true);
     lviSearchResults.setItems(filteredList);
 
-    txtSearch.setOnKeyPressed(new EventHandler<KeyEvent>() {
-      @Override public void handle(KeyEvent event) {
-        if (event.getCode().equals(KeyCode.DOWN))
-          lviSearchResults.requestFocus();
-      }
+    txtSearch.setOnKeyPressed(event -> {
+      if (event.getCode().equals(KeyCode.DOWN))
+        lviSearchResults.requestFocus();
     });
-    txtSearch.setOnKeyTyped(new EventHandler<KeyEvent>() {
-      @Override public void handle(KeyEvent event) {
+    txtSearch.setOnKeyTyped(event -> {
 
-        if (event.getCode().equals(KeyCode.ENTER) && lviSearchResults.getItems().size() == 1) {
-          event.consume();
-        }
-
-        filteredList.setPredicate(new Predicate<UserInfo>() {
-          @Override public boolean test(UserInfo userInfo) {
-            return (userInfo.getEmail() != null && userInfo.getEmail().contains(txtSearch.getText())) || (userInfo
-                .getDisplayname() != null && userInfo.getDisplayname().contains(txtSearch.getText()));
-          }
-        });
+      if (event.getCode().equals(KeyCode.ENTER) && lviSearchResults.getItems().size() == 1) {
+        event.consume();
       }
+
+      filteredList.setPredicate(userInfo -> (userInfo.getEmail() != null && userInfo.getEmail().contains(txtSearch.getText())) || (userInfo
+          .getDisplayname() != null && userInfo.getDisplayname().contains(txtSearch.getText())));
     });
 
-    lviSearchResults.setOnKeyPressed(new EventHandler<KeyEvent>() {
-      @Override public void handle(KeyEvent event) {
-        if (event.getCode().equals(KeyCode.ENTER)) {
-          select(lviSearchResults.getSelectionModel().getSelectedItem());
-        }
-
+    lviSearchResults.setOnKeyPressed(event -> {
+      if (event.getCode().equals(KeyCode.ENTER)) {
+        select(lviSearchResults.getSelectionModel().getSelectedItem());
       }
+
     });
 
   }

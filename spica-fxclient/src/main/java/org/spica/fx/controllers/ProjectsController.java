@@ -3,16 +3,12 @@ package org.spica.fx.controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.spica.fx.Reload;
 import org.spica.fx.renderer.ProjectInfoTreeCellFactory;
 import org.spica.javaclient.model.ProjectInfo;
 
@@ -57,14 +53,14 @@ public class ProjectsController extends AbstractController {
   }
 
   public void refreshViews () {
-    HashMap<String, TreeItem<ProjectInfo>> model = new HashMap<String, TreeItem<ProjectInfo>>();
+    HashMap<String, TreeItem<ProjectInfo>> model = new HashMap<>();
     log.info("refreshViews with " + getModel().getTaskInfos().size() + " tasks");
 
-    TreeItem<ProjectInfo> rootItem = new TreeItem<ProjectInfo> ();
+    TreeItem<ProjectInfo> rootItem = new TreeItem<>();
     rootItem.setExpanded(true);
     List<ProjectInfo> projectInfoList = getModel().getProjectInfos();
     for (ProjectInfo next: projectInfoList) {
-      TreeItem<ProjectInfo> treeItem = new TreeItem<ProjectInfo>(next);
+      TreeItem<ProjectInfo> treeItem = new TreeItem<>(next);
       treeItem.setExpanded(true);
       model.put(next.getId(), treeItem);
     }
@@ -86,46 +82,36 @@ public class ProjectsController extends AbstractController {
   @Override public void refreshData() {
     getMainController().refreshData();
 
-    treProjects.setCellFactory(cellfactory -> new ProjectInfoTreeCellFactory(getActionContext(), new Reload() {
-      @Override public void reload() {
-        refreshViews();
-      }
-    }));
+    treProjects.setCellFactory(cellfactory -> new ProjectInfoTreeCellFactory(getActionContext(), this::refreshViews));
     refreshViews();
 
     txtSearch.requestFocus();
-    txtSearch.setOnKeyPressed(new EventHandler<KeyEvent>() {
-      @Override public void handle(KeyEvent event) {
-        if (event.getCode().equals(KeyCode.ENTER)) {
-          addNewProject(txtSearch.getText());
-        }
+    txtSearch.setOnKeyPressed(event -> {
+      if (event.getCode().equals(KeyCode.ENTER)) {
+        addNewProject(txtSearch.getText());
       }
     });
 
-    treProjects.setOnKeyPressed(new EventHandler<KeyEvent>() {
-      @Override public void handle(KeyEvent event) {
-        if (! treProjects.getSelectionModel().isEmpty()) {
+    treProjects.setOnKeyPressed(event -> {
+      if (! treProjects.getSelectionModel().isEmpty()) {
+        ProjectInfo selectedProject = treProjects.getSelectionModel().getSelectedItem().getValue();
+
+        if (event.getCode().equals(KeyCode.SLASH) && selectedProject.getName() != null) {
+          removeProject(selectedProject);
+        }
+      }
+
+    });
+
+    treProjects.setOnMouseClicked(event -> {
+      if (! treProjects.getSelectionModel().isEmpty()) {
+        if (event.getClickCount() == 2) {
           ProjectInfo selectedProject = treProjects.getSelectionModel().getSelectedItem().getValue();
-
-          if (event.getCode().equals(KeyCode.SLASH) && selectedProject.getName() != null) {
-            removeProject(selectedProject);
-          }
+          getModel().setSelectedProjectInfo(selectedProject);
+          stepToPane(Pages.PROJECTDETAIL);
         }
-
       }
-    });
 
-    treProjects.setOnMouseClicked(new EventHandler<MouseEvent>() {
-      @Override public void handle(MouseEvent event) {
-        if (! treProjects.getSelectionModel().isEmpty()) {
-          if (event.getClickCount() == 2) {
-            ProjectInfo selectedProject = treProjects.getSelectionModel().getSelectedItem().getValue();
-            getModel().setSelectedProjectInfo(selectedProject);
-            stepToPane(Pages.PROJECTDETAIL);
-          }
-        }
-
-      }
     });
 
 

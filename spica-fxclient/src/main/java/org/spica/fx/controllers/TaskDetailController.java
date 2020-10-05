@@ -1,7 +1,5 @@
 package org.spica.fx.controllers;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -40,12 +38,9 @@ public class TaskDetailController extends AbstractController {
     } else
       cboParent.getSelectionModel().clearSelection();
 
-    cboParent.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TaskInfo>() {
-      @Override public void changed(ObservableValue<? extends TaskInfo> observable, TaskInfo oldValue,
-          TaskInfo newValue) {
-        taskInfo.setParentId(newValue.getId());
-        saveModel("Changed parent of task " + taskInfo.getId() + " to " + newValue.getId());
-      }
+    cboParent.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+      taskInfo.setParentId(newValue.getId());
+      saveModel("Changed parent of task " + taskInfo.getId() + " to " + newValue.getId());
     });
 
     btnSave.setOnAction(action -> save());
