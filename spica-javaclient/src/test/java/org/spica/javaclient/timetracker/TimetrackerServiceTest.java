@@ -3,6 +3,7 @@ package org.spica.javaclient.timetracker;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,6 +27,15 @@ public class TimetrackerServiceTest {
 
     }
 
+    private EventInfo createEvent (final LocalDateTime from, final LocalDateTime until) {
+
+        EventInfo eventInfo = new EventInfo().eventType(EventType.PAUSE).id(UUID.randomUUID().toString());
+        eventInfo = eventInfo.start(from);
+        if (until != null)
+            eventInfo = eventInfo.stop(until);
+        return eventInfo;
+    }
+
     private EventInfo createEvent (final LocalTime from, final LocalTime until) {
 
         EventInfo eventInfo = new EventInfo().eventType(EventType.PAUSE).id(UUID.randomUUID().toString());
@@ -40,6 +50,19 @@ public class TimetrackerServiceTest {
         timetrackerCreationParam.setDate(LocalDate.now());
         timetrackerCreationParam.setFrom(from);
         timetrackerCreationParam.setUntil(until);
+        timetrackerCreationParam.setEventType(EventType.TOPIC);
+        timetrackerCreationParam.setTaskInfo(new TaskInfo().name("New event"));
+        return timetrackerCreationParam;
+    }
+
+    private TimetrackerCreationParam createCreationParam (final LocalDateTime from, final LocalDateTime until) {
+        if (! from.toLocalDate().equals(until.toLocalDate()))
+            throw new IllegalStateException("From and until do not match the same date");
+
+        TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
+        timetrackerCreationParam.setDate(from.toLocalDate());
+        timetrackerCreationParam.setFrom(from.toLocalTime());
+        timetrackerCreationParam.setUntil(until.toLocalTime());
         timetrackerCreationParam.setEventType(EventType.TOPIC);
         timetrackerCreationParam.setTaskInfo(new TaskInfo().name("New event"));
         return timetrackerCreationParam;
@@ -125,7 +148,34 @@ public class TimetrackerServiceTest {
 
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
+    public void createEventBeforeFirstFinishedEventGap () {
+        Model model = modelCacheService.get();
+
+        //13.10. 09:00 -
+        model.getEventInfosReal().add(createEvent(LocalDateTime.of(2020, 10, 13, 9,0), LocalDateTime.of(2020, 10, 13, 10,0)));
+
+        //->12.10. 08:00 - 08:30
+        timetrackerService.createEvent(createCreationParam(LocalDateTime.of(2020, 10, 12, 8,0), LocalDateTime.of(2020, 10, 12, 8,30)));
+
+    }
+
+    @Test
+    public void createEventBeforeFirstNotFinishedEventGap () {
+        Model model = modelCacheService.get();
+
+        LocalDate today = LocalDate.now();
+        LocalDate yesterday = today.minus(1, ChronoUnit.DAYS);
+
+        //13.10. 09:00 -
+        model.getEventInfosReal().add(createEvent(LocalDateTime.of(today, LocalTime.of(9,0)), null));
+
+        //->12.10. 08:00 - 08:30
+        timetrackerService.createEvent(createCreationParam(LocalDateTime.of(yesterday, LocalTime.of(8,0)), LocalDateTime.of(yesterday, LocalTime.of(8,30))));
+
+    }
+
+    @Test
     public void createEventBeforeFirstEventGap () {
         Model model = modelCacheService.get();
 
@@ -134,8 +184,6 @@ public class TimetrackerServiceTest {
 
         //->08:00 - 08:30
         timetrackerService.createEvent(createCreationParam(LocalTime.of(8,0), LocalTime.of(8,30)));
-
-        //->Error Gap
     }
 
     @Test(expected = IllegalStateException.class)

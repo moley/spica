@@ -122,18 +122,15 @@ public class TimetrackerService {
                 newStartedEvent.setStop(eventInfoAfter.getStart());
                 output.add("Limit the new booking to " + dateUtil.getDateAsString(eventInfoAfter.getStart()));
             }
-
-            //If new event is before first event and there is a gap between end time of new event and start time of old first event
-            if (newStartedEvent.getStop().isBefore(eventInfoAfter.getStart()))
-                throw new IllegalStateException("Gap between stop of new booking and start of old first booking. Configure no until or an until which matches start of first booking");
         }
 
         if (eventInfoAfter != null) {
+            output.add("Found subsequent event " + eventInfoAfter.getName() + " (" + eventInfoAfter.getStart() + "-" + eventInfoAfter.getStop());
 
             //If new event ends after the next event starts, then adapt the next event to start when new event ends
             if (eventInfoAfter.getStart().isBefore(newStartedEvent.getStop())) {
                 eventInfoAfter.setStart(newStartedEvent.getStop());
-                output.add("New event ends after start of first event of the day, set start of first event to " + dateUtil.getTimeAsString(newStartedEvent.getStop()));
+                output.add("New event ends after start of first event of the day, limit first event to " + dateUtil.getTimeAsString(newStartedEvent.getStop()));
             }
         }
 

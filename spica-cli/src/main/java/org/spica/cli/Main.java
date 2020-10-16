@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import lombok.extern.slf4j.Slf4j;
-import org.spica.cli.actions.StandaloneActionContext;
+import org.spica.javaclient.StandaloneActionContext;
 import org.spica.cli.actions.StandaloneActionParamFactory;
 import org.spica.javaclient.Configuration;
 import org.spica.javaclient.actions.ActionGroup;

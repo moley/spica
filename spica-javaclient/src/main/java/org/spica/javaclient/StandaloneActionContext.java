@@ -1,4 +1,4 @@
-package org.spica.cli.actions;
+package org.spica.javaclient;
 
 import java.io.File;
 import java.util.List;
@@ -26,8 +26,6 @@ public class StandaloneActionContext implements ActionContext {
   private Services services = new Services();
 
   private ActionHandler actionHandler = new ActionHandler();
-
-
 
 
   private ActionParamFactory actionParamFactory;

@@ -66,6 +66,9 @@ public class CreateBookingAction extends AbstractAction {
         UserInfo userInfo = inputParams.getInputValue(KEY_FOREIGN_USER, UserInfo.class);
         String text = inputParams.getInputValueAsString(KEY_TEXT);
 
+
+        outputDefault("Create booking for " + date + "(" + fromTime + " until " + untilTime + ")");
+
         TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
         timetrackerCreationParam.setFrom( fromTime);
         timetrackerCreationParam.setUntil(untilTime);

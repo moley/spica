@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Test;
 import org.spica.ModelBasedTest;
-import org.spica.cli.actions.StandaloneActionContext;
+import org.spica.javaclient.StandaloneActionContext;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;

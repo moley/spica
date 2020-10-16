@@ -8,7 +8,7 @@ import org.gradle.api.Task;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.Assert;
 import org.junit.Test;
-import org.spica.cli.actions.StandaloneActionContext;
+import org.spica.javaclient.StandaloneActionContext;
 import org.spica.javaclient.model.TaskInfo;
 
 public class SpicaTaskTest {
