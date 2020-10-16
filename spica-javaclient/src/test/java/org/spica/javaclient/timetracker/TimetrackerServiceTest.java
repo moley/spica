@@ -1,12 +1,16 @@
 package org.spica.javaclient.timetracker;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.spica.javaclient.model.*;
-
-import java.time.*;
-import java.util.UUID;
+import org.spica.javaclient.model.EventInfo;
+import org.spica.javaclient.model.EventType;
+import org.spica.javaclient.model.Model;
+import org.spica.javaclient.model.TaskInfo;
 import org.spica.javaclient.services.ModelCacheService;
 
 public class TimetrackerServiceTest {
@@ -17,7 +21,6 @@ public class TimetrackerServiceTest {
 
     @Before
     public void before () {
-        modelCacheService.close();
         modelCacheService.set(new Model(), "create new model");
         timetrackerService.setModelCacheService(modelCacheService);
 

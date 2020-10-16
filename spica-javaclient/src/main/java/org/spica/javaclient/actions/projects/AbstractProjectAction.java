@@ -14,8 +14,10 @@ public abstract class AbstractProjectAction extends AbstractAction {
         .getMandatoryMainArgument("You have to add an parameter containing a name or an id to your command");
 
     List<ProjectInfo> infos = model.findProjectInfosByQuery(query);
-    if (infos.size() != 1)
-      outputError("Your query <" + query + "> did not choose exactly one project, but " + infos.size()).finish();
+    if (infos.size() != 1) {
+      String additionalInfo = infos.isEmpty() ? ". Create a new project with params 'p create [NAME]'" : "";
+      outputError("Your query <" + query + "> did not choose exactly one project, but " + infos.size() + additionalInfo).finish();
+    }
     return infos.get(0);
   }
 

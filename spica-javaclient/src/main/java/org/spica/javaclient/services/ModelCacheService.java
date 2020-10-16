@@ -34,7 +34,7 @@ public class ModelCacheService implements Serializable{
   private File configFile;
 
 
-  private static Model currentConfiguration;
+  private Model currentConfiguration;
 
   public void setConfigFile (final File configFile) {
     this.configFile = configFile;

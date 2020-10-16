@@ -20,6 +20,10 @@ public class CommandLineArguments {
 
   private String [] argumentsAsArray;
 
+  public CommandLineArguments () {
+    this (new String[0]);
+  }
+
   public CommandLineArguments (final String [] args) {
     this.arguments = Arrays.asList(args);
     this.argumentsAsArray = args;

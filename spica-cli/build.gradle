@@ -3,6 +3,7 @@ import java.time.format.DateTimeFormatter
 
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'maven-publish'
 
 mainClassName = 'org.spica.cli.Main'
 
@@ -78,5 +79,5 @@ task installLocal(type: Copy) {
 }
 
 build.dependsOn installDist
-publish.dependsOn createDmg
-
+tasks.release.dependsOn createDmg
+tasks.release.dependsOn tasks.publish

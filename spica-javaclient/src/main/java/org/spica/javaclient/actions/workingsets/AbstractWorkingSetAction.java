@@ -14,8 +14,10 @@ public abstract class AbstractWorkingSetAction extends AbstractAction {
         .getMandatoryMainArgument("You have to add an parameter containing a name or an id to your command");
 
     List<WorkingSetInfo> infos = model.findWorkingSetInfosByQuery(query);
-    if (infos.size() != 1)
-      outputError("Your query <" + query + "> did not choose exactly one project, but " + infos.size()).finish();
+    if (infos.size() != 1) {
+      String additionalInfo = infos.isEmpty() ? ". Create a new workingset with params 'w create [NAME]'" : "";
+      outputError("Your query <" + query + "> did not choose exactly one workingset, but " + infos.size() + additionalInfo).finish();
+    }
     return infos.get(0);
   }
 

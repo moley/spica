@@ -88,5 +88,5 @@ task installLocal(type: Copy) {
     dependsOn tasks.prepareDmg
 }
 
-build.dependsOn installDist
-publish.dependsOn createDmg
+tasks.build.dependsOn installDist
+tasks.release.dependsOn createDmg

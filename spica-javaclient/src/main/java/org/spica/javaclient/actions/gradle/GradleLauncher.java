@@ -107,4 +107,24 @@ public class GradleLauncher {
   public int getReturnCode () {
     return returnCode;
   }
+
+  public List<String> getOutput() {
+    return output;
+  }
+
+  public String getOutputString () {
+    return String.join("\n", output);
+  }
+
+  public List<String> getErrorOutput() {
+    return errorOutput;
+  }
+
+  public String getErrorOutputString () {
+    return String.join("\n", errorOutput);
+  }
+
+  public String getThread() {
+    return thread;
+  }
 }

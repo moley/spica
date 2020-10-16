@@ -71,6 +71,16 @@ public class BitbucketService {
     stashAdapter.checkout(branch, targetPath);
   }
 
+  /**
+   * Checkout the given branch from the given reository url
+   * @param url         repository url
+   * @param branch      branch to checkout
+   * @param targetPath  into this path
+   */
+  public void checkout(String url, String branch, File targetPath) {
+    stashAdapter.checkout(url, branch, targetPath);
+  }
+
 
 
 

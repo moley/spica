@@ -13,6 +13,6 @@ tasks.register("demoData", JavaExec) {
   main = 'org.spica.testutils.DemoDataCreator'
 }
 
-build.dependsOn demoData
+tasks.build.dependsOn demoData
 
 

@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'maven-publish'
 
 dependencies {
   compile 'org.modelmapper:modelmapper:2.3.0'

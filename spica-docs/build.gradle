@@ -51,4 +51,5 @@ jar {
 }
 
 tasks.build.dependsOn tasks.asciidoctor, tasks.docsCopyJavadoc
-tasks.publish.dependsOn tasks.jar
+tasks.release.dependsOn tasks.jar
+

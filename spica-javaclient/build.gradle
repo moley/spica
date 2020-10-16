@@ -1,8 +1,10 @@
 plugins {
   id 'org.hidetake.swagger.generator' version '2.18.1'
+
 }
 
 apply plugin: 'java'
+apply plugin: 'maven-publish'
 
 dependencies {
   swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.5'  // or Swagger Codegen V3

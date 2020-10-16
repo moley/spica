@@ -18,10 +18,14 @@ plugins {
 
 apply plugin: "com.github.breadmoirai.github-release"
 
+def mavenUrl = System.getProperty("maven.url")
+def mavenUser = System.getProperty("maven.user")
+def mavenPwd = System.getProperty("maven.password")
 
 allprojects {
   ext.junitJupiterVersion = '5.3.1'
   ext.junitPlatformVersion = '1.3.1'
+  ext.lombokVersion = '1.18.6'
 
   group = 'org.spica'
  
@@ -36,7 +40,9 @@ allprojects {
     jcenter()
   }
 
-  tasks.create('publish')
+  tasks.create('release')
+
+
 
 
   pluginManager.withPlugin('java', {
@@ -64,12 +70,13 @@ allprojects {
 
     check.dependsOn jacocoTestReport
 
+
     dependencies {
 
-      compileOnly 'org.projectlombok:lombok:1.18.6'
-      annotationProcessor 'org.projectlombok:lombok:1.18.6'
-
-      compileOnly 'org.projectlombok:lombok:1.18.2'
+      compileOnly "org.projectlombok:lombok:${lombokVersion}"
+      testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+      annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+      testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
       compile 'org.jsoup:jsoup:1.13.1'
 
@@ -89,6 +96,35 @@ allprojects {
     }
 
   })
+
+
+
+  project.plugins.withId('maven-publish') {
+
+    tasks.create('sourceJar', org.gradle.jvm.tasks.Jar) {
+      from sourceSets.main.allJava
+    }
+
+    publishing {
+      repositories {
+        maven {
+          credentials {
+            username mavenUser
+            password mavenPwd
+          }
+          url mavenUrl
+        }
+      }
+      publications {
+        maven(MavenPublication) {
+          from components.java
+          artifact project.sourceJar {
+            classifier 'sources'
+          }
+        }
+      }
+    }
+  }
 }
 
 subprojects {
@@ -118,9 +154,8 @@ githubRelease {
                               "spica-docs/build/libs/spica-docs-${version}.jar")
 }
 
-tasks.githubRelease.dependsOn getTasksByName('createDmg', true), getTasksByName('publish', true)
+tasks.githubRelease.dependsOn getTasksByName('createDmg', true), getTasksByName('release', true)
 
-def releasetask = tasks.create('release')
-releasetask.dependsOn tasks.githubRelease, tasks.findByPath(':spica-server:dockerPushImage')
+tasks.release.dependsOn tasks.githubRelease, tasks.findByPath(':spica-server:dockerPushImage')
 
 

@@ -46,7 +46,20 @@ public class DateUtil {
         return localDate.format(formatter);
     }
 
+    /**
+     * gets date from string
+     *
+     * null -> now
+     * 1208 -> 12.8.
+     * 12.08 -> 12.8.[THIS YEAR]
+     *
+     * @param dateAsString
+     * @return date as {@link LocalDate}
+     */
     public LocalDate getDate (final String dateAsString) {
+        if (dateAsString == null)
+            return LocalDate.now();
+
         String trimmed = dateAsString.trim();
 
         LocalDate today = LocalDate.now();
@@ -65,7 +78,21 @@ public class DateUtil {
 
     }
 
+    /**
+     * gets time from string
+     *
+     * null -> now
+     * 1234 -> 12:34
+     * 12:34 -> 12:34
+     *
+     * @param dateAsString time from string
+     *
+     * @return time als {@link LocalTime}
+     */
     public LocalTime getTime (final String dateAsString) {
+        if (dateAsString == null)
+            return LocalTime.now();
+
         String trimmed = dateAsString.trim();
 
         if (trimmed.length() == 4) {

@@ -33,6 +33,7 @@ public class CreateBookingAction extends AbstractAction {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(CreateBookingAction.class);
 
+    public final static String KEY_DAY = "day";
     public final static String KEY_FROM = "from";
     public final static String KEY_UNTIL = "until";
     public final static String KEY_TYPE = "type";
@@ -56,6 +57,8 @@ public class CreateBookingAction extends AbstractAction {
     @Override
     public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
+        LocalDate date = dateUtil.getDate(inputParams.getInputValueAsString(KEY_DAY));
+
         LocalTime fromTime = dateUtil.getTime(inputParams.getInputValueAsString(KEY_FROM));
         LocalTime untilTime = inputParams.isAvailable(KEY_UNTIL) ? dateUtil.getTime(inputParams.getInputValueAsString(KEY_UNTIL)): null;
 
@@ -66,7 +69,7 @@ public class CreateBookingAction extends AbstractAction {
         TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
         timetrackerCreationParam.setFrom( fromTime);
         timetrackerCreationParam.setUntil(untilTime);
-        timetrackerCreationParam.setDate(LocalDate.now());
+        timetrackerCreationParam.setDate(date);
         timetrackerCreationParam.setEventType(EventType.fromValue(inputParams.getInputValueAsString(KEY_TYPE)));
         timetrackerCreationParam.setTaskInfo(inputParams.getInputValue(KEY_TOPIC, TaskInfo.class));
         TimetrackerService timetrackerService = new TimetrackerService();
@@ -107,6 +110,7 @@ public class CreateBookingAction extends AbstractAction {
     public InputParams getInputParams(ActionContext actionContext, CommandLineArguments commandLineArguments) {
 
         //General parameters
+        TextInputParam day = new TextInputParam(1, KEY_DAY, "Day (let empty for today)");
         TextInputParam started = new TextInputParam(1, KEY_FROM, "Started ");
         TextInputParam stopped = new TextInputParam(1, KEY_UNTIL, "Stopped (maybe empty)");
         SelectInputParam<EventType> type = new SelectInputParam<EventType>(KEY_TYPE, "Type: ", Arrays.asList(EventType.values()), new Renderer<EventType>() {
@@ -117,6 +121,7 @@ public class CreateBookingAction extends AbstractAction {
         });
 
         InputParamGroup inputParamGroup = new InputParamGroup("Basic");
+        inputParamGroup.getInputParams().add(day);
         inputParamGroup.getInputParams().add(started);
         inputParamGroup.getInputParams().add(stopped);
         inputParamGroup.getInputParams().add(type);

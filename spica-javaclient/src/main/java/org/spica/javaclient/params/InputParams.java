@@ -53,6 +53,18 @@ public class InputParams {
         return inputParams;
     }
 
+    public InputParam getInputParam (final String key) {
+        List<InputParam> inputParams = new ArrayList<>();
+        for (InputParamGroup next: inputParamGroups) {
+            for (InputParam nextParam: next.getInputParams()) {
+                if (nextParam.getKey().equals(key))
+                    return nextParam;
+            }
+        }
+
+        throw new IllegalStateException("InputParam with key " + key + " not found in input params " + toString());
+    }
+
     public Object getInputValue(final String key) {
         for (InputParamGroup next: inputParamGroups) {
             for (InputParam nextParam: next.getInputParams()) {

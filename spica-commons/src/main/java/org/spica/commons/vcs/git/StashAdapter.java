@@ -240,23 +240,26 @@ public class StashAdapter extends DefaultControlAdapter {
   }
 
   public void checkout(VcsBranchInfo branch, File targetPath) {
-    String url = branch.getVcsModuleInfo().getUrl();
+    checkout(branch.getVcsModuleInfo().getUrl(), branch.getName(), targetPath);
+  }
+
+  public void checkout(String url, String branch, File targetPath) {
 
 
     try {
       PasswordMask passwordMask = new PasswordMask();
       String maskedPassword = passwordMask.getMaskedPassword(password);
 
-      log.info("Checkout branch " + branch.getName() + " to path " + targetPath.getAbsoluteFile() + " for user " + user + " and password " + maskedPassword);
+      log.info("Checkout branch " + branch + " from url " + url + " to path " + targetPath.getAbsoluteFile() + " for user " + user + " and password " + maskedPassword);
 
 
       CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(user, password);
-      Git git = Git.cloneRepository().setCredentialsProvider(credentialsProvider).setDirectory(targetPath).setBranch(branch.getName()).setURI(url).call();
+      Git git = Git.cloneRepository().setCredentialsProvider(credentialsProvider).setDirectory(targetPath).setBranch(branch).setURI(url).call();
       log.info(git.status().call().isClean() + " -is clean");
 
       git.close();
     } catch (Exception e) {
-      throw new IllegalStateException("Error when cloning " + url + ":" + e.getLocalizedMessage(), e);
+      throw new IllegalStateException("Error when cloning " + branch + " from url " + url + ":" + e.getLocalizedMessage(), e);
     }
 
   }
