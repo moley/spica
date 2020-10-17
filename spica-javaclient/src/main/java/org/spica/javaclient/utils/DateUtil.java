@@ -49,11 +49,11 @@ public class DateUtil {
     /**
      * gets date from string
      *
-     * null -> now
-     * 1208 -> 12.8.
-     * 12.08 -> 12.8.[THIS YEAR]
+     * null  .... now
+     * 1208  .... 12.8.
+     * 12.08 .... 12.8.[THIS YEAR]
      *
-     * @param dateAsString
+     * @param dateAsString  the date as formatted string
      * @return date as {@link LocalDate}
      */
     public LocalDate getDate (final String dateAsString) {
@@ -81,9 +81,9 @@ public class DateUtil {
     /**
      * gets time from string
      *
-     * null -> now
-     * 1234 -> 12:34
-     * 12:34 -> 12:34
+     * null  .... now
+     * 1234  .... 12:34
+     * 12:34 .... 12:34
      *
      * @param dateAsString time from string
      *

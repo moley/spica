@@ -710,7 +710,8 @@ public class Model {
   /**
    * find user by usernmae
    * @param username  username
-   * @return user or {@link NotFoundException}
+   * @return user
+   * @throws NotFoundException is thrown when no user for this username was found
    */
   public UserInfo findUserByUsername(String username) throws NotFoundException {
     if (username == null)
