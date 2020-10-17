@@ -2,7 +2,7 @@ package org.spica.javaclient.actions.booking;
 
 import java.time.LocalDate;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.spica.ModelBasedTest;
 import org.spica.javaclient.StandaloneActionContext;
 import org.spica.javaclient.actions.ActionContext;
@@ -16,7 +16,7 @@ public class CreateBookingActionTest extends ModelBasedTest {
   @Test
   public void createBookingForToDay () {
 
-    ActionContext actionContext = new StandaloneActionContext();
+    ActionContext actionContext = createNewActionContext();
     CommandLineArguments commandLineArguments = new CommandLineArguments();
 
     Assert.assertTrue(actionContext.getModel().getEventInfosReal().isEmpty());
@@ -39,7 +39,7 @@ public class CreateBookingActionTest extends ModelBasedTest {
 
   @Test
   public void createBookingForDifferentDay () {
-    ActionContext actionContext = new StandaloneActionContext();
+    ActionContext actionContext = createNewActionContext();
     CommandLineArguments commandLineArguments = new CommandLineArguments();
 
     Assert.assertTrue(actionContext.getModel().getEventInfosReal().isEmpty());

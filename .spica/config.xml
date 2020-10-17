@@ -1,2 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model/>
+<model>
+    <eventInfosReal>
+        <eventType>PAUSE</eventType>
+        <id>3c099d2c-3ef0-4c16-af7b-bfd474ebf85c</id>
+        <start>2020-10-17T15:26:27.910514</start>
+    </eventInfosReal>
+    <projectInfos>
+        <color>0x80b380ff</color>
+        <id>Private</id>
+        <name>Private</name>
+    </projectInfos>
+    <projectInfos>
+        <color>0x8099ffff</color>
+        <id>Work</id>
+        <name>Work</name>
+    </projectInfos>
+    <workingsetInfos>
+        <id>e1c57ded-f192-40b3-90bd-86a9ab6313ee</id>
+        <name>testWorkingSet</name>
+        <sourceparts>
+            <branch>master</branch>
+            <enabled>true</enabled>
+            <id>project1</id>
+            <url>/Users/OleyMa/vcs/spica/spica/build/demodata/gitserver/project1</url>
+        </sourceparts>
+        <sourceparts>
+            <branch>master</branch>
+            <enabled>true</enabled>
+            <id>project2</id>
+            <url>/Users/OleyMa/vcs/spica/spica/build/demodata/gitserver/project1</url>
+        </sourceparts>
+    </workingsetInfos>
+</model>
