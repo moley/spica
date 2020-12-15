@@ -1,6 +1,7 @@
 package org.spica.javaclient.actions.configuration;
 
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.ApiException;
@@ -15,9 +16,8 @@ import org.spica.javaclient.model.UserInfo;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
 
+@Slf4j
 public class ImportUsersAction extends AbstractAction {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(ImportUsersAction.class);
 
     private UserApi userApi = new UserApi();
 
@@ -47,7 +47,7 @@ public class ImportUsersAction extends AbstractAction {
             model.setUserInfos(userInfos);
             outputOk("Imported " + userInfos.size() + " users");
         } catch (ApiException e) {
-            LOGGER.error("Error importing users: " + e.getResponseBody(), e);
+            log.error("Error importing users: " + e.getResponseBody(), e);
         }
         actionContext.saveModel(getClass().getName());
 

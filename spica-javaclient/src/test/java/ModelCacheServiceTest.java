@@ -26,8 +26,8 @@ public class ModelCacheServiceTest {
 
     modelCacheService.set(model, "");
     modelCacheService.closeEventDashboardsWhenEventIsClosed();
-    Assert.assertFalse ("Closed event not closed at dashboard", dashboardClosed.isOpen());
-    Assert.assertTrue ("Open event not open at dashboard", dashboardOpen.isOpen());
+    Assert.assertFalse ("Closed event not closed at dashboard", dashboardClosed.getOpen());
+    Assert.assertTrue ("Open event not open at dashboard", dashboardOpen.getOpen());
 
   }
 }

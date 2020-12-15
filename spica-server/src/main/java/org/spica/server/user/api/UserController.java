@@ -1,5 +1,6 @@
 package org.spica.server.user.api;
 
+import io.swagger.annotations.ApiParam;
 import java.util.Collection;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -16,6 +17,8 @@ import org.spica.server.user.service.LdapUserImporter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -76,11 +79,12 @@ public class UserController implements UserApi {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    @Override public ResponseEntity<Void> setUserSkills(@Valid List<SkillInfo> body, @NotNull @Valid String userId) {
+    @Override
+    public ResponseEntity<Void> setUserSkills(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "userId", required = true) String userId,@ApiParam(value = "" ,required=true )  @Valid @RequestBody List<SkillInfo> skillInfo) {
         Collection<String> ids = new ArrayList<String>();
         List<Skill> allSkills = skillRepository.findAll();
 
-        for (SkillInfo next: body) {
+        for (SkillInfo next: skillInfo) {
             LOGGER.info("Found skill " + next);
             Skill nextSkill = skillMapper.findSkill(allSkills, next.getId());
             ids.add(String.valueOf(nextSkill.getId()));

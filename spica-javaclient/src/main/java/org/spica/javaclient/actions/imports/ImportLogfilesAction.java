@@ -1,18 +1,13 @@
 package org.spica.javaclient.actions.imports;
 
-import com.google.common.io.Files;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -67,7 +62,7 @@ public class ImportLogfilesAction extends AbstractAction {
 
     File rootPath = new File ("").getAbsoluteFile();
     for (File next: FileUtils.listFiles(rootPath, new String [] {"log"}, true)) {
-      String localFile = fileUtil.getRelativeName(rootPath, next);
+      String localFile = fileUtil.getRelativePath(rootPath, next);
 
       boolean containsStack = containsStacktrace(next);
       if (containsStack)
@@ -97,7 +92,7 @@ public class ImportLogfilesAction extends AbstractAction {
     try {
       ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(importedFile));
       for (File next: importedFiles) {
-        String localFile = fileUtil.getRelativeName(rootPath, next);
+        String localFile = fileUtil.getRelativePath(rootPath, next);
         ZipEntry zipEntry = new ZipEntry(localFile);
         zos.putNextEntry(zipEntry);
         zos.write(FileUtils.readFileToByteArray(next));

@@ -1,13 +1,9 @@
 package org.spica.javaclient.actions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
 
 public interface Action {
-
-    final static Logger LOGGER = LoggerFactory.getLogger(Action.class);
 
     String getDisplayname ();
 
@@ -45,7 +41,6 @@ public interface Action {
     Command getCommand ();
 
     default InputParams getInputParams(ActionContext actionContext, CommandLineArguments commandLineArguments) {
-        LOGGER.info("default getInputParams implementation");
         return new InputParams();
     }
 

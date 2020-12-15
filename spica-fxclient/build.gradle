@@ -1,3 +1,6 @@
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 plugins {
     id 'org.openjfx.javafxplugin' version '0.0.6'
     id 'application'
@@ -35,6 +38,15 @@ dependencies {
 
 mainClassName = 'org.spica.fx.Main'
 
+DefaultTask generateVersionFileTask = task 'generateVersionFile', {
+    doFirst{
+        File leguanVersionFile = file('src/main/resources/spica-fx.version')
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        leguanVersionFile.text = version + " ( Build from " + LocalDateTime.now().format(formatter) + " )"
+        println "Create file $leguanVersionFile.absolutePath with content $leguanVersionFile.text"
+    }
+}
+processResources.dependsOn generateVersionFileTask
 
 task prepareDmg {
     doFirst {
@@ -81,7 +93,7 @@ task installLocal(type: Copy) {
     def localCliInstallationPath = '/Applications/SpicaFX.app/Contents/app/'
     from file('build/dmgInput')
     eachFile {
-        println "Install $it"
+        println "Install $it to $destinationDir/$it.path"
     }
     into localCliInstallationPath
     includeEmptyDirs = false

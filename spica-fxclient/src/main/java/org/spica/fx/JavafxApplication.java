@@ -179,7 +179,7 @@ public class JavafxApplication extends Application {
 
     showMessages();
 
-    screenManager.layoutEdged(stage);
+    screenManager.layoutEdged(stage, false);
     LOGGER
         .info("Stage layouted " + stage.getX() + "-" + stage.getY() + "-" + stage.getWidth() + "-" + stage.getHeight());
 

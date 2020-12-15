@@ -1,5 +1,6 @@
 package org.spica.javaclient.actions.booking;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.*;
@@ -11,9 +12,8 @@ import org.spica.javaclient.utils.DateUtil;
 
 import java.time.LocalDate;
 
+@Slf4j
 public class ListBookingsAction extends AbstractAction {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(ListBookingsAction.class);
 
     private DateUtil dateUtil = new DateUtil();
 

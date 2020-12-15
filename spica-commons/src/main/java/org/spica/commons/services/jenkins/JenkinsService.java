@@ -19,8 +19,6 @@ import org.spica.commons.SpicaProperties;
 @Slf4j
 public class JenkinsService {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(JenkinsService.class);
-
 
   public final static String PROPERTY_JENKINS_URL = "spica.jenkins.url";
   public final static String PROPERTY_JENKINS_USER = "spica.jenkins.user";
@@ -72,7 +70,7 @@ public class JenkinsService {
    * @return url part
    */
   public String triggerBuild (Jenkins jenkins, String foldername, String jobname, final HashMap<String, String> parameters) {
-    LOGGER.info("Trigger build in folder " + foldername + ":" + jobname);
+    log.info("Trigger build in folder " + foldername + ":" + jobname);
     JenkinsServer jenkinsServer = jenkins.getJenkinsServer();
 
     FolderJob folderJob = getFolderJob(jenkins, foldername);

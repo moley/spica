@@ -47,13 +47,13 @@ public class MailImporterTest {
     Assert.assertEquals ("Number of messages invalid:" + model.getMessagecontainerInfos(), 1, model.getMessagecontainerInfos().get(0).getMessage().size());
     String messageID = model.getMessagecontainerInfos().get(0).getMessage().get(0).getId();
     DashboardItemInfo dashboardItemInfo = model.findDashboardItemInfo(DashboardItemType.MAIL, messageID);
-    Assert.assertTrue("DashboardItem must be open at first", dashboardItemInfo.isOpen());
+    Assert.assertTrue("DashboardItem must be open at first", dashboardItemInfo.getOpen());
 
     MailAdapter mailAdapter2 = Mockito.mock(MailAdapter.class);
     Mockito.when(mailAdapter.recieveMails()).thenReturn(new ArrayList<>());
     mailImporter.setMailAdapter(mailAdapter2);
     mailImporter.importMails(model);
-    Assert.assertFalse("DashboardItem was not closed when mail is no longer available", dashboardItemInfo.isOpen());
+    Assert.assertFalse("DashboardItem was not closed when mail is no longer available", dashboardItemInfo.getOpen());
 
 
 

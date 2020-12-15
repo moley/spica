@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +32,8 @@ import org.spica.commons.vcs.VersionControlException;
  * <p>
  * The used layout is automatically detected via checking if under module1 there are non folder entries.
  */
+@Slf4j
 public class LocalFilesystemAdapter extends DefaultControlAdapter {
-
-  private Logger log = LoggerFactory.getLogger(LocalFilesystemAdapter.class);
-
 
   private File projectUrl;
 

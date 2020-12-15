@@ -1,5 +1,6 @@
 package org.spica.javaclient.actions.booking;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
@@ -17,9 +18,8 @@ import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.timetracker.TimetrackerService;
 
+@Slf4j
 public class FinishTaskAction extends AbstractAction {
-
-  private final static Logger LOGGER = LoggerFactory.getLogger(FinishTaskAction.class);
 
   @Override public String getDescription() {
     return "Finish current task";
@@ -34,9 +34,9 @@ public class FinishTaskAction extends AbstractAction {
     Model model = actionContext.getModel();
 
     EventInfo eventInfo = model.findLastOpenEventFromToday();
-    LOGGER.info("Found event " + eventInfo);
+    log.info("Found event " + eventInfo);
     if (eventInfo != null && eventInfo.getEventType().equals(EventType.TOPIC)) {
-      LOGGER.info("Reference ID: " + eventInfo.getReferenceId());
+      log.info("Reference ID: " + eventInfo.getReferenceId());
       if (eventInfo.getReferenceId() != null) {
         //TODO
 

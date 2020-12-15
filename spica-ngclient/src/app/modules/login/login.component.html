@@ -1,0 +1,27 @@
+<div class="container col-lg-6" layout-align="center center">
+    <h1 class="text-center">LOGIN</h1>
+    <div class="card">
+      <div class="card-body" width="200px">
+        <form class="form-group">
+          
+          <mat-form-field >
+            <mat-label>Username </mat-label>
+            <input matInput type="text" class="form-control" id="username" [(ngModel)]="username" placeholder="Enter User Name"
+              name="username">
+          </mat-form-field>
+
+          <mat-form-field >
+            <mat-label>Password</mat-label>
+            <input matInput type="password" class="form-control" [(ngModel)]="password" id="password" placeholder="Enter password"
+              name="password">
+          </mat-form-field>
+          <button mat-flat-button color="primary" (click)=handleLogin() class="btn btn-success">Login</button>
+
+          <div class="alert alert-warning" *ngIf='invalidLogin'>{{errorMessage}}</div>
+          <div class="alert alert-success" *ngIf='loginSuccess'>{{successMessage}}</div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  

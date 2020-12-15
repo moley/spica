@@ -16,12 +16,17 @@ out/
 bin/
 /.metadata
 
+/spica-ngclient/node_modules/
+/spica-ngclient/src/app/modules/generated
+/spica-ngclient/dist
+
 /spica-cli/config.xml
 /spica-cli/src/main/resources/spica-cli.version
 /spica-ionicclient/package-lock.json
 /spica-fxclient/.spica/config*
 /spica-cli/.spica/config*
 /spica-server/.spica/
+/spica-server/src/main/resources/static/
 /.spica/config_*
 /.spica/links
 /.spica/attachments/

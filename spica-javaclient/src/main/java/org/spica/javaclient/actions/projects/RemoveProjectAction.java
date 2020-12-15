@@ -1,5 +1,6 @@
 package org.spica.javaclient.actions.projects;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.*;
@@ -10,9 +11,8 @@ import org.spica.javaclient.model.ProjectInfo;
 
 import java.util.List;
 
+@Slf4j
 public class RemoveProjectAction extends AbstractProjectAction {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(RemoveProjectAction.class);
 
     @Override public String getDisplayname() {
         return "Remove project";

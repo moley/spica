@@ -1,6 +1,7 @@
 package org.spica.server.project.api;
 
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
@@ -24,11 +25,10 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
+@Slf4j
 public class TasksController implements TasksApi {
 
     TasksMapper topicsMapper = new TasksMapper();
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(TasksController.class);
 
     @Autowired
     private TaskImporterStrategy taskImporterStrategy;
@@ -51,9 +51,9 @@ public class TasksController implements TasksApi {
         String jiraUser = properties.getValueNotNull(JiraConfiguration.PROPERTY_SPICA_JIRA_USER);
         String jiraPwd = properties.getValueNotNull(JiraConfiguration.PROPERTY_SPICA_JIRA_PWD);
         String closedStatus = properties.getValueNotNull(JiraConfiguration.PROPERTY_SPICA_STATUS_CLOSED);
-        LOGGER.info("Using jira " + jiraUrl + " with user " + jiraUser);
+        log.info("Using jira " + jiraUrl + " with user " + jiraUser);
 
-        LOGGER.info("Set status " + closedStatus + " on jira " + topicId);
+        log.info("Set status " + closedStatus + " on jira " + topicId);
 
         ExternalSystem externalSystem = new ExternalSystem(jiraUrl, jiraUser, jiraPwd);
         adapter.setStatus(externalSystem, topicId, Integer.valueOf(closedStatus).intValue());
@@ -76,7 +76,7 @@ public class TasksController implements TasksApi {
         try {
             importedTasks = taskImporter.importTasksOfUser(userId, usernameExternalSystem, passwordExternalSystem);
         } catch (InterruptedException e) {
-            LOGGER.error("Error importing topics: " + e.getLocalizedMessage(), e);
+            log.error("Error importing topics: " + e.getLocalizedMessage(), e);
         }
 
         TaskContainerInfo topicContainerInfo = topicsMapper.toApi(importedTasks);

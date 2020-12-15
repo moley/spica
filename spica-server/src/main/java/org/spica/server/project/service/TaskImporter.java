@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface TaskImporter {
 
-    public List<Task> importTasksOfUser(final String userID, final String user, final String pwd) throws InterruptedException;
+    List<Task> importTasksOfUser(final String userID, final String user, final String pwd) throws InterruptedException;
 }

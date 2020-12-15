@@ -82,7 +82,7 @@ public class MailImporter {
     for (DashboardItemInfo nextDashboardItem: model.getDashboardItemInfos() ) {
       if (nextDashboardItem.getItemType().equals(DashboardItemType.MAIL.name())) {
         Boolean open = ids.contains(nextDashboardItem.getItemReference());
-        if (! open.equals(nextDashboardItem.isOpen())) {
+        if (! open.equals(nextDashboardItem.getOpen())) {
           nextDashboardItem.setOpen(open);
           modelChanged = true;
         }

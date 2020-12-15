@@ -41,7 +41,7 @@ public class ImportTaskAction extends AbstractAction {
             model.setTaskInfos(topicContainerInfo.getTasks());
             outputOk("Imported " + topicContainerInfo.getTasks().size() + " taks");
         } catch (ApiException e) {
-            LOGGER.error("Error importing jira topics: " + e.getResponseBody(), e);
+            log.error("Error importing jira topics: " + e.getResponseBody(), e);
         }
         actionContext.saveModel(getClass().getName());
 

@@ -1,5 +1,6 @@
 package org.spica.server.project.api;
 
+import lombok.extern.slf4j.Slf4j;
 import org.spica.server.project.domain.Task;
 import org.spica.server.project.model.TaskContainerInfo;
 import org.spica.server.project.model.TaskInfo;
@@ -7,6 +8,7 @@ import org.spica.server.project.model.TaskInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class TasksMapper {
 
   TaskInfo toApi (Task task) {

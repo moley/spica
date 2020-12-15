@@ -1,10 +1,13 @@
-- Set gradle version / gradleplugins version in workingset / all workingsets
-- workingset mit verteilten Pfaden
+
+- optimize import of tasks
 - Multiple selection (Remove bunch of messages at once)
 - Relayout (screen) on Toggle visibility
+
+- Timeout when recieving mails
+- Set gradle version / gradleplugins version in workingset / all workingsets
+- workingset hierarchisch
 - Send mail
 - Links and Screenshots into mail
-
 
 - When selecting a task in creating a booking and you forget to select again after key is unique it runs null
 - Show status of users 

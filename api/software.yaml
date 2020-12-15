@@ -1,0 +1,47 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: "spica rest software component"
+  description: "Rest API for the software component of spica"
+servers:
+  - url: http://localhost/api
+security:
+  - BasicAuth
+
+paths:
+  /software/list:
+    get:
+      tags:
+        - software
+      operationId: "getSoftware"
+      description: "get list of software"
+      responses:
+        '200':
+          description: 'skill'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Software"
+
+
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+
+  schemas:
+    Software:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        name:
+          type: "string"
+        description:
+          type: "string"
+        requirement:
+          type: "string"

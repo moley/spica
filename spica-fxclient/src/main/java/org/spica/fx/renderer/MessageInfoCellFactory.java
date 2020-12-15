@@ -23,8 +23,6 @@ import org.spica.javaclient.model.UserInfo;
 
 public class MessageInfoCellFactory extends ListCell<MessageInfo> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(MessageInfoCellFactory.class);
-
 
   private Model model;
 

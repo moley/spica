@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.AbstractAction;
@@ -29,9 +30,8 @@ import org.spica.javaclient.timetracker.TimetrackerService;
 import org.spica.javaclient.utils.DateUtil;
 import org.spica.javaclient.utils.RenderUtil;
 
+@Slf4j
 public class CreateBookingAction extends AbstractAction {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(CreateBookingAction.class);
 
     public final static String KEY_DAY = "day";
     public final static String KEY_FROM = "from";

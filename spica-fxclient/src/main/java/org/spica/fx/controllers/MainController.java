@@ -3,6 +3,8 @@ package org.spica.fx.controllers;
 import com.jfoenix.controls.JFXBadge;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Timer;
@@ -17,10 +19,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.textfield.CustomTextField;
@@ -28,6 +32,7 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spica.commons.SpicaProperties;
 import org.spica.javaclient.StandaloneActionContext;
 import org.spica.commons.UserPresence;
 import org.spica.commons.filestore.FilestoreService;
@@ -52,7 +57,6 @@ import org.spica.javaclient.model.UserInfo;
 @Slf4j
 public class MainController extends AbstractController  {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
   @FXML private Label lblAppname;
   @FXML private HBox panHeader;
   @FXML private TextField txtCurrentAction;
@@ -73,15 +77,45 @@ public class MainController extends AbstractController  {
 
   private final StandaloneActionContext standaloneActionContext = new StandaloneActionContext();
 
+  private ScreenManager screenManager = new ScreenManager();
+
   private boolean foldedOut = true;
+
+  private String getVersion () {
+    log.info("Determine version of fx app");
+    String version = "not found";
+
+    try {
+      URL leguanVersion = getClass().getClassLoader().getResource("spica-fx.version");
+      if (leguanVersion != null) {
+        version = IOUtils.toString(leguanVersion, Charset.defaultCharset());
+      }
+
+      log.info("Determined version " + version);
+      return version;
+
+
+    } catch (Throwable e) {
+      log.error("Error determining version: " + e.getLocalizedMessage(), e);
+      return version;
+    }
+  }
 
   public void toggleVisibility (final boolean toVisibility) {
     log.info("toggle visibility to " + toVisibility + "(folded out == " + foldedOut + ")");
     if (foldedOut == toVisibility)
       return;
 
+    Tooltip tooltipAppname = new Tooltip();
+    Label lblTooltipAppname = new Label();
+    lblTooltipAppname.setText("Version " + getVersion());
+    tooltipAppname.setGraphic(lblTooltipAppname);
+    lblAppname.setTooltip(tooltipAppname);
+
     paRootPane.getCenter().setVisible(toVisibility);
     panHeader.setVisible(toVisibility);
+
+    screenManager.layoutEdged(getStage(), true);
 
     btnToggleVisibility.setGraphic(Consts.createIcon((toVisibility ?"fa-chevron-left" :"fa-chevron-right"), Consts.ICON_SIZE_TOOLBAR));
 
@@ -188,7 +222,7 @@ public class MainController extends AbstractController  {
       controller.setMainController(this);
       getRegisteredMasks().put(pages, mask);
     } catch (Exception e) {
-      LOGGER.error("Error loading page " + pages.getFilename(), e);
+      log.error("Error loading page " + pages.getFilename(), e);
     }
 
   }

@@ -40,9 +40,9 @@ public class ShowWorkingSetsAction extends AbstractAction {
                 outputDefault("SourceParts      : " + next.getSourceparts().size());
                 outputDefault("");
                 for (WorkingSetSourcePartInfo sourcePartInfo : next.getSourceparts()) {
-                    String state = (sourcePartInfo.isEnabled() != null && sourcePartInfo.isEnabled()) ? "enabled" : "disabled";
+                    String state = (sourcePartInfo.getEnabled() != null && sourcePartInfo.getEnabled()) ? "enabled" : "disabled";
                     String sourcepartInfo = String.format("  %-9s %-40s   %-20s %s", state, sourcePartInfo.getId(), sourcePartInfo.getBranch(), sourcePartInfo.getUrl());
-                    if (sourcePartInfo.isEnabled())
+                    if (sourcePartInfo.getEnabled())
                       outputOk(sourcepartInfo);
                     else
                       outputWarning(sourcepartInfo);

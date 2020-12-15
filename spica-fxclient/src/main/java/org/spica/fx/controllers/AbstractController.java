@@ -4,6 +4,7 @@ import java.util.HashMap;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.fx.ApplicationContext;
@@ -12,13 +13,13 @@ import org.spica.fx.MaskLoader;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.model.Model;
 
+@Slf4j
 public abstract class AbstractController {
 
 
 
   private static HashMap<Pages, Mask> registeredMasks = new HashMap<Pages, Mask>();
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(AbstractController.class);
 
   private BorderPane paRootPane;
 
@@ -35,7 +36,7 @@ public abstract class AbstractController {
   }
 
   public void stepToPane (final Pages page) {
-    LOGGER.info("step to pane " +  page.getDisplayname());
+    log.info("step to pane " +  page.getDisplayname());
     for (Mask nextMask : registeredMasks.values()) {
       nextMask.getParent().setVisible(false);
     }

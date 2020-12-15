@@ -2,10 +2,12 @@ package org.spica.fx.controllers;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
@@ -30,12 +32,13 @@ public class MessagesController extends AbstractController {
   @FXML private TextField txtSearch;
 
   @FXML public void initialize() {
+    lviMessages.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     lviMessages.setCellFactory(cellfactory -> new MessageContainerInfoCellFactory(getModel()));
     lviMessages.setOnDragOver(event -> event.acceptTransferModes(TransferMode.ANY));
 
     lviMessages.setOnKeyPressed(event -> {
       if (event.getCode().equals(KeyCode.SLASH)) {
-        removeMessage(lviMessages.getSelectionModel().getSelectedItem());
+        removeMessage(lviMessages.getSelectionModel().getSelectedItems());
       }
     });
 
@@ -123,16 +126,19 @@ public class MessagesController extends AbstractController {
     });
   }
 
-  private void removeMessage (final MessagecontainerInfo messagecontainerInfo) {
-
+  private void removeMessage (final List<MessagecontainerInfo> messagecontainerInfos) {
+    int numberOfMessages = 0;
     MailAdapter mailAdapter = getActionContext().getServices().getMailImporter().getMailAdapter();
-    getModel().getMessagecontainerInfos().remove(messagecontainerInfo);
-    for (MessageInfo nextMessage: messagecontainerInfo.getMessage()) {
-      if (nextMessage.getType().equals(MessageType.MAIL)) {
-        mailAdapter.deleteMail(nextMessage.getId());
+    getModel().getMessagecontainerInfos().removeAll(messagecontainerInfos);
+    for (MessagecontainerInfo messagecontainerInfo: messagecontainerInfos) {
+      for (MessageInfo nextMessage : messagecontainerInfo.getMessage()) {
+        if (nextMessage.getType().equals(MessageType.MAIL)) {
+          mailAdapter.deleteMail(nextMessage.getId());
+          numberOfMessages++;
+        }
       }
     }
-    saveModel("Removed message " + messagecontainerInfo.getTopic() + " with " + messagecontainerInfo.getMessage().size() + " messages");
+    saveModel("Removed " + messagecontainerInfos.size() + " messages with " + numberOfMessages + " messages");
     refreshData();
   }
 

@@ -65,12 +65,14 @@ public class ScreenManager {
     stage.setHeight(primary.getVisualBounds().getHeight());
   }
 
-  public void layoutEdged (final Stage stage) {
+  public void layoutEdged (final Stage stage, final boolean resize) {
     Screen primary = getExternalOrPrimaryScreen();
     stage.setX(primary.getBounds().getMinX());
     stage.setY(primary.getBounds().getMinY() + 40);
-    stage.setWidth(FULL_WIDTH);
-    stage.setHeight(primary.getBounds().getMaxY()- 80);
+    if (resize) {
+      stage.setWidth(FULL_WIDTH);
+      stage.setHeight(primary.getBounds().getMaxY() - 80);
+    }
   }
 
 

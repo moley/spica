@@ -28,16 +28,15 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spica.commons.UriUtils;
 import org.spica.commons.credentials.PasswordMask;
-import org.spica.commons.vcs.VcsBranchInfo;
 import org.spica.commons.vcs.DefaultControlAdapter;
 import org.spica.commons.vcs.LastChangeInfo;
+import org.spica.commons.vcs.VcsBranchInfo;
 import org.spica.commons.vcs.VcsModuleInfo;
 import org.spica.commons.vcs.VcsProjectInfo;
 import org.spica.commons.vcs.VersionControlException;
@@ -46,9 +45,8 @@ import static com.atlassian.stash.rest.client.api.StashException.toErrors;
 import static com.atlassian.stash.rest.client.core.parser.Parsers.errorsParser;
 
 
+@Slf4j
 public class StashAdapter extends DefaultControlAdapter {
-
-  private Logger log = LoggerFactory.getLogger(StashAdapter.class);
 
   private StashClient client;
   private URL baseurl;
@@ -61,7 +59,7 @@ public class StashAdapter extends DefaultControlAdapter {
 
   HttpClientHttpExecutor httpClientHttpExecutor;
 
-  private UriUtils uriUtils = new UriUtils();
+  private final UriUtils uriUtils = new UriUtils();
 
 
   @Override

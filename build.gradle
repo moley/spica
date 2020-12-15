@@ -7,7 +7,9 @@ buildscript {
   }
 
   dependencies {
-    classpath('org.springframework.boot:spring-boot-gradle-plugin:2.1.3.RELEASE')
+    classpath "org.openapitools:openapi-generator-gradle-plugin:4.3.1"
+    classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.3.RELEASE'
+    classpath "com.moowork.gradle:gradle-node-plugin:1.3.1"
   }
 }
 
@@ -42,10 +44,9 @@ allprojects {
 
   tasks.create('release')
 
-
-
-
   pluginManager.withPlugin('java', {
+
+    tasks.javadoc.onlyIf {false} // due to error on @http.response.details in generated code TODO
 
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11

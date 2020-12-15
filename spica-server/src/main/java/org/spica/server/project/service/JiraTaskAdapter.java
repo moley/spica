@@ -9,6 +9,7 @@ import com.atlassian.jira.rest.client.api.domain.input.TransitionInput;
 import com.atlassian.jira.rest.client.auth.BasicHttpAuthenticationHandler;
 import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
 import io.atlassian.util.concurrent.Promise;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.server.commons.ExternalSystem;
@@ -24,12 +25,10 @@ import java.util.function.Consumer;
  * Adapter which provides an abstraction to access and change topics in external system
  */
 @Service
+@Slf4j
 public class JiraTaskAdapter implements ExternalSystemTaskAdapter {
 
     public final static String EXTERNAL_SYSTEM_KEY_JIRA = "JIRA";
-
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(JiraTaskImporter.class);
 
 
     private AsynchronousJiraRestClientFactory jiraRestClientFactory = new AsynchronousJiraRestClientFactory();
@@ -43,7 +42,7 @@ public class JiraTaskAdapter implements ExternalSystemTaskAdapter {
             @Override
             public void accept(SearchResult searchResult) {
                 for (Issue next: searchResult.getIssues()) {
-                    LOGGER.info("Found my issue " + next.getKey() + "-" + next.getSummary() + "-" + next.getStatus().getName());
+                    log.info("Found my issue " + next.getKey() + "-" + next.getSummary() + "-" + next.getStatus().getName());
 
                     TaskInfo topicInfo = new TaskInfo();
                     topicInfo.setExternalSystemID(EXTERNAL_SYSTEM_KEY_JIRA);

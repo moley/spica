@@ -1,5 +1,6 @@
 package org.spica.server.user.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.directory.api.ldap.model.cursor.EntryCursor;
 import org.apache.directory.api.ldap.model.entry.Attribute;
 import org.apache.directory.api.ldap.model.entry.Entry;
@@ -27,12 +28,12 @@ import java.util.Collection;
 /**
  */
 @Component
+@Slf4j
 public class LdapUserImporter implements UserImporter {
 
     @Autowired
     private UserRepository userRepository;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LdapUserImporter.class);
 
     @Override
     public Collection<User> getUsers() {
@@ -60,20 +61,20 @@ public class LdapUserImporter implements UserImporter {
 
             LdapConnection connection = new LdapNetworkConnection(host, port, isSSl);
 
-            LOGGER.info("Starting importing users from LDAP with following configurations");
-            LOGGER.info("Host              : " + host);
-            LOGGER.info("SSL               : " + isSSl);
-            LOGGER.info("BindDn            : " + bindDn);
-            LOGGER.info("Password          : " + new PasswordMask().getMaskedPassword(pw));
-            LOGGER.info("BaseDn            : " + stammDn);
-            LOGGER.info("SearchUserFilter  : " + searchUsersFilter);
-            LOGGER.info("Port              : " + port);
-            LOGGER.info("Field displayname : " + displaynameKey);
-            LOGGER.info("Field username    : " + usernameKey);
-            LOGGER.info("Field firstname   : " + firstnameKey);
-            LOGGER.info("Field surename    : " + surenameKey);
-            LOGGER.info("Field mail        : " + mailKey);
-            LOGGER.info("Field phone       : " + phoneKey);
+            log.info("Starting importing users from LDAP with following configurations");
+            log.info("Host              : " + host);
+            log.info("SSL               : " + isSSl);
+            log.info("BindDn            : " + bindDn);
+            log.info("Password          : " + new PasswordMask().getMaskedPassword(pw));
+            log.info("BaseDn            : " + stammDn);
+            log.info("SearchUserFilter  : " + searchUsersFilter);
+            log.info("Port              : " + port);
+            log.info("Field displayname : " + displaynameKey);
+            log.info("Field username    : " + usernameKey);
+            log.info("Field firstname   : " + firstnameKey);
+            log.info("Field surename    : " + surenameKey);
+            log.info("Field mail        : " + mailKey);
+            log.info("Field phone       : " + phoneKey);
 
             int number = 0;
             long time = 0;
@@ -88,13 +89,13 @@ public class LdapUserImporter implements UserImporter {
                 connection.bind(br);
 
 
-                LOGGER.info("Authenticated: " + connection.isAuthenticated());
+                log.info("Authenticated: " + connection.isAuthenticated());
                 if (connection.isAuthenticated()) {
 
                     long from = System.currentTimeMillis();
 
-                    LOGGER.info("Bind to ldap completed");
-                    LOGGER.info("Search with baseDn <" + stammDn + ">, user filter <" + searchUsersFilter + ">");
+                    log.info("Bind to ldap completed");
+                    log.info("Search with baseDn <" + stammDn + ">, user filter <" + searchUsersFilter + ">");
                     EntryCursor cursor = connection.search(stammDn, searchUsersFilter, SearchScope.SUBTREE, "*");
 
                     while (cursor.next()) {
@@ -108,8 +109,8 @@ public class LdapUserImporter implements UserImporter {
 
                         if (username != null && surename != null && firstname != null ) {
 
-                            if (LOGGER.isDebugEnabled())
-                            LOGGER.debug("Import entry with (" +  usernameKey + "=" + username + ", " +
+                            if (log.isDebugEnabled())
+                            log.debug("Import entry with (" +  usernameKey + "=" + username + ", " +
                                 firstnameKey + "=" + firstname + "," +
                                 surenameKey + "=" + surename + "," +
                                 mailKey + "=" + mail + "," +
@@ -133,12 +134,12 @@ public class LdapUserImporter implements UserImporter {
                               userRepository.save(user);
 
                             number++;
-                            if (LOGGER.isDebugEnabled())
-                              LOGGER.debug("Imported user " +  usernameKey);
+                            if (log.isDebugEnabled())
+                              log.debug("Imported user " +  usernameKey);
                         }
                         else {
                             if (mail != null || phone != null || username != null || phone != null || firstname != null || surename != null)
-                                LOGGER.warn("Cannot import entry with (" +  usernameKey + "=" + username + ", " +
+                                log.warn("Cannot import entry with (" +  usernameKey + "=" + username + ", " +
                                   firstnameKey + "=" + firstname + "," +
                                   surenameKey + "=" + surename + "," +
                                   mailKey + "=" + mail + "," +
@@ -155,7 +156,7 @@ public class LdapUserImporter implements UserImporter {
                 throw new IllegalStateException(e);
 
             } finally {
-                LOGGER.info("Unbinding");
+                log.info("Unbinding");
                 if (connection.isConnected())
                     try {
                         connection.unBind();
@@ -164,10 +165,10 @@ public class LdapUserImporter implements UserImporter {
                     }
             }
 
-            LOGGER.info("Search completed with " + number + " results in " + time + " ms");
+            log.info("Search completed with " + number + " results in " + time + " ms");
         }
         else
-            LOGGER.warn("Importing LDAP Users is disabled by configuration");
+            log.warn("Importing LDAP Users is disabled by configuration");
 
         return users;
     }

@@ -37,7 +37,7 @@ public class BranchWorkingSetAction extends AbstractWorkingSetAction {
     WorkingSetInfo workingSetInfo = getWorkingSet(actionContext.getModel(), commandLineArguments);
 
     for (WorkingSetSourcePartInfo nextModule : workingSetInfo.getSourceparts()) {
-      if (nextModule.isEnabled()) {
+      if (nextModule.getEnabled()) {
         File toDir = new File(nextModule.getId()).getAbsoluteFile();
         try {
           Git git = Git.open(toDir);

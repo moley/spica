@@ -1,0 +1,184 @@
+<div class="example-container">
+
+    <mat-grid-list cols="3" rowHeight="85px">
+        <mat-grid-tile>
+            <div fxFlex fxLayoutAlign="start center">
+                <h1>Software: {{software.name}}</h1>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile><img src="https://www.jenkins.io/images/post-images/jenkins-is-the-way/jenkins-is-the-way.png"
+                height="80px" alt="Italian Trulli"></mat-grid-tile>
+
+
+        <mat-grid-tile>
+            <div class="buttonpane">
+                <button mat-flat-button color="primary">Save</button>
+                <button mat-flat-button color="primary">Start</button>
+            </div>
+
+        </mat-grid-tile>
+
+
+    </mat-grid-list>
+
+    <mat-tab-group>
+        <!-- Tab General -->
+        <mat-tab label="General" style="background-color: blue;">
+
+            <mat-form-field appearance="fill" style="width:60vw">
+                <mat-label>ID</mat-label>
+                <input matInput required readonly [(ngModel)]="software.id">
+            </mat-form-field>
+            <mat-form-field appearance="fill" style="width:60vw">
+                <mat-label>Name</mat-label>
+                <input matInput [(ngModel)]="software.name">
+            </mat-form-field>
+            <mat-form-field appearance="fill" style="width:60vw">
+                <mat-label>Description</mat-label>
+                <textarea matInput required [(ngModel)]="software.description"></textarea>
+            </mat-form-field>
+            <mat-form-field appearance="fill" style="width:60vw">
+                <mat-label>Requirement</mat-label>
+                <input matInput required [(ngModel)]="software.requirement">
+            </mat-form-field>
+            <br>
+
+            <mat-form-field appearance="fill" style="width:60vw">
+                <mat-label>Type</mat-label>
+                <select matNativeControl required>
+                    <option value="windows">WINDOWS APP</option>
+                    <option value="common">COMMON MODULE</option>
+                </select>
+            </mat-form-field>
+
+        </mat-tab>
+
+
+        <!-- Tab Planning -->
+        <mat-tab label="Planning">
+            <mat-form-field appearance="fill" style="width:60vw">
+                <mat-label>Target date</mat-label>
+                <input matInput [matDatepicker]="picker">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <br>
+            <mat-form-field appearance="fill" style="width:60vw">
+                <mat-label>State</mat-label>
+                <select matNativeControl required>
+                    <option value="idea">IDEA </option>
+                    <option value="planned">PLANNED </option>
+                </select>
+            </mat-form-field>
+            <br>
+            <br>
+            <mat-checkbox class="example-margin">Uses online help</mat-checkbox><br>
+            <mat-checkbox class="example-margin">Uses monitoring</mat-checkbox><br>
+            <mat-checkbox class="example-margin">Uses backup and recovery</mat-checkbox><br>
+            <mat-checkbox class="example-margin">Uses single signon</mat-checkbox><br>
+
+        </mat-tab>
+
+        <!-- Tab Contacts -->
+        <mat-tab label="Contacts">
+            <mat-form-field appearance="fill" style="width:60vw">
+                <mat-label>Product Owner</mat-label>
+                <input matInput>
+            </mat-form-field>
+            <br>
+            <br>
+            <mat-label>Team</mat-label>
+            <mat-list style="width:60vw">
+                <mat-list-item> Pepper (Dev) </mat-list-item>
+                <mat-list-item> Salt (QS)</mat-list-item>
+                <mat-list-item> Paprika (Concepti) </mat-list-item>
+            </mat-list>
+        </mat-tab>
+
+
+        <!-- Tab Connections-->
+        <mat-tab label="Connections">
+            <mat-label>Incoming</mat-label>
+            <mat-list style="width:60vw">
+                <mat-list-item> Pepper (PRODUCTIVE) </mat-list-item>
+                <mat-list-item> Salt (PLANNED)</mat-list-item>
+                <mat-list-item> Paprika (PLANNED) </mat-list-item>
+            </mat-list>
+            <br>
+            <br>
+            <br>
+            <mat-label>Outgoing</mat-label>
+            <mat-list style="width:60vw">
+                <mat-list-item> Pepper (PRODUCTIVE) </mat-list-item>
+                <mat-list-item> Salt (PRODUCTIVE)</mat-list-item>
+                <mat-list-item> Paprika (PRODUCTIVE) </mat-list-item>
+            </mat-list>
+        </mat-tab>
+
+        <!-- Tab Runtime-->
+        <mat-tab label="Runtime">
+            <mat-form-field appearance="fill" style="width:60vw">
+                <mat-label>Deployment</mat-label>
+                <select matNativeControl required>
+                    <option value="locally">LOCALLY </option>
+                    <option value="rz">RZ </option>
+                </select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" style="width:60vw">
+                <mat-label>Deploymentname</mat-label>
+                <input matInput>
+            </mat-form-field>
+            <mat-form-field appearance="fill" style="width:60vw">
+                <mat-label>Location</mat-label>
+                <input matInput>
+            </mat-form-field>
+
+        </mat-tab>
+
+        <!-- Tab Development-->
+        <mat-tab label="Development">
+            <mat-checkbox class="example-margin">Fits architecture</mat-checkbox><br>
+            <mat-form-field appearance="fill" style="width:60vw">
+                <mat-label>Architecture Exceptions</mat-label>
+                <textarea matInput required></textarea>
+            </mat-form-field>
+            <br>
+            <br>
+            <br>
+
+
+            <mat-form-field appearance="fill" style="width:60vw">
+                <mat-label>VCS</mat-label>
+                <input matInput>
+            </mat-form-field>
+            <mat-form-field appearance="fill" style="width:60vw">
+                <mat-label>Jenkins</mat-label>
+                <input matInput>
+            </mat-form-field>
+            <mat-form-field appearance="fill" style="width:60vw">
+                <mat-label>Jira</mat-label>
+                <input matInput>
+            </mat-form-field>
+            <mat-form-field appearance="fill" style="width:60vw">
+                <mat-label>Documentation</mat-label>
+                <input matInput>
+            </mat-form-field>
+
+            <br>
+            <br>
+            <br>
+
+            <mat-label>Technologies</mat-label>
+            <mat-list style="width:60vw">
+                <mat-list-item> Gradle 6.7.1</mat-list-item>
+                <mat-list-item> Springboot 2.3</mat-list-item>
+            </mat-list>
+
+
+
+
+        </mat-tab>
+    </mat-tab-group>
+
+
+</div>

@@ -3,6 +3,7 @@ package org.spica.javaclient.actions.booking;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.AbstractAction;
@@ -19,9 +20,9 @@ import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.timetracker.TimetrackerService;
 import org.spica.javaclient.utils.DateUtil;
 
+@Slf4j
 public class FinishDayAction extends AbstractAction {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(FinishDayAction.class);
 
     private DateUtil dateUtil = new DateUtil();
 
@@ -39,7 +40,7 @@ public class FinishDayAction extends AbstractAction {
 
     @Override
     public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
-        LOGGER.info("Finish day called with parameter " + commandLineArguments);
+        log.info("Finish day called with parameter " + commandLineArguments);
 
         LocalDate lastOpenEventDate = getDateLastOpenEvent(actionContext);
         if (lastOpenEventDate.equals(LocalDate.now()) || inputParams.getInputValueAsBoolean(KEY_CONFIRM_LATER, Boolean.FALSE)) {

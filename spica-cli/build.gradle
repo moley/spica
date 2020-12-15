@@ -71,7 +71,7 @@ task installLocal(type: Copy) {
   def localCliInstallationPath = '/Applications/SpicaCLI.app/Contents/app/'
   from file('build/dmgInput')
   eachFile {
-    println "Install $it"
+    println "Install $it to $destinationDir/$it.path"
   }
   into localCliInstallationPath
   includeEmptyDirs = false

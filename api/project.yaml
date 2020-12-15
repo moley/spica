@@ -1,0 +1,251 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: "spica rest project component"
+  description: "Rest API for the time component of spica communication server"
+servers:
+  - url: http://localhost/api
+security:
+  - BasicAuth
+
+paths:
+  /projects:
+    get:
+      tags:
+        - project
+      operationId: "getProjects"
+      description: "returns all projects the current user is authorized to see"
+      responses:
+        '200':
+          description: list of projects
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectContainerInfo"
+    post:
+      tags:
+        - project
+      operationId: "createProject"
+      description: "creates a new project"
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: created project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectInfo"
+
+  /projects/{projectId}/tasks:
+    get:
+      tags:
+        - task
+      operationId: "getTasks"
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: list of tasks
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskContainerInfo"
+
+    post:
+      tags:
+        - task
+      operationId: "createTask"
+      description: "creates a new task"
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: name
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: created task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskInfo"
+
+
+
+
+  /tasks/import:
+    post:
+      tags:
+        - task
+      operationId: "importTasks"
+      description: "import tasks for user from external system (currently only jira)"
+      parameters:
+        - in: query
+          name: userId
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: usernameExternalSystem
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: passwordExternalSystem
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: created task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskContainerInfo"
+
+  /tasks/{taskId}:
+    delete:
+      tags:
+        - task
+      operationId: "deleteTask"
+      parameters:
+        - in: query
+          name: userId
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: taskId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Null response'
+
+  /tasks/{taskId}/finish:
+    post:
+      tags:
+        - task
+      operationId: "finishTask"
+      description: "finish a task in the database and the external system"
+      parameters:
+        - in: query
+          name: userId
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: taskId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Null response'
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+
+  schemas:
+    ProjectInfo:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        name:
+          type: "string"
+        color:
+          type: "string"
+        parentId:
+          type: "string"
+
+    WorkingSetInfo:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        name:
+          type: "string"
+        localFolder:
+          type: "string"
+        sourceparts:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/WorkingSetSourcePartInfo"
+
+    WorkingSetSourcePartInfo:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        url:
+          type: "string"
+        branch:
+          type: "string"
+        enabled:
+          type: "boolean"
+
+    ProjectContainerInfo:
+      type: "object"
+      properties:
+        projects:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ProjectInfo"
+
+
+    TaskInfo:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        name:
+          type: "string"
+        description:
+          type: "string"
+        taskState:
+          type: "string"
+          enum: [new, finished]
+        externalSystemKey:
+          type: "string"
+        externalSystemID:
+          type: "string"
+        projectId:
+          type: "string"
+        parentId:
+          type: "string"
+        links:
+          type: "array"
+          items:
+            type: "string"
+        priority:
+          type: int
+        plannedDate:
+          type: string
+          format: date
+
+    TaskContainerInfo:
+      type: "object"
+      properties:
+        tasks:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/TaskInfo"

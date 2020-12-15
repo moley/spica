@@ -1,0 +1,38 @@
+plugins {
+  id "com.moowork.node" version "1.3.1"
+}
+
+apply plugin : 'base'
+apply plugin: 'org.openapi.generator'
+
+
+//here we are going to store swagger files
+def swaggerList = []
+
+//iteration by swagger file root folder and save into swaggerList variable
+def dir = new File("$rootDir/api/".toString())
+dir.eachFileRecurse(groovy.io.FileType.FILES) { file ->
+  if (file.getName().endsWith(".yaml"))
+    swaggerList << file
+}
+
+// Iterate on all swagger files and generate a task for each one with the nomenclature openApiGenerate + swagger name
+swaggerList.each {
+  def apiName = it.getName().replace(".yaml", "");
+
+  def openApiGenerateTask = tasks.create("openApiGenerate" + apiName.capitalize(), org.openapitools.generator.gradle.plugin.tasks.GenerateTask, {
+    generatorName = "typescript-angular"
+    inputSpec = "$rootDir/api/".toString() + "${apiName}.yaml"
+    outputDir = "$projectDir/src/app/modules/generated".toString()
+    apiPackage = "api"
+    modelPackage = "model"
+    invokerPackage = "api"
+  })
+
+  tasks.build.dependsOn openApiGenerateTask
+
+}
+
+tasks.build.dependsOn tasks.npmInstall
+
+
