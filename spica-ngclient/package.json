@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "prestart": "npm run generate:api",
+    "prestart": "npm run",
     "start": "ng serve",
-    "prebuild": "npm run generate:api",
+    "prebuild": "npm run",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
