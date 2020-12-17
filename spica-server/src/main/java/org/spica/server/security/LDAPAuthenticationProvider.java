@@ -1,6 +1,7 @@
 package org.spica.server.security;
 
 import java.util.ArrayList;
+import lombok.extern.slf4j.Slf4j;
 import org.spica.server.user.domain.User;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,6 +10,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class LDAPAuthenticationProvider implements AuthenticationProvider {
 
   @Override
@@ -23,9 +25,10 @@ public class LDAPAuthenticationProvider implements AuthenticationProvider {
     if (userInfo != null) {
       // use the credentials
       // and authenticate against the third-party system
-      return new UsernamePasswordAuthenticationToken(
-          name, password, new ArrayList<>());
+      log.info("Return authentication token for user " + name);
+      return new UsernamePasswordAuthenticationToken(name, password, new ArrayList<>());
     } else {
+      log.info("Return authentication token null");
       return null;
     }
   }

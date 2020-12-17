@@ -1,18 +1,15 @@
 package org.spica.commons;
 
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SpicaProperties {
@@ -39,17 +36,14 @@ public class SpicaProperties {
 
         logProperties(properties, "defaults");
 
-        File customPropertiesFile = getCustomPropertiesFile();
-        log.info("Custom properties file " + customPropertiesFile.getAbsolutePath() + " exists: " + customPropertiesFile.exists());
-        if (customPropertiesFile.exists()) {
+        Collection<File> customPropertiesFiles = getCustomPropertiesFile();
+        for (File next: customPropertiesFiles) {
           Properties customProperties = new Properties();
-          customProperties.load(new FileInputStream(customPropertiesFile));
+          customProperties.load(new FileInputStream(next));
           properties.putAll(customProperties);
           customPropertiesFromFile.putAll(customProperties);
-          logProperties(properties, "customized from " + customPropertiesFile.getAbsolutePath());
+          logProperties(properties, "custom property file " + next.getAbsolutePath());
         }
-        else
-          log.info("Custom properties file " + customPropertiesFile.getAbsolutePath() + " does not exist");
 
         properties.putAll(System.getProperties());
         logProperties(properties, "systemproperties");
@@ -60,36 +54,26 @@ public class SpicaProperties {
     }
   }
 
-  public File getCustomPropertiesFile () {
-    return new File (getSpicaHome(), FILENAME_SPICA_PROPERTIES);
+  public Collection<File> getCustomPropertiesFile () {
+    List<File> files = new ArrayList<>();
+
+    File globalPropertiesFile = new File (getGlobalSpicaHome(), FILENAME_SPICA_PROPERTIES).getAbsoluteFile();
+    if (globalPropertiesFile.exists())
+      files.add(globalPropertiesFile);
+
+    //local configs overwrite global configs
+    File localPropertiesFile = new File (".spica", FILENAME_SPICA_PROPERTIES).getAbsoluteFile();
+    if (localPropertiesFile.exists())
+      files.add(localPropertiesFile);
+
+    return files;
   }
 
   public void setProperty (final String key, String value) {
-    setProperty(key, value, false);
-  }
-
-  public void setProperty (final String key, String value, final boolean save) {
     if (value == null)
       properties.remove(key);
     else
       properties.setProperty(key, value);
-
-    if (save) {
-
-      if (value == null)
-        customPropertiesFromFile.remove(key);
-      else
-        customPropertiesFromFile.setProperty(key, value);
-
-      try {
-        customPropertiesFromFile.store(new FileWriter(getCustomPropertiesFile()), "properties saved from spica");
-        log.info("Saved persistent properties in " + getCustomPropertiesFile().getAbsolutePath());
-      } catch (IOException e) {
-        log.error("Could not save " + getCustomPropertiesFile().getAbsolutePath(), e);
-      }
-
-    }
-
   }
 
   public Properties getProperties () {

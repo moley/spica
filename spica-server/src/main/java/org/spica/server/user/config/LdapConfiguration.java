@@ -23,6 +23,11 @@ public interface LdapConfiguration {
   String PROPERTY_LDAP_PORT = "spica.ldap.port";
 
   /**
+   * Prefix to be used when authenticating
+   */
+  String PROPERTY_LDAP_USERNAME_PREFIX = "spica.ldap.usernamePrefix";
+
+  /**
    * The bind dn for the request
    */
   String PROPERTY_LDAP_BIND_DN = "spica.ldap.bind.dn";

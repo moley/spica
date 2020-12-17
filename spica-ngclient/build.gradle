@@ -38,7 +38,7 @@ swaggerList.each {
   def openApiGenerateTask = tasks.create("openApiGenerate" + apiName.capitalize(), org.openapitools.generator.gradle.plugin.tasks.GenerateTask, {
     generatorName = "typescript-angular"
     inputSpec = "$rootDir/api/".toString() + "${apiName}.yaml"
-    outputDir = "$projectDir/src/app/modules/generated".toString()
+    outputDir = "$projectDir/src/app/modules/generated/" + apiName.toString()
     apiPackage = "api"
     modelPackage = "model"
     invokerPackage = "api"
@@ -52,6 +52,10 @@ tasks.build.dependsOn tasks.buildClient
 tasks.withType(org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
   outputs.upToDateWhen { false }
   outputs.cacheIf { false }
+}
+
+tasks.clean.doFirst {
+  project.file("src/app/modules/generated").deleteDir()
 }
 
 

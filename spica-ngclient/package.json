@@ -1,5 +1,5 @@
 {
-  "name": "eplanner",
+  "name": "spica-ngclient",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",

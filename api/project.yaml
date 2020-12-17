@@ -4,7 +4,7 @@ info:
   title: "spica rest project component"
   description: "Rest API for the time component of spica communication server"
 servers:
-  - url: http://localhost/api
+  - url: http://localhost:8765/api
 security:
   - BasicAuth
 

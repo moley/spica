@@ -14,6 +14,8 @@ import org.apache.directory.ldap.client.api.LdapNetworkConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.commons.SpicaProperties;
+import org.spica.commons.credentials.PasswordMask;
+import org.spica.server.user.config.LdapConfiguration;
 import org.spica.server.user.domain.User;
 import org.spica.server.user.service.UserProvider;
 
@@ -48,54 +50,60 @@ public class LDAPUserProvider implements UserProvider {
 
   @Override
   public User getUserInfo(String username, final String password) {
-    LOGGER.info("Requesting user info for user " + username + " and password (" + password.length() + ")");
+    PasswordMask passwordMask = new PasswordMask();
+    String maskedPassword = passwordMask.getMaskedPassword(password);
 
-    SpicaProperties leguanProperties = new SpicaProperties();
+    LOGGER.info("Requesting user info for user <" + username + "> and password <" + maskedPassword + ">");
+
+    SpicaProperties spicaProperties = new SpicaProperties();
 
     User user = new User();
 
-    String ldapHostname = leguanProperties.getValueNotNull(LDAPConfiguration.PROPERTY_LDAP_HOST);
-    Integer ldapPort = leguanProperties.getValueAsInt(leguanProperties.getValueNotNull(LDAPConfiguration.PROPERTY_LDAP_PORT));
-    String ldapBaseDn = leguanProperties.getValueNotNull(LDAPConfiguration.PROPERTY_LDAP_BASE_DN);
-    String ldapBindDn = leguanProperties.getValueNotNull(LDAPConfiguration.PROPERTY_LDAP_BIND_DN);
-    String ldapBindPwd = leguanProperties.getValueNotNull(LDAPConfiguration.PROPERTY_LDAP_BIND_PASSWORD);
-    String ldapUsernameField = leguanProperties.getValueNotNull(LDAPConfiguration.PROPERTY_LDAP_FIELD_USERNAME);
-    String ldapDisplaynameField = leguanProperties.getValueNotNull(LDAPConfiguration.PROPERTY_LDAP_FIELD_DISPLAYNAME);
+    String ldapHostname = spicaProperties.getValueNotNull(LdapConfiguration.PROPERTY_LDAP_HOST);
+    Integer ldapPort = spicaProperties.getValueAsInt(spicaProperties.getValueNotNull(LdapConfiguration.PROPERTY_LDAP_PORT));
+    String ldapBaseDn = spicaProperties.getValueNotNull(LdapConfiguration.PROPERTY_LDAP_BASE_DN);
+    String ldapUsernameField = spicaProperties.getValueNotNull(LdapConfiguration.PROPERTY_LDAP_FIELD_USERNAME);
+    String ldapDisplaynameField = spicaProperties.getValueNotNull(LdapConfiguration.PROPERTY_LDAP_FIELD_DISPLAYNAME);
+    String ldapUserPrefix = spicaProperties.getValueNotNull(LdapConfiguration.PROPERTY_LDAP_USERNAME_PREFIX);
 
 
+    String completeUsername = ldapUserPrefix + username;
     LdapConnection connection = createLdapConnection(ldapHostname, ldapPort, true);
 
-    LOGGER.info("Created connection with");
-    LOGGER.info("Host              : <" + ldapHostname + ">");
-    LOGGER.info("BaseDn            : <" + ldapBaseDn + ">");
-    LOGGER.info("BindDn            : <" + ldapBindDn + ">");
-    LOGGER.info("Bind Password     : <" + ldapBindPwd + ">");
-    LOGGER.info("Username Field    : <" + ldapUsernameField + ">");
-    LOGGER.info("Displayname Field : <" + ldapDisplaynameField + ">");
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Created connection with");
+      LOGGER.debug("Host              : <" + ldapHostname + ">");
+      LOGGER.debug("BaseDn            : <" + ldapBaseDn + ">");
+      LOGGER.debug("User prefix       : <" + ldapUserPrefix + ">");
+      LOGGER.debug("Username Field    : <" + ldapUsernameField + ">");
+      LOGGER.debug("Displayname Field : <" + ldapDisplaynameField + ">");
+      LOGGER.debug("Complete username : <" + completeUsername + ">");
+      LOGGER.debug("Password          : <" + maskedPassword + ">");
+    }
 
     long time = 0;
 
     try {
       BindRequest bindRequest = new BindRequestImpl();
-      bindRequest.setName(ldapBindDn); //"INTRA\\ServiceLinux"
-      bindRequest.setCredentials(ldapBindPwd);
+      bindRequest.setName(completeUsername); //"INTRA\\ServiceLinux"
+      bindRequest.setCredentials(password);
       connection.bind(bindRequest);
 
       ResultCodeEnum resultCode = bindRequest.getResultResponse().getLdapResult().getResultCode();
-      LOGGER.info("Authenticated with name " + username + " and credentials " + password + ": " + connection.isAuthenticated() + "(" + resultCode.getMessage() + ")");
+      LOGGER.debug("Binding result: " + connection.isAuthenticated() + "(" + resultCode.getMessage() + ")");
       if (connection.isAuthenticated()) {
 
         long from = System.currentTimeMillis();
 
         String searchUsersFilter = "(" + ldapUsernameField + "=" + username + ")";
 
-        LOGGER.info("Bind to user completed");
-        LOGGER.info("Search with baseDn <" + ldapBaseDn + ">, user filter <" + searchUsersFilter + ">");
+        LOGGER.debug("Bind to user completed");
+        LOGGER.debug("Search with baseDn <" + ldapBaseDn + ">, user filter <" + searchUsersFilter + ">");
 
         EntryCursor cursor = connection.search(ldapBaseDn, searchUsersFilter, SearchScope.SUBTREE, ldapUsernameField, ldapDisplaynameField);
 
         if (! cursor.next()) {
-          LOGGER.error("No user found for username " + username);
+          LOGGER.warn("No user found for username " + username);
           return null;
         }
 
@@ -110,7 +118,7 @@ public class LDAPUserProvider implements UserProvider {
           user.setDisplayname(displaynameFound);
           user.setPassword(password);
 
-          LOGGER.info("Found user " + usernameFound + " with password (" + password.length() + ") and displayname " + displaynameFound);
+          LOGGER.info("Found user " + usernameFound + " with password (" + maskedPassword+ ") and displayname " + displaynameFound);
 
         } else {
           LOGGER.error("Username invalid, should be " + username + " but was " + usernameFound + "(" + cn + "), check your search query");
