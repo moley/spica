@@ -52,7 +52,10 @@ Afterwards call `./gradlew publish` to release the following artifacts:
 
 ##Create demo data 
 - `./gradlew :spica-testutils:demoData`
-                                   
+            
+            
+##Additional documentation links 
+https://mapstruct.org/                                   
 
 
 

@@ -33,7 +33,7 @@ dependencies {
   }
 
   compile 'io.swagger:swagger-annotations:1.5.22'
-
+  compile 'org.mapstruct:mapstruct:1.4.1.Final'
 
   runtime 'com.h2database:h2:1.4.179'
   runtime 'org.postgresql:postgresql:42.2.16.jre7'
