@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-//import { Software } from '../software/software.model';
+import { SoftwareInfo } from '../generated/software';
+
 
 @Component({
   selector: 'app-softwaredetails',
@@ -8,12 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SoftwareDetailsComponent implements OnInit {
 
-  //software: Software;
+  software: SoftwareInfo;
 
   constructor() { }
 
   ngOnInit() {
-    //this.software = new Software('Component1', 12, 'Description1');
+    this.software = {name: 'Component1', id: '12', description: 'Description1'}
   }
 
 }

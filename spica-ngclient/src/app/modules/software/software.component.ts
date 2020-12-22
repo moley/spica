@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { Software } from '../generated/software/model/software';
+import { SoftwareInfo } from '../generated/software/model/softwareInfo';
 import { SoftwareService } from '../generated/software/api/software.service';
 
 
@@ -12,7 +12,7 @@ import { SoftwareService } from '../generated/software/api/software.service';
 export class SoftwareComponent implements OnInit {
 
   displayedColumns: string[] = ['id', 'name', 'description'];
-  dataSource: Software[];
+  dataSource: SoftwareInfo[];
 
   constructor(private softwareService: SoftwareService) { }
 

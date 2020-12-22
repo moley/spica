@@ -23,7 +23,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Software"
+                  $ref: "#/components/schemas/SoftwareInfo"
 
 components:
   securitySchemes:
@@ -32,7 +32,7 @@ components:
       scheme: basic
 
   schemas:
-    Deployment:
+    DeploymentInfo:
       type: "object"
       properties:
        id:
@@ -40,7 +40,7 @@ components:
        location:
          type: "string"
 
-    Status:
+    StatusInfo:
       type: "object"
       properties:
         id:
@@ -48,13 +48,13 @@ components:
         additionalText:
           type: "string"
 
-    Type:
+    TypeInfo:
       type: "object"
       properties:
         id:
           type: "string"
 
-    TeamMember:
+    TeamMemberInfo:
       type: "object"
       properties:
         id:
@@ -62,15 +62,8 @@ components:
         role:
           type: "string"
 
-    SoftwareAggregate:
-      type: "object"
-      properties:
-        software:
-          type: array
-          items:
-            $ref: "#/components/schema/Software"
 
-    Software:
+    SoftwareInfo:
       type: "object"
       properties:
         id:
@@ -84,11 +77,11 @@ components:
         teammembers:
           type: array
           items:
-            $ref: "#/components/schema/TeamMember"
-        typeId:
-          $ref: "#/components/schema/Type"
-        statusId:
-          $ref: "#/components/schema/Status"
+            $ref: "#/components/schema/TeamMemberInfo"
+        type:
+          $ref: "#/components/schema/TypeInfo"
+        status:
+          $ref: "#/components/schema/StatusInfo"
         vcs:
           type: "string"
         technologies:
@@ -96,10 +89,10 @@ components:
           items:
             type: "string"
         parent:
-          $ref: "#/components/schema/Software"
+          $ref: "#/components/schema/SoftwareInfo"
         children:
           type: array
           items:
-            $ref: "#/components/schema/Software"
+            $ref: "#/components/schema/SoftwareInfo"
 
 

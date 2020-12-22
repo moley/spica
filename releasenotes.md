@@ -1,3 +1,7 @@
+**0.14**
+- spica ngclient
+- first implementation software
+
 **0.13**
 - toggle spica fx 
 - bugfixing  reading mail content

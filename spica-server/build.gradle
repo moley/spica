@@ -114,12 +114,13 @@ docker {
     email = System.getProperty('docker.email')
   }
   springBootApplication {
-    baseImage = ' adoptopenjdk/openjdk11-openj9:latest'
+    baseImage = 'openjdk:14'
     ports = [8080]
     images = ["markusoley/spica:${jar.archiveVersion.get()}"]
   }
 }
-dockerBuildImage.dependsOn classes, bootJar
+tasks.bootJar.mustRunAfter project(':spica-ngclient').tasks.buildClientProd, project(':spica-ngclient').tasks.buildClient
+tasks.dockerBuildImage.dependsOn project(':spica-ngclient').tasks.buildClientProd, classes, bootJar
 
 
 

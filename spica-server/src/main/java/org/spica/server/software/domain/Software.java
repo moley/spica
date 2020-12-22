@@ -1,11 +1,10 @@
-package org.spica.server.software.db;
+package org.spica.server.software.domain;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-class SoftwareDb {
+public class Software {
 
   @Id
   @EqualsAndHashCode.Include
@@ -55,12 +54,11 @@ class SoftwareDb {
 
   @ManyToOne(fetch = FetchType.EAGER, optional = true)
   @JoinColumn(name="parent_id", referencedColumnName = "id")
-  private SoftwareDb parent;
-
-
+  private Software parent;
 
   private String importedFrom;
 
+  @ElementCollection
   private List<String> deployments = new ArrayList<>();
 
   private String location;

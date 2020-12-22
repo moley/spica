@@ -19,6 +19,12 @@ task buildClient(type: NpmTask, dependsOn: 'npmInstall') {
   args = ['run', 'build']
 }
 
+task buildClientProd(type: NpmTask, dependsOn: 'npmInstall') {
+  group = 'build'
+  description = 'Compile client side assets for production'
+  args = ['run', 'buildProd']
+}
+
 task clientTest(type: NpmTask, dependsOn: 'npmInstall') {
   group = 'verification'
   description = 'Executes client side unit tests'
