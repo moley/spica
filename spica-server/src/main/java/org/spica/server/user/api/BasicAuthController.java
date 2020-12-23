@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@CrossOrigin(origins="*")
+@CrossOrigin(allowedHeaders = "*", origins = "*", maxAge = 3600)
 @Slf4j
 public class BasicAuthController {
 

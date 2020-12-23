@@ -5,7 +5,6 @@ services:
     container_name: nginx
     restart: unless-stopped
     ports:
-      - "80:80"
       - "443:443"
     volumes:
       - ./log:/var/log/nginx
@@ -14,7 +13,7 @@ services:
       - ./conf/nginx.key:/etc/nginx/nginx.key
 
   spica:
-    image: markusoley/spica:0.1
+    image: markusoley/spica:0.14
     container_name: spica
     restart: unless-stopped
     volumes:

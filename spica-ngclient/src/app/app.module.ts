@@ -20,6 +20,13 @@ import { FormsModule } from '@angular/forms';
 import { LoginActivate } from './loginActivate.guard';
 
 import { environment } from '../environments/environment';
+import { BASE_PATH as COMMUNICATION_BASE_PATH} from './modules/generated/communication';
+import { BASE_PATH as DASHBOARD_BASE_PATH} from './modules/generated/dashboard';
+import { BASE_PATH as LINKS_BASE_PATH} from './modules/generated/links';
+import { BASE_PATH as PROJECT_BASE_PATH} from './modules/generated/project';
+import { BASE_PATH as SOFTWARE_BASE_PATH} from './modules/generated/software';
+import { BASE_PATH as TIMES_BASE_PATH} from './modules/generated/times';
+import { BASE_PATH as USER_BASE_PATH} from './modules/generated/user';
 
 
 
@@ -49,6 +56,28 @@ import { environment } from '../environments/environment';
         useClass: HttpInterceptorService,
         multi: true
       },
+      { provide: COMMUNICATION_BASE_PATH,
+        useValue: environment.API_BASE_PATH
+      },
+      { provide: DASHBOARD_BASE_PATH,
+        useValue: environment.API_BASE_PATH
+      },
+      { provide: LINKS_BASE_PATH,
+        useValue: environment.API_BASE_PATH
+      },
+      { provide: PROJECT_BASE_PATH,
+        useValue: environment.API_BASE_PATH
+      },
+      { provide: SOFTWARE_BASE_PATH,
+        useValue: environment.API_BASE_PATH
+      },
+      { provide: TIMES_BASE_PATH,
+        useValue: environment.API_BASE_PATH
+      },
+      { provide:  USER_BASE_PATH,
+        useValue: environment.API_BASE_PATH
+      },
+
       LoginActivate
     ],
   bootstrap: [AppComponent]

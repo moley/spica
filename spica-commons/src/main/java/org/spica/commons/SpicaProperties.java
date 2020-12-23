@@ -109,7 +109,6 @@ public class SpicaProperties {
       throw new IllegalStateException("configuration with key " + key + " must be 'true' or 'false'");
   }
 
-
   public String getValueNotNull (final String key) {
     String value = getValue(key);
     if (value == null)
