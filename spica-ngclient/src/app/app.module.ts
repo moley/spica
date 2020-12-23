@@ -82,4 +82,7 @@ import { BASE_PATH as USER_BASE_PATH} from './modules/generated/user';
     ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+  
+
+}
