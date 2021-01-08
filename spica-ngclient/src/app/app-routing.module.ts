@@ -16,15 +16,15 @@ const routes: Routes = [{
   }, {
     path: 'app',
     component: DashboardComponent,
-    canActivate:[LoginActivate]
+    //canActivate:[LoginActivate]
   }, {
     path: 'app/software',
     component: SoftwareComponent, 
-    canActivate:[LoginActivate]
+    //canActivate:[LoginActivate]
   }, {
     path: 'app/software/:id',
     component: SoftwareDetailsComponent, 
-    canActivate:[LoginActivate]
+    //canActivate:[LoginActivate]
   }]
 }];
 

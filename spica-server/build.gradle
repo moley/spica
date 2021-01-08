@@ -101,9 +101,6 @@ sourceSets {
   }
 }
 
-
-
-
 println "Docker - User:" + System.getProperty('docker.username')
 println "Docker - Mail:" + System.getProperty('docker.email')
 
