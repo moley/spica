@@ -1,6 +1,9 @@
 language: java
 install: true
 
+node_js:
+  - 15
+
 os:
   - linux
   - osx
