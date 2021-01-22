@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,8 +24,10 @@ public class Relationship extends ObjectWithStatus {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
+  @OneToOne
   private Software source;
 
+  @OneToOne
   private Software target;
 
 }
