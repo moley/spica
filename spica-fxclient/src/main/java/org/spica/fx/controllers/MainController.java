@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.Timer;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
@@ -30,10 +28,6 @@ import org.controlsfx.control.PopOver;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.spica.commons.SpicaProperties;
-import org.spica.javaclient.StandaloneActionContext;
 import org.spica.commons.UserPresence;
 import org.spica.commons.filestore.FilestoreService;
 import org.spica.commons.xmpp.XMPPAdapter;
@@ -47,6 +41,7 @@ import org.spica.fx.MaskLoader;
 import org.spica.fx.ScreenManager;
 import org.spica.fx.clipboard.ClipboardItem;
 import org.spica.javaclient.Configuration;
+import org.spica.javaclient.StandaloneActionContext;
 import org.spica.javaclient.exceptions.NotFoundException;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.MessageType;
@@ -79,7 +74,7 @@ public class MainController extends AbstractController  {
 
   private ScreenManager screenManager = new ScreenManager();
 
-  private boolean foldedOut = true;
+  private boolean foldedOut = false;
 
   private String getVersion () {
     log.info("Determine version of fx app");
@@ -101,10 +96,8 @@ public class MainController extends AbstractController  {
     }
   }
 
-  public void toggleVisibility (final boolean toVisibility) {
-    log.info("toggle visibility to " + toVisibility + "(folded out == " + foldedOut + ")");
-    if (foldedOut == toVisibility)
-      return;
+  public void toggleVisibility (final boolean toFoldedOut) {
+    log.info("toggle visibility to " + toFoldedOut + "(folded out == " + foldedOut + ")");
 
     Tooltip tooltipAppname = new Tooltip();
     Label lblTooltipAppname = new Label();
@@ -112,18 +105,18 @@ public class MainController extends AbstractController  {
     tooltipAppname.setGraphic(lblTooltipAppname);
     lblAppname.setTooltip(tooltipAppname);
 
-    paRootPane.getCenter().setVisible(toVisibility);
-    panHeader.setVisible(toVisibility);
+    paRootPane.getCenter().setVisible(toFoldedOut);
+    panHeader.setVisible(toFoldedOut);
 
     screenManager.layoutEdged(getStage(), true);
 
-    btnToggleVisibility.setGraphic(Consts.createIcon((toVisibility ?"fa-chevron-left" :"fa-chevron-right"), Consts.ICON_SIZE_TOOLBAR));
+    btnToggleVisibility.setGraphic(Consts.createIcon((toFoldedOut ?"fa-chevron-left" :"fa-chevron-right"), Consts.ICON_SIZE_TOOLBAR));
 
-    double width = toVisibility ? ScreenManager.FULL_WIDTH : ScreenManager.HALF_WIDTH;
+    double width = toFoldedOut ? ScreenManager.FULL_WIDTH : ScreenManager.HALF_WIDTH;
 
     getStage().setMaxWidth(width);
     getStage().setMinWidth(width);
-    foldedOut = toVisibility;
+    foldedOut = toFoldedOut;
   }
 
   @FXML
@@ -135,11 +128,7 @@ public class MainController extends AbstractController  {
     btnCloseSearch.setGraphic(Consts.createIcon("fa-close", 15));
     btnToggleVisibility.setGraphic(Consts.createIcon("fa-chevron-left", Consts.ICON_SIZE_TOOLBAR));
 
-    btnToggleVisibility.setOnAction(new EventHandler<ActionEvent>() {
-      @Override public void handle(ActionEvent event) {
-        toggleVisibility(!foldedOut);
-      }
-    });
+    btnToggleVisibility.setOnAction(event -> toggleVisibility(!foldedOut));
 
     btnState.setOnAction(event -> {
 
@@ -348,6 +337,7 @@ public class MainController extends AbstractController  {
         messageInfo.addDocumentsItem(fileId);
 
         File fileInFileStore = filestoreService.file(fileId);
+        log.info("Recieve file " + fileInFileStore.getAbsolutePath());
 
         try {
           incomingFileTransfer.receiveFile(fileInFileStore);
@@ -384,8 +374,8 @@ public class MainController extends AbstractController  {
     btnState.textProperty().bindBidirectional(getApplicationContext().presencePropertyProperty());
     btnState.textProperty().setValue(UserPresence.ONLINE.name());
 
-    if (paRootPane.getCenter() == null)
-      stepToPane(Pages.PLANNING);
+    stepToPane(Pages.DASHBOARD, false);
+
   }
 
   public void showMessageNotifications() {

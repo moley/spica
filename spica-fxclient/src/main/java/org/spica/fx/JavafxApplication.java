@@ -17,11 +17,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.Timer;
+import java.util.UUID;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -35,14 +35,12 @@ import javax.imageio.ImageIO;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.commons.SpicaProperties;
+import org.spica.commons.filestore.FilestoreService;
 import org.spica.fx.clipboard.ClipboardItem;
-import org.spica.fx.clipboard.AttachmentService;
 import org.spica.fx.controllers.MainController;
 import org.spica.fx.controllers.Pages;
 
-@Slf4j
-public class JavafxApplication extends Application {
+@Slf4j public class JavafxApplication extends Application {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(JavafxApplication.class);
 
@@ -54,9 +52,6 @@ public class JavafxApplication extends Application {
   // a timer allowing the tray icon to provide a periodic notification event.
   private Timer notificationTimer = new Timer();
 
-  // format used to display the current time in a tray icon notification.
-  private DateFormat timeFormat = SimpleDateFormat.getTimeInstance();
-
   private MaskLoader<MainController> maskLoader = new MaskLoader<MainController>();
   private Mask<MainController> mask;
 
@@ -65,15 +60,15 @@ public class JavafxApplication extends Application {
   // interacts with the tray icon.
   @Override public void start(final Stage stage) throws IOException {
 
-    LoggerContext context = (LoggerContext)LoggerFactory.getILoggerFactory();
+    LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 
     for (ch.qos.logback.classic.Logger logger : context.getLoggerList()) {
-      for (Iterator<Appender<ILoggingEvent>> index = logger.iteratorForAppenders(); index.hasNext();) {
+      for (Iterator<Appender<ILoggingEvent>> index = logger.iteratorForAppenders(); index.hasNext(); ) {
         Appender<ILoggingEvent> appender = index.next();
 
         if (appender instanceof FileAppender) {
-          FileAppender<ILoggingEvent> fa = (FileAppender<ILoggingEvent>)appender;
-          ResilientFileOutputStream rfos = (ResilientFileOutputStream)fa.getOutputStream();
+          FileAppender<ILoggingEvent> fa = (FileAppender<ILoggingEvent>) appender;
+          ResilientFileOutputStream rfos = (ResilientFileOutputStream) fa.getOutputStream();
           File file = rfos.getFile();
 
           System.out.println(file.getAbsolutePath());
@@ -88,40 +83,40 @@ public class JavafxApplication extends Application {
     mask = maskLoader.load("main");
     mask.getController().setStage(stage);
 
-/**TODO enable again
-    try {
-      GlobalScreen.registerNativeHook();
-    } catch (NativeHookException ex) {
-      System.err.println("There was a problem registering the native hook.");
-      System.err.println(ex.getMessage());
+    /**TODO enable again
+     try {
+     GlobalScreen.registerNativeHook();
+     } catch (NativeHookException ex) {
+     System.err.println("There was a problem registering the native hook.");
+     System.err.println(ex.getMessage());
 
-      System.exit(1);
+     System.exit(1);
+     }
+
+     GlobalScreen.addNativeKeyListener(new NativeKeyListener() {
+    @Override public void nativeKeyTyped(NativeKeyEvent nativeKeyEvent) {
+
+    if ((((nativeKeyEvent.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK)) && nativeKeyEvent
+    .getKeyChar() == 's') {
+    Platform.runLater(new Runnable() {
+    @Override public void run() {
+    paste();
+    showTasks();
+    }
+    });
     }
 
-    GlobalScreen.addNativeKeyListener(new NativeKeyListener() {
-      @Override public void nativeKeyTyped(NativeKeyEvent nativeKeyEvent) {
+    System.out.println("Key Typed: " + nativeKeyEvent.getKeyText(nativeKeyEvent.getKeyCode()));
 
-        if ((((nativeKeyEvent.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK)) && nativeKeyEvent
-            .getKeyChar() == 's') {
-          Platform.runLater(new Runnable() {
-            @Override public void run() {
-              paste();
-              showTasks();
-            }
-          });
-        }
+    }
 
-        System.out.println("Key Typed: " + nativeKeyEvent.getKeyText(nativeKeyEvent.getKeyCode()));
+    @Override public void nativeKeyPressed(NativeKeyEvent nativeKeyEvent) {
 
-      }
+    }
 
-      @Override public void nativeKeyPressed(NativeKeyEvent nativeKeyEvent) {
+    @Override public void nativeKeyReleased(NativeKeyEvent nativeKeyEvent) {
 
-      }
-
-      @Override public void nativeKeyReleased(NativeKeyEvent nativeKeyEvent) {
-
-      }
+    }
     });**/
 
     // instructs the javafx system not to exit implicitly when the last application window is shut.
@@ -129,7 +124,6 @@ public class JavafxApplication extends Application {
 
     // sets up the tray icon (using awt code run on the swing thread).
     javax.swing.SwingUtilities.invokeLater(this::addAppToTray);
-
 
     // out stage will be translucent, so give it a transparent style.
     stage.initStyle(StageStyle.UNDECORATED);
@@ -177,7 +171,7 @@ public class JavafxApplication extends Application {
 
     stage.setScene(scene);
 
-    showMessages();
+    showMask(Pages.DASHBOARD, false);
 
     screenManager.layoutEdged(stage, false);
     LOGGER
@@ -189,7 +183,7 @@ public class JavafxApplication extends Application {
 
     Clipboard sysClip = Toolkit.getDefaultToolkit().getSystemClipboard();
     Transferable clipTf = sysClip.getContents(null);
-    AttachmentService attachmentService = mask.getController().getApplicationContext().getAttachmentService();
+    FilestoreService filestoreService = mask.getController().getActionContext().getServices().getFilestoreService();
 
     //from https://stackoverflow.com/questions/20174462/how-to-do-cut-copy-paste-in-java
 
@@ -200,7 +194,7 @@ public class JavafxApplication extends Application {
           MultiResolutionImage multiResolutionImage = (MultiResolutionImage) clipTf
               .getTransferData(DataFlavor.imageFlavor);
           BufferedImage toolkitImage = (BufferedImage) multiResolutionImage.getResolutionVariants().get(0);
-          File imageFile = attachmentService.createAttachment();
+          File imageFile = filestoreService.file("Clipboard" + UUID.randomUUID() + ".png");
           LOGGER.info("Saving image to file " + imageFile.getAbsolutePath());
           ImageIO.write(toolkitImage, "png", imageFile);
           ClipboardItem clipboardItem = new ClipboardItem();
@@ -208,7 +202,7 @@ public class JavafxApplication extends Application {
           mask.getController().getApplicationContext().getClipboard().getItems().add(clipboardItem);
 
         } catch (Exception e) {
-          e.printStackTrace();
+          throw new IllegalStateException(e);
         }
       }
 
@@ -240,18 +234,14 @@ public class JavafxApplication extends Application {
         Platform.exit();
       }
 
-      boolean isTestEnvironment = new File ("build.gradle").exists();
-
+      boolean isTestEnvironment = new File("build.gradle").exists();
 
       // set up a system tray icon.
       java.awt.SystemTray tray = java.awt.SystemTray.getSystemTray();
 
-      final String icon = isTestEnvironment ? "/spica_test.png": "/spica.png";
+      final String icon = isTestEnvironment ? "/spica_test.png" : "/spica.png";
       java.awt.Image image = ImageIO.read(getClass().getResource(icon));
       java.awt.TrayIcon trayIcon = new java.awt.TrayIcon(image);
-
-      // if the user double-clicks on the tray icon, show the main app stage.
-      trayIcon.addActionListener(event -> Platform.runLater(this::showPlanning));
 
       java.awt.Font defaultFont = java.awt.Font.decode(null);
       java.awt.Font boldFont = defaultFont.deriveFont(java.awt.Font.BOLD);
@@ -322,8 +312,6 @@ public class JavafxApplication extends Application {
     }
   }
 
-
-
   private void hide() {
     stage.hide();
   }
@@ -342,34 +330,22 @@ public class JavafxApplication extends Application {
 
   }
 
-  private void showDashboard() {
-    showMask(Pages.DASHBOARD);
-  }
-
-  private void showPlanning() {
-    showMask(Pages.PLANNING);
-  }
-
-  private void showTasks() {
-    showMask(Pages.TASKS);
-  }
-
-  private void showMessages() {
-    showMask(Pages.MESSAGES);
-  }
-
-  private void showProjects() {
-    showMask(Pages.PROJECTS);
-  }
 
   /**
    * Shows the application stage and ensures that it is brought ot the front of all stages.
    */
   private void showMask(Pages pages) {
+    showMask(pages, true);
+  }
+
+  /**
+   * Shows the application stage and ensures that it is brought ot the front of all stages.
+   */
+  private void showMask(Pages pages, final boolean foldedOut) {
     if (stage != null) {
       stage.show();
       stage.toFront();
-      mask.getController().stepToPane(pages);
+      mask.getController().stepToPane(pages, foldedOut);
     }
   }
 

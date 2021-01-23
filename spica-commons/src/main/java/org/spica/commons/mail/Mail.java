@@ -18,23 +18,25 @@ public class Mail {
 
   private final String subject;
 
+  private final String id;
   private final Date sentDate;
   private final Date creationDate;
   private final int messageNumber;
   private final String from;
   private final String text;
 
-  public Mail (Message message) throws MessagingException, IOException {
-    subject = message.getSubject();
-    sentDate = message.getSentDate();
-    creationDate = message.getSentDate();
-    messageNumber = message.getMessageNumber();
-    from = message.getFrom()[0].toString();
+  public Mail (Message message, final String id) throws MessagingException, IOException {
+    this.id = id;
+    this.subject = message.getSubject();
+    this.sentDate = message.getSentDate();
+    this.creationDate = message.getSentDate();
+    this.messageNumber = message.getMessageNumber();
+    this.from = message.getFrom()[0].toString();
     StringBuilder builderHtml = new StringBuilder();
     StringBuilder builderPlainText = new StringBuilder();
     readContent(builderPlainText, builderHtml, message.getContent());
     log.info("Recieved message " + subject + " from " + sentDate + " from " + from + " with html " + ! builderHtml.toString().isEmpty());
-    text = ! builderHtml.toString().isEmpty() ? builderHtml.toString() : builderPlainText.toString();
+    this.text = ! builderHtml.toString().isEmpty() ? builderHtml.toString() : builderPlainText.toString();
   }
 
   public void readContent (final StringBuilder plainText, final StringBuilder htmlText, Object contentObject) throws MessagingException, IOException {
@@ -55,6 +57,9 @@ public class Mail {
       MimeMultipart mimeMultipart = (MimeMultipart) contentObject;
       for (int i = 0; i < mimeMultipart.getCount(); i++) {
         BodyPart bodyPart = mimeMultipart.getBodyPart(i);
+        if (bodyPart.getFileName() != null) {
+          log.info("Found attachment");
+        }
         if (bodyPart instanceof MimeBodyPart) {
           MimeBodyPart mimeBodyPart = (MimeBodyPart) bodyPart;
           readContent(plainText, htmlText, mimeBodyPart.getContent());
@@ -100,7 +105,7 @@ public class Mail {
     return text;
   }
 
-  public String getId() throws MessagingException {
-    return getFrom() + "-" + getSentDate();
+  public String getId() {
+    return id;
   }
 }

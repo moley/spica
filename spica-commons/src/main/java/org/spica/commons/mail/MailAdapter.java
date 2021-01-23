@@ -1,5 +1,6 @@
 package org.spica.commons.mail;
 
+import com.sun.mail.pop3.POP3Folder;
 import com.sun.mail.util.MailSSLSocketFactory;
 import java.io.File;
 import java.security.GeneralSecurityException;
@@ -85,7 +86,7 @@ public class MailAdapter {
 
       Store store = session.getStore("pop3");
       store.connect();
-      Folder folder = store.getFolder("INBOX");
+      POP3Folder folder = (POP3Folder) store.getFolder("INBOX");
       folder.open(Folder.READ_WRITE);
 
       if (!folder.isOpen())
@@ -94,7 +95,7 @@ public class MailAdapter {
       Message message[] = folder.getMessages();
       for(int i=0;i<message.length;i++){
         Message m = message[i];
-        Mail mail = new Mail(m);
+        Mail mail = new Mail(m, folder.getUID(m));
         if (mail.getId().equals(id)) {
           log.info("Set deleted flag on id " + mail.getId());
           m.setFlag(Flags.Flag.DELETED, true);
@@ -156,7 +157,7 @@ public class MailAdapter {
 
       Store store = session.getStore("pop3");
       store.connect();
-      Folder folder = store.getFolder("INBOX");
+      POP3Folder folder = (POP3Folder) store.getFolder("INBOX");
       folder.open(Folder.READ_ONLY);
 
       if (!folder.isOpen())
@@ -167,7 +168,7 @@ public class MailAdapter {
 
       for(int i=0;i<message.length;i++){
         Message m = message[i];
-        mailCollection.add(new Mail(m));
+        mailCollection.add(new Mail(m, folder.getUID(m)));
       }
 
       folder.close( false );
@@ -187,4 +188,7 @@ public class MailAdapter {
 
 
   }
+
+
+
 }

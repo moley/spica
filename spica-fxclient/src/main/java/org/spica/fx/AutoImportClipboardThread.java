@@ -12,17 +12,16 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import javafx.application.Platform;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.spica.commons.SpicaProperties;
+import org.spica.commons.filestore.FilestoreService;
 import org.spica.fx.clipboard.ClipboardItem;
-import org.spica.fx.clipboard.AttachmentService;
 
 @Slf4j
 public class AutoImportClipboardThread extends Thread {
 
   private ApplicationContext applicationContext;
 
-  private AttachmentService attachmentService = new AttachmentService();
+  private FilestoreService filestoreService = new FilestoreService();
 
 
   public AutoImportClipboardThread(final ApplicationContext applicationContext) {
@@ -44,24 +43,16 @@ public class AutoImportClipboardThread extends Thread {
       WatchKey watchKey;
       while ((watchKey = watchService.take()) != null) {
         final WatchKey finalWatchKey = watchKey;
-        Platform.runLater(new Runnable() {
-          @Override public void run() {
-            for (WatchEvent<?> event : finalWatchKey.pollEvents()) {
-              log.info("Event kind:" + event.kind() + ". File affected: " + event.context() + ".");
-              File affectedFile = new File (importDir, event.context().toString());
-              File linkFile = attachmentService.createAttachment();
-              log.info("Import file " + affectedFile.getAbsolutePath() + " as " + linkFile.getAbsolutePath());
-              try {
-                FileUtils.moveFile(affectedFile, linkFile);
-              } catch (IOException e) {
-                log.error("Could not move " + affectedFile.getAbsolutePath() + " to " + linkFile.getAbsolutePath(), e);
-              }
-              ClipboardItem clipboardItem = new ClipboardItem();
-              clipboardItem.setFile(linkFile);
-              applicationContext.getClipboard().getItems().add(clipboardItem);
-            }
-
+        Platform.runLater(() -> {
+          for (WatchEvent<?> event : finalWatchKey.pollEvents()) {
+            log.info("Event kind:" + event.kind() + ". File affected: " + event.context() + ".");
+            File affectedFile = new File (importDir, event.context().toString());
+            File linkFile = filestoreService.addAutoImport(affectedFile);
+            ClipboardItem clipboardItem = new ClipboardItem();
+            clipboardItem.setFile(linkFile);
+            applicationContext.getClipboard().getItems().add(clipboardItem);
           }
+
         });
 
         watchKey.reset();

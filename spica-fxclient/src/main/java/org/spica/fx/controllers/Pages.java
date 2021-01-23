@@ -3,13 +3,21 @@ package org.spica.fx.controllers;
 public enum Pages {
 
   DASHBOARD ("dashboard", "Dashboard", "fa-tachometer", true),
-  PLANNING ("planning", "Planning", "fa-calendar", true),
+
   MESSAGES ("messages", "Messages", "fa-envelope", true),
   MESSAGEDIALOG ("messagedialog", "Dialog", "fa-envelope", false),
+
   TASKS ("tasks", "Tasks", "fa-tasks", true),
   TASKDETAIL ("taskdetails", "Task Details", "fa-tasks", false),
+
   PROJECTS ("projects", "Projects", "fa-building", true),
   PROJECTDETAIL ("projectdetails", "Project Details", "fa-building", false),
+
+  PLANNING ("planning", "Planning", "fa-calendar", true),
+
+  FILESTORE ("filestore", "FileStore", "fa-file", true),
+
+
   SEARCHBOX ("searchbox", "SearchDialog", "fa-building", false);
 
 

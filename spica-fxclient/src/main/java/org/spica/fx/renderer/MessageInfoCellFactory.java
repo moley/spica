@@ -1,8 +1,12 @@
 package org.spica.fx.renderer;
 
+import java.io.File;
 import java.time.format.DateTimeFormatter;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.image.ImageView;
@@ -15,20 +19,24 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spica.commons.filestore.FilestoreItem;
+import org.spica.commons.filestore.FilestoreService;
 import org.spica.fx.Consts;
 import org.spica.fx.UiUtils;
+import org.spica.fx.logic.FileStoreNavigator;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.UserInfo;
 
 public class MessageInfoCellFactory extends ListCell<MessageInfo> {
 
-
+  private FilestoreService filestoreService;
   private Model model;
 
   private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
-  public MessageInfoCellFactory (final Model model) {
+  public MessageInfoCellFactory (final FilestoreService filestoreService, final Model model) {
+    this.filestoreService = filestoreService;
     this.model = model;
 
   }
@@ -64,7 +72,7 @@ public class MessageInfoCellFactory extends ListCell<MessageInfo> {
       //      bubbledLabel.setText(item.getMessage());
 
 
-      HBox hBox = new HBox(10);
+      HBox messageInfosHBox = new HBox(10);
 
 
       //WebView webView = new WebView();
@@ -85,19 +93,38 @@ public class MessageInfoCellFactory extends ListCell<MessageInfo> {
       chatTimeLabel.getStyleClass().setAll("chat-time");
       userAndTime.getChildren().add(chatTimeLabel);
 
+
+      VBox vbox = new VBox();
+      vbox.getChildren().add(messageInfosHBox);
+
+      if (item.getDocuments() != null) {
+        for (String next : item.getDocuments()) {
+          Button button = new Button(next);
+          vbox.getChildren().add(button);
+          button.setOnAction(event -> {
+            FilestoreItem filestoreItem = filestoreService.item(next);
+            FileStoreNavigator fileStoreNavigator = new FileStoreNavigator();
+            fileStoreNavigator.open(filestoreItem);
+          });
+        }
+      }
+
+
       if (isFromMe) {
         node.getStyleClass().setAll("chat-bubble-me");
-        hBox.setAlignment(Pos.CENTER_RIGHT);
-        hBox.getChildren().add(node);
-        hBox.getChildren().add(userAndTime);
+        messageInfosHBox.setAlignment(Pos.CENTER_RIGHT);
+        vbox.setAlignment(Pos.CENTER_RIGHT);
+        messageInfosHBox.getChildren().add(node);
+        messageInfosHBox.getChildren().add(userAndTime);
       }
       else {
         node.getStyleClass().setAll("chat-bubble-foreign");
-        hBox.getChildren().add(userAndTime);
-        hBox.getChildren().add(node);
-        hBox.setAlignment(Pos.CENTER_LEFT);
+        messageInfosHBox.getChildren().add(userAndTime);
+        messageInfosHBox.getChildren().add(node);
+        messageInfosHBox.setAlignment(Pos.CENTER_LEFT);
+        vbox.setAlignment(Pos.CENTER_LEFT);
       }
-      setGraphic(hBox);
+      setGraphic(vbox);
 
     }
   }

@@ -1,4 +1,4 @@
-
+- file handling from concept
 - optimize import of tasks
 - Multiple selection (Remove bunch of messages at once)
 - Relayout (screen) on Toggle visibility

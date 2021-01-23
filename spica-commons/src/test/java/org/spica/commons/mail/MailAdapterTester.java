@@ -6,6 +6,7 @@ public class MailAdapterTester {
 
     MailAdapter mailAdapter = new MailAdapter();
     for (Mail next: mailAdapter.recieveMails()) {
+      System.out.println ("ID        : " + next.getId());
       System.out.println ("From      : " + next.getFrom());
       System.out.println ("Subject   : " + next.getSubject());
       System.out.println ("Sent on   : " + next.getSentDate());

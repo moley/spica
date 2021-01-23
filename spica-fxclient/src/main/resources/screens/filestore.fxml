@@ -1,0 +1,17 @@
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.ListView?>
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fx.controllers.FileStoreController" alignment="TOP_LEFT" hgap="10" vgap="10" >
+    <stylesheets>
+        <URL value="@/css/spica.css" />
+    </stylesheets>
+    <padding><Insets top="20" bottom="20" left="20" right="20"/> </padding>
+
+    <Label fx:id="lblDashboard" text="FileStore" style="-fx-font-weight: bold"/>
+
+    <ListView fx:id="lviFileStoreItems" GridPane.fillWidth="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" GridPane.fillHeight="true"></ListView>
+
+
+</GridPane>

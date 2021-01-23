@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model>
+    <dashboardItemInfos>
+        <created>2020-10-17T15:26:27.910514</created>
+        <id>051d3794-d725-4efe-8359-dabc5745d27c</id>
+        <itemReference>3c099d2c-3ef0-4c16-af7b-bfd474ebf85c</itemReference>
+        <itemType>EVENT</itemType>
+        <open>false</open>
+    </dashboardItemInfos>
     <eventInfosReal>
         <eventType>PAUSE</eventType>
         <id>3c099d2c-3ef0-4c16-af7b-bfd474ebf85c</id>
         <start>2020-10-17T15:26:27.910514</start>
+        <stop>2020-10-17T17:00:00</stop>
     </eventInfosReal>
     <projectInfos>
         <color>0x80b380ff</color>

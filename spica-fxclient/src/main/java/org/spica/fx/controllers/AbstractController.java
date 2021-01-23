@@ -1,15 +1,11 @@
 package org.spica.fx.controllers;
 
 import java.util.HashMap;
-import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spica.fx.ApplicationContext;
 import org.spica.fx.Mask;
-import org.spica.fx.MaskLoader;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.model.Model;
 
@@ -36,6 +32,10 @@ public abstract class AbstractController {
   }
 
   public void stepToPane (final Pages page) {
+    stepToPane(page, true);
+  }
+
+  public void stepToPane (final Pages page, final boolean foldedOut) {
     log.info("step to pane " +  page.getDisplayname());
     for (Mask nextMask : registeredMasks.values()) {
       nextMask.getParent().setVisible(false);
@@ -46,7 +46,7 @@ public abstract class AbstractController {
 
     AbstractController controller = mask.getController();
     controller.refreshData();
-    controller.getMainController().toggleVisibility(true);
+    controller.getMainController().toggleVisibility(foldedOut);
 
     mask.getParent().setVisible(true);
   }

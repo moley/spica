@@ -35,8 +35,7 @@ import org.spica.javaclient.model.MessageType;
 import org.spica.javaclient.model.MessagecontainerInfo;
 import org.spica.javaclient.model.UserInfo;
 
-@Slf4j
-public class MessageDialogController extends AbstractController {
+@Slf4j public class MessageDialogController extends AbstractController {
 
   @FXML private Label lblFiles;
   @FXML private HTMLEditor hedNewMail;
@@ -49,7 +48,9 @@ public class MessageDialogController extends AbstractController {
   private List<File> files = new ArrayList<File>();
 
   @FXML public void initialize() {
-    lviDialog.setCellFactory(cellfactory -> new MessageInfoCellFactory(getActionContext().getModel()));
+    lviDialog.setCellFactory(
+        cellfactory -> new MessageInfoCellFactory(getActionContext().getServices().getFilestoreService(),
+            getActionContext().getModel()));
     txaNewMessage.setOnKeyPressed(new EventHandler<KeyEvent>() {
       @Override public void handle(KeyEvent event) {
         if (new KeyCodeCombination(KeyCode.ENTER, KeyCombination.SHORTCUT_DOWN).match(event)) {
@@ -69,11 +70,10 @@ public class MessageDialogController extends AbstractController {
     });
   }
 
-  private void adaptFileLabel (){
+  private void adaptFileLabel() {
     if (files.isEmpty()) {
       lblFiles.setText("");
-    }
-    else {
+    } else {
 
       StringBuilder builder = new StringBuilder(files.size() + " files attached: ");
       for (File next : files) {
@@ -90,17 +90,15 @@ public class MessageDialogController extends AbstractController {
 
     boolean filesAdded = false;
 
-    for (ClipboardItem nextItem: getApplicationContext ().getClipboard().getItems()) {
+    for (ClipboardItem nextItem : getApplicationContext().getClipboard().getItems()) {
       if (nextItem.getFiles() != null) {
         filesAdded = true;
         files.addAll(nextItem.getFiles());
-      }
-      else if (nextItem.getString() != null) {
+      } else if (nextItem.getString() != null) {
         String text = txaNewMessage.getText();
         text = text + "\n\n" + nextItem.getString();
         txaNewMessage.setText(text);
-      }
-      else {
+      } else {
         String text = txaNewMessage.getText();
         text = text + "\n\n" + nextItem.getString();
         txaNewMessage.setText(text);
@@ -138,19 +136,18 @@ public class MessageDialogController extends AbstractController {
         hedNewMail.getHtmlText() :
         txaNewMessage.getText());
 
-    for (File nextFile: files) {
+    for (File nextFile : files) {
       messageInfo.addDocumentsItem(nextFile.getAbsolutePath());
     }
 
     boolean firstMail = selectedMessageContainer.getMessage().get(0).equals(messageInfo);
 
     //set all former message to read
-    for (MessageInfo next: selectedMessageContainer.getMessage()) {
+    for (MessageInfo next : selectedMessageContainer.getMessage()) {
       if (next.getReadtime() == null)
         next.setReadtime(LocalDateTime.now());
     }
 
-    
     getActionContext().saveModel("Added new message to messagecontainer " + selectedMessageContainer.getTopic());
 
     if (messageType.equals(MessageType.MAIL)) {
@@ -176,7 +173,8 @@ public class MessageDialogController extends AbstractController {
       try {
 
         UserInfo recipient = getModel().getUsersOrMe(getModel().getSelectedMessageContainer());
-        xmppAdapter.sendMessage(getActionContext().getProperties(), recipient.getUsername(), messageInfo.getMessage(), files);
+        xmppAdapter
+            .sendMessage(getActionContext().getProperties(), recipient.getUsername(), messageInfo.getMessage(), files);
         messageInfo.setSendtime(LocalDateTime.now());
       } catch (InterruptedException | SmackException | IOException | XMPPException e) {
         log.error(e.getLocalizedMessage(), e);

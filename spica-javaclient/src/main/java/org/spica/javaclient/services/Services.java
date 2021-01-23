@@ -27,6 +27,11 @@ public class Services {
   private DownloadService downloadService = new DownloadService();
 
   /**
+   * get the filestore service to be able to investigate files
+   */
+  private FilestoreService filestoreService = new FilestoreService();
+
+  /**
    * get the mail service to be able to e.g.send mails
    * @return mail service
    */
@@ -63,8 +68,6 @@ public class Services {
   private BitbucketService bitbucketService = new BitbucketService();
 
   private MailImporter mailImporter = new MailImporter();
-
-  private FilestoreService filestoreService = new FilestoreService();
 
   public Services() {
     modelCacheService.migrateOnDemand();
