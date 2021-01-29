@@ -33,6 +33,7 @@ public class Message {
   @ElementCollection
   private List<Long> documentIds = new ArrayList<Long>();
 
+
   
   
 

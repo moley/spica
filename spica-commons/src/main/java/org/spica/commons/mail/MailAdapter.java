@@ -111,7 +111,16 @@ public class MailAdapter {
 
   }
 
+  public void sendMail (final String subject, String content, final List<String> to) throws MessagingException {
+    sendMail(subject, content, to, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+  }
+
   public void sendMail (final String subject, String content, final List<String> to, final List<File> files) throws MessagingException {
+    sendMail(subject, content, to, new ArrayList<>(), new ArrayList<>(), files);
+  }
+
+  public void sendMail (final String subject, String content, final List<String> to, final List<String> cc, final List<String> bcc, final List<File> files) throws MessagingException {
+    log.info("send mail with subject " + subject + " and content " + content.length() + " to " + to + " with files " + files);
     SpicaProperties spicaProperties = new SpicaProperties();
     Session session = createSession(spicaProperties);
 
@@ -119,7 +128,18 @@ public class MailAdapter {
     message.setFrom( new InternetAddress( spicaProperties.getValue(PROPERTY_MAIL_SMTP_SENDER)));
 
     for (String nextTo: to) {
+      log.info("Add TO '" + nextTo + "'");
       message.addRecipient(Message.RecipientType.TO, new InternetAddress(nextTo));
+    }
+
+    for (String nextCc: cc) {
+      log.info("Add CC '" + nextCc + "'");
+      message.addRecipient(Message.RecipientType.CC, new InternetAddress(nextCc));
+    }
+
+    for (String nextBcc: bcc) {
+      log.info("Add BCC '" + nextBcc + "'");
+      message.addRecipient(Message.RecipientType.BCC, new InternetAddress(nextBcc));
     }
 
     message.setSubject( subject, "ISO-8859-1" );
@@ -188,6 +208,8 @@ public class MailAdapter {
 
 
   }
+
+
 
 
 

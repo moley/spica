@@ -14,7 +14,7 @@ public class TimetrackerService {
     private ModelCacheService modelCacheService;
 
     private Model getModelCache () {
-        return modelCacheService.get();
+        return modelCacheService.load();
     }
 
     public boolean isPause () {
@@ -78,7 +78,7 @@ public class TimetrackerService {
             newStartedEvent.setReferenceId(lastEventInfo.getReferenceId());
             model.getEventInfosReal().add(newStartedEvent);
         }
-        modelCacheService.set(model, "restart last real event" + eventType.name());
+        modelCacheService.save(model, "restart last real event" + eventType.name());
 
     }
 
@@ -186,7 +186,7 @@ public class TimetrackerService {
         newStartedEvent.setName(topicInfo.getName());
         newStartedEvent.setReferenceId(topicInfo.getId());
         model.getEventInfosReal().add(newStartedEvent);
-        modelCacheService.set(model, "Start work on topic");
+        modelCacheService.save(model, "Start work on topic");
     }
 
     public void startTelephoneCall () {
@@ -199,7 +199,7 @@ public class TimetrackerService {
         eventInfo.setName("Telephone call");
 
         model.getEventInfosReal().add(eventInfo);
-        modelCacheService.set(model, "Start telephone call");
+        modelCacheService.save(model, "Start telephone call");
     }
 
     public void finishTelephoneCall (final MessageInfo messageInfo, UserInfo userInfo, final boolean restartPreviousWork) {
@@ -229,7 +229,7 @@ public class TimetrackerService {
 
     public void finishDay(LocalDateTime localDateTime) {
         stopLastOpenEvent(localDateTime);
-        modelCacheService.set(getModelCache(), "Finish day");
+        modelCacheService.save(getModelCache(), "Finish day");
     }
 
     public ModelCacheService getModelCacheService() {

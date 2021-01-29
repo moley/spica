@@ -15,7 +15,7 @@ public class XMPPAdapterTester {
     SpicaProperties spicaProperties = new SpicaProperties();
     String remoteUser = spicaProperties.getValue("spica.xmpp.remoteUser");
     adapter.login(spicaProperties,
-        (from, message, chat) -> System.out.println("Incoming message from " + from.toString() + ":" + message.toString()),
+        (from, message, chat) -> System.out.println("Incoming message from " + from.toString() + ":" + message.toString() + ":" + chat),
         request -> System.out.println("Incoming file from " + request.toString() + ":" + request.getFileName()));
     System.out.println ("Login successful");
 

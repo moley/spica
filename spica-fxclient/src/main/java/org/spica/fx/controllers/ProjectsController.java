@@ -107,7 +107,7 @@ public class ProjectsController extends AbstractController {
       if (! treProjects.getSelectionModel().isEmpty()) {
         if (event.getClickCount() == 2) {
           ProjectInfo selectedProject = treProjects.getSelectionModel().getSelectedItem().getValue();
-          getModel().setSelectedProjectInfo(selectedProject);
+          getApplicationContext().setSelectedProjectInfo(selectedProject);
           stepToPane(Pages.PROJECTDETAIL);
         }
       }

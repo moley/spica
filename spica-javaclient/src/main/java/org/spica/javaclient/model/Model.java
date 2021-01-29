@@ -4,12 +4,15 @@ import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlRootElement;
+import lombok.Data;
 import org.spica.commons.DashboardItemType;
 import org.spica.javaclient.exceptions.NotFoundException;
 import org.spica.javaclient.model.MessagecontainerInfo.MessagecontainerStateEnum;
@@ -47,12 +50,6 @@ public class Model {
 
   private List<SkillInfo> allSkills = new ArrayList<>();
 
-  private MessagecontainerInfo selectedMessageContainer;
-
-  private TaskInfo selectedTaskInfo;
-
-  private ProjectInfo selectedProjectInfo;
-
   /**
    * getter
    * @return list of all projects
@@ -82,9 +79,9 @@ public class Model {
    * get all project infos excluding the one that is selected
    * @return other projects
    */
-  public Collection<ProjectInfo> getOtherProjectInfos () {
+  public Collection<ProjectInfo> getOtherProjectInfos (final ProjectInfo selectedProjectInfo) {
     Collection<ProjectInfo> projectInfos = new ArrayList<>(getProjectInfos());
-    projectInfos.remove(getSelectedProjectInfo());
+    projectInfos.remove(selectedProjectInfo);
     return projectInfos;
   }
 
@@ -110,8 +107,13 @@ public class Model {
 			if (nextContainer.getMessagecontainerState() == null || !nextContainer.getMessagecontainerState().equals(MessagecontainerStateEnum.FINISHED)) {
 				for (MessageInfo nextMessage : nextContainer.getMessage()) {
 					if (nextMessage.getType() != null && nextMessage.getType().equals(messageType)) {
-					  if (nextMessage.getCreatorId() != null && (nextMessage.getCreatorId().equalsIgnoreCase(from.getId()) ||
-                nextMessage.getRecipientId().equalsIgnoreCase(from.getId())))
+
+					  boolean recipientsContainFrom = false;
+					  for (String next: nextMessage.getRecieversTo()) {
+					    if (next.equalsIgnoreCase(from.getId()))
+					      recipientsContainFrom = true;
+            }
+					  if (nextMessage.getCreatorId() != null && (nextMessage.getCreatorId().equalsIgnoreCase(from.getId()) || recipientsContainFrom))
 					    return nextContainer;
 					}
 				}
@@ -122,12 +124,32 @@ public class Model {
 
 	}
 
+	public MessageInfo createNewMessage (MessageType type) {
+	  MessageInfo messageInfo = new MessageInfo();
+    messageInfo.setCreationtime(LocalDateTime.now());
+    messageInfo.setCreatorId(getMe().getId());
+    messageInfo.setCreatorMailadresse(getMe().getEmail());
+    messageInfo.setType(type);
+    messageInfo.setId(UUID.randomUUID().toString());
+    return messageInfo;
+  }
+
+  public MessagecontainerInfo createNewMessageContainer () {
+	  MessagecontainerInfo messagecontainerInfo = new MessagecontainerInfo();
+	  messagecontainerInfo.setMessage(new ArrayList<>());
+	  return messagecontainerInfo;
+  }
+
   public List<UserInfo> getOtherUsers (final MessagecontainerInfo messagecontainerInfo) {
     UserInfo me = getMe();
     Collection<UserInfo> userInfos = new HashSet<>();
     for (MessageInfo nextMessage: messagecontainerInfo.getMessage()) {
-      if (nextMessage.getRecipientId() != null && ! nextMessage.getRecipientId().equals(me.getId()))
-        userInfos.add(findUserById(nextMessage.getRecipientId()));
+      if (nextMessage.getRecieversTo() != null) {
+        for (String next : nextMessage.getRecieversTo()) {
+          if (!next.equals(me.getId()) && next.startsWith("@"))
+            userInfos.add(findUserById(next));
+        }
+      }
 
       if (nextMessage.getCreatorId() != null && ! nextMessage.getCreatorId().equals(me.getId()))
         userInfos.add(findUserById(nextMessage.getCreatorId()));
@@ -638,58 +660,16 @@ public class Model {
   }
 
   /**
-   * get the selected message container
-   * @return message container
-   */
-  public MessagecontainerInfo getSelectedMessageContainer() {
-    return selectedMessageContainer;
-  }
-
-  /**
-   * select the message container
-   * @param selectedMessageContainer message container
-   * @return true: read time was added, caller should save the model
-   */
-  public boolean setSelectedMessageContainer(MessagecontainerInfo selectedMessageContainer) {
-    boolean readtimeSet = false;
-    if (selectedMessageContainer != null) {
-      for (MessageInfo nextMessage : selectedMessageContainer.getMessage()) {
-        if (nextMessage.getReadtime() == null) {
-          nextMessage.setReadtime(LocalDateTime.now());
-          readtimeSet = true;
-        }
-      }
-    }
-    this.selectedMessageContainer = selectedMessageContainer;
-    return readtimeSet;
-  }
-
-  /**
-   * get the selected task
-   * @return selected task
-   */
-  public TaskInfo getSelectedTaskInfo() {
-    return selectedTaskInfo;
-  }
-
-  /**
    * get other tasks (excludes the currently selected one)
    *
    * @return other tasks
    */
-  public Collection<TaskInfo> getOtherTaskInfos () {
+  public Collection<TaskInfo> getOtherTaskInfos (TaskInfo selectedTaskInfo) {
     Collection<TaskInfo> taskInfos = new ArrayList<>(getTaskInfos());
-    taskInfos.remove(getSelectedTaskInfo());
+    taskInfos.remove(selectedTaskInfo);
     return taskInfos;
   }
 
-  /**
-   * selected a task
-   * @param selectedTaskInfo selected task
-   */
-  public void setSelectedTaskInfo(TaskInfo selectedTaskInfo) {
-    this.selectedTaskInfo = selectedTaskInfo;
-  }
 
   /**
    * find user by ID
@@ -697,14 +677,25 @@ public class Model {
    * @return user or throws {@link IllegalStateException}
    */
   public UserInfo findUserById(String id) {
+
     if (id == null)
       throw new IllegalArgumentException("Parameter id must not be null");
+
+    if (id.startsWith("@"))
+      id = id.substring(1);
 
     for (UserInfo next: userInfos) {
       if (next.getId().equals(id))
         return next;
     }
-    throw new IllegalStateException("No user found for id " + id);
+    throw new IllegalStateException("No user found for id '" + id + "'");
+  }
+
+  public UserInfo findUser (String usernameOrMail) throws NotFoundException {
+    UserInfo foundUser = findUserByMail(usernameOrMail);
+    if (foundUser == null)
+      foundUser = findUserByUsername(usernameOrMail);
+    return foundUser;
   }
 
   /**
@@ -739,22 +730,6 @@ public class Model {
         return next;
     }
     return null;
-  }
-
-  /**
-   * get the selected project
-   * @return selected project
-   */
-  public ProjectInfo getSelectedProjectInfo() {
-    return selectedProjectInfo;
-  }
-
-  /**
-   * select a project
-   * @param selectedProjectInfo project to select
-   */
-  public void setSelectedProjectInfo(ProjectInfo selectedProjectInfo) {
-    this.selectedProjectInfo = selectedProjectInfo;
   }
 
   /**
@@ -797,5 +772,27 @@ public class Model {
     }
 
     return unreadMessages;
+  }
+
+  public List<String> getMailAdresses(String text) {
+    List<String> mailadresses = new ArrayList<>();
+    if (text != null && ! text.trim().isEmpty()) {
+      String[] arrays = text.split(",");
+      for (String next : arrays) {
+        String trimmed = next.trim();
+        if (trimmed.startsWith("@")) {
+          UserInfo userInfo = findUserById(trimmed.substring(1));
+          if (userInfo.getEmail() == null)
+            throw new IllegalStateException("User " + userInfo.getUsername() + " does not have an mailadress");
+          mailadresses.add(userInfo.getEmail());
+        } else
+          mailadresses.add(trimmed);
+      }
+    }
+    return mailadresses;
+  }
+
+  public MessageInfo getLastMessageInMessageContainer(MessagecontainerInfo selectedItem) {
+    return selectedItem.getMessage().get(selectedItem.getMessage().size() - 1);
   }
 }

@@ -24,30 +24,30 @@ public class TaskDetailController extends AbstractController {
   }
 
   @Override public void refreshData() {
-    TaskInfo taskInfo = getModel().getSelectedTaskInfo();
+    TaskInfo selectedTaskInfo = getApplicationContext().getSelectedTaskInfo();
 
-    txtName.setText(taskInfo.getName());
-    txaDescription.setText(taskInfo.getDescription());
-    if (taskInfo.getLinks() != null)
-      txtLinks.setText(String.join("\n", taskInfo.getLinks()));
+    txtName.setText(selectedTaskInfo.getName());
+    txaDescription.setText(selectedTaskInfo.getDescription());
+    if (selectedTaskInfo.getLinks() != null)
+      txtLinks.setText(String.join("\n", selectedTaskInfo.getLinks()));
 
-    cboParent.setItems(FXCollections.observableArrayList(getModel().getOtherTaskInfos()));
-    if (taskInfo.getParentId() != null) {
-      TaskInfo parent = getModel().findTaskInfoById(taskInfo.getParentId());
+    cboParent.setItems(FXCollections.observableArrayList(getModel().getOtherTaskInfos(selectedTaskInfo)));
+    if (selectedTaskInfo.getParentId() != null) {
+      TaskInfo parent = getModel().findTaskInfoById(selectedTaskInfo.getParentId());
       cboParent.getSelectionModel().select(parent);
     } else
       cboParent.getSelectionModel().clearSelection();
 
     cboParent.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-      taskInfo.setParentId(newValue.getId());
-      saveModel("Changed parent of task " + taskInfo.getId() + " to " + newValue.getId());
+      selectedTaskInfo.setParentId(newValue.getId());
+      saveModel("Changed parent of task " + selectedTaskInfo.getId() + " to " + newValue.getId());
     });
 
     btnSave.setOnAction(action -> save());
   }
 
   public void save() {
-    TaskInfo taskInfo = getModel().getSelectedTaskInfo();
+    TaskInfo taskInfo = getApplicationContext().getSelectedTaskInfo();
     if (!cboParent.getSelectionModel().isEmpty())
       taskInfo.setParentId(cboParent.getSelectionModel().getSelectedItem().getId());
     taskInfo.setName(txtName.getText());

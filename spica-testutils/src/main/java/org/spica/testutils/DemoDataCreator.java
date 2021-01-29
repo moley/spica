@@ -50,7 +50,7 @@ public class DemoDataCreator {
     git2.commit().setAll(true).setMessage("First commit").call();
 
     ModelCacheService modelCacheService = new ModelCacheService();
-    Model model = modelCacheService.get();
+    Model model = modelCacheService.load();
     List<WorkingSetInfo> workingSetInfosByQuery = model.findWorkingSetInfosByQuery(TESTWORKINGSET);
     model.getWorkingsetInfos().removeAll(workingSetInfosByQuery);
 
@@ -72,7 +72,7 @@ public class DemoDataCreator {
     workingSetInfoTest.addSourcepartsItem(sourcePartInfo1);
     workingSetInfoTest.addSourcepartsItem(sourcePartInfo2);
     model.getWorkingsetInfos().add(workingSetInfoTest);
-    modelCacheService.set(model, "reconfigured testdata");
+    modelCacheService.save(model, "reconfigured testdata");
 
   }
 

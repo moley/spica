@@ -64,14 +64,9 @@ import static java.lang.Thread.sleep;
     XMPPTCPConnectionConfiguration.Builder builder = XMPPTCPConnectionConfiguration.builder();
     builder = builder.setUsernameAndPassword(user, password).setXmppDomain(host).setHost(host);
 
-
-
-
     connection = new XMPPTCPConnection(builder.build());
     connection.connect(); //Establishes a connection to the server
     connection.login(); //Logs in
-
-
 
     System.out.println ("Connected     : " + connection.isConnected());
     System.out.println ("Anonymous     : " + connection.isAnonymous());

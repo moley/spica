@@ -14,8 +14,11 @@ public class MailService {
     sendMail(subject, content, to, new ArrayList<>());
   }
 
-  public void sendMail(String subject, final String content, final List<String> to, final List<File> files)
-      throws MessagingException {
+  public void sendMail(String subject, final String content, final List<String> to, final List<String> cc, final List<String> bcc, final List<File> files) throws MessagingException {
+    mailAdapter.sendMail(subject, content, to, cc, bcc, files);
+  }
+
+  public void sendMail(String subject, final String content, final List<String> to, final List<File> files) throws MessagingException {
     mailAdapter.sendMail(subject, content, to, files);
   }
 }

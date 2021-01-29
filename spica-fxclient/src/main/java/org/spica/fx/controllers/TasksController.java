@@ -165,7 +165,7 @@ public class TasksController extends AbstractController {
         if (event.getClickCount() == 2) {
           TaskTreeItem taskTreeItem = treTasks.getSelectionModel().getSelectedItem().getValue();
           if (taskTreeItem.isTask()) {
-            getModel().setSelectedTaskInfo(taskTreeItem.getTaskInfo());
+            getApplicationContext().setSelectedTaskInfo(taskTreeItem.getTaskInfo());
             stepToPane(Pages.TASKDETAIL);
           }
         }

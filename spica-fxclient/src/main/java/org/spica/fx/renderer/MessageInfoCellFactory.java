@@ -44,24 +44,21 @@ public class MessageInfoCellFactory extends ListCell<MessageInfo> {
   @Override protected void updateItem(MessageInfo item, boolean empty) {
     super.updateItem(item, empty);
 
-    if (empty || item == null || item.getMessage() == null) {
+    if (empty || item == null || (item.getMessage() == null && item.getDocuments() == null)) {
       setText(null);
       setGraphic(null);
     }
     else {
-      Document document = Jsoup.parseBodyFragment(item.getMessage());
-      Elements ps = document.select("p");
-
       Node node;
 
-      if (item.getMessage().contains("<html")) {
+      if (item.getMessage() != null && item.getMessage().contains("<html")) {
         WebView webView = new WebView();
         webView.getEngine().loadContent(item.getMessage());
         node = webView;
       }
       else {
         Label label = new Label();
-        label.setText(item.getMessage());
+        label.setText(item.getMessage() != null ? item.getMessage(): "");
         node = label;
       }
 

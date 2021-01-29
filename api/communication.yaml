@@ -54,10 +54,18 @@ components:
           type: "string"
         creatorMailadresse:
           type: "string"
-        recipientId:
-          type: "string"
-        recipientMailadresse:
-          type: "string"
+        recieversTo:
+          type: "array"
+          items:
+            type: "string"
+        recieversCC:
+          type: "array"
+          items:
+            type: "string"
+        recieversBCC:
+          type: "array"
+          items:
+            type: "string"
         creationtime:
           type: "string"
           format: "date-time"
@@ -80,6 +88,9 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/MessageInfo"
+        id:
+          type: "string"
+
         topic:
           type: "string"
         messagecontainerState:

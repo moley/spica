@@ -60,7 +60,7 @@ public class ModelCacheService implements Serializable{
   }
 
   public void migrateOnDemand () {
-    Model model = get();
+    Model model = load();
     for (EventInfo nextEvent: model.getEventInfosReal()) {
 
       //create an event on dashboard if does not exist yet
@@ -96,7 +96,7 @@ public class ModelCacheService implements Serializable{
       projectPrivate.setName(Model.DEFAULTTASK_PRIVATE);
       projectPrivate.setColor("0x80b380ff");
       model.getProjectInfos().add(projectPrivate);
-      set(model, "Create default task " + Model.DEFAULTTASK_PRIVATE);
+      save(model, "Create default task " + Model.DEFAULTTASK_PRIVATE);
     }
     else
       log.info("Default task " + Model.DEFAULTTASK_PRIVATE + " already exists");
@@ -108,7 +108,7 @@ public class ModelCacheService implements Serializable{
       projectWork.setName(Model.DEFAULTTASK_WORK);
       projectWork.setColor("0x8099ffff");
       model.getProjectInfos().add(projectWork);
-      set(model, "Create default task " + Model.DEFAULTTASK_WORK);
+      save(model, "Create default task " + Model.DEFAULTTASK_WORK);
     }
     else
       log.info("Default task " + Model.DEFAULTTASK_WORK + " already exists");
@@ -127,7 +127,7 @@ public class ModelCacheService implements Serializable{
   }
 
   public void forceId () {
-    Model model = get();
+    Model model = load();
     for (DashboardItemInfo nextDashboardItem : model.getDashboardItemInfos()) {
       if (nextDashboardItem.getId() == null)
         nextDashboardItem.setId(UUID.randomUUID().toString());
@@ -135,7 +135,7 @@ public class ModelCacheService implements Serializable{
   }
 
   public void closeEventDashboardsWhenEventIsClosed () {
-    Model model = get();
+    Model model = load();
     for (DashboardItemInfo nextDashboardItem: model.getDashboardItemInfos()) {
       if (nextDashboardItem.getItemType().equals(DashboardItemType.EVENT.name())) {
         EventInfo eventInfoRealById = model.findEventInfoRealById(nextDashboardItem.getItemReference());
@@ -146,7 +146,7 @@ public class ModelCacheService implements Serializable{
   }
 
 
-  public Model get() {
+  public Model load() {
     if (currentConfiguration != null)
       return currentConfiguration;
 
@@ -164,7 +164,7 @@ public class ModelCacheService implements Serializable{
       else {
         LOGGER.info("Create new configuration because " + configFile.getAbsolutePath() + " does not exist");
         currentConfiguration = new Model();
-        set(currentConfiguration, "Creation");
+        save(currentConfiguration, "Creation");
       }
     } catch (Exception e) {
       LOGGER.error("Error loading configurations from " + configFile.getAbsolutePath() + ":" + e.getLocalizedMessage(), e);
@@ -189,8 +189,12 @@ public class ModelCacheService implements Serializable{
     }
   }
 
+  public void set (Model model) {
+    this.currentConfiguration = model;
+  }
 
-  public void set(Model configuration, final String action) {
+
+  public void save(Model configuration, final String action) {
     JAXBContext jc = null;
     try {
       jc = JAXBContext.newInstance(Model.class);

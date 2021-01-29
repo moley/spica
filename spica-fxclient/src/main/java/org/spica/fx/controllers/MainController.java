@@ -8,6 +8,7 @@ import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Timer;
+import java.util.UUID;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -276,7 +277,8 @@ public class MainController extends AbstractController  {
         MessagecontainerInfo openMesssageContainer = getModel().findOpenMessageContainerByUser(MessageType.CHAT, userInfo);
 
         //if no open conversation found so far create new one
-        MessagecontainerInfo newMessageContainer = openMesssageContainer != null ? openMesssageContainer : new MessagecontainerInfo();
+        MessagecontainerInfo newMessageContainer = openMesssageContainer != null ? openMesssageContainer : model.createNewMessageContainer();
+        newMessageContainer.setId(UUID.randomUUID().toString());
         newMessageContainer.setTopic("Chat with " + from.toString());
         MessageInfo messageInfo = new MessageInfo();
         messageInfo.setType(MessageType.CHAT);
@@ -299,8 +301,8 @@ public class MainController extends AbstractController  {
 
           showMessageNotifications();
 
-          Mask<MessageDialogController> detailMask = getMask(Pages.MESSAGEDIALOG);
-          MessageDialogController controller = detailMask.getController();
+          Mask<MessageDetailController> detailMask = getMask(Pages.MESSAGEDIALOG);
+          MessageDetailController controller = detailMask.getController();
           controller.refreshData();
 
         });
@@ -323,7 +325,7 @@ public class MainController extends AbstractController  {
         MessagecontainerInfo openMesssageContainer = getModel().findOpenMessageContainerByUser(MessageType.CHAT, userInfo);
 
         //if no open conversation found so far create new one
-        MessagecontainerInfo newMessageContainer = openMesssageContainer != null ? openMesssageContainer : new MessagecontainerInfo();
+        MessagecontainerInfo newMessageContainer = openMesssageContainer != null ? openMesssageContainer : model.createNewMessageContainer();
         newMessageContainer.setTopic("Chat with " + from);
         MessageInfo messageInfo = new MessageInfo();
         messageInfo.setType(MessageType.CHAT);
@@ -360,8 +362,8 @@ public class MainController extends AbstractController  {
 
           showMessageNotifications();
 
-          Mask<MessageDialogController> detailMask = getMask(Pages.MESSAGEDIALOG);
-          MessageDialogController controller = detailMask.getController();
+          Mask<MessageDetailController> detailMask = getMask(Pages.MESSAGEDIALOG);
+          MessageDetailController controller = detailMask.getController();
           controller.refreshData();
 
         });

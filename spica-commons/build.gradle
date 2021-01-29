@@ -33,5 +33,7 @@ dependencies {
   runtime 'org.glassfish.jaxb:jaxb-runtime:2.3.2'
   compile 'javax.xml.bind:jaxb-api:2.3.1'
 
+  testCompile 'org.mockito:mockito-core:2.28.2'
+
 
 }

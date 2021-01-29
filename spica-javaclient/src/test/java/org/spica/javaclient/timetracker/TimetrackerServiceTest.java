@@ -22,7 +22,7 @@ public class TimetrackerServiceTest {
 
     @Before
     public void before () {
-        modelCacheService.set(new Model(), "create new model");
+        modelCacheService.save(new Model(), "create new model");
         timetrackerService.setModelCacheService(modelCacheService);
 
     }
@@ -71,7 +71,7 @@ public class TimetrackerServiceTest {
     @Test
     public void createEventAfterLastFinishedEvent() {
 
-        Model model = modelCacheService.get();
+        Model model = modelCacheService.load();
         //08:00 - 09:00
         model.getEventInfosReal().add(createEvent(LocalTime.of(8,0), LocalTime.of(9,0)));
 
@@ -88,7 +88,7 @@ public class TimetrackerServiceTest {
 
     @Test
     public void createEventWithPreviousOriginNotFinished () {
-        Model model = modelCacheService.get();
+        Model model = modelCacheService.load();
 
         //09:00 -
         model.getEventInfosReal().add(createEvent(LocalTime.of(9,0), null));
@@ -110,7 +110,7 @@ public class TimetrackerServiceTest {
 
     @Test
     public void createEventAfterLastNotFinishedEvent () {
-        Model model = modelCacheService.get();
+        Model model = modelCacheService.load();
 
         //8:00 -
         model.getEventInfosReal().add(createEvent(LocalTime.of(8,0), null));
@@ -130,7 +130,7 @@ public class TimetrackerServiceTest {
 
     @Test
     public void createEventBeforeFirstEvent () {
-        Model model = modelCacheService.get();
+        Model model = modelCacheService.load();
         //09:00 - 10:00
         model.getEventInfosReal().add(createEvent(LocalTime.of(9,0), LocalTime.of(10,0)));
 
@@ -150,7 +150,7 @@ public class TimetrackerServiceTest {
 
     @Test
     public void createEventBeforeFirstFinishedEventGap () {
-        Model model = modelCacheService.get();
+        Model model = modelCacheService.load();
 
         //13.10. 09:00 -
         model.getEventInfosReal().add(createEvent(LocalDateTime.of(2020, 10, 13, 9,0), LocalDateTime.of(2020, 10, 13, 10,0)));
@@ -162,7 +162,7 @@ public class TimetrackerServiceTest {
 
     @Test
     public void createEventBeforeFirstNotFinishedEventGap () {
-        Model model = modelCacheService.get();
+        Model model = modelCacheService.load();
 
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minus(1, ChronoUnit.DAYS);
@@ -177,7 +177,7 @@ public class TimetrackerServiceTest {
 
     @Test
     public void createEventBeforeFirstEventGap () {
-        Model model = modelCacheService.get();
+        Model model = modelCacheService.load();
 
         //09:00 - 10:00
         model.getEventInfosReal().add(createEvent(LocalTime.of(9,0), LocalTime.of(10,0)));
@@ -188,7 +188,7 @@ public class TimetrackerServiceTest {
 
     @Test(expected = IllegalStateException.class)
     public void createEventBeforeFirstEventHidingOrigin () {
-        Model model = modelCacheService.get();
+        Model model = modelCacheService.load();
 
         //09:00 - 10:00
         model.getEventInfosReal().add(createEvent(LocalTime.of(9,0), LocalTime.of(10,0)));
@@ -203,7 +203,7 @@ public class TimetrackerServiceTest {
 
     @Test
     public void createEventSplittingOrigin () {
-        Model model = modelCacheService.get();
+        Model model = modelCacheService.load();
 
         //08:00 - 09:00
         model.getEventInfosReal().add(createEvent(LocalTime.of(8,0), LocalTime.of(9,0)));
@@ -225,7 +225,7 @@ public class TimetrackerServiceTest {
 
     @Test
     public void createEventOverlapping () {
-        Model model = modelCacheService.get();
+        Model model = modelCacheService.load();
 
         //08:00 - 09:00
         //09:00 - 10:00
@@ -249,7 +249,7 @@ public class TimetrackerServiceTest {
 
     @Test(expected = IllegalStateException.class)
     public void createEventOverlappingHidingOtherEvent () {
-        Model model = modelCacheService.get();
+        Model model = modelCacheService.load();
 
         //08:00 - 09:00
         //09:00 - 10:00

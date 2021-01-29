@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model>
-    <dashboardItemInfos>
-        <created>2020-10-17T15:26:27.910514</created>
-        <id>051d3794-d725-4efe-8359-dabc5745d27c</id>
-        <itemReference>3c099d2c-3ef0-4c16-af7b-bfd474ebf85c</itemReference>
-        <itemType>EVENT</itemType>
-        <open>false</open>
-    </dashboardItemInfos>
-    <eventInfosReal>
-        <eventType>PAUSE</eventType>
-        <id>3c099d2c-3ef0-4c16-af7b-bfd474ebf85c</id>
-        <start>2020-10-17T15:26:27.910514</start>
-        <stop>2020-10-17T17:00:00</stop>
-    </eventInfosReal>
+    <me>
+        <email>me@spica.org</email>
+        <id>me</id>
+        <username>me</username>
+    </me>
+    <messagecontainerInfos>
+        <message>
+            <creatorMailadresse>firstname.lastname@spica.org</creatorMailadresse>
+            <message>Message1</message>
+            <readtime>2021-01-29T18:35:41.991587</readtime>
+        </message>
+        <topic>topic</topic>
+    </messagecontainerInfos>
     <projectInfos>
         <color>0x80b380ff</color>
         <id>Private</id>
@@ -23,20 +23,4 @@
         <id>Work</id>
         <name>Work</name>
     </projectInfos>
-    <workingsetInfos>
-        <id>cf8150cb-117f-4033-bc27-50c6fd04c78f</id>
-        <name>testWorkingSet</name>
-        <sourceparts>
-            <branch>master</branch>
-            <enabled>true</enabled>
-            <id>project1</id>
-            <url>/Users/OleyMa/vcs/spica/spica/build/demodata/gitserver/project1</url>
-        </sourceparts>
-        <sourceparts>
-            <branch>master</branch>
-            <enabled>true</enabled>
-            <id>project2</id>
-            <url>/Users/OleyMa/vcs/spica/spica/build/demodata/gitserver/project1</url>
-        </sourceparts>
-    </workingsetInfos>
 </model>

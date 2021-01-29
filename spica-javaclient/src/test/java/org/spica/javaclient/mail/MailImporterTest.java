@@ -37,7 +37,7 @@ public class MailImporterTest {
     Mail message1 = Mockito.mock(Mail.class);
     Mockito.when(message1.getSentDate()).thenReturn(localDate);
     Mockito.when(message1.getSubject()).thenReturn(topic);
-    Mockito.when(message1.getFrom()).thenReturn(mail);
+    Mockito.when(message1.getFromAsStringList().get(0)).thenReturn(mail);
     Mockito.when(message1.getText()).thenReturn("Hello world");
 
     Mockito.when(mailAdapter.recieveMails()).thenReturn(Arrays.asList(message1));
@@ -80,14 +80,14 @@ public class MailImporterTest {
     Mail message1 = Mockito.mock(Mail.class);
     Mockito.when(message1.getSentDate()).thenReturn(localDate);
     Mockito.when(message1.getSubject()).thenReturn(topic);
-    Mockito.when(message1.getFrom()).thenReturn(mail);
+    Mockito.when(message1.getFromAsStringList().get(0)).thenReturn(mail);
     Mockito.when(message1.getText()).thenReturn("Hello world");
 
 
     Mail message2 = Mockito.mock(Mail.class);
     Mockito.when(message2.getSentDate()).thenReturn(localDate);
     Mockito.when(message2.getSubject()).thenReturn(topic);
-    Mockito.when(message2.getFrom()).thenReturn(mail2);
+    Mockito.when(message2.getFromAsStringList().get(0)).thenReturn(mail2);
     Mockito.when(message2.getText()).thenReturn("Hello world");
 
 
@@ -123,14 +123,14 @@ public class MailImporterTest {
     Mail message1 = Mockito.mock(Mail.class);
     Mockito.when(message1.getSentDate()).thenReturn(localDate);
     Mockito.when(message1.getSubject()).thenReturn(topic);
-    Mockito.when(message1.getFrom()).thenReturn(mail);
+    Mockito.when(message1.getFromAsStringList().get(0)).thenReturn(mail);
     Mockito.when(message1.getText()).thenReturn("Hello world");
 
 
     Mail message2 = Mockito.mock(Mail.class);
     Mockito.when(message2.getSentDate()).thenReturn(laterDate);
     Mockito.when(message2.getSubject()).thenReturn(topic);
-    Mockito.when(message2.getFrom()).thenReturn(mail);
+    Mockito.when(message2.getFromAsStringList().get(0)).thenReturn(mail);
     Mockito.when(message2.getText()).thenReturn("Hello world");
 
 
@@ -164,14 +164,14 @@ public class MailImporterTest {
     Mail message1 = Mockito.mock(Mail.class);
     Mockito.when(message1.getSentDate()).thenReturn(localDate);
     Mockito.when(message1.getSubject()).thenReturn(topic);
-    Mockito.when(message1.getFrom()).thenReturn(mail);
+    Mockito.when(message1.getFromAsStringList().get(0)).thenReturn(mail);
     Mockito.when(message1.getText()).thenReturn("Hello world");
 
 
     Mail message2 = Mockito.mock(Mail.class);
     Mockito.when(message2.getSentDate()).thenReturn(localDate);
     Mockito.when(message2.getSubject()).thenReturn(topic2);
-    Mockito.when(message2.getFrom()).thenReturn(mail);
+    Mockito.when(message2.getFromAsStringList().get(0)).thenReturn(mail);
     Mockito.when(message2.getText()).thenReturn("Hello world");
 
 

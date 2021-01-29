@@ -24,7 +24,7 @@ public class ModelCacheServiceTest {
     model.getEventInfosReal().addAll(Arrays.asList(openEvent, closedEvent));
     model.getDashboardItemInfos().addAll(Arrays.asList(dashboardOpen, dashboardClosed));
 
-    modelCacheService.set(model, "");
+    modelCacheService.save(model, "");
     modelCacheService.closeEventDashboardsWhenEventIsClosed();
     Assert.assertFalse ("Closed event not closed at dashboard", dashboardClosed.getOpen());
     Assert.assertTrue ("Open event not open at dashboard", dashboardOpen.getOpen());

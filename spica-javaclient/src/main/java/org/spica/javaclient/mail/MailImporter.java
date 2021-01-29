@@ -1,12 +1,18 @@
 package org.spica.javaclient.mail;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 import javax.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.spica.commons.DashboardItemType;
+import org.spica.commons.filestore.FilestoreService;
+import org.spica.commons.mail.Attachment;
 import org.spica.commons.mail.Mail;
 import org.spica.commons.mail.MailAdapter;
 import org.spica.javaclient.model.DashboardItemInfo;
@@ -19,16 +25,9 @@ import org.spica.javaclient.model.UserInfo;
 @Slf4j
 public class MailImporter {
 
+  private FilestoreService filestoreService = new FilestoreService();
 
   private MailAdapter mailAdapter = new MailAdapter();
-
-  private String extractMailAdresse (final String from) {
-    try {
-      return from.substring(from.indexOf("<") + 1, from.indexOf(">"));
-    } catch (Exception e) {
-      return from;
-    }
-  }
 
   public boolean importMails(Model model) throws MessagingException, IOException {
 
@@ -42,7 +41,7 @@ public class MailImporter {
 
       MessagecontainerInfo messagecontainerInfo = getMessageContainer(model, nextMail);
       if (messagecontainerInfo == null) {
-        messagecontainerInfo = new MessagecontainerInfo().message(new ArrayList<MessageInfo>());
+        messagecontainerInfo = model.createNewMessageContainer();
         messagecontainerInfo.setTopic(normalizeMailSubject(nextMail.getSubject()));
         model.getMessagecontainerInfos().add(messagecontainerInfo);
         modelChanged = true;
@@ -70,10 +69,28 @@ public class MailImporter {
 
       }
 
-      String mailFrom = extractMailAdresse(nextMail.getFrom());
+      for (Attachment attachment : nextMail.getAttachmentList()){
+        String completeFilename = "mailattachment_" + nextMail.getId() + "_" + attachment.getFilename();
+        File file = filestoreService.file(completeFilename);
+        if (! file.exists()) {
+          FileOutputStream fos = new FileOutputStream(file);
+          IOUtils.copy(attachment.getInputStream(), fos);
+
+          if (messageInfo.getDocuments() == null)
+            messageInfo.setDocuments(new ArrayList<>());
+
+          if (! messageInfo.getDocuments().contains(completeFilename))
+            messageInfo.getDocuments().add(completeFilename);
+        }
+      }
+
+      String mailFrom = nextMail.getFromAsStringList().get(0);
       UserInfo userInfo = model.findUserByMail(mailFrom);
       messageInfo.setCreatorId(userInfo != null ? userInfo.getId(): null);
       messageInfo.setCreatorMailadresse(mailFrom);
+      messageInfo.setRecieversTo(nextMail.getToAsStringList());
+      messageInfo.setRecieversCC(nextMail.getCCAsStringList());
+      messageInfo.setRecieversBCC(nextMail.getBCCAsStringList());
       messageInfo.setMessage(nextMail.getText());
 
     }
@@ -94,6 +111,9 @@ public class MailImporter {
   private MessageInfo getMessage(final MessagecontainerInfo messagecontainerInfo, final Mail mail)
       throws MessagingException {
     for (MessageInfo nextMessageInfo : messagecontainerInfo.getMessage()) {
+      if (nextMessageInfo.getId() == null)
+        continue;
+
       if (nextMessageInfo.getId().equals(mail.getId())) { //Update
         return nextMessageInfo;
       }

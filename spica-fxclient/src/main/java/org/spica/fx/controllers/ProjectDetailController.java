@@ -27,31 +27,27 @@ public class ProjectDetailController extends AbstractController{
   @Override public void refreshData() {
     getMainController().refreshData();
 
-    ProjectInfo projectInfo = getModel().getSelectedProjectInfo();
+    ProjectInfo selectedProjectInfo = getApplicationContext().getSelectedProjectInfo();
 
-    txtName.setText(projectInfo.getName());
+    txtName.setText(selectedProjectInfo.getName());
 
-    cboParent.setItems(FXCollections.observableArrayList(getModel().getOtherProjectInfos()));
-    if (projectInfo.getParentId() != null) {
-      ProjectInfo parent = getModel().findProjectInfoById(projectInfo.getParentId());
+    cboParent.setItems(FXCollections.observableArrayList(getModel().getOtherProjectInfos(selectedProjectInfo)));
+    if (selectedProjectInfo.getParentId() != null) {
+      ProjectInfo parent = getModel().findProjectInfoById(selectedProjectInfo.getParentId());
       cboParent.getSelectionModel().select(parent);
     }
     else
       cboParent.getSelectionModel().clearSelection();
 
-    cboParent.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ProjectInfo>() {
-      @Override public void changed(ObservableValue<? extends ProjectInfo> observable, ProjectInfo oldValue,
-          ProjectInfo newValue) {
-        projectInfo.setParentId(newValue.getId());
-      }
-    });
+    cboParent.getSelectionModel().selectedItemProperty().addListener(
+        (observable, oldValue, newValue) -> selectedProjectInfo.setParentId(newValue.getId()));
 
     btnSave.setOnAction(event -> save());
 
   }
 
   public void save () {
-    ProjectInfo projectInfo = getModel().getSelectedProjectInfo();
+    ProjectInfo projectInfo = getApplicationContext().getSelectedProjectInfo();
     if (! cboParent.getSelectionModel().isEmpty())
       projectInfo.setParentId(cboParent.getSelectionModel().getSelectedItem().getId());
     projectInfo.setName(txtName.getText());

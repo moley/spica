@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.spica.commons.SpicaProperties;
-import org.spica.javaclient.ApiException;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.ActionHandler;
 import org.spica.javaclient.actions.Api;
@@ -87,14 +86,14 @@ public class StandaloneActionContext implements ActionContext {
   }
 
   @Override public Model getModel() {
-    return services.getModelCacheService().get();
+    return services.getModelCacheService().load();
   }
   
 
   @Override public void saveModel(String lastAction) {
     ModelCacheService modelCacheService = services.getModelCacheService();
-    Model model = modelCacheService.get();
-    modelCacheService.set(model, lastAction);
+    Model model = modelCacheService.load();
+    modelCacheService.save(model, lastAction);
   }
 
   @Override public SpicaProperties getProperties() {

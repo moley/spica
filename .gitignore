@@ -30,7 +30,10 @@ bin/
 /.spica/config_*
 /.spica/links
 /.spica/attachments/
+/.spica/filestore/
 /.spica/siteChanged/
 /demospace/**/**
+
+/spica-ngclient/package-lock.json
 
 /config/examples/dockerPostgres/postgres_db/
