@@ -16,8 +16,7 @@ public class ScreenManager {
 
   private List<Screen> externalScreens = new ArrayList<>();
 
-  public final static double FULL_WIDTH = 1400;
-  public final static double HALF_WIDTH = 110;
+  private final static double HALF_WIDTH = 110;
 
   public ScreenManager() {
     primary = Screen.getPrimary();
@@ -37,41 +36,25 @@ public class ScreenManager {
 
   }
 
-  public boolean isMultiScreenEnvironment () {
-    return externalScreens.size() > 0;
+  public double getFullWidth () {
+    return getExternalOrPrimaryScreen().getBounds().getWidth();
+  }
+
+  public double getHalfWidth () {
+    return HALF_WIDTH;
   }
 
   public Screen getExternalOrPrimaryScreen () {
     return ! externalScreens.isEmpty() ? externalScreens.get(0) : primary;
   }
 
-  public Screen getPrimary () {
-    return primary;
-  }
-
-  public void layoutOnExternalOrPrimary(final Stage stage) {
-    Screen externalOrPrimary = getExternalOrPrimaryScreen();
-    stage.setX(externalOrPrimary.getVisualBounds().getMinX());
-    stage.setY(externalOrPrimary.getVisualBounds().getMinY());
-    stage.setWidth(externalOrPrimary.getVisualBounds().getWidth());
-    stage.setHeight(externalOrPrimary.getVisualBounds().getHeight());
-  }
-
-  public void layoutOnPrimary(final Stage stage) {
-    Screen primary = getPrimary();
-    stage.setX(primary.getVisualBounds().getMinX());
-    stage.setY(primary.getVisualBounds().getMinY());
-    stage.setWidth(primary.getVisualBounds().getWidth());
-    stage.setHeight(primary.getVisualBounds().getHeight());
-  }
-
   public void layoutEdged (final Stage stage, final boolean resize) {
     Screen primary = getExternalOrPrimaryScreen();
     stage.setX(primary.getBounds().getMinX());
-    stage.setY(primary.getBounds().getMinY() + 40);
+    stage.setY(primary.getBounds().getMinY());
     if (resize) {
-      stage.setWidth(FULL_WIDTH);
-      stage.setHeight(primary.getBounds().getMaxY() - 80);
+      stage.setWidth(getFullWidth());
+      stage.setHeight(primary.getBounds().getMaxY());
     }
   }
 

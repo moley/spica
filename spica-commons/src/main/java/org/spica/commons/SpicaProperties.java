@@ -180,7 +180,7 @@ public class SpicaProperties {
   }
 
   public static void setSpicaHome(final File spicaHome) {
-    SpicaProperties.customSpicaPath = spicaHome;
+    SpicaProperties.customSpicaPath = spicaHome.getAbsoluteFile();
   }
 
 }

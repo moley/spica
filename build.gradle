@@ -48,6 +48,11 @@ allprojects {
 
     tasks.javadoc.onlyIf {false} // due to error on @http.response.details in generated code TODO
 
+    tasks.withType(JavaCompile) {
+      //options.compilerArgs << '-Xlint:unchecked'
+      options.deprecation = true
+    }
+
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
 

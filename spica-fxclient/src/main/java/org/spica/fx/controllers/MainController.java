@@ -102,7 +102,7 @@ public class MainController extends AbstractController  {
 
     Tooltip tooltipAppname = new Tooltip();
     Label lblTooltipAppname = new Label();
-    lblTooltipAppname.setText("Version " + getVersion());
+    lblTooltipAppname.setText("Version : " + getVersion() + "\nModel : " + getActionContext().getServices().getModelCacheService().getConfigFile().getAbsolutePath());
     tooltipAppname.setGraphic(lblTooltipAppname);
     lblAppname.setTooltip(tooltipAppname);
 
@@ -113,7 +113,7 @@ public class MainController extends AbstractController  {
 
     btnToggleVisibility.setGraphic(Consts.createIcon((toFoldedOut ?"fa-chevron-left" :"fa-chevron-right"), Consts.ICON_SIZE_TOOLBAR));
 
-    double width = toFoldedOut ? ScreenManager.FULL_WIDTH : ScreenManager.HALF_WIDTH;
+    double width = toFoldedOut ? screenManager.getFullWidth() : screenManager.getHalfWidth();
 
     getStage().setMaxWidth(width);
     getStage().setMinWidth(width);
@@ -122,7 +122,8 @@ public class MainController extends AbstractController  {
 
   @FXML
   public void initialize () {
-    lblAppname.setMinWidth(ScreenManager.HALF_WIDTH);
+
+    lblAppname.setMinWidth(screenManager.getHalfWidth());
     lblAppname.setGraphic(new ImageView(Consts.createImage("/spica.png", 40)));
 
     setPaRootPane(paRootPane);
@@ -185,7 +186,7 @@ public class MainController extends AbstractController  {
 
         JFXBadge jfxBadge = new JFXBadge();
         Button menuItem = new Button(next.getDisplayname(), Consts.createIcon(next.getIcon(), Consts.ICON_SIZE_TOOLBAR));
-        menuItem.setMaxWidth(ScreenManager.HALF_WIDTH - 20);
+        menuItem.setMaxWidth(screenManager.getHalfWidth() - 20);
         menuItem.setContentDisplay(ContentDisplay.TOP);
         menuItem.setOnAction(event -> stepToPane(next));
         jfxBadge.setControl(menuItem);

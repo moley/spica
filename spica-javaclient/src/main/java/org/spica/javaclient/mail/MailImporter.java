@@ -22,8 +22,7 @@ import org.spica.javaclient.model.MessagecontainerInfo;
 import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.UserInfo;
 
-@Slf4j
-public class MailImporter {
+@Slf4j public class MailImporter {
 
   private FilestoreService filestoreService = new FilestoreService();
 
@@ -69,24 +68,29 @@ public class MailImporter {
 
       }
 
-      for (Attachment attachment : nextMail.getAttachmentList()){
-        String completeFilename = "mailattachment_" + nextMail.getId() + "_" + attachment.getFilename();
+      for (Attachment attachment : nextMail.getAttachmentList()) {
+        String completeFilename = "mailattachment_" + nextMail.getId() + "_" + attachment.getFilename().replaceAll(" ", "_");
+
         File file = filestoreService.file(completeFilename);
-        if (! file.exists()) {
+        log.info("Add attachment to " + file.getAbsolutePath());
+        if (!file.exists()) {
           FileOutputStream fos = new FileOutputStream(file);
           IOUtils.copy(attachment.getInputStream(), fos);
-
-          if (messageInfo.getDocuments() == null)
-            messageInfo.setDocuments(new ArrayList<>());
-
-          if (! messageInfo.getDocuments().contains(completeFilename))
-            messageInfo.getDocuments().add(completeFilename);
         }
+
+        if (messageInfo.getDocuments() == null)
+          messageInfo.setDocuments(new ArrayList<>());
+
+        if (!messageInfo.getDocuments().contains(completeFilename))
+          messageInfo.getDocuments().add(completeFilename);
+
       }
+
+      log.info("Set attachments of message " + messageInfo.getId() + " to " + messageInfo.getDocuments());
 
       String mailFrom = nextMail.getFromAsStringList().get(0);
       UserInfo userInfo = model.findUserByMail(mailFrom);
-      messageInfo.setCreatorId(userInfo != null ? userInfo.getId(): null);
+      messageInfo.setCreatorId(userInfo != null ? userInfo.getId() : null);
       messageInfo.setCreatorMailadresse(mailFrom);
       messageInfo.setRecieversTo(nextMail.getToAsStringList());
       messageInfo.setRecieversCC(nextMail.getCCAsStringList());
@@ -96,10 +100,10 @@ public class MailImporter {
     }
 
     //close open mails if not imported anymore
-    for (DashboardItemInfo nextDashboardItem: model.getDashboardItemInfos() ) {
+    for (DashboardItemInfo nextDashboardItem : model.getDashboardItemInfos()) {
       if (nextDashboardItem.getItemType().equals(DashboardItemType.MAIL.name())) {
         Boolean open = ids.contains(nextDashboardItem.getItemReference());
-        if (! open.equals(nextDashboardItem.getOpen())) {
+        if (!open.equals(nextDashboardItem.getOpen())) {
           nextDashboardItem.setOpen(open);
           modelChanged = true;
         }
@@ -123,11 +127,9 @@ public class MailImporter {
 
   }
 
-
-  public String normalizeMailSubject (final String subject) {
+  public String normalizeMailSubject(final String subject) {
     return subject.replaceAll("Re:", "").replaceAll("AW:", "").trim();
   }
-
 
   private MessagecontainerInfo getMessageContainer(final Model model, Mail mail) throws MessagingException {
     for (MessagecontainerInfo nextInfo : model.getMessagecontainerInfos()) {

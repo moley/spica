@@ -1,9 +1,6 @@
 package org.spica.fx.renderer;
 
-import java.io.File;
 import java.time.format.DateTimeFormatter;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -14,20 +11,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.spica.commons.filestore.FilestoreItem;
 import org.spica.commons.filestore.FilestoreService;
 import org.spica.fx.Consts;
-import org.spica.fx.UiUtils;
 import org.spica.fx.logic.FileStoreNavigator;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.UserInfo;
 
+@Slf4j
 public class MessageInfoCellFactory extends ListCell<MessageInfo> {
 
   private FilestoreService filestoreService;
@@ -38,7 +31,6 @@ public class MessageInfoCellFactory extends ListCell<MessageInfo> {
   public MessageInfoCellFactory (final FilestoreService filestoreService, final Model model) {
     this.filestoreService = filestoreService;
     this.model = model;
-
   }
 
   @Override protected void updateItem(MessageInfo item, boolean empty) {
@@ -49,31 +41,25 @@ public class MessageInfoCellFactory extends ListCell<MessageInfo> {
       setGraphic(null);
     }
     else {
-      Node node;
+      Node contentNode;
 
       if (item.getMessage() != null && item.getMessage().contains("<html")) {
         WebView webView = new WebView();
         webView.getEngine().loadContent(item.getMessage());
-        node = webView;
+        webView.maxWidthProperty().bind(widthProperty().subtract(20));
+        webView.minWidthProperty().bind(widthProperty().subtract(20));
+        contentNode = webView;
       }
       else {
         Label label = new Label();
+        label.maxWidthProperty().bind(widthProperty().subtract(20));
+        label.minWidthProperty().bind(widthProperty().subtract(20));
         label.setText(item.getMessage() != null ? item.getMessage(): "");
-        node = label;
+        contentNode = label;
       }
 
-      HBox.setHgrow(node, Priority.ALWAYS);
+      HBox.setHgrow(contentNode, Priority.ALWAYS);
 
-//      bubbledLabel.setText(multilineString);
-
-      //      bubbledLabel.setText(item.getMessage());
-
-
-      HBox messageInfosHBox = new HBox(10);
-
-
-      //WebView webView = new WebView();
-      //webView.getEngine().loadContent(item.getMessage());
 
       UserInfo userInfo = item.getCreatorId() != null ? model.findUserById (item.getCreatorId()) : null;
 
@@ -90,37 +76,33 @@ public class MessageInfoCellFactory extends ListCell<MessageInfo> {
       chatTimeLabel.getStyleClass().setAll("chat-time");
       userAndTime.getChildren().add(chatTimeLabel);
 
+      VBox vbox = new VBox(5);
+      if (isFromMe) {
+        contentNode.getStyleClass().setAll("chat-bubble-me");
+        userAndTime.setAlignment(Pos.CENTER_RIGHT);
+      }
+      else {
+        contentNode.getStyleClass().setAll("chat-bubble-foreign");
+        userAndTime.setAlignment(Pos.CENTER_LEFT);
+      }
 
-      VBox vbox = new VBox();
-      vbox.getChildren().add(messageInfosHBox);
+      vbox.getChildren().add(userAndTime);
+      vbox.getChildren().add(contentNode);
 
       if (item.getDocuments() != null) {
         for (String next : item.getDocuments()) {
           Button button = new Button(next);
           vbox.getChildren().add(button);
           button.setOnAction(event -> {
+            log.info("setOnAction on document button " + next);
             FilestoreItem filestoreItem = filestoreService.item(next);
+
             FileStoreNavigator fileStoreNavigator = new FileStoreNavigator();
             fileStoreNavigator.open(filestoreItem);
           });
         }
       }
 
-
-      if (isFromMe) {
-        node.getStyleClass().setAll("chat-bubble-me");
-        messageInfosHBox.setAlignment(Pos.CENTER_RIGHT);
-        vbox.setAlignment(Pos.CENTER_RIGHT);
-        messageInfosHBox.getChildren().add(node);
-        messageInfosHBox.getChildren().add(userAndTime);
-      }
-      else {
-        node.getStyleClass().setAll("chat-bubble-foreign");
-        messageInfosHBox.getChildren().add(userAndTime);
-        messageInfosHBox.getChildren().add(node);
-        messageInfosHBox.setAlignment(Pos.CENTER_LEFT);
-        vbox.setAlignment(Pos.CENTER_LEFT);
-      }
       setGraphic(vbox);
 
     }

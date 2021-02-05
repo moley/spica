@@ -167,7 +167,7 @@ import org.spica.fx.controllers.Pages;
     // this dummy app just hides itself when the app screen is clicked.
     // a real app might have some interactive UI and a separate icon which hides the app window.
     scene.setFill(Color.TRANSPARENT);
-    stage.setAlwaysOnTop(true);
+    //stage.setAlwaysOnTop(true);
 
     stage.setScene(scene);
 

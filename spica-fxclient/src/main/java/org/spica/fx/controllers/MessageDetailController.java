@@ -22,6 +22,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.web.HTMLEditor;
+import javafx.stage.FileChooser;
 import javax.mail.MessagingException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +40,7 @@ import org.spica.javaclient.model.UserInfo;
 
 @Slf4j @Data public class MessageDetailController extends AbstractController {
 
+  @FXML private  Button btnAddFile;
   @FXML private TextField txtTopic;
   @FXML private Button btnType;
   @FXML private GridPane panMailEditor;
@@ -65,6 +67,7 @@ import org.spica.javaclient.model.UserInfo;
     Bindings.bindBidirectional(txtMailCC.textProperty(), viewModel.getMailCCProperty());
     Bindings.bindBidirectional(txtMailBCC.textProperty(), viewModel.getMailBCCProperty());
     lviDialog.setItems(viewModel.getMessageInfos());
+
     Tooltip tooltip = new Tooltip();
     tooltip.textProperty().bind(viewModel.getIdProperty());
     btnType.setTooltip(tooltip);
@@ -91,6 +94,17 @@ import org.spica.javaclient.model.UserInfo;
     btnAttachClipboard.setOnAction(new EventHandler<ActionEvent>() {
       @Override public void handle(ActionEvent event) {
         attachClipboard();
+      }
+    });
+
+    btnAddFile.setGraphic(Consts.createIcon("fa-file", Consts.ICON_SIZE_TOOLBAR));
+    btnAddFile.setOnAction(new EventHandler<ActionEvent>() {
+      @Override public void handle(ActionEvent event) {
+        log.info("show filechooser");
+        FileChooser fileChooser = new FileChooser();
+        File selectedFile = fileChooser.showOpenDialog(getStage());
+        if (selectedFile != null)
+          addFile(selectedFile);
       }
     });
   }
@@ -151,6 +165,12 @@ import org.spica.javaclient.model.UserInfo;
 
     if (filesAdded)
       adaptFileLabel();
+  }
+
+  private void addFile (File newFile) {
+    List<File> files = viewModel.getFiles();
+    files.add(newFile);
+    adaptFileLabel();
   }
 
   public void sendMessage() {
@@ -320,8 +340,8 @@ import org.spica.javaclient.model.UserInfo;
       viewModel.getMailCCProperty().set(getTextField(currentMessage.getRecieversCC()));
       viewModel.getMailBCCProperty().set(getTextField(currentMessage.getRecieversBCC()));
     } else {
-      viewModel.getMailEditorVisibleProperty().set(true);
-      viewModel.getChatEditorVisibleProperty().set(false);
+      viewModel.getMailEditorVisibleProperty().set(false);
+      viewModel.getChatEditorVisibleProperty().set(true);
       viewModel.getChatContentProperty().set("");
       if (currentMessage.getRecieversTo() != null && currentMessage.getRecieversTo().size() != 1)
         throw new IllegalStateException("Only messages with one reciever allowed for chat");
