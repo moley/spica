@@ -1,28 +1,38 @@
 package org.spica.cli.actions;
 
 import de.codeshelf.consoleui.elements.PromptableElementIF;
-import de.codeshelf.consoleui.prompt.*;
+import de.codeshelf.consoleui.prompt.CheckboxResult;
+import de.codeshelf.consoleui.prompt.ConfirmResult;
+import de.codeshelf.consoleui.prompt.ConsolePrompt;
+import de.codeshelf.consoleui.prompt.InputResult;
+import de.codeshelf.consoleui.prompt.ListResult;
+import de.codeshelf.consoleui.prompt.PromtResultItemIF;
 import de.codeshelf.consoleui.prompt.builder.CheckboxPromptBuilder;
 import de.codeshelf.consoleui.prompt.builder.ListPromptBuilder;
 import de.codeshelf.consoleui.prompt.builder.PromptBuilder;
-import jline.console.completer.StringsCompleter;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.spica.javaclient.actions.ActionContext;
-import org.spica.javaclient.actions.FoundAction;
-import org.spica.javaclient.params.*;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import jline.console.completer.StringsCompleter;
+import lombok.extern.slf4j.Slf4j;
+import org.spica.javaclient.actions.ActionContext;
+import org.spica.javaclient.params.ActionParamFactory;
+import org.spica.javaclient.params.ConfirmInputParam;
+import org.spica.javaclient.params.FlagInputParam;
+import org.spica.javaclient.params.InputParam;
+import org.spica.javaclient.params.InputParamGroup;
+import org.spica.javaclient.params.InputParams;
+import org.spica.javaclient.params.MultiSelectInputParam;
+import org.spica.javaclient.params.SearchInputParam;
+import org.spica.javaclient.params.SelectInputParam;
+import org.spica.javaclient.params.TextInputParam;
 
 @Slf4j
 public class StandaloneActionParamFactory implements ActionParamFactory {
 
 
     @Override
-    public InputParams build(ActionContext actionContext, InputParams inputParams, FoundAction foundAction) {
+    public InputParams build(ActionContext actionContext, InputParams inputParams) {
 
         ConsolePrompt prompt = new ConsolePrompt();
 

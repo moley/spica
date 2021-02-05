@@ -32,7 +32,12 @@ import org.spica.javaclient.model.MessagecontainerInfo;
       if (mailImporter.importMails(actionContext.getModel())) {
         Collections.sort(actionContext.getModel().getMessagecontainerInfos(), new Comparator<MessagecontainerInfo>() {
           @Override public int compare(MessagecontainerInfo o1, MessagecontainerInfo o2) {
-            return o2.getMessage().get(0).getCreationtime().compareTo(o1.getMessage().get(0).getCreationtime());
+            try {
+              return o2.getMessage().get(0).getCreationtime().compareTo(o1.getMessage().get(0).getCreationtime());
+            } catch (Exception e) {
+              log.error("Error comparing container " + o2.getId() + " containing " + o2.getMessage().size() + " messages with container " + o1.getId() + " containing " + o1.getMessage().size() + " messages: " + e.getLocalizedMessage(), e);
+              return 0;
+            }
           }
         });
         if (reload != null) {

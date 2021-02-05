@@ -64,6 +64,7 @@ import org.spica.javaclient.model.UserInfo;
     Bindings.bindBidirectional(txtMailTo.textProperty(), viewModel.getMailToProperty());
     Bindings.bindBidirectional(txtMailCC.textProperty(), viewModel.getMailCCProperty());
     Bindings.bindBidirectional(txtMailBCC.textProperty(), viewModel.getMailBCCProperty());
+    lviDialog.setItems(viewModel.getMessageInfos());
     Tooltip tooltip = new Tooltip();
     tooltip.textProperty().bind(viewModel.getIdProperty());
     btnType.setTooltip(tooltip);
@@ -164,8 +165,7 @@ import org.spica.javaclient.model.UserInfo;
       getApplicationContext().getMessages().text("Multiple Users not yet supported").showError();
 
     currentMessage.setCreatorId(getModel().getMe().getId());
-    String message = messageType != null && messageType.equals(MessageType.MAIL) ?
-        getMailEditorContent() : viewModel.getChatContentProperty().get();
+    String message = viewModel.getMailEditorVisibleProperty().get() ? getMailEditorContent() : viewModel.getChatContentProperty().get();
     log.info("Set message to " + message);
     currentMessage.setMessage(message);
 
@@ -320,8 +320,8 @@ import org.spica.javaclient.model.UserInfo;
       viewModel.getMailCCProperty().set(getTextField(currentMessage.getRecieversCC()));
       viewModel.getMailBCCProperty().set(getTextField(currentMessage.getRecieversBCC()));
     } else {
-      viewModel.getMailEditorVisibleProperty().set(false);
-      viewModel.getChatEditorVisibleProperty().set(true);
+      viewModel.getMailEditorVisibleProperty().set(true);
+      viewModel.getChatEditorVisibleProperty().set(false);
       viewModel.getChatContentProperty().set("");
       if (currentMessage.getRecieversTo() != null && currentMessage.getRecieversTo().size() != 1)
         throw new IllegalStateException("Only messages with one reciever allowed for chat");

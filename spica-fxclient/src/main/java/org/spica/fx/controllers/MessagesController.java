@@ -75,6 +75,7 @@ public class MessagesController extends AbstractController {
     Bindings.bindBidirectional(txtSearch.textProperty(), viewModel.getSearchProperty());
 
     txtSearch.setOnKeyReleased(event -> {
+      log.info("KeyRelaesed on txtSearch: " + event.getText());
 
       if (event.getCode().equals(KeyCode.ENTER)) {
         editNewMessage();

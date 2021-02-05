@@ -1,7 +1,12 @@
 package org.spica.commons.mail;
 
 import com.sun.mail.util.BASE64DecoderStream;
+import com.sun.mail.util.QPDecoderStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -18,6 +23,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.minidns.record.A;
 
 @Slf4j
@@ -109,8 +115,12 @@ public class Mail {
       //ignore
       System.out.println ("");
 
+    } else if (contentObject instanceof QPDecoderStream) {
+      log.info("Found decoderstream");
+      InputStreamReader reader = new InputStreamReader((InputStream) contentObject, Charset.defaultCharset());
+      readContent(plainText, htmlText, IOUtils.toString(reader));
     } else
-      throw new IllegalStateException("Message with content of type " + contentObject.getClass() + " is not supported yet");
+      throw new IllegalStateException("Message with content of type " + contentObject.getClass() + " is not supported yet, ");
 
   }
 

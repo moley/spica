@@ -27,11 +27,7 @@ bin/
 /spica-cli/.spica/config*
 /spica-server/.spica/
 /spica-server/src/main/resources/static/
-/.spica/config_*
-/.spica/links
-/.spica/attachments/
-/.spica/filestore/
-/.spica/siteChanged/
+/.spica
 /demospace/**/**
 
 /spica-ngclient/package-lock.json

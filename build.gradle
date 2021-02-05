@@ -159,4 +159,10 @@ tasks.githubRelease.dependsOn getTasksByName('createDmg', true), getTasksByName(
 
 tasks.release.dependsOn tasks.githubRelease, tasks.findByPath(':spica-server:dockerPushImage')
 
-
+task importProdData (type: Copy) {
+  from System.getProperty("user.home") + '/.spica'
+  into project.rootProject.file('.spica')
+  doFirst {
+    project.rootProject.file('.spica').deleteDir()
+  }
+}

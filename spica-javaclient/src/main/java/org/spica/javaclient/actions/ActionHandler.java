@@ -233,7 +233,7 @@ public class ActionHandler {
         }
       }
 
-      inputParams = actionContext.getActionParamFactory().build(actionContext, inputParams, foundAction);
+      inputParams = actionContext.getActionParamFactory().build(actionContext, inputParams);
     }
 
     return action.execute(actionContext, inputParams, commandLineArguments);

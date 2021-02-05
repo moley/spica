@@ -5,5 +5,5 @@ import org.spica.javaclient.actions.FoundAction;
 
 public interface ActionParamFactory {
 
-    InputParams build(ActionContext actionContext, InputParams inputParams, FoundAction foundAction);
+    InputParams build(ActionContext actionContext, InputParams inputParams);
 }

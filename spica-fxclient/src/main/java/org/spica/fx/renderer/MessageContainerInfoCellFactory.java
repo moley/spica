@@ -59,7 +59,7 @@ public class MessageContainerInfoCellFactory extends ListCell<MessagecontainerIn
       try {
         userInfos = model.getOtherUsers(item);
       } catch (Exception e) {
-        log.error("Error get other users of " + item.getTopic() + ":" + e.getLocalizedMessage(), e);
+        log.error("Error get other users of messagecontainer " + item.getId() + ":" + e.getLocalizedMessage(), e);
         userInfos = new ArrayList<>();
       }
       for (UserInfo next: userInfos) {
@@ -71,15 +71,18 @@ public class MessageContainerInfoCellFactory extends ListCell<MessagecontainerIn
       if (item.getMessage().size() > 0) {
         MessageInfo firstMessage = item.getMessage().get(0);
         MessageInfo lastMessage = item.getMessage().get(item.getMessage().size() - 1);
-
-        if (firstMessage.getType().equals(MessageType.MAIL))
-          icon = Consts.createIcon("fa-envelope", Consts.ICON_SIZE_TOOLBAR);
-        else if (firstMessage.getType().equals(MessageType.PHONECALL))
-          icon = Consts.createIcon("fa-phone", Consts.ICON_SIZE_TOOLBAR);
-        else if (firstMessage.getType().equals(MessageType.CHAT))
-          icon = Consts.createIcon("fa-comments", Consts.ICON_SIZE_TOOLBAR);
+        if (firstMessage.getType() != null) {
+          if (firstMessage.getType().equals(MessageType.MAIL))
+            icon = Consts.createIcon("fa-envelope", Consts.ICON_SIZE_TOOLBAR);
+          else if (firstMessage.getType().equals(MessageType.PHONECALL))
+            icon = Consts.createIcon("fa-phone", Consts.ICON_SIZE_TOOLBAR);
+          else if (firstMessage.getType().equals(MessageType.CHAT))
+            icon = Consts.createIcon("fa-comments", Consts.ICON_SIZE_TOOLBAR);
+          else
+            throw new IllegalStateException("Unknown message type " + firstMessage.getType() + " in container " + item.getTopic());
+        }
         else
-          throw new IllegalStateException("Unknown message type " + firstMessage.getType() + " in container " + item.getTopic());
+          log.error("Message " + firstMessage.getId() + " does not have a type");
 
         lblDate.setText(dateUtil.getDateAndTimeAsString(lastMessage.getCreationtime()));
       }
