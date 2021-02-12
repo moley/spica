@@ -14,7 +14,9 @@ public class UserInfoCellFactory extends ListCell<UserInfo> {
       setGraphic(null);
     }
     else {
-      setText(item.getDisplayname());
+
+      String name = item.getDisplayname() != null ? item.getDisplayname(): item.getEmail();
+      setText(name + (item.getSource() != null ? "(" + item.getSource() + ")": ""));
       setGraphic(Consts.createIcon("fa-user", Consts.ICON_SIZE_MEDIUM));
     }
   }

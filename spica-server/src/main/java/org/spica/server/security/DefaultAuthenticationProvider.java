@@ -8,8 +8,10 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 public class DefaultAuthenticationProvider implements AuthenticationProvider {
 
   @Value("${spring.security.user.name}")
@@ -21,6 +23,8 @@ public class DefaultAuthenticationProvider implements AuthenticationProvider {
   private PasswordMask passwordMask = new PasswordMask();
 
   @Override public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    log.info("Create default authentication provider with username " + username + " and password " + passwordMask.getMaskedPassword(password));
+
     String maskedPassword = password != null ? passwordMask.getMaskedPassword(password): null;
 
 

@@ -22,7 +22,7 @@ public class SpringSecurityConf extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    log.info("Configure LDAPAuthenticationProvider");
+    log.info("Configure authentication provider");
     auth.authenticationProvider(authenticationProvider());
   }
 

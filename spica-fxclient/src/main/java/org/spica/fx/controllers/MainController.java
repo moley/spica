@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.UUID;
@@ -41,6 +42,7 @@ import org.spica.fx.Mask;
 import org.spica.fx.MaskLoader;
 import org.spica.fx.ScreenManager;
 import org.spica.fx.clipboard.ClipboardItem;
+import org.spica.javaclient.ApiException;
 import org.spica.javaclient.Configuration;
 import org.spica.javaclient.StandaloneActionContext;
 import org.spica.javaclient.exceptions.NotFoundException;
@@ -261,6 +263,7 @@ public class MainController extends AbstractController  {
     } catch (Exception e) {
       String message = "Error while synchronization with server: " + e.getLocalizedMessage();
       log.error(message, e);
+      System.exit(1);
     }
 
     try {
@@ -271,7 +274,7 @@ public class MainController extends AbstractController  {
         String username = from.toString().split("@")[0];
         UserInfo userInfo = null;
         try {
-          userInfo = getModel().findUserByUsername(username);
+          userInfo = getModel().getUserNotNull("@" + username);
         } catch (NotFoundException e) {
           Notifications.create().text("User " + username + " not found").showError();
         }
@@ -283,11 +286,10 @@ public class MainController extends AbstractController  {
         newMessageContainer.setTopic("Chat with " + from.toString());
         MessageInfo messageInfo = new MessageInfo();
         messageInfo.setType(MessageType.CHAT);
-        messageInfo.setCreatorMailadresse(from.toString());
-        if (userInfo != null)
-          messageInfo.setCreatorId(userInfo.getId());
+        messageInfo.setCreator(userInfo.getId());
         messageInfo.setMessage(message.getBody());
         messageInfo.setCreationtime(LocalDateTime.now());
+        messageInfo.setRecieversTo(Arrays.asList(getModel().getMe().getId()));
         newMessageContainer.addMessageItem(messageInfo);
         if (openMesssageContainer == null)
           model.getMessagecontainerInfos().add(newMessageContainer);
@@ -319,7 +321,7 @@ public class MainController extends AbstractController  {
         String username = from.split("@")[0];
         UserInfo userInfo = null;
         try {
-          userInfo = getModel().findUserByUsername(username);
+          userInfo = getModel().getUserNotNull(username);
         } catch (NotFoundException e) {
           Notifications.create().text("User " + username + " not found").showError();
         }
@@ -330,9 +332,7 @@ public class MainController extends AbstractController  {
         newMessageContainer.setTopic("Chat with " + from);
         MessageInfo messageInfo = new MessageInfo();
         messageInfo.setType(MessageType.CHAT);
-        messageInfo.setCreatorMailadresse(from);
-        if (userInfo != null)
-          messageInfo.setCreatorId(userInfo.getId());
+        messageInfo.setCreator(userInfo.getId());
 
         FilestoreService filestoreService = standaloneActionContext.getServices().getFilestoreService();
 

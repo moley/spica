@@ -30,9 +30,7 @@ import org.spica.javaclient.model.MessageType;
 import org.spica.javaclient.model.MessagecontainerInfo;
 import org.spica.javaclient.model.UserInfo;
 
-@Slf4j
-@Data
-public class MessagesController extends AbstractController {
+@Slf4j @Data public class MessagesController extends AbstractController {
 
   public ButtonBar btbActions;
   @FXML private ListView<MessagecontainerInfo> lviMessages;
@@ -45,10 +43,10 @@ public class MessagesController extends AbstractController {
     Button btnSetRead = new Button("Read");
     btnSetRead.setOnAction(event -> setReadtime(lviMessages.getSelectionModel().getSelectedItems()));
 
-    Button btnClear = new Button ("Clear");
-    btnClear.setOnAction(event -> clear ());
+    Button btnClear = new Button("Clear");
+    btnClear.setOnAction(event -> clear());
 
-    Button btnDelete = new Button ("Remove");
+    Button btnDelete = new Button("Remove");
     btnDelete.setOnAction(event -> removeMessage(lviMessages.getSelectionModel().getSelectedItems()));
 
     btbActions.getButtons().addAll(btnSetRead, btnClear, btnDelete);
@@ -64,10 +62,9 @@ public class MessagesController extends AbstractController {
       }
     });
 
-
     lviMessages.setOnMouseClicked(event -> {
       if (event.getClickCount() == 2) {
-        editExistingMessage (lviMessages.getSelectionModel().getSelectedItem());
+        editExistingMessage(lviMessages.getSelectionModel().getSelectedItem());
         stepToPane(Pages.MESSAGEDIALOG);
       }
 
@@ -114,7 +111,13 @@ public class MessagesController extends AbstractController {
     MessageInfo lastMessageInContainer = getModel().getLastMessageInMessageContainer(selectedMessageContainer);
     //Answer last message
     MessageInfo newMessageInfo = getModel().createNewMessage(lastMessageInContainer.getType());
-    newMessageInfo.addRecieversToItem(lastMessageInContainer.getCreatorMailadresse());
+
+    try {
+      UserInfo creator = getActionContext().getModel().getUserNotNull(lastMessageInContainer.getCreator());
+      newMessageInfo.addRecieversToItem(creator.getId());
+    } catch (NotFoundException e) {
+      throw new IllegalStateException(e.getLocalizedMessage(), e);
+    }
     if (lastMessageInContainer.getRecieversCC() != null) {
       for (String next : lastMessageInContainer.getRecieversCC())
         newMessageInfo.addRecieversCCItem(next);
@@ -130,37 +133,32 @@ public class MessagesController extends AbstractController {
   }
 
   public void editNewMessage() {
-    String [] tokens = viewModel.getSearchProperty().get().split(" ");
+    String[] tokens = viewModel.getSearchProperty().get().split(" ");
     String type = tokens[0];
     String recipient = tokens[1];
-    if (recipient.startsWith("#"))
-      recipient = recipient.substring(1);
 
+    UserInfo userInfo = null;
+
+    try {
+      userInfo = getModel().getUserNotNull(recipient);
+    } catch (NotFoundException e) {
+      getApplicationContext().getMessages().text("No user found for '" + recipient + "'");
+      return;
+    }
     String subject = String.join(" ", Arrays.copyOfRange(tokens, 2, tokens.length));
 
-    String recipientMail = recipient.contains("@") ? recipient: null;
-    UserInfo recipientUser = null;
 
-    if (recipientMail == null) { //if no mail adress we expect an internal user
-      try {
-        recipientUser = getModel().findUserByUsername(recipient);
-        getApplicationContext().getMessages().text("Found user " + recipientUser.getDisplayname()).showInformation();
-      } catch (NotFoundException e) {
-        getApplicationContext().getMessages().text("User " + recipient + " not found").showError();
-      }
-      recipientMail = recipientUser.getEmail();
-    } else {
-      recipientUser = getModel().findUserByMail(recipientMail);
-    }
 
     MessagecontainerInfo newMessageContainer = getModel().createNewMessageContainer();
     newMessageContainer.setTopic(subject);
 
     MessageInfo messageInfo = getModel().createNewMessage(MessageType.fromValue(type.toLowerCase()));
-    messageInfo.addRecieversToItem(recipientUser != null ? "@" + recipientUser.getId(): recipientMail);
+    messageInfo.addRecieversToItem(userInfo.getId());
     getApplicationContext().setSelectedMessageContainer(newMessageContainer);
     getApplicationContext().setSelectedMessageInfo(messageInfo);
-    getApplicationContext().getMessages().text("Creating a new message of type " + messageInfo.getType() + " for recipient " + messageInfo.getRecieversTo().get(0)).showInformation();
+    getApplicationContext().getMessages().text(
+        "Creating a new message of type " + messageInfo.getType() + " for recipient " + messageInfo.getRecieversTo()
+            .get(0)).showInformation();
     viewModel.getSearchProperty().set("");
   }
 
@@ -178,13 +176,13 @@ public class MessagesController extends AbstractController {
     refreshData();
   }
 
-  private void removeMessage (final List<MessagecontainerInfo> messagecontainerInfos) {
+  private void removeMessage(final List<MessagecontainerInfo> messagecontainerInfos) {
     int numberOfMessages = 0;
     MailAdapter mailAdapter = getActionContext().getServices().getMailImporter().getMailAdapter();
     getModel().getMessagecontainerInfos().removeAll(messagecontainerInfos);
-    for (MessagecontainerInfo messagecontainerInfo: messagecontainerInfos) {
+    for (MessagecontainerInfo messagecontainerInfo : messagecontainerInfos) {
       for (MessageInfo nextMessage : messagecontainerInfo.getMessage()) {
-        if (nextMessage.getType().equals(MessageType.MAIL)) {
+        if (nextMessage.getType() != null && nextMessage.getType().equals(MessageType.MAIL)) {
           mailAdapter.deleteMail(nextMessage.getId());
           numberOfMessages++;
         }
@@ -194,9 +192,9 @@ public class MessagesController extends AbstractController {
     refreshData();
   }
 
-  private void setReadtime (final List<MessagecontainerInfo> messagecontainerInfos) {
+  private void setReadtime(final List<MessagecontainerInfo> messagecontainerInfos) {
     int numberOfMessages = 0;
-    for (MessagecontainerInfo messagecontainerInfo: messagecontainerInfos) {
+    for (MessagecontainerInfo messagecontainerInfo : messagecontainerInfos) {
       for (MessageInfo nextMessage : messagecontainerInfo.getMessage()) {
         if (nextMessage.getReadtime() == null) {
           nextMessage.readtime(LocalDateTime.now());
@@ -207,8 +205,6 @@ public class MessagesController extends AbstractController {
     saveModel("Set readtime for " + numberOfMessages);
     refreshData();
   }
-
-
 
   @Override public void refreshData() {
 

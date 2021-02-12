@@ -1,6 +1,8 @@
 package org.spica.javaclient;
 
+import com.sun.jersey.core.util.Base64;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.spica.commons.SpicaProperties;
@@ -46,28 +48,55 @@ public class StandaloneActionContext implements ActionContext {
 
   public void refreshServer () {
     //refresh all skills
-    log.info("refresh server data from " + getApi().getCurrentServer());
+
 
     try {
-
-
       UserDisplayName userDisplayName = new UserDisplayName();
 
+      String username = getProperties().getValueNotNull("spica.cli.username");
+      String password = getProperties().getValueNotNull("spica.cli.password");
+      String basePath = getProperties().getValueNotNull("spica.cli.serverurl");
+
+      ApiClient apiClient = new ApiClient();
+      apiClient.setBasePath(basePath);
+      String encodedAuth = new String (Base64.encode(username + ":" + password));
+      apiClient.addDefaultHeader("Authorization", "Basic " + encodedAuth);
+      getApi().setApiClient(apiClient);
+
+      log.info("refresh server data from " + getApi().getCurrentServer());
+
+      List<UserInfo> infosFromApi = getModel().findUsersBySource("api");
+      getModel().getUserInfos().removeAll(infosFromApi);
+      log.info("Deleted " + infosFromApi.size() + " users");
+
       List<UserInfo> users = getApi().getUserApi().getUsers();
+      log.info("Refreshing " + users.size() + " users");
       for (UserInfo next: users) {
+        next.setSource("api");
         String newDisplayname = userDisplayName.getDisplayname(next);
         if (next.getDisplayname() == null || ! newDisplayname.equals(next.getDisplayname())) {
           next.setDisplayname(userDisplayName.getDisplayname(next));
         }
       }
-      getModel().setUserInfos(users);
+      getModel().getUserInfos().addAll(users);
     } catch (ApiException e) {
-      log.info("Exception when reading users: " + e.getLocalizedMessage(), e);
+      log.error("Exception when reading users: " + e.getCode() + ":" + e.getResponseBody() + ":" + e.getLocalizedMessage(), e);
+      throw new IllegalStateException(e);
     }
 
     String usermail = getProperties().getValueNotNull("spica.cli.usermail");
-    getModel().setMe(getModel().findUserByMail(usermail));
+    UserInfo meUser = getModel().findUserByMail(usermail);
+    if (meUser == null) {
+      String message = "User with mail adress " + usermail + " not found, can not detect me. Configure a valid user in property 'spica.cli.usermail'";
+      log.error(message);
+      System.exit(1); //TODO message
 
+    }
+
+    //set me
+    getModel().setMe(meUser);
+
+    //refresh skills
     UserApi userApi = getApi().getUserApi();
     try {
       List<SkillInfo> skills = userApi.getSkills();
@@ -82,6 +111,8 @@ public class StandaloneActionContext implements ActionContext {
     } catch (ApiException e) {
       log.info("Exception when reading userskills of me: " + e.getLocalizedMessage(), e);
     }
+
+    services.getModelCacheService().save(getModel(), "Refresh api data at application start");
 
   }
 

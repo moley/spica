@@ -1,6 +1,7 @@
 package org.spica.fx.renderer;
 
 import java.time.format.DateTimeFormatter;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -16,6 +17,7 @@ import org.spica.commons.filestore.FilestoreItem;
 import org.spica.commons.filestore.FilestoreService;
 import org.spica.fx.Consts;
 import org.spica.fx.logic.FileStoreNavigator;
+import org.spica.javaclient.exceptions.NotFoundException;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.UserInfo;
@@ -60,18 +62,22 @@ public class MessageInfoCellFactory extends ListCell<MessageInfo> {
 
       HBox.setHgrow(contentNode, Priority.ALWAYS);
 
-
-      UserInfo userInfo = item.getCreatorId() != null ? model.findUserById (item.getCreatorId()) : null;
+      UserInfo userInfo;
+      try {
+        userInfo = item.getCreator() != null ? model.findUserById (item.getCreator()) : null;
+      } catch (NotFoundException e) {
+        throw new IllegalStateException("User " + item.getCreator() + " cannot be found");
+      }
 
       boolean isFromMe = userInfo != null && model.isMe(userInfo);
 
-      String username = userInfo != null ? userInfo.getDisplayname() : item.getCreatorMailadresse();
-      if (isFromMe)
-        username = "Me";
+      String displayname = isFromMe ? "Me" : userInfo.getDisplayname();
       Node icon = (userInfo != null && userInfo.getAvatar() != null) ? new ImageView(Consts.createImage(userInfo.getAvatar(), Consts.ICON_SIZE_MEDIUM)) : Consts.createIcon("fa-user", Consts.ICON_SIZE_MEDIUM);
 
-      VBox userAndTime = new VBox();
-      userAndTime.getChildren().add(new Label(username, icon));
+      VBox userAndTime = new VBox(5);
+      userAndTime.setPadding(new Insets(5, 5, 5, 5));
+      userAndTime.setStyle("-fx-background-color: #FFD08D");
+      userAndTime.getChildren().add(new Label(displayname, icon));
       Label chatTimeLabel = new Label(formatter.format(item.getCreationtime().toLocalTime()));
       chatTimeLabel.getStyleClass().setAll("chat-time");
       userAndTime.getChildren().add(chatTimeLabel);

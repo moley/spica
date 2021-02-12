@@ -17,8 +17,9 @@ public enum Pages {
 
   FILESTORE ("filestore", "FileStore", "fa-file", true),
 
+  SEARCHBOX ("searchbox", "SearchDialog", "fa-building", false),
 
-  SEARCHBOX ("searchbox", "SearchDialog", "fa-building", false);
+  USERS ("users", "Users", "fa-user", true);
 
 
   private String filename;

@@ -84,7 +84,7 @@ public class CreateBookingAction extends AbstractAction {
 
             //TODO consolidate with StartPhoneCallAction
             MessageInfo messageInfo = new MessageInfo();
-            messageInfo.setCreatorId(userInfo != null ? userInfo.getId(): null);
+            messageInfo.setCreator(userInfo != null ? userInfo.getId(): null);
             messageInfo.setMessage(text);
             messageInfo.setType(MessageType.PHONECALL);
             messageInfo.setId(UUID.randomUUID().toString());

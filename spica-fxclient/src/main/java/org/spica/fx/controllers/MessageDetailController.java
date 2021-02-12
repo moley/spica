@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -33,6 +34,7 @@ import org.spica.commons.xmpp.XMPPAdapter;
 import org.spica.fx.Consts;
 import org.spica.fx.clipboard.ClipboardItem;
 import org.spica.fx.renderer.MessageInfoCellFactory;
+import org.spica.javaclient.exceptions.NotFoundException;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.MessageType;
 import org.spica.javaclient.model.MessagecontainerInfo;
@@ -40,7 +42,7 @@ import org.spica.javaclient.model.UserInfo;
 
 @Slf4j @Data public class MessageDetailController extends AbstractController {
 
-  @FXML private  Button btnAddFile;
+  @FXML private Button btnAddFile;
   @FXML private TextField txtTopic;
   @FXML private Button btnType;
   @FXML private GridPane panMailEditor;
@@ -110,18 +112,18 @@ import org.spica.javaclient.model.UserInfo;
   }
 
   //TODO Workaround because HtmlEditor does not support bindings
-  private void setMailEditorContent (final String content) {
+  private void setMailEditorContent(final String content) {
     viewModel.getMailContentProperty().set(content);
     if (hedMailContent != null)
       hedMailContent.setHtmlText(content);
   }
 
   //TODO Workaround because HtmlEditor does not support bindings
-  private String getMailEditorContent () {
+  private String getMailEditorContent() {
     if (hedMailContent != null)
       getViewModel().getMailContentProperty().set(hedMailContent.getHtmlText());
     return getViewModel().getMailContentProperty().get();
- }
+  }
 
   private void adaptFileLabel() {
     List<File> files = viewModel.getFiles();
@@ -167,7 +169,7 @@ import org.spica.javaclient.model.UserInfo;
       adaptFileLabel();
   }
 
-  private void addFile (File newFile) {
+  private void addFile(File newFile) {
     List<File> files = viewModel.getFiles();
     files.add(newFile);
     adaptFileLabel();
@@ -184,8 +186,10 @@ import org.spica.javaclient.model.UserInfo;
     if (viewModel.getMailToProperty().get().contains(","))
       getApplicationContext().getMessages().text("Multiple Users not yet supported").showError();
 
-    currentMessage.setCreatorId(getModel().getMe().getId());
-    String message = viewModel.getMailEditorVisibleProperty().get() ? getMailEditorContent() : viewModel.getChatContentProperty().get();
+    currentMessage.setCreator(getModel().getMe().getId());
+    String message = viewModel.getMailEditorVisibleProperty().get() ?
+        getMailEditorContent() :
+        viewModel.getChatContentProperty().get();
     log.info("Set message to " + message);
     currentMessage.setMessage(message);
 
@@ -207,18 +211,18 @@ import org.spica.javaclient.model.UserInfo;
     if (messageType.equals(MessageType.MAIL)) {
       log.info("Send mail " + currentMessage);
 
-      List<String> mailAdressesTo = getModel().getMailAdresses(viewModel.getMailToProperty().get());
-      log.info("To: " + mailAdressesTo);
-
-      List<String> mailAdressesCc = getModel().getMailAdresses(viewModel.getMailCCProperty().get());
-      log.info("Cc: " + mailAdressesCc);
-
-      List<String> mailAdressesBcc = getModel().getMailAdresses(viewModel.getMailBCCProperty().get());
-      log.info("Bcc: " + mailAdressesBcc);
-
-      int numberRecipients = mailAdressesTo.size() + mailAdressesCc.size() + mailAdressesBcc.size();
-
       try {
+        List<String> mailAdressesTo = getModel().getMailAdresses(viewModel.getMailToProperty().get());
+        log.info("To: " + mailAdressesTo);
+
+        List<String> mailAdressesCc = getModel().getMailAdresses(viewModel.getMailCCProperty().get());
+        log.info("Cc: " + mailAdressesCc);
+
+        List<String> mailAdressesBcc = getModel().getMailAdresses(viewModel.getMailBCCProperty().get());
+        log.info("Bcc: " + mailAdressesBcc);
+
+        int numberRecipients = mailAdressesTo.size() + mailAdressesCc.size() + mailAdressesBcc.size();
+
         String subject = (firstMail ? currentMessageContainer.getTopic() : "Re: " + currentMessageContainer.getTopic());
 
         currentMessage.setSendtime(LocalDateTime.now());
@@ -230,10 +234,14 @@ import org.spica.javaclient.model.UserInfo;
         mailService.sendMail(subject, currentMessage.getMessage(), mailAdressesTo, mailAdressesCc, mailAdressesBcc,
             viewModel.getFiles());
 
-        getApplicationContext().getMessages().text("Mail sent to " + numberRecipients + " recipients").showInformation();
+        getApplicationContext().getMessages().text("Mail sent to " + numberRecipients + " recipients")
+            .showInformation();
       } catch (MessagingException e) {
         log.error(e.getLocalizedMessage(), e);
         getApplicationContext().getMessages().text("Error on sending mail: " + e.getLocalizedMessage()).showError();
+      } catch (NotFoundException e) {
+        getApplicationContext().getMessages().text(e.getLocalizedMessage()).showError();
+        return;
       }
 
     } else if (messageType.equals(MessageType.CHAT)) {
@@ -247,14 +255,19 @@ import org.spica.javaclient.model.UserInfo;
 
         currentMessage.setRecieversTo(entries);
 
-        UserInfo recipient = getModel().getUsersOrMe(currentMessageContainer);
+        String to = entries.get(0).startsWith("@") ? entries.get(0) : "@" + entries.get(0);
+
+        UserInfo recipient = getModel().findUserBySearchString(to);
         xmppAdapter
             .sendMessage(getActionContext().getProperties(), recipient.getUsername(), currentMessage.getMessage(),
                 viewModel.getFiles());
 
       } catch (InterruptedException | SmackException | IOException | XMPPException e) {
         log.error(e.getLocalizedMessage(), e);
-        getApplicationContext().getMessages().text("Error on sending chat message: " + e.getLocalizedMessage()).showError();
+        getApplicationContext().getMessages().text("Error on sending chat message: " + e.getLocalizedMessage())
+            .showError();
+      } catch (NotFoundException e) {
+        log.error("No user found: " + e.getLocalizedMessage(), e);
       }
     } else {
       getApplicationContext().getMessages().text("MessageType " + messageType + " not yet supported");
@@ -272,7 +285,8 @@ import org.spica.javaclient.model.UserInfo;
 
     currentMessage.setReadtime(LocalDateTime.now());
 
-    log.info("Add messsage " + currentMessage.getId() + " to model (container " + currentMessageContainer.getId() + ")");
+    log.info(
+        "Add messsage " + currentMessage.getId() + " to model (container " + currentMessageContainer.getId() + ")");
     currentMessageContainer.getMessage().add(currentMessage);
     //create new message, but don't save
     MessageInfo newMessage = getModel().createNewMessage(currentMessage.getType());
@@ -289,8 +303,21 @@ import org.spica.javaclient.model.UserInfo;
   private String getTextField(final List<String> adresses) {
     if (adresses == null)
       return "";
-    else
-      return adresses.toString().replace("[", "").replace("]", "");
+    else {
+      List<String> mailAdresses = new ArrayList<>();
+      for (String nextId: adresses) {
+        try {
+          UserInfo userById = getModel().getUserNotNull(nextId);
+          if (userById.getEmail() == null)
+            throw new IllegalStateException("User " + userById + " has no mail address");
+          mailAdresses.add(userById.getEmail());
+        } catch (NotFoundException e) {
+          throw new IllegalStateException("Invalid user id " + nextId + " found");
+        }
+      }
+      return String.join(",", mailAdresses);
+    }
+
   }
 
   private List<String> getEntries(final String content) {
@@ -346,18 +373,45 @@ import org.spica.javaclient.model.UserInfo;
       if (currentMessage.getRecieversTo() != null && currentMessage.getRecieversTo().size() != 1)
         throw new IllegalStateException("Only messages with one reciever allowed for chat");
 
-      viewModel.getChatToProperty().set(viewModel.getCurrentMessage().getRecieversTo().get(0));
+      try {
+        UserInfo userInfo = getModel().getUserNotNull(viewModel.getCurrentMessage().getRecieversTo().get(0));
+        viewModel.getChatToProperty().set("@" + userInfo.getUsername());
+      } catch (NotFoundException e) {
+        throw new IllegalStateException("No user found for id " + viewModel.getCurrentMessage().getRecieversTo().get(0));
+      }
+
+
     }
     viewModel.getMessageInfos().setAll(currentMessageContainer.getMessage());
 
     List<String> userIds = new ArrayList<>();
-    List<UserInfo> otherUsers = getModel().getOtherUsers(viewModel.getCurrentMessageContainer());
+    List<UserInfo> otherUsers = null;
+    try {
+      otherUsers = getModel().getOtherUsers(viewModel.getCurrentMessageContainer());
+    } catch (NotFoundException e) {
+      log.error(e.getLocalizedMessage(), e);
+    }
     for (UserInfo next : otherUsers) {
       if (next.getUsername() != null)
         userIds.add("@" + next.getUsername());
       else
         userIds.add(next.getEmail());
     }
+
+    if (hedMailContent != null && txaMessageContent != null) {
+      Platform.runLater(new Runnable() {
+        @Override public void run() {
+          if (currentMessage.getType() != null) {
+            if (currentMessage.getType().equals(MessageType.MAIL) && hedMailContent != null)
+              hedMailContent.requestFocus();
+            else if (txtMessageTo != null)
+              txaMessageContent.requestFocus();
+          }
+
+        }
+      });
+    }
+
 
   }
 }

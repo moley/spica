@@ -113,7 +113,7 @@ public class Model {
 					    if (next.equalsIgnoreCase(from.getId()))
 					      recipientsContainFrom = true;
             }
-					  if (nextMessage.getCreatorId() != null && (nextMessage.getCreatorId().equalsIgnoreCase(from.getId()) || recipientsContainFrom))
+					  if (nextMessage.getCreator() != null && (nextMessage.getCreator().equalsIgnoreCase(from.getId()) || recipientsContainFrom))
 					    return nextContainer;
 					}
 				}
@@ -127,8 +127,7 @@ public class Model {
 	public MessageInfo createNewMessage (MessageType type) {
 	  MessageInfo messageInfo = new MessageInfo();
     messageInfo.setCreationtime(LocalDateTime.now());
-    messageInfo.setCreatorId(getMe().getId());
-    messageInfo.setCreatorMailadresse(getMe().getEmail());
+    messageInfo.setCreator(getMe().getId());
     messageInfo.setType(type);
     messageInfo.setId(UUID.randomUUID().toString());
     return messageInfo;
@@ -140,34 +139,86 @@ public class Model {
 	  return messagecontainerInfo;
   }
 
-  public List<UserInfo> getOtherUsers (final MessagecontainerInfo messagecontainerInfo) {
+  public UserInfo getUserNotNull (final String searchString) throws NotFoundException {
+    UserInfo foundUser;
+    try {
+      foundUser = findUserBySearchString(searchString);
+    } catch (NotFoundException e) {
+      foundUser = new UserInfo();
+      foundUser.setId(UUID.randomUUID().toString());
+      if (searchString.startsWith("@"))
+        throw new NotFoundException("User with username " + searchString.substring(1) + " not found");
+      else if (searchString.contains("@")) {
+        foundUser.setEmail(searchString);
+        foundUser.setDisplayname(searchString);
+      }
+      else
+        throw new NotFoundException("parameter " + searchString + " is not a username and mail adresse and user with this id not found");
+
+      userInfos.add(foundUser);
+    }
+    return foundUser;
+  }
+
+  public List<UserInfo> getAllUsers (final MessagecontainerInfo messagecontainerInfo) throws NotFoundException {
     UserInfo me = getMe();
-    Collection<UserInfo> userInfos = new HashSet<>();
+    Collection<UserInfo> otherUsers = new HashSet<>();
     for (MessageInfo nextMessage: messagecontainerInfo.getMessage()) {
       if (nextMessage.getRecieversTo() != null) {
         for (String next : nextMessage.getRecieversTo()) {
-          if (!next.equals(me.getId()) && next.startsWith("@"))
-            userInfos.add(findUserById(next));
+          UserInfo foundUser = getUserNotNull(next);
+          otherUsers.add(foundUser);
         }
       }
 
-      if (nextMessage.getCreatorId() != null && ! nextMessage.getCreatorId().equals(me.getId()))
-        userInfos.add(findUserById(nextMessage.getCreatorId()));
+      if (nextMessage.getCreator() != null) {
+        UserInfo foundUser = getUserNotNull(nextMessage.getCreator());
+        otherUsers.add(foundUser);
+      }
     }
 
-    return new ArrayList<>(userInfos);
+    return new ArrayList<>(otherUsers);
   }
 
-	public UserInfo getUsersOrMe (final MessagecontainerInfo messagecontainerInfo) {
-	  Collection<UserInfo> userInfos = getOtherUsers(messagecontainerInfo);
-	  if (userInfos.size() > 1)
-	    throw new IllegalStateException("More than one user found, which is not me in messagecontainer " + messagecontainerInfo.getTopic());
-	  else if (userInfos.isEmpty())
-	    return getMe();
+  public List<UserInfo> getOtherUsers (final MessagecontainerInfo messagecontainerInfo) throws NotFoundException {
+    UserInfo me = getMe();
+    Collection<UserInfo> otherUsers = new HashSet<>();
+    for (MessageInfo nextMessage: messagecontainerInfo.getMessage()) {
+      if (nextMessage.getRecieversTo() != null) {
+        for (String next : nextMessage.getRecieversTo()) {
+          UserInfo foundUser = getUserNotNull(next);
+          if (! foundUser.getId().equalsIgnoreCase(me.getId()))
+            otherUsers.add(foundUser);
+        }
+      }
 
-	  return userInfos.iterator().next();
+      if (nextMessage.getCreator() != null) {
+        UserInfo foundUser = getUserNotNull(nextMessage.getCreator());
+        if (! foundUser.getId().equalsIgnoreCase(me.getId()))
+          otherUsers.add(foundUser);
+      }
+    }
 
+    return new ArrayList<>(otherUsers);
   }
+
+  public List<UserInfo> getCreators (final MessagecontainerInfo messagecontainerInfo) throws NotFoundException {
+    UserInfo me = getMe();
+    Collection<UserInfo> otherUsers = new HashSet<>();
+    for (MessageInfo nextMessage: messagecontainerInfo.getMessage()) {
+      if (nextMessage.getCreator() != null) {
+        UserInfo foundUser = getUserNotNull(nextMessage.getCreator());
+        if (! foundUser.getId().equalsIgnoreCase(me.getId()))
+          otherUsers.add(foundUser);
+      }
+    }
+
+    if (otherUsers.isEmpty())
+      otherUsers.add(getMe());
+
+    return new ArrayList<>(otherUsers);
+  }
+
 
   /**
    * find tasks by name, external system key or id
@@ -497,6 +548,22 @@ public class Model {
   }
 
   /**
+   * finds only the users which have the source
+   * @param source source
+   * @return users with source
+   */
+  public List<UserInfo> findUsersBySource (final String source) {
+    List<UserInfo> filteredUserInfos = new ArrayList<>();
+    for (UserInfo next: getUserInfos()) {
+      if (next.getSource() != null && next.getSource().equalsIgnoreCase(source))
+        filteredUserInfos.add(next);
+    }
+
+    return filteredUserInfos;
+
+  }
+
+  /**
    * setter users
    * <b>ATTENTION! Overrids current data</b>
    * @param userInfos list of users
@@ -676,7 +743,7 @@ public class Model {
    * @param id user id
    * @return user or throws {@link IllegalStateException}
    */
-  public UserInfo findUserById(String id) {
+  public UserInfo findUserById(String id) throws NotFoundException {
 
     if (id == null)
       throw new IllegalArgumentException("Parameter id must not be null");
@@ -688,14 +755,38 @@ public class Model {
       if (next.getId().equals(id))
         return next;
     }
-    throw new IllegalStateException("No user found for id '" + id + "'");
+    throw new NotFoundException("No user found for id '" + id + "'");
   }
 
-  public UserInfo findUser (String usernameOrMail) throws NotFoundException {
-    UserInfo foundUser = findUserByMail(usernameOrMail);
-    if (foundUser == null)
-      foundUser = findUserByUsername(usernameOrMail);
-    return foundUser;
+  /**
+   * find user:
+   * - by username when param starts with @
+   * - by mail when param contains @
+   * - or by id
+   *
+   * If nothing found, an error is thrown
+   *
+   * @param param
+   * @return user, not null
+   * @throws NotFoundException if no user was found
+   */
+  public UserInfo findUserBySearchString (String param) throws NotFoundException {
+    UserInfo userInfo = null;
+    if (param != null && ! param.trim().isEmpty()) {
+      if (param.startsWith("@"))
+        userInfo = findUserByUsername(param.substring(1));
+
+      if (userInfo == null && param.contains("@"))
+        userInfo = findUserByMail(param);
+
+      if (userInfo == null)
+        userInfo = findUserById(param);
+    }
+
+    if (userInfo == null)
+      throw new NotFoundException("No user found for searchstring '" + param + "'");
+
+    return userInfo;
   }
 
   /**
@@ -774,7 +865,7 @@ public class Model {
     return unreadMessages;
   }
 
-  public List<String> getMailAdresses(String text) {
+  public List<String> getMailAdresses(String text) throws NotFoundException {
     List<String> mailadresses = new ArrayList<>();
     if (text != null && ! text.trim().isEmpty()) {
       String[] arrays = text.split(",");

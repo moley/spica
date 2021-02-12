@@ -1,5 +1,6 @@
 package org.spica.javaclient.actions;
 
+import org.spica.javaclient.ApiClient;
 import org.spica.javaclient.api.ProjectApi;
 import org.spica.javaclient.api.TaskApi;
 import org.spica.javaclient.api.UserApi;
@@ -12,13 +13,16 @@ public class Api {
 
   private ProjectApi projectApi;
 
+  private ApiClient apiClient;
+
   /**
    * getter UserAPI
    * @return user api
    */
   public UserApi getUserApi() {
-    if (userApi == null)
-      userApi = new UserApi();
+    if (userApi == null) {
+      userApi = new UserApi(apiClient);
+    }
     return userApi;
   }
 
@@ -36,7 +40,7 @@ public class Api {
    */
   public TaskApi getTaskApi() {
     if (taskApi == null) {
-      taskApi = new TaskApi();
+      taskApi = new TaskApi(apiClient);
     }
     return taskApi;
   }
@@ -48,8 +52,16 @@ public class Api {
   public ProjectApi getProjectApi() {
 
     if (projectApi == null) {
-      projectApi = new ProjectApi();
+      projectApi = new ProjectApi(apiClient);
     }
     return projectApi;
+  }
+
+  public ApiClient getApiClient() {
+    return apiClient;
+  }
+
+  public void setApiClient(ApiClient apiClient) {
+    this.apiClient = apiClient;
   }
 }

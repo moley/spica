@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 import javax.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.spica.commons.filestore.FilestoreService;
 import org.spica.commons.mail.Attachment;
 import org.spica.commons.mail.Mail;
 import org.spica.commons.mail.MailAdapter;
+import org.spica.javaclient.exceptions.NotFoundException;
 import org.spica.javaclient.model.DashboardItemInfo;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.MessageType;
@@ -89,12 +92,19 @@ import org.spica.javaclient.model.UserInfo;
       log.info("Set attachments of message " + messageInfo.getId() + " to " + messageInfo.getDocuments());
 
       String mailFrom = nextMail.getFromAsStringList().get(0);
-      UserInfo userInfo = model.findUserByMail(mailFrom);
-      messageInfo.setCreatorId(userInfo != null ? userInfo.getId() : null);
-      messageInfo.setCreatorMailadresse(mailFrom);
-      messageInfo.setRecieversTo(nextMail.getToAsStringList());
-      messageInfo.setRecieversCC(nextMail.getCCAsStringList());
-      messageInfo.setRecieversBCC(nextMail.getBCCAsStringList());
+      UserInfo userInfo = null;
+      try {
+        userInfo = model.getUserNotNull(mailFrom);
+        messageInfo.setCreator(userInfo.getId());
+
+
+      } catch (NotFoundException e) {
+        log.error(e.getLocalizedMessage(), e);
+      }
+
+      messageInfo.setRecieversTo(getIdsForUsers(model, nextMail.getToAsStringList()));
+      messageInfo.setRecieversCC(getIdsForUsers(model, nextMail.getCCAsStringList()));
+      messageInfo.setRecieversBCC(getIdsForUsers(model, nextMail.getBCCAsStringList()));
       messageInfo.setMessage(nextMail.getText());
 
     }
@@ -110,6 +120,21 @@ import org.spica.javaclient.model.UserInfo;
       }
     }
     return modelChanged;
+  }
+
+  public List<String> getIdsForUsers (final Model model, final List<String> mails) {
+    Collection<String> ids = new HashSet<>();
+    for (String next: mails) {
+      try {
+        UserInfo userInfo = model.getUserNotNull(next);
+        ids.add(userInfo.getId());
+      } catch (NotFoundException e) {
+        throw new IllegalStateException("Cannot add on demand user with searchstring " + next);
+      }
+    }
+
+    return new ArrayList<>(ids);
+
   }
 
   private MessageInfo getMessage(final MessagecontainerInfo messagecontainerInfo, final Mail mail)

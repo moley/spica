@@ -52,10 +52,14 @@ dir.eachFileRecurse(groovy.io.FileType.FILES) { file ->
 
 // Iterate on all swagger files and generate a task for each one with the nomenclature openApiGenerate + swagger name
 swaggerList.each {
+
   def apiName = it.getName().replace(".yaml", "");
 
-  def openApiGenerateTask = tasks.create("openApiGenerate" + apiName.capitalize(), org.openapitools.generator.gradle.plugin.tasks.GenerateTask.class, {
+
+  Task openApiGenerateTask = tasks.create("openApiGenerate" + apiName.capitalize(), org.openapitools.generator.gradle.plugin.tasks.GenerateTask.class, {
     generatorName = "java"
+    group = "OpenAPI Tools"
+    description = "Generate the api " + apiName + " via Open API Tools Generator"
     inputSpec = "$rootDir/api/".toString() + "${apiName}.yaml"
     outputDir = "$buildDir/generated/openapi".toString()
     apiPackage = "org.spica.javaclient.api"
@@ -69,6 +73,8 @@ swaggerList.each {
             useLombok: "true"
     ]
   })
+
+  println "Create task for " + apiName + "-> " + openApiGenerateTask.name
 
   tasks.compileJava.dependsOn openApiGenerateTask
 }

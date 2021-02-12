@@ -50,9 +50,7 @@ components:
           type: "string"
         type:
           $ref: "#/components/schemas/MessageType"
-        creatorId:
-          type: "string"
-        creatorMailadresse:
+        creator:
           type: "string"
         recieversTo:
           type: "array"

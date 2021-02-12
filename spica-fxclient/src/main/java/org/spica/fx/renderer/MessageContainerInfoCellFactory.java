@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import lombok.extern.slf4j.Slf4j;
@@ -46,27 +47,29 @@ public class MessageContainerInfoCellFactory extends ListCell<MessagecontainerIn
       lblDate.setMinWidth(120);
       Label lblText = new Label();
 
-      ButtonBar bbaUsers = new ButtonBar();
-      bbaUsers.setMinWidth(200);
-      bbaUsers.setMaxWidth(200);
-
-
       Node icon = null;
 
       String date = "";
 
-      List<UserInfo> userInfos;
+      List<UserInfo> allUsers = new ArrayList<>();
+      List<UserInfo> otherUsers = new ArrayList<>();
       try {
-        userInfos = model.getOtherUsers(item);
+        allUsers = model.getAllUsers(item);
       } catch (Exception e) {
         log.error("Error get other users of messagecontainer " + item.getId() + ":" + e.getLocalizedMessage(), e);
-        userInfos = new ArrayList<>();
       }
-      for (UserInfo next: userInfos) {
-        Button btnUser = new Button(next.getUsername());
-        ButtonBar.setButtonData(btnUser, ButtonBar.ButtonData.LEFT);
-        bbaUsers.getButtons().add(btnUser);
+
+      String tooltip = allUsers.size() + " users contained in the message container:";
+      for (UserInfo next: allUsers) {
+        tooltip += "\n - " + next.getDisplayname();
       }
+
+      UserInfo firstCreator = allUsers.get(0);
+      Button btnUser = new Button();
+      btnUser.setText(firstCreator.getDisplayname() + "(" + allUsers.size() + ")");
+      btnUser.setTooltip(new Tooltip(tooltip));
+      btnUser.setMinWidth(200);
+      btnUser.setMaxWidth(200);
 
       if (item.getMessage().size() > 0) {
         MessageInfo firstMessage = item.getMessage().get(0);
@@ -98,7 +101,7 @@ public class MessageContainerInfoCellFactory extends ListCell<MessagecontainerIn
         }
       }
 
-      hbox.getChildren().addAll(lblType, lblDate, bbaUsers, lblText);
+      hbox.getChildren().addAll(lblType, lblDate, btnUser, lblText);
 
       setGraphic(hbox);
       setText(null);

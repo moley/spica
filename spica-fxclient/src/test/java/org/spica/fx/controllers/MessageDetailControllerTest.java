@@ -1,5 +1,6 @@
 package org.spica.fx.controllers;
 
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,9 @@ public class MessageDetailControllerTest {
     MailService mockedMailService = Mockito.mock(MailService.class);
 
     Model model = new Model();
-    model.setMe(new UserInfo().username("me").id("me"));
+    model.setMe(new UserInfo().username("me").id("me")); //TODO add test with unknown user mailto
+    model.getUserInfos().add(new UserInfo().email("mailto@spica.org").id(UUID.randomUUID().toString()).username("mailto"));
+    model.getUserInfos().add(model.getMe());
     MessageInfo messageInfo = model.createNewMessage(MessageType.MAIL);
     MessagecontainerInfo messagecontainerInfo = model.createNewMessageContainer();
 

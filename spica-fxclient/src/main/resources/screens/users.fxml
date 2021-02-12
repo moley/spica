@@ -5,18 +5,12 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Button?>
-<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fx.controllers.UserFxController" alignment="TOP_LEFT" hgap="10" vgap="10" >
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.spica.fx.controllers.UsersController" alignment="TOP_LEFT" hgap="10" vgap="10" >
     <stylesheets>
         <URL value="@/css/spica.css" />
     </stylesheets>
     <padding><Insets top="20" bottom="20" left="20" right="20"/> </padding>
 
-    <Label text="USERS" fx:id="lblUsersHeader" styleClass="header" GridPane.rowIndex="0" GridPane.columnIndex="0">
-        <GridPane.margin>
-            <Insets bottom="20"/>
-        </GridPane.margin>
-    </Label>
-    <Button fx:id="btnSynchronize" text="Synchronize" styleClass="infobutton" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS"></Button>
 
 
     <GridPane fx:id="panHeader"  styleClass="infopane" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"  GridPane.columnIndex="0" GridPane.columnSpan="2" hgap="10" vgap="10">
@@ -27,9 +21,44 @@
         </GridPane.margin>
         <Label text="Search for:" styleClass="infotype" GridPane.rowIndex="0" GridPane.columnIndex="0"></Label>
         <TextField fx:id="txtUserSearch" styleClass="infotext" GridPane.rowIndex="0" GridPane.columnIndex="1"></TextField>
+        <Button fx:id="btnSynchronize" text="Synchronize" styleClass="infobutton" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS"></Button>
+
     </GridPane>
 
     <ListView styleClass="infolistview" fx:id="lviUsers" GridPane.rowIndex="2"  GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.vgrow="ALWAYS"></ListView>
+
+    <GridPane fx:id="panDetails"  styleClass="infopane" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2"  GridPane.columnIndex="2"  hgap="10" vgap="10">
+        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+
+        <GridPane.margin>
+            <Insets bottom="5" top="5" left="5" right="5"/>
+        </GridPane.margin>
+
+
+        <Label text="Name:" styleClass="infotype" GridPane.rowIndex="0" GridPane.columnIndex="0"></Label>
+        <TextField fx:id="txtName" styleClass="infotext" GridPane.rowIndex="0" GridPane.columnIndex="1"></TextField>
+
+        <Label text="First name:" styleClass="infotype" GridPane.rowIndex="1" GridPane.columnIndex="0"></Label>
+        <TextField fx:id="txtFirstname" styleClass="infotext" GridPane.rowIndex="1" GridPane.columnIndex="1"></TextField>
+
+        <Label text="Username:" styleClass="infotype" GridPane.rowIndex="2" GridPane.columnIndex="0"></Label>
+        <TextField fx:id="txtUsername" styleClass="infotext" GridPane.rowIndex="2" GridPane.columnIndex="1"></TextField>
+
+        <Label text="Displayname:" styleClass="infotype" GridPane.rowIndex="3" GridPane.columnIndex="0"></Label>
+        <TextField fx:id="txtDisplayname" styleClass="infotext" GridPane.rowIndex="3" GridPane.columnIndex="1"></TextField>
+
+        <Label text="Mail:" styleClass="infotype" GridPane.rowIndex="4" GridPane.columnIndex="0"></Label>
+        <TextField fx:id="txtMail" styleClass="infotext" GridPane.rowIndex="4" GridPane.columnIndex="1"></TextField>
+
+        <Label text="Phone:" styleClass="infotype" GridPane.rowIndex="5" GridPane.columnIndex="0"></Label>
+        <TextField fx:id="txtPhone" styleClass="infotext" GridPane.rowIndex="5" GridPane.columnIndex="1"></TextField>
+
+        <Label text="Source:" styleClass="infotype" GridPane.rowIndex="6" GridPane.columnIndex="0"></Label>
+        <TextField fx:id="txtSource" styleClass="infotext" GridPane.rowIndex="6" GridPane.columnIndex="1"></TextField>
+
+
+
+    </GridPane>
 
 
 
