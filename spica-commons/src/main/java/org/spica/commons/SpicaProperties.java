@@ -30,8 +30,8 @@ public class SpicaProperties {
 
         while (resources.hasMoreElements()) {
           URL next = resources.nextElement();
-          log.info("Found propertiesindex file in " + next.toString());
           properties.load(next.openStream());
+          logProperties(properties, "property file " + next.toString());
         }
 
         logProperties(properties, "defaults");
@@ -42,7 +42,7 @@ public class SpicaProperties {
           customProperties.load(new FileInputStream(next));
           properties.putAll(customProperties);
           customPropertiesFromFile.putAll(customProperties);
-          logProperties(properties, "custom property file " + next.getAbsolutePath());
+          logProperties(properties, "property file " + next.getAbsolutePath());
         }
 
         properties.putAll(System.getProperties());
@@ -131,8 +131,23 @@ public class SpicaProperties {
     return values.iterator().next();
   }
 
-  public Collection<String> getValues (final String prefix) {
-    Collection<String> values = new ArrayList<String>();
+  public List<KeyValue> getKeyValuePairs (final String prefix) {
+    List<KeyValue> values = new ArrayList<KeyValue>();
+    for (Object nextKey : new ArrayList(properties.keySet())) {
+      String nextKeyAsString = (String) nextKey;
+      if (nextKeyAsString.startsWith(prefix)) {
+        String nextValue = properties.getProperty(nextKeyAsString);
+        String trimmedKey = nextKeyAsString.substring(prefix.length() + 1);
+        values.add(new KeyValue(trimmedKey, nextValue));
+      }
+    }
+
+    return values;
+
+  }
+
+  public List<String> getValues (final String prefix) {
+    List<String> values = new ArrayList<String>();
     for (Object nextKey : new ArrayList(properties.keySet())) {
       String nextKeyAsString = (String) nextKey;
       if (nextKeyAsString.startsWith(prefix)) {

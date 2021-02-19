@@ -44,6 +44,7 @@ dependencies {
   runtime 'ch.qos.logback:logback-classic:1.2.3'
 
   testCompile('org.springframework.boot:spring-boot-starter-test')
+  testCompile project(':spica-javaclient')
 
 }
 
@@ -57,7 +58,8 @@ jar.onlyIf {false}
 
 bootRun {
   sourceResources sourceSets.main
-  jvmArgs = ['-Ddemodata']
+  jvmArgs = ['-Ddemodata=true']
+  args = ["--spring.profiles.active=test"]
 }
 
 //here we are going to store swagger files
@@ -90,6 +92,7 @@ swaggerList.each {
             useLombok: "true"
     ]
   })
+  openApiGenerateTask.onlyIf {return true}
 
   tasks.compileJava.dependsOn openApiGenerateTask
 }
@@ -120,7 +123,6 @@ docker {
 }
 tasks.bootJar.mustRunAfter project(':spica-ngclient').tasks.buildClientProd, project(':spica-ngclient').tasks.buildClient
 tasks.dockerBuildImage.dependsOn project(':spica-ngclient').tasks.buildClientProd, classes, bootJar
-
 
 
 

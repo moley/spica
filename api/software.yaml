@@ -9,6 +9,54 @@ security:
   - BasicAuth
 
 paths:
+  /software/deployments/list:
+    get:
+      tags:
+        - software
+      operationId: "getDeployments"
+      description: "get list of deployments"
+      responses:
+        '200':
+          description: 'list of valid deployments'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/IdAndDisplaynameInfo"
+
+  /software/types/list:
+    get:
+      tags:
+        - software
+      operationId: "getTypes"
+      description: "get list of types"
+      responses:
+        '200':
+          description: 'list of valid types'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/IdAndDisplaynameInfo"
+
+  /software/states/list:
+    get:
+      tags:
+        - software
+      operationId: "getStates"
+      description: "get list of states"
+      responses:
+        '200':
+          description: 'list of valid states'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/IdAndDisplaynameInfo"
+
   /software/list:
     get:
       tags:
@@ -17,13 +65,30 @@ paths:
       description: "get list of software"
       responses:
         '200':
-          description: 'skill'
+          description: 'list of software items'
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/SoftwareInfo"
+    post:
+      tags:
+        - software
+      operationId: "setSoftware"
+      description: "set list of software"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/SoftwareInfo"
+
+      responses:
+        '200':
+          description: 'Null response'
 
 components:
   securitySchemes:
@@ -32,32 +97,19 @@ components:
       scheme: basic
 
   schemas:
-    DeploymentInfo:
-      type: "object"
-      properties:
-       id:
-         type: "string"
-       location:
-         type: "string"
 
-    StatusInfo:
+    IdAndDisplaynameInfo:
       type: "object"
       properties:
         id:
           type: "string"
-        additionalText:
-          type: "string"
-
-    TypeInfo:
-      type: "object"
-      properties:
-        id:
+        displayname:
           type: "string"
 
     TeamMemberInfo:
       type: "object"
       properties:
-        id:
+        user:
           type: "string"
         role:
           type: "string"
@@ -74,22 +126,24 @@ components:
           type: "string"
         requirement:
           type: "string"
+        deployment:
+           $ref: "#/components/schema/IdAndDisplaynameInfo"
+        type:
+          $ref: "#/components/schema/IdAndDisplaynameInfo"
+        state:
+          $ref: "#/components/schema/IdAndDisplaynameInfo"
+
         teammembers:
           type: array
           items:
             $ref: "#/components/schema/TeamMemberInfo"
-        type:
-          $ref: "#/components/schema/TypeInfo"
-        status:
-          $ref: "#/components/schema/StatusInfo"
+
         vcs:
           type: "string"
         technologies:
           type: array
           items:
             type: "string"
-        parent:
-          $ref: "#/components/schema/SoftwareInfo"
         children:
           type: array
           items:

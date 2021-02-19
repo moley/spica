@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,9 +56,8 @@ public class Software extends ObjectWithStatus {
 
   private String format;
 
-  @ManyToOne(fetch = FetchType.EAGER, optional = true)
-  @JoinColumn(name="parent_id", referencedColumnName = "id")
-  private Software parent;
+  @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
+  private List<Software> children;
 
   private String importedFrom;
 
@@ -65,9 +65,6 @@ public class Software extends ObjectWithStatus {
   private List<String> deployments = new ArrayList<>();
 
   private String location;
-
-
-
 
   public boolean containsTokens (final String filter) {
     String [] tokens = filter.split(" ");

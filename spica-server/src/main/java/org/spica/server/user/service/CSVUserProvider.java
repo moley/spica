@@ -1,20 +1,18 @@
 package org.spica.server.user.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.spica.commons.SpicaProperties;
-import org.spica.server.user.UserRoleName;
-import org.spica.server.user.domain.User;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.spica.commons.SpicaProperties;
+import org.spica.server.user.UserRoleName;
+import org.spica.server.user.domain.User;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+@Slf4j
 public class CSVUserProvider implements UserProvider {
-  private static final Logger LOGGER = LoggerFactory.getLogger(CSVUserProvider.class);
 
   private File leguanHome  = SpicaProperties.getSpicaHome();
   private File configFile;
@@ -26,7 +24,7 @@ public class CSVUserProvider implements UserProvider {
   public File getUserFile( ){
     if (configFile == null) {
       configFile = new File(leguanHome, "userprovider.csv").getAbsoluteFile();
-      LOGGER.info("configFile = " + configFile.getAbsolutePath());
+      log.info("configFile = " + configFile.getAbsolutePath());
     }
 
     if (!configFile.getParentFile().exists())
@@ -81,7 +79,7 @@ public class CSVUserProvider implements UserProvider {
   public User getUserInfo(String username, String password) {
     for (String next: getContent()) {
 
-      LOGGER.info("Check line " + next);
+      log.info("Check line " + next);
       if (next.startsWith(username + ":")) {
         String [] tokens = next.split(":");
         User userInfo = new User();
@@ -92,13 +90,13 @@ public class CSVUserProvider implements UserProvider {
         userInfo.setAuthorities(Arrays.asList(authority));
 
         if (userInfo.getPassword().equals(password)) {
-          LOGGER.info("Found user for username " + username);
+          log.info("Found user for username " + username);
           return userInfo;
         }
       }
     }
 
-    LOGGER.warn("Did not find user for username " + username);
+    log.warn("Did not find user for username " + username);
     return null;
   }
 }

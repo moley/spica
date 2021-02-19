@@ -1,24 +1,24 @@
-package org.spica.testutils;
+package org.spica.javaclient;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.UUID;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
+import org.junit.Test;
 import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.WorkingSetInfo;
 import org.spica.javaclient.model.WorkingSetSourcePartInfo;
 import org.spica.javaclient.services.ModelCacheService;
 
-public class DemoDataCreator {
+public class DemoDataCreatorTest {
 
   public final static String TESTWORKINGSET = "testWorkingSet";
 
-  public DemoDataCreator() throws IOException, GitAPIException {
 
+  @Test
+  public void createGit () throws Exception {
     File demodataGitDir = new File("build/demodata/gitserver");
     if (demodataGitDir.exists())
       FileUtils.deleteQuietly(demodataGitDir);
@@ -73,11 +73,8 @@ public class DemoDataCreator {
     workingSetInfoTest.addSourcepartsItem(sourcePartInfo2);
     model.getWorkingsetInfos().add(workingSetInfoTest);
     modelCacheService.save(model, "reconfigured testdata");
-
   }
 
-  public static void main(String[] args) throws IOException, GitAPIException {
-    DemoDataCreator demoDataCreator = new DemoDataCreator();
 
-  }
+
 }

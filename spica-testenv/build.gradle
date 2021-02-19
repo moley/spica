@@ -1,7 +1,10 @@
+
 apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 
 dependencies {
-  compile project (':spica-commons')
+  compile project (':spica-server')
   compile project (':spica-javaclient')
   compile 'org.mockito:mockito-core:2.28.2'
 }
