@@ -1,7 +1,7 @@
 package org.spica.javaclient.actions.tasks;
 
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.model.TaskInfo;

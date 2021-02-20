@@ -3,8 +3,8 @@ package org.spica.server.software.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import org.junit.Ignore;
-import org.junit.Test;
+import java.util.UUID;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.spica.server.software.db.SoftwareRepository;
 import org.spica.server.software.domain.Software;
@@ -23,11 +23,9 @@ public class SoftwareServiceTest {
 
 
     SoftwareInfo software11 = new SoftwareInfo();
-    software11.setParent(software1);
     software11.setName("Software1 - Module1");
 
     SoftwareInfo software12 = new SoftwareInfo();
-    software12.setParent(software1);
     software12.setName("Software1 - Module2");
 
     SoftwareService softwareService = new SoftwareService();
@@ -45,14 +43,15 @@ public class SoftwareServiceTest {
     Collection<Software> softwareInDatabase = new ArrayList<Software>();
     Software software1 = new Software();
     software1.setName("Software1");
+    software1.setId(UUID.randomUUID().toString());
 
 
     Software software11 = new Software();
-    software11.setParent(software1);
+    software11.setParentId(software1.getId());
     software11.setName("Software1 - Module1");
 
     Software software12 = new Software();
-    software12.setParent(software1);
+    software12.setParentId(software1.getId());
     software12.setName("Software1 - Module2");
 
     softwareInDatabase.add(software1);

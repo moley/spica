@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.WorkingSetInfo;
 import org.spica.javaclient.model.WorkingSetSourcePartInfo;

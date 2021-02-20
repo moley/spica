@@ -2,6 +2,7 @@ package org.spica.server.software.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import org.spica.commons.KeyValue;
 import org.spica.server.software.domain.Software;
 import org.spica.server.software.model.IdAndDisplaynameInfo;
@@ -11,16 +12,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class SoftwareMapper {
 
-  public Software toSoftwareEntity(final SoftwareInfo softwareInfo) {
+  public Software toSoftwareEntity(final SoftwareInfo softwareInfo, final Software parent) {
     Software software = new Software();
 
+    software.setId(UUID.randomUUID().toString());
     software.setName(softwareInfo.getName());
     software.setDescription(softwareInfo.getDescription());
+    if (parent != null)
+      software.setParentId(parent.getId());
 
     List<Software> children = new ArrayList<>();
     if (softwareInfo.getChildren() != null) {
       for (SoftwareInfo next : softwareInfo.getChildren()) {
-        Software nextChildren = toSoftwareEntity(next);
+        Software nextChildren = toSoftwareEntity(next, software);
         children.add(nextChildren);
       }
     }

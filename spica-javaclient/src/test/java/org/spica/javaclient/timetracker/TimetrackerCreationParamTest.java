@@ -1,6 +1,6 @@
 package org.spica.javaclient.timetracker;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.TaskInfo;

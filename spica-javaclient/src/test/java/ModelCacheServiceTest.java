@@ -1,7 +1,7 @@
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.spica.commons.DashboardItemType;
 import org.spica.javaclient.model.DashboardItemInfo;
 import org.spica.javaclient.model.EventInfo;

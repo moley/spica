@@ -7,7 +7,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.model.Model;

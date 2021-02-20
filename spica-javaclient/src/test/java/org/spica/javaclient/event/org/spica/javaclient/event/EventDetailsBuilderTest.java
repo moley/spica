@@ -1,7 +1,7 @@
 package org.spica.javaclient.event.org.spica.javaclient.event;
 
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.spica.javaclient.event.EventDetails;
 import org.spica.javaclient.event.EventDetailsBuilder;
 import org.spica.javaclient.model.EventInfo;

@@ -44,7 +44,6 @@ dependencies {
   runtime 'ch.qos.logback:logback-classic:1.2.3'
 
   testCompile('org.springframework.boot:spring-boot-starter-test')
-  testCompile project(':spica-javaclient')
 
 }
 

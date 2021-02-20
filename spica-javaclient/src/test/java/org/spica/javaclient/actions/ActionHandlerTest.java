@@ -1,7 +1,7 @@
 package org.spica.javaclient.actions;
 
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.spica.javaclient.actions.booking.CreateBookingAction;
 import org.spica.javaclient.actions.tasks.ListTasksAction;
 

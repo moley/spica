@@ -21,7 +21,7 @@ public class SoftwareService {
 
   public List<SoftwareInfo> getSoftware () {
     List<SoftwareInfo> infos = new ArrayList<>();
-    for (Software next: softwareRepository.findAll()) {
+    for (Software next: softwareRepository.findByParentIdIsNull()) {
       infos.add(softwareMapper.toSoftwareInfo(next));
     }
 
@@ -33,7 +33,7 @@ public class SoftwareService {
 
     List<Software> savedSoftware = new ArrayList<>();
     for (SoftwareInfo next: software) {
-      savedSoftware.add(softwareMapper.toSoftwareEntity(next));
+      savedSoftware.add(softwareMapper.toSoftwareEntity(next, null));
     }
 
     softwareRepository.saveAll(savedSoftware);

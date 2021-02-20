@@ -3,7 +3,7 @@ package org.spica.javaclient.model;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

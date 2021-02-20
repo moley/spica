@@ -1,6 +1,7 @@
 package org.spica.server.software.domain;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,8 +34,7 @@ public class Software extends ObjectWithStatus {
 
   @Id
   @EqualsAndHashCode.Include
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+  private String id;
 
   private String name;
   @Column(length = 10000)
@@ -55,6 +55,8 @@ public class Software extends ObjectWithStatus {
   private Set<String> technologies = new HashSet<>();
 
   private String format;
+
+  private String parentId;
 
   @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
   private List<Software> children;
