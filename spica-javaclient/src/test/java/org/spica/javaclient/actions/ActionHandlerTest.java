@@ -1,11 +1,11 @@
 package org.spica.javaclient.actions;
 
+import java.util.Collection;
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.spica.javaclient.actions.booking.CreateBookingAction;
 import org.spica.javaclient.actions.tasks.ListTasksAction;
-
-import java.util.Collection;
 
 public class ActionHandlerTest {
 
@@ -16,10 +16,13 @@ public class ActionHandlerTest {
 
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void findActionOneToken () {
-        ActionHandler actionHandler = new ActionHandler();
-        actionHandler.findAction("t");
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+
+            ActionHandler actionHandler = new ActionHandler();
+            actionHandler.findAction("t");
+        });
 
     }
     @Test

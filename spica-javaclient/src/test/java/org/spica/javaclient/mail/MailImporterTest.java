@@ -1,5 +1,6 @@
 package org.spica.javaclient.mail;
 
+import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -12,6 +13,8 @@ import javax.mail.MessagingException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.spica.commons.DashboardItemType;
@@ -31,12 +34,13 @@ public class MailImporterTest {
   private TestUtils testUtils = new TestUtils();
 
 
-  @Before
+  @BeforeEach
   public void before () throws IOException {
     testUtils.setupJunitTestWorkspace(getClass().getSimpleName());
+    SpicaProperties.setSpicaHome(Files.createTempDir());
   }
 
-  @After
+  @AfterEach
   public void after () {
     SpicaProperties.close();
 

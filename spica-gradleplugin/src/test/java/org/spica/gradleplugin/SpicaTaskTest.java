@@ -9,6 +9,7 @@ import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.spica.javaclient.StandaloneActionContext;
+import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.TaskInfo;
 
 public class SpicaTaskTest {
@@ -16,20 +17,21 @@ public class SpicaTaskTest {
   @Test
   public void trigger () {
 
+    Model model = new Model();
+    model.getTaskInfos().add(new TaskInfo().id("id").name("name"));
+
     List<String> ids = new ArrayList<String>();
     Project project = ProjectBuilder.builder().build();
     project.getPlugins().apply(SpicaPlugin.class);
     SpicaTask spicaTask = project.getTasks().create("demo", SpicaTask.class);
+    spicaTask.getContext().getServices().getModelCacheService().set(model);
     spicaTask.doLast(new Action<Task>() {
       @Override public void execute(Task task) {
         SpicaTask theTask = (SpicaTask) task;
         StandaloneActionContext standaloneActionContext = theTask.getContext();
         for (TaskInfo next: standaloneActionContext.getModel().getTaskInfos()) {
           ids.add(next.getId() + "-" + next.getName());
-
         }
-
-
       }
     });
 

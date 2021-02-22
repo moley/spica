@@ -19,7 +19,6 @@ public class TestUtils {
         modelCacheService.save(new Model(), "create action context");
 
         ActionContext actionContext = Mockito.mock(ActionContext.class);
-        Mockito.when(actionContext.getServices().getModelCacheService()).thenReturn(modelCacheService);
         Mockito.when(actionContext.getModel()).thenReturn(modelCacheService.load());
 
         return actionContext;

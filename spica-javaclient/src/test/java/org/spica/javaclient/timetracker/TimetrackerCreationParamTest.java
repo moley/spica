@@ -1,44 +1,52 @@
 package org.spica.javaclient.timetracker;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.TaskInfo;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 public class TimetrackerCreationParamTest {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void dateIsNull () {
-        TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
-        timetrackerCreationParam.validate();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+
+            TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
+            timetrackerCreationParam.validate();
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void fromIsNull () {
-        TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
-        timetrackerCreationParam.setDate(LocalDate.now());
-        timetrackerCreationParam.validate();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+
+            TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
+            timetrackerCreationParam.setDate(LocalDate.now());
+            timetrackerCreationParam.validate();
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
     public void eventTypeIsNull () {
-        TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+
+            TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
         timetrackerCreationParam.setDate(LocalDate.now());
         timetrackerCreationParam.setFrom(LocalTime.now());
-        timetrackerCreationParam.validate();
+        timetrackerCreationParam.validate();});
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
     public void topicNoTaskInfo () {
-        TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
-        timetrackerCreationParam.setDate(LocalDate.now());
-        timetrackerCreationParam.setFrom(LocalTime.now());
-        timetrackerCreationParam.setEventType(EventType.TOPIC);
-        timetrackerCreationParam.validate();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
+            timetrackerCreationParam.setDate(LocalDate.now());
+            timetrackerCreationParam.setFrom(LocalTime.now());
+            timetrackerCreationParam.setEventType(EventType.TOPIC);
+            timetrackerCreationParam.validate();
+        });
 
     }
 
@@ -52,15 +60,18 @@ public class TimetrackerCreationParamTest {
         timetrackerCreationParam.validate();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void topicMessageSet () {
-        TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
-        timetrackerCreationParam.setDate(LocalDate.now());
-        timetrackerCreationParam.setFrom(LocalTime.now());
-        timetrackerCreationParam.setEventType(EventType.TOPIC);
-        timetrackerCreationParam.setTaskInfo(new TaskInfo());
-        timetrackerCreationParam.setMessageInfo(new MessageInfo());
-        timetrackerCreationParam.validate();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+
+            TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
+            timetrackerCreationParam.setDate(LocalDate.now());
+            timetrackerCreationParam.setFrom(LocalTime.now());
+            timetrackerCreationParam.setEventType(EventType.TOPIC);
+            timetrackerCreationParam.setTaskInfo(new TaskInfo());
+            timetrackerCreationParam.setMessageInfo(new MessageInfo());
+            timetrackerCreationParam.validate();
+        });
     }
 
     @Test
@@ -73,13 +84,15 @@ public class TimetrackerCreationParamTest {
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void messageNoMessage () {
-        TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
-        timetrackerCreationParam.setDate(LocalDate.now());
-        timetrackerCreationParam.setFrom(LocalTime.now());
-        timetrackerCreationParam.setEventType(EventType.MESSAGE);
-        timetrackerCreationParam.validate();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
+            timetrackerCreationParam.setDate(LocalDate.now());
+            timetrackerCreationParam.setFrom(LocalTime.now());
+            timetrackerCreationParam.setEventType(EventType.MESSAGE);
+            timetrackerCreationParam.validate();
+        });
 
     }
 
@@ -93,13 +106,15 @@ public class TimetrackerCreationParamTest {
         timetrackerCreationParam.validate();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void messageTaskSet () {
-        TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
-        timetrackerCreationParam.setDate(LocalDate.now());
-        timetrackerCreationParam.setFrom(LocalTime.now());
-        timetrackerCreationParam.setTaskInfo(new TaskInfo());
-        timetrackerCreationParam.setEventType(EventType.MESSAGE);
-        timetrackerCreationParam.validate();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
+            timetrackerCreationParam.setDate(LocalDate.now());
+            timetrackerCreationParam.setFrom(LocalTime.now());
+            timetrackerCreationParam.setTaskInfo(new TaskInfo());
+            timetrackerCreationParam.setEventType(EventType.MESSAGE);
+            timetrackerCreationParam.validate();
+        });
     }
 }

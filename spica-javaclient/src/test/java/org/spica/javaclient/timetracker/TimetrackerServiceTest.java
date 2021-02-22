@@ -6,7 +6,8 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;
@@ -20,7 +21,7 @@ public class TimetrackerServiceTest {
     private ModelCacheService modelCacheService = new ModelCacheService();
 
 
-    @Before
+    @BeforeEach
     public void before () {
         modelCacheService.save(new Model(), "create new model");
         timetrackerService.setModelCacheService(modelCacheService);
@@ -186,18 +187,19 @@ public class TimetrackerServiceTest {
         timetrackerService.createEvent(createCreationParam(LocalTime.of(8,0), LocalTime.of(8,30)));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void createEventBeforeFirstEventHidingOrigin () {
-        Model model = modelCacheService.load();
+        Assertions.assertThrows(IllegalStateException.class, ()-> {
+            Model model = modelCacheService.load();
 
-        //09:00 - 10:00
-        model.getEventInfosReal().add(createEvent(LocalTime.of(9,0), LocalTime.of(10,0)));
+            //09:00 - 10:00
+            model.getEventInfosReal().add(createEvent(LocalTime.of(9, 0), LocalTime.of(10, 0)));
 
-        //->08:00 - 11:30
-        timetrackerService.createEvent(createCreationParam(LocalTime.of(8,0), LocalTime.of(11,0)));
+            //->08:00 - 11:30
+            timetrackerService.createEvent(createCreationParam(LocalTime.of(8, 0), LocalTime.of(11, 0)));
 
-
-        //->Error Overlapping
+            //->Error Overlapping
+        });
 
     }
 
@@ -247,8 +249,9 @@ public class TimetrackerServiceTest {
         Assert.assertEquals (LocalTime.of(10, 0), model.getEventInfosRealToday().get(2).getStop().toLocalTime());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void createEventOverlappingHidingOtherEvent () {
+        Assertions.assertThrows(IllegalStateException.class, () -> {
         Model model = modelCacheService.load();
 
         //08:00 - 09:00
@@ -260,5 +263,6 @@ public class TimetrackerServiceTest {
 
         //->08:30 - 09:30
         timetrackerService.createEvent(createCreationParam(LocalTime.of(8,30), LocalTime.of(10,30)));
+        });
     }
 }
