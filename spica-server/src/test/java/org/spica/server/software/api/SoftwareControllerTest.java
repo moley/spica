@@ -1,23 +1,18 @@
 package org.spica.server.software.api;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
 import org.apache.commons.lang.StringUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.spica.SpicaServerApplication;
 import org.spica.commons.SpicaProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -26,7 +21,7 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { SpicaServerApplication.class })
 public class SoftwareControllerTest {
 
@@ -35,20 +30,20 @@ public class SoftwareControllerTest {
   @Autowired
   protected WebApplicationContext context;
 
-  @BeforeClass
+  @BeforeAll
   public static void beforeClass () throws IOException {
     System.out.println (System.getProperty("java.version"));
     SpicaProperties.close();
     System.setProperty("demodata", "true");
   }
 
-  @AfterClass
+  @AfterAll
   public static void afterClass () {
     System.clearProperty("demodata");
     SpicaProperties.close();
   }
 
-  @Before
+  @BeforeEach
   public void setUp() throws IOException {
     mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
   }
@@ -59,7 +54,7 @@ public class SoftwareControllerTest {
     ResultActions resultActions = mockMvc.perform(get("/api/software/list")).andExpect(status().isOk());
     String result = resultActions.andReturn().getResponse().getContentAsString();
 
-    Assert.assertTrue ("Root software Spica not found", result.contains("Spica"));
-    Assert.assertEquals ("Non root software Spica-CLI found", 1, StringUtils.countMatches(result, "Spica-CLI"));
+    Assertions.assertTrue (result.contains("Spica"), "Root software Spica not found");
+    Assertions.assertEquals (1, StringUtils.countMatches(result, "Spica-CLI"), "Non root software Spica-CLI found");
   }
 }

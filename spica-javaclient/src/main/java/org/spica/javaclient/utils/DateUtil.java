@@ -70,11 +70,14 @@ public class DateUtil {
 
             return LocalDate.of(today.getYear(), Integer.valueOf(month).intValue(), Integer.valueOf(day).intValue());
         }
-        else {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd");
-            TemporalAccessor temporalAccessor = formatter.parse(trimmed);
-            return LocalDate.from(temporalAccessor);
+        else if (trimmed.length() == 5) {
+            String day = dateAsString.substring(0, 2);
+            String month = dateAsString.substring(3, 5);
+
+            return LocalDate.of(today.getYear(), Integer.valueOf(month).intValue(), Integer.valueOf(day).intValue());
         }
+
+        throw new IllegalStateException("Invalid date " + dateAsString + ", Please use date in format DDMM or DD.MM");
 
     }
 

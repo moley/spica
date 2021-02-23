@@ -6,7 +6,8 @@ import { RouterModule } from '@angular/router';
 import { SoftwareComponent } from 'src/app/modules/software/software.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { MatSidenavModule, MatDividerModule, MatCardModule, MatPaginatorModule, MatTableModule,
-         MatInputModule, MatSelectModule, MatButtonModule, MatDatepickerModule, MatNativeDateModule, MatListModule, MatTabsModule, MatCheckboxModule, MatGridListModule, MatFormFieldModule, MatTreeModule, MatIconModule } from '@angular/material';
+         MatInputModule, MatSelectModule, MatButtonModule, MatDatepickerModule, MatNativeDateModule, MatListModule, MatTabsModule, 
+         MatCheckboxModule, MatGridListModule, MatFormFieldModule, MatTreeModule, MatIconModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { DashboardService } from 'src/app/modules/dashboard.service';
 import { SoftwareDetailsComponent } from 'src/app/modules/softwaredetails/softwaredetails.component';

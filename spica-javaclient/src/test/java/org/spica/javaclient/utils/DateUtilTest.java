@@ -25,7 +25,7 @@ public class DateUtilTest {
         LocalDate day = dateUtil.getDate("12.08");
 
         Assert.assertEquals ("Day invalid", day.getDayOfMonth(), 12);
-        Assert.assertEquals ("Month invalid", day.getMonth(), 8);
+        Assert.assertEquals ("Month invalid", day.getMonthValue(), 8);
         Assert.assertEquals ("Year invalid", day.getYear(), today.getYear());
     }
 

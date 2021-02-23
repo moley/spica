@@ -6,12 +6,17 @@ import { SoftwareService } from '../generated/software/api/software.service';
 
 
 
-
 /** Flat node with expandable and level information */
 interface ExampleFlatNode {
   expandable: boolean;
   name: string;
   level: number;
+}
+
+
+interface Node<T> {
+  value: T;
+  children: Node<T>[];
 }
 
 
@@ -47,8 +52,16 @@ export class SoftwareComponent implements OnInit {
     this.softwareService.getSoftware().subscribe(
       x => this.dataSource.data = x,
       err => console.error('Observer got an error: ' + err),
-      () => console.error('Observer finished'),
+      () => console.info('Observer finished'),
     );
   }
 
+  click () {
+    console.log ("Hello")
+  }
+
+
+
 }
+
+

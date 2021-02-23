@@ -39,7 +39,7 @@ public class TasksController implements TasksApi {
 
     @Override
     public ResponseEntity<Void> deleteTask(@NotNull @Valid String userId, String topicId) {
-        return null;
+        throw new IllegalStateException("NYI");
     }
 
     @Override
