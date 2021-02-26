@@ -33,3 +33,4 @@ bin/
 /spica-ngclient/package-lock.json
 
 /config/examples/dockerPostgres/postgres_db/
+/postgres_db

@@ -49,11 +49,22 @@ export class SoftwareComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.softwareService.getSoftware().subscribe(
+
+    this.dataSource.data = [{
+      name: 'Spica',
+      id: '1', 
+      children: [ 
+        {name: 'Spica-Server'}, 
+        {name: 'Spica-CLI'}
+
+      ]
+    }]
+
+    /**this.softwareService.getSoftware().subscribe(
       x => this.dataSource.data = x,
       err => console.error('Observer got an error: ' + err),
       () => console.info('Observer finished'),
-    );
+    );**/
   }
 
   click () {
