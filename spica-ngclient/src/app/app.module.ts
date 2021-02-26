@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { DefaultComponent } from './layouts/default/default.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DefaultModule } from './layouts/default/default.module';
 import { ApiModule as CommunicationApiModule } from '../app/modules/generated/communication/api.module';
 import { ApiModule as DashboardApiModule } from '../app/modules/generated/dashboard/api.module';
 import { ApiModule as LinksApiModule } from '../app/modules/generated/links/api.module';
@@ -19,6 +19,11 @@ import { LogoutComponent } from './modules/logout/logout.component';
 import { FormsModule } from '@angular/forms';
 import { LoginActivate } from './loginActivate.guard';
 
+import {ToolbarModule} from 'primeng/toolbar';
+import {MenuModule} from 'primeng/menu';
+import {SidebarModule} from 'primeng/sidebar';
+import {ButtonModule} from 'primeng/button';
+
 import { environment } from '../environments/environment';
 import { BASE_PATH as COMMUNICATION_BASE_PATH} from './modules/generated/communication';
 import { BASE_PATH as DASHBOARD_BASE_PATH} from './modules/generated/dashboard';
@@ -27,12 +32,28 @@ import { BASE_PATH as PROJECT_BASE_PATH} from './modules/generated/project';
 import { BASE_PATH as SOFTWARE_BASE_PATH} from './modules/generated/software';
 import { BASE_PATH as TIMES_BASE_PATH} from './modules/generated/times';
 import { BASE_PATH as USER_BASE_PATH} from './modules/generated/user';
+import { SoftwareComponent } from './modules/software/software.component';
+import { SoftwareDetailsComponent } from './modules/softwaredetails/softwaredetails.component';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { SharedModule } from 'primeng/api';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import {ReactiveFormsModule} from '@angular/forms';
+import { HeaderComponent } from './shared/components/header/header.component';
+import { FooterComponent } from './shared/components/footer/footer.component';
 
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent, 
+    DefaultComponent,
+    LoginComponent, 
+    HeaderComponent,
+    FooterComponent,
+    LogoutComponent,
+    SoftwareComponent,
+    SoftwareDetailsComponent
   ],
   imports: [
     CommunicationApiModule,
@@ -48,7 +69,18 @@ import { BASE_PATH as USER_BASE_PATH} from './modules/generated/user';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    DefaultModule
+    
+    CommonModule,
+    RouterModule,
+    SharedModule,
+    FlexLayoutModule, 
+    FormsModule, 
+    ReactiveFormsModule,
+
+    ToolbarModule, 
+    MenuModule,
+    SidebarModule, 
+    ButtonModule, 
   ],
   providers: [
       {

@@ -1,36 +1,39 @@
-<mat-toolbar color="primary">
-    <mat-toolbar-row>
-        <button mat-icon-button (click)="toggleSideBar()">
-            <mat-icon>menu</mat-icon>
-        </button>
 
-        <span>SPICA</span>
-    
-        <div class="flexExpand"></div>
-        <div fxFlex fxLayout="row" fxFlexOffset="20" fxLayoutAlign="end">
-                    <button mat-icon-button fxLayoutAlign="flex-end">
-                        <mat-icon>settings</mat-icon>
-                    </button>
+<p-toolbar>
+    <p-sidebar  [(visible)]="sidebarVisible" position="left">
+        <h2>Model</h2>
 
-                    <button mat-icon-button>
-                        <mat-icon>help_outline</mat-icon>
-                    </button>
-
-                    <button mat-button [matMenuTriggerFor]="menu">
-                        <mat-icon>person_outline</mat-icon>
-                    </button>
-
-                   <mat-menu #menu="matMenu">
-                        <button mat-menu-item *ngIf="!isLoggedIn()" routerLink="/login">
-                            <mat-icon>exit_to_app</mat-icon>
-                            Log in
-                        </button>
-                        <button mat-menu-item *ngIf="isLoggedIn()" (click)=handleLogout()>
-                            <mat-icon>exit_to_app</mat-icon>
-                            Log out
-                        </button>
-                    </mat-menu>
+        <div>
+            <p-button routerLink="/app/dashboard" type="button" (click)="sidebarVisible = false" label="Dashboard" styleClass="p-button-success"></p-button>
         </div>
-    </mat-toolbar-row>
+        <div>
+            <p-button routerLink="/app/software" type="button" (click)="sidebarVisible = false" label="Software" styleClass="p-button-success"></p-button>
+        </div>
+
+    </p-sidebar>
+    <p-button type="text" (click)="sidebarVisible = true" icon="pi pi-bars"></p-button>
+
     
-</mat-toolbar>
+    <h2 style="border-left: 10px;"><span>SPICA</span></h2>
+
+    <div class="flexExpand"></div>
+    <div fxFlex fxLayout="row" fxFlexOffset="20" fxLayoutAlign="end">
+                <p-button  label="Settings" fxLayoutAlign="flex-end"> 
+                </p-button>
+
+                <p-button label="Help"> 
+                </p-button>
+
+                <p-button label="Person">
+                </p-button>
+
+                <p-menu #menu [popup]="true" [model]="menu"></p-menu>
+                <button type="button" pButton icon="pi pi-list" label="OleyMa" (click)="menu.toggle($event)"></button>
+               
+    </div>
+    
+</p-toolbar>
+
+
+
+

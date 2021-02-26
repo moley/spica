@@ -2,7 +2,9 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DefaultComponent } from './layouts/default/default.component';
 import { LoginActivate } from './loginActivate.guard';
+import { DashboardService } from './modules/generated/dashboard';
 import { LoginComponent } from './modules/login/login.component';
+import { DashboardComponent } from './modules/dashboard/dashboard.component';
 import { SoftwareComponent } from './modules/software/software.component';
 import { SoftwareDetailsComponent } from './modules/softwaredetails/softwaredetails.component';
 
@@ -12,7 +14,12 @@ const routes: Routes = [{
   children: [{
     path: 'login',
     component: LoginComponent
-  }, {
+  }, 
+  {
+    path: 'app/dashboard', 
+    component: DashboardComponent, 
+  }, 
+  {
     path: 'app/software',
     component: SoftwareComponent, 
     //canActivate:[LoginActivate]
