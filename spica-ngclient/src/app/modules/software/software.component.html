@@ -1,36 +1,25 @@
-<mat-grid-list cols="2" rowHeight="85px">
-    <mat-grid-tile>
-        <div fxFlex fxLayoutAlign="start center">
-            <h1>Software</h1>
-        </div>
-    </mat-grid-tile>
-    
-    <mat-grid-tile>
-        <div class="buttonpane">
-            <button mat-flat-button color="primary"[routerLink]="['/app/software',2]">New</button>
-            <button mat-flat-button color="primary">Remove</button>
-        </div>
+<h2>Software</h2>
 
-    </mat-grid-tile>
-
-
-</mat-grid-list>
-
-<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-  <!-- This is the tree node template for leaf nodes -->
-  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-    <!-- use a disabled button to provide padding for tree leaf -->
-    <button mat-icon-button disabled></button>
-    {{node.name}}
-  </mat-tree-node>
-  <!-- This is the tree node template for expandable nodes -->
-  <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding (click)="click">
-    <button mat-icon-button matTreeNodeToggle
-            [attr.aria-label]="'Toggle ' + node.name">
-      <mat-icon class="mat-icon-rtl-mirror">
-        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-      </mat-icon>
-    </button>
-    {{node.name}}
-  </mat-tree-node>
-</mat-tree>  
+<p-treeTable [value]="software">
+  <ng-template pTemplate="header">
+      <tr>
+          <th>Name</th>
+          <th>Size</th>
+          <th>Type</th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+      <tr>
+          <td>
+              <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+              {{rowData.name}}
+          </td>
+          <td>{{rowData.size}}</td>
+          <td>{{rowData.type}}</td>
+          <td>
+            <p-button icon="pi pi-search"  [style]="{'margin-right': '.5em'}"></p-button>
+            <p-button icon="pi pi-pencil" [routerLink]="['/app/software/', '1']"></p-button>
+        </td>          
+      </tr>
+  </ng-template>
+</p-treeTable>

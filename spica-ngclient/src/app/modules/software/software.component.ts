@@ -1,23 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {FlatTreeControl} from '@angular/cdk/tree';
-import { SoftwareInfo } from '../generated/software/model/softwareInfo';
+import {TreeTableModule} from 'primeng/treetable';
+import {TreeNode} from 'primeng/api';
 import { SoftwareService } from '../generated/software/api/software.service';
-
-
-
-/** Flat node with expandable and level information */
-interface ExampleFlatNode {
-  expandable: boolean;
-  name: string;
-  level: number;
-}
-
-
-interface Node<T> {
-  value: T;
-  children: Node<T>[];
-}
-
+import { NodeService } from './nodeservice';
 
 @Component({
   selector: 'app-software',
@@ -26,20 +11,18 @@ interface Node<T> {
 })
 export class SoftwareComponent implements OnInit {
 
-  treedata = [{
-    name: 'Spica',
-    id: '1', 
-    children: [ 
-      {name: 'Spica-Server'}, 
-      {name: 'Spica-CLI'}
-
-    ]
-  }];
+  software: TreeNode[];
     
-  constructor(private softwareService: SoftwareService) { 
+  constructor(private nodeService: NodeService) { 
+    
   }
 
+
   ngOnInit() {
+
+    this.nodeService.getFilesystem().then(files => {console.log ("Software loaded : " + files); 
+      this.software = files});
+    
 
     /**this.softwareService.getSoftware().subscribe(
       x => this.dataSource.data = x,

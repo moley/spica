@@ -23,6 +23,12 @@ import {ToolbarModule} from 'primeng/toolbar';
 import {MenuModule} from 'primeng/menu';
 import {SidebarModule} from 'primeng/sidebar';
 import {ButtonModule} from 'primeng/button';
+import {TreeTableModule} from 'primeng/treetable';
+import {TabViewModule} from 'primeng/tabview';
+import {InputTextModule} from 'primeng/inputtext';
+import {DropdownModule} from 'primeng/dropdown';
+import {InputTextareaModule} from 'primeng/inputtextarea';
+
 
 import { environment } from '../environments/environment';
 import { BASE_PATH as COMMUNICATION_BASE_PATH} from './modules/generated/communication';
@@ -41,6 +47,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import {ReactiveFormsModule} from '@angular/forms';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { NodeService } from './modules/software/nodeservice';
 
 
 
@@ -81,6 +88,13 @@ import { FooterComponent } from './shared/components/footer/footer.component';
     MenuModule,
     SidebarModule, 
     ButtonModule, 
+    TreeTableModule, 
+    TabViewModule, 
+    InputTextModule,
+    InputTextareaModule,
+    DropdownModule
+
+    
   ],
   providers: [
       {
@@ -110,7 +124,8 @@ import { FooterComponent } from './shared/components/footer/footer.component';
         useValue: environment.API_BASE_PATH
       },
 
-      LoginActivate
+      LoginActivate, 
+      NodeService
     ],
   bootstrap: [AppComponent]
 })
