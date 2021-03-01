@@ -1,4 +1,5 @@
 
+<div class="main">
 <div class="p-grid">
     <div class="p-col"><h1>Software: {{software.name}}</h1></div>
     <div class="p-col"><img src="https://www.jenkins.io/images/post-images/jenkins-is-the-way/jenkins-is-the-way.png"
@@ -16,151 +17,193 @@
     <p-tabPanel header="GENERAL">
         <div class="p-fluid">
 
-          <div class="p-field">
-            <label for="fieldId">ID</label>
+          <div class="p-field p-grid">
+            <label for="fieldId" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">ID</label>
+            <div class="p-col-12 p-md-10">
             <input id="fieldId" [(ngModel)]="software.id" type="text" pInputText> 
+            </div>
           </div>
-          <div class="p-field">
-            <label for="fieldName">Name</label>
+          <div class="p-field p-grid">
+            <label for="fieldName" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Name</label>
+            <div class="p-col-12 p-md-10">
             <input id="fieldName" [(ngModel)]="software.name" type="text" pInputText> 
+            </div>
           </div>
-          <div class="p-field">
-            <label for="fieldDescription">Description</label>
+          <div class="p-field p-grid">
+            <label for="fieldDescription" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Description</label>
+            <div class="p-col-12 p-md-10">
             <textarea id="fieldDescription" [(ngModel)]="software.description" type="text" rows="6" pInputTextarea></textarea>
+            </div>
           </div>
-          <div class="p-field">
-            <label for="fieldDescription">Type</label>
+          <div class="p-field p-grid">
+            <label for="fieldDescription" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Type</label>
+            <div class="p-col-12 p-md-10">
             <p-dropdown [options]="types" [(ngModel)]="selectedType" optionLabel="name"></p-dropdown>
+            </div>
           </div>
 
         </div>
         
     </p-tabPanel>
     <p-tabPanel header="PLANNING">
-        <!--<mat-tab label="Planning">
-            <mat-form-field appearance="fill" style="width:60vw">
-                <mat-label>Target date</mat-label>
-                <input matInput [matDatepicker]="picker">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-            <br>
-            <mat-form-field appearance="fill" style="width:60vw">
-                <mat-label>State</mat-label>
-                <select matNativeControl required>
-                    <option value="idea">IDEA </option>
-                    <option value="planned">PLANNED </option>
-                </select>
-            </mat-form-field>
-            <br>
-            <br>
-            <mat-checkbox class="example-margin">Uses online help</mat-checkbox><br>
-            <mat-checkbox class="example-margin">Uses monitoring</mat-checkbox><br>
-            <mat-checkbox class="example-margin">Uses backup and recovery</mat-checkbox><br>
-            <mat-checkbox class="example-margin">Uses single signon</mat-checkbox><br>
+        <div class="p-fluid">
 
-        </mat-tab>-->
+        <div class="p-field p-grid">
+            <label for="fieldTargetDate" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Target date</label>
+            <div class="p-col-12 p-md-10">
+                <p-calendar [(ngModel)]="value"></p-calendar>
+            </div>
+        </div>
+        <div class="p-field p-grid">
+          <label for="fieldDescription" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">State</label>
+          <div class="p-col-12 p-md-10">
+          <p-dropdown [options]="status" [(ngModel)]="selectedStatus" optionLabel="name"></p-dropdown>
+          </div>
+        </div>
+
+        <div class="p-field p-grid">
+            <label for="onlineHelp" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Needs online help</label>
+            <div class="p-col-12 p-md-10">
+                <p-checkbox name="onlineHelp"></p-checkbox>
+            </div>
+        </div>
+
+        <div class="p-field p-grid">
+            <label for="monitoring" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Needs monitoring</label>
+            <div class="p-col-12 p-md-10">
+                <p-checkbox name="monitoring"></p-checkbox>
+            </div>
+        </div>
+
+        <div class="p-field p-grid">
+            <label for="persistence" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Contains persistence</label>
+            <div class="p-col-12 p-md-10">
+                <p-checkbox name="persistence"></p-checkbox>
+            </div>
+        </div>
+
+        <div class="p-field p-grid">
+            <label for="authentication" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Needs authentication</label>
+            <div class="p-col-12 p-md-10">
+                <p-checkbox name="authentication"></p-checkbox>
+            </div>
+        </div>
+        </div>
+          
+        
     </p-tabPanel>
     <p-tabPanel header="CONTACTS">
-        <!-- <mat-tab label="Contacts">
-            <mat-form-field appearance="fill" style="width:60vw">
-                <mat-label>Product Owner</mat-label>
-                <input matInput>
-            </mat-form-field>
-            <br>
-            <br>
-            <mat-label>Team</mat-label>
-            <mat-list style="width:60vw">
-                <mat-list-item> Pepper (Dev) </mat-list-item>
-                <mat-list-item> Salt (QS)</mat-list-item>
-                <mat-list-item> Paprika (Concepti) </mat-list-item>
-            </mat-list>
-        </mat-tab>-->
+        <div class="p-fluid">
+
+        <p-table [value]="software.teammembers">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>User</th>
+                    <th>Role</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-member>
+                <tr>
+                    <td>{{member.user}}</td>
+                    <td><p-dropdown [options]="roles"  optionLabel="name"></p-dropdown>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        </div>
     </p-tabPanel>
     <p-tabPanel header="CONNECTIONS">
-        <!--<mat-tab label="Connections">
-            <mat-label>Incoming</mat-label>
-            <mat-list style="width:60vw">
-                <mat-list-item> Pepper (PRODUCTIVE) </mat-list-item>
-                <mat-list-item> Salt (PLANNED)</mat-list-item>
-                <mat-list-item> Paprika (PLANNED) </mat-list-item>
-            </mat-list>
-            <br>
-            <br>
-            <br>
-            <mat-label>Outgoing</mat-label>
-            <mat-list style="width:60vw">
-                <mat-list-item> Pepper (PRODUCTIVE) </mat-list-item>
-                <mat-list-item> Salt (PRODUCTIVE)</mat-list-item>
-                <mat-list-item> Paprika (PRODUCTIVE) </mat-list-item>
-            </mat-list>
-        </mat-tab>-->
+        <div class="p-fluid">
+
+        <p-table [value]="connections">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Type</th>
+                    <th>Target</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-connection>
+                <tr>
+                    <td><p-dropdown [options]="connectionTypes"  optionLabel="name"></p-dropdown>
+                    <td><p-dropdown [options]="allsoftware"  optionLabel="name"></p-dropdown>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        </div>
+        
     </p-tabPanel>
 
     <p-tabPanel header="RUNTIME">
-        <!--<mat-tab label="Runtime">
-            <mat-form-field appearance="fill" style="width:60vw">
-                <mat-label>Deployment</mat-label>
-                <select matNativeControl required>
-                    <option value="locally">LOCALLY </option>
-                    <option value="rz">RZ </option>
-                </select>
-            </mat-form-field>
-            <mat-form-field appearance="fill" style="width:60vw">
-                <mat-label>Deploymentname</mat-label>
-                <input matInput>
-            </mat-form-field>
-            <mat-form-field appearance="fill" style="width:60vw">
-                <mat-label>Location</mat-label>
-                <input matInput>
-            </mat-form-field>
+        <div class="p-fluid">
 
-        </mat-tab>-->
+        <div class="p-field p-grid">
+            <label for="deployments" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Deployment</label>
+            <div class="p-col-12 p-md-10">
+            <p-dropdown [options]="deployments"  optionLabel="name"></p-dropdown>
+            </div>
+          </div>
+          <div class="p-field p-grid">
+            <label for="deploymentName" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Deploymentname</label>
+            <div class="p-col-12 p-md-10">
+            <input id="deploymentName" type="text" pInputText> 
+            </div>
+          </div>
+          <div class="p-field p-grid">
+            <label for="location" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Location</label>
+            <div class="p-col-12 p-md-10">
+            <input id="location" type="text" pInputText> 
+            </div>
+          </div>
+          </div>
+        
     </p-tabPanel>
     <p-tabPanel header="DEVELOPMENT">
-        <!--<mat-tab label="Development">
-            <mat-checkbox class="example-margin">Fits architecture</mat-checkbox><br>
-            <mat-form-field appearance="fill" style="width:60vw">
-                <mat-label>Architecture Exceptions</mat-label>
-                <textarea matInput required></textarea>
-            </mat-form-field>
-            <br>
-            <br>
-            <br>
+        <div class="p-fluid">
 
+        <div class="p-field p-grid">
+            <label for="fitsArchitecture" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Fits architecture</label>
+            <div class="p-col-12 p-md-10">
+                <p-checkbox name="fitsArchitecture"></p-checkbox>
+            </div>
+        </div>
+        <div class="p-field p-grid">
+            <label for="architectureExceptions" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Description</label>
+            <div class="p-col-12 p-md-10">
+            <textarea id="architectureExceptions" type="text" rows="6" pInputTextarea></textarea>
+            </div>
+          </div>
+          <div class="p-field p-grid">
+            <label for="vcs" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Name</label>
+            <div class="p-col-12 p-md-10">
+            <input id="vcs" type="text" pInputText> 
+            </div>
+          </div>
+          <div class="p-field p-grid">
+            <label for="buildsystem" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Buildsystem</label>
+            <div class="p-col-12 p-md-10">
+            <input id="buildsystem" type="text" pInputText> 
+            </div>
+          </div>
+          <div class="p-field p-grid">
+            <label for="bugtracking" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">BugTracking</label>
+            <div class="p-col-12 p-md-10">
+            <input id="bugtracking" type="text" pInputText> 
+            </div>
+          </div>
+          </div>
+    </p-tabPanel>
+    <p-tabPanel header="TECHNOLOGY">
+        <p-pickList [source]="technologies" [target]="software.technologies">
+            <ng-template let-technology pTemplate="item">
+                <div>
+                    {{technology}}
+                </div>
+            </ng-template>
+        </p-pickList>
 
-            <mat-form-field appearance="fill" style="width:60vw">
-                <mat-label>VCS</mat-label>
-                <input matInput>
-            </mat-form-field>
-            <mat-form-field appearance="fill" style="width:60vw">
-                <mat-label>Jenkins</mat-label>
-                <input matInput>
-            </mat-form-field>
-            <mat-form-field appearance="fill" style="width:60vw">
-                <mat-label>Jira</mat-label>
-                <input matInput>
-            </mat-form-field>
-            <mat-form-field appearance="fill" style="width:60vw">
-                <mat-label>Documentation</mat-label>
-                <input matInput>
-            </mat-form-field>
-
-            <br>
-            <br>
-            <br>
-
-            <mat-label>Technologies</mat-label>
-            <mat-list style="width:60vw">
-                <mat-list-item> Gradle 6.7.1</mat-list-item>
-                <mat-list-item> Springboot 2.3</mat-list-item>
-            </mat-list>
-
-
-
-
-        </mat-tab>-->
     </p-tabPanel>
     
 </p-tabView>
+</div>
 

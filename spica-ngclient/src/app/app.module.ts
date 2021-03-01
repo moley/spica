@@ -28,6 +28,10 @@ import {TabViewModule} from 'primeng/tabview';
 import {InputTextModule} from 'primeng/inputtext';
 import {DropdownModule} from 'primeng/dropdown';
 import {InputTextareaModule} from 'primeng/inputtextarea';
+import {CalendarModule} from 'primeng/calendar';
+import {CheckboxModule} from 'primeng/checkbox';
+import {TableModule} from 'primeng/table';
+import {PickListModule} from 'primeng/picklist';
 
 
 import { environment } from '../environments/environment';
@@ -92,7 +96,12 @@ import { NodeService } from './modules/software/nodeservice';
     TabViewModule, 
     InputTextModule,
     InputTextareaModule,
-    DropdownModule
+    DropdownModule, 
+    CalendarModule,
+    CheckboxModule, 
+    TableModule, 
+    PickListModule,
+    
 
     
   ],
