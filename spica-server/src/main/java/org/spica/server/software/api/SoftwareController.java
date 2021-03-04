@@ -16,6 +16,7 @@ import org.spica.server.software.service.SoftwareService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,6 +37,10 @@ public class SoftwareController implements SoftwareApi {
   public ResponseEntity<List<SoftwareInfo>> getSoftware() {
     log.info("call getSoftware");
     return ResponseEntity.of(Optional.of(softwareService.getSoftware()));
+  }
+
+  public ResponseEntity<SoftwareInfo> getSoftwareById(@ApiParam(value = "",required=true) @PathVariable("softwareId") String softwareId) {
+    return ResponseEntity.of(Optional.of(softwareService.getSoftwareById(softwareId)));
   }
 
   public ResponseEntity<Void> setSoftware(@ApiParam(value = "" ,required=true )  @Valid @RequestBody List<SoftwareInfo> softwareInfo) {

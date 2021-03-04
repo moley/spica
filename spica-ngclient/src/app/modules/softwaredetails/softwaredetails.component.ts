@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { SoftwareInfo } from '../generated/software';
+import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { SoftwareInfo, SoftwareService } from '../generated/software';
 
 interface IdAndName {
   name: string,
   id: string
 }
 
-interface Connection {
+interface Relation {
   type: string,
   target: string
 }
@@ -20,13 +21,16 @@ interface Connection {
 
 export class SoftwareDetailsComponent implements OnInit {
 
+  @Input()
   software: SoftwareInfo;
+
   types: IdAndName[];
   status: IdAndName[];
+  groups: IdAndName[];
   roles: IdAndName[];
-  connectionTypes: IdAndName[];
+  relationTypes: IdAndName[];
   deployments: IdAndName[];
-  connections: Connection[];
+  relations: Relation[];
 
   selectedType: IdAndName;
   selectedStatus: IdAndName;
@@ -35,7 +39,8 @@ export class SoftwareDetailsComponent implements OnInit {
   technologies: String [];
   
 
-  constructor() {
+  constructor(private softwareService: SoftwareService, private route: ActivatedRoute) {
+
     this.types = [{name: 'Web Application', id:"WEB_APP"}, 
                   {name: 'Standalone Application', id:"STANDALONE_APP"}]
 
@@ -47,11 +52,13 @@ export class SoftwareDetailsComponent implements OnInit {
                   {name: 'Softwareentwickler', id:"DEVELOPER"}, 
                   {name: 'Tester', id:"TESTER"}]
 
-    this.connectionTypes = [{name: 'wird benutzt von', id:"USED_IN"}, 
+    this.relationTypes = [{name: 'wird benutzt von', id:"USED_IN"}, 
                   {name: 'benutzt', id:"USES"}]
 
     this.deployments = [{name: 'On Premise', id: 'ON_PREMISE'}, 
                         {name: 'Datacenter', id: 'DATACENTER'}]
+    this.groups = [{name: 'Shop', id: 'SHOP'}, 
+                   {name: 'InfoSystem', id: 'INFOSYSTEM'}]                    
 
     this.technologies = ['Gradle', 'Java', 'C#'];
 
@@ -63,6 +70,14 @@ export class SoftwareDetailsComponent implements OnInit {
    }
 
   ngOnInit() {
+    this.route.params.subscribe(params => {
+      this.softwareService.getSoftwareById(params.id).subscribe(
+        x => this.software = x,
+        err => console.error('Observer got an error: ' + err),
+        () => console.info('Observer finished'),
+      );
+    });
+    
     this.software = {name: 'Component1', id: '12', description: 'Description1', teammembers: [
       {user: "user1@spica.org", role:"productowner"}, 
       {user: "user2@spica.org", role:"Developer"} 
@@ -70,7 +85,7 @@ export class SoftwareDetailsComponent implements OnInit {
     technologies: ['Gradle', 'Java']}
 
     this.allsoftware = [{name: "Other1"}, {name: "Other2"}];
-    this.connections = [{type: 'USES', target: '1'}]
+    this.relations = [{type: 'USES', target: '1'}]
   }
 
 }

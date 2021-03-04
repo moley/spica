@@ -57,6 +57,25 @@ paths:
                 items:
                   $ref: "#/components/schemas/IdAndDisplaynameInfo"
 
+  /software/{softwareId}:
+    get:
+      tags:
+        - software
+      operationId: "getSoftwareById"
+      description: "get software with id"
+      parameters:
+        - in: path
+          name: softwareId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: software
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SoftwareInfo"
   /software/list:
     get:
       tags:
@@ -114,7 +133,6 @@ components:
         role:
           type: "string"
 
-
     SoftwareInfo:
       type: "object"
       properties:
@@ -128,10 +146,29 @@ components:
           type: "string"
         deployment:
            $ref: "#/components/schema/IdAndDisplaynameInfo"
+        location:
+          type: "string"
+        format:
+          type: "string"
         type:
           $ref: "#/components/schema/IdAndDisplaynameInfo"
+        group:
+          type: "string"
         state:
           $ref: "#/components/schema/IdAndDisplaynameInfo"
+        active:
+          type: "boolean"
+        needsAction:
+          type: "boolean"
+        needsActionDescription:
+          type: "string"
+        technicalDebt:
+          type: "integer"
+        complexity:
+          type: "integer"
+        maintainability:
+          type: "integer"
+
 
         teammembers:
           type: array
@@ -149,4 +186,12 @@ components:
           items:
             $ref: "#/components/schema/SoftwareInfo"
 
-
+    RelationInfo:
+      type: "object"
+      properties:
+        relationtype:
+          type: "string"
+        source:
+          $ref: "#/components/schema/SoftwareInfo"
+        target:
+          $ref: "#/components/schema/SoftwareInfo"

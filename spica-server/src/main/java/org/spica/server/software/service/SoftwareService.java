@@ -28,6 +28,11 @@ public class SoftwareService {
     return infos;
   }
 
+  public SoftwareInfo getSoftwareById (final String id) {
+    Software software = softwareRepository.findById(id);
+    return softwareMapper.toSoftwareInfo(software);
+  }
+
   public void setSoftware (final List<SoftwareInfo> software) {
     softwareRepository.deleteAll();
 

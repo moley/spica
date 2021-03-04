@@ -10,5 +10,7 @@ public interface SoftwareRepository extends CrudRepository<Software, Long> {
 
   Collection<Software> findByParentIdIsNull ();
 
+  Software findById (final String id);
+
 
 }

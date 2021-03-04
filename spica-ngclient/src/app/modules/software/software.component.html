@@ -4,21 +4,18 @@
   <ng-template pTemplate="header">
       <tr>
           <th>Name</th>
-          <th>Size</th>
-          <th>Type</th>
+          <th>Edit</th>
+       
       </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+  <ng-template pTemplate="body" let-rowNode let-rowData="rowData" (onRowSelect)="onRowSelect($event)">
       <tr>
           <td>
               <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
               {{rowData.name}}
           </td>
-          <td>{{rowData.size}}</td>
-          <td>{{rowData.type}}</td>
           <td>
-            <p-button icon="pi pi-search"  [style]="{'margin-right': '.5em'}"></p-button>
-            <p-button icon="pi pi-pencil" [routerLink]="['/app/software/', '1']"></p-button>
+            <p-button icon="pi pi-pencil" (click)="stepToDetails(rowData)"></p-button>
         </td>          
       </tr>
   </ng-template>

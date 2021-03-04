@@ -38,6 +38,7 @@ public class SoftwareMapper {
     SoftwareInfo softwareInfo = new SoftwareInfo();
     softwareInfo.setDescription(software.getDescription());
     softwareInfo.setName(software.getName());
+    softwareInfo.setId(software.getId());
 
     for (Software children: software.getChildren()) {
       SoftwareInfo nextChildrenInfo = toSoftwareInfo(children);

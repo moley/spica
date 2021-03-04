@@ -17,12 +17,7 @@
     <p-tabPanel header="GENERAL">
         <div class="p-fluid">
 
-          <div class="p-field p-grid">
-            <label for="fieldId" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">ID</label>
-            <div class="p-col-12 p-md-10">
-            <input id="fieldId" [(ngModel)]="software.id" type="text" pInputText> 
-            </div>
-          </div>
+          
           <div class="p-field p-grid">
             <label for="fieldName" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Name</label>
             <div class="p-col-12 p-md-10">
@@ -36,9 +31,15 @@
             </div>
           </div>
           <div class="p-field p-grid">
-            <label for="fieldDescription" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Type</label>
+            <label for="fieldType" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Type</label>
             <div class="p-col-12 p-md-10">
-            <p-dropdown [options]="types" [(ngModel)]="selectedType" optionLabel="name"></p-dropdown>
+            <p-dropdown id="fieldType" [options]="types" [(ngModel)]="selectedType" optionLabel="name"></p-dropdown>
+            </div>
+          </div>
+          <div class="p-field p-grid">
+            <label for="fieldGroup" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Type</label>
+            <div class="p-col-12 p-md-10">
+            <p-dropdown id="fieldGroup" [options]="groups" [(ngModel)]="selectedGroup" optionLabel="name"></p-dropdown>
             </div>
           </div>
 
@@ -112,10 +113,10 @@
         </p-table>
         </div>
     </p-tabPanel>
-    <p-tabPanel header="CONNECTIONS">
+    <p-tabPanel header="RELATIONS">
         <div class="p-fluid">
 
-        <p-table [value]="connections">
+        <p-table [value]="relations">
             <ng-template pTemplate="header">
                 <tr>
                     <th>Type</th>
@@ -124,7 +125,7 @@
             </ng-template>
             <ng-template pTemplate="body" let-connection>
                 <tr>
-                    <td><p-dropdown [options]="connectionTypes"  optionLabel="name"></p-dropdown>
+                    <td><p-dropdown [options]="relationType"  optionLabel="name"></p-dropdown>
                     <td><p-dropdown [options]="allsoftware"  optionLabel="name"></p-dropdown>
                     </td>
                 </tr>
