@@ -1,27 +1,34 @@
-<div class="container col-lg-6" layout-align="center center">
-    <h1 class="text-center">LOGIN</h1>
-    <div class="card">
-      <div class="card-body" width="200px">
-        <form class="form-group">
+<h2>Login</h2>
+
+<div class="p-fluid">
+
           
-          <mat-form-field >
-            <mat-label>Username </mat-label>
-            <input matInput type="text" class="form-control" id="username" [(ngModel)]="username" placeholder="Enter User Name"
-              name="username">
-          </mat-form-field>
-
-          <mat-form-field >
-            <mat-label>Password</mat-label>
-            <input matInput type="password" class="form-control" [(ngModel)]="password" id="password" placeholder="Enter password"
-              name="password">
-          </mat-form-field>
-          <button mat-flat-button color="primary" (click)=handleLogin() class="btn btn-success">Login</button>
-
-          <div class="alert alert-warning" *ngIf='invalidLogin'>{{errorMessage}}</div>
-          <div class="alert alert-success" *ngIf='loginSuccess'>{{successMessage}}</div>
-
-        </form>
-      </div>
+  <div class="p-field p-grid">
+    <label for="fieldUsername" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Username</label>
+    <div class="p-col-12 p-md-10">
+    <input id="fieldUsername" [(ngModel)]="username" type="text" pInputText> 
     </div>
   </div>
+  <div class="p-field p-grid">
+    <label for="fieldPassword" class="p-col- p-mb-2 p-md-2 p-mb-md-0">Password</label>
+    <div class="p-col-12 p-md-10">
+      <input type="password" pPassword [(ngModel)]="password" />
+    </div>
+  </div>
+
+  <div *ngIf="loginSuccess" class="success p-col-12 p-mb-2 p-md-2 p-mb-md-0">
+    Login successful
+  </div>
+
+  <div *ngIf="invalidLogin" class="failed p-col-12 p-mb-2 p-md-2 p-mb-md-0">
+    Login failed
+  </div>
+
+  <div class="p-field p-grid" >
+    <p-button  type="button" (click)="handleLogin()" label="Login" class="p-col-12 p-mb-2 p-md-2 p-mb-md-"></p-button>
+  </div>
+
   
+
+
+</div>

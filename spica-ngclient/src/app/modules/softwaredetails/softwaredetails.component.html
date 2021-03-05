@@ -1,11 +1,12 @@
 
+<div *ngIf="software">
 <div class="main">
 <div class="p-grid">
     <div class="p-col"><h1>Software: {{software.name}}</h1></div>
     <div class="p-col"><img src="https://www.jenkins.io/images/post-images/jenkins-is-the-way/jenkins-is-the-way.png"
         height="80px" alt="Italian Trulli"></div>
     <div class="p-col"><div fxFlex fxLayout="row" fxFlexOffset="20" fxLayoutAlign="end">
-        <p-button  label="Save"> 
+        <p-button  label="Save" (click)="save()"> 
         </p-button>
 
         <p-button label="Start"> 
@@ -14,7 +15,7 @@
 </div></div>
 </div>
 <p-tabView>
-    <p-tabPanel header="GENERAL">
+    <p-tabPanel header="GENERAL" >
         <div class="p-fluid">
 
           
@@ -33,13 +34,13 @@
           <div class="p-field p-grid">
             <label for="fieldType" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Type</label>
             <div class="p-col-12 p-md-10">
-            <p-dropdown id="fieldType" [options]="types" [(ngModel)]="selectedType" optionLabel="name"></p-dropdown>
+            <p-dropdown id="fieldType" [options]="constants.types" [(ngModel)]="software.type" optionLabel="displayname" ></p-dropdown>
             </div>
           </div>
           <div class="p-field p-grid">
-            <label for="fieldGroup" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Type</label>
+            <label for="fieldGroup" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Group</label>
             <div class="p-col-12 p-md-10">
-            <p-dropdown id="fieldGroup" [options]="groups" [(ngModel)]="selectedGroup" optionLabel="name"></p-dropdown>
+            <p-dropdown id="fieldGroup" [options]="constants.groups" [(ngModel)]="software.group" optionLabel="displayname"></p-dropdown>
             </div>
           </div>
 
@@ -58,7 +59,7 @@
         <div class="p-field p-grid">
           <label for="fieldDescription" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">State</label>
           <div class="p-col-12 p-md-10">
-          <p-dropdown [options]="status" [(ngModel)]="selectedStatus" optionLabel="name"></p-dropdown>
+          <p-dropdown [options]="constants.states" [(ngModel)]="software.state" optionLabel="displayname"></p-dropdown>
           </div>
         </div>
 
@@ -106,7 +107,7 @@
             <ng-template pTemplate="body" let-member>
                 <tr>
                     <td>{{member.user}}</td>
-                    <td><p-dropdown [options]="roles"  optionLabel="name"></p-dropdown>
+                    <td><p-dropdown [options]="constants.roles"  optionLabel="displayname"></p-dropdown>
                     </td>
                 </tr>
             </ng-template>
@@ -125,9 +126,8 @@
             </ng-template>
             <ng-template pTemplate="body" let-connection>
                 <tr>
-                    <td><p-dropdown [options]="relationType"  optionLabel="name"></p-dropdown>
-                    <td><p-dropdown [options]="allsoftware"  optionLabel="name"></p-dropdown>
-                    </td>
+                    <td>uses</td>
+                    <td><p-dropdown [options]="allsoftware"  optionLabel="name"></p-dropdown></td>
                 </tr>
             </ng-template>
         </p-table>
@@ -141,7 +141,7 @@
         <div class="p-field p-grid">
             <label for="deployments" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Deployment</label>
             <div class="p-col-12 p-md-10">
-            <p-dropdown [options]="deployments"  optionLabel="name"></p-dropdown>
+            <p-dropdown [options]="constants.deployments"  optionLabel="name"></p-dropdown>
             </div>
           </div>
           <div class="p-field p-grid">
@@ -207,4 +207,4 @@
     
 </p-tabView>
 </div>
-
+</div>

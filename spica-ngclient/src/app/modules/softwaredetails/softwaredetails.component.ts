@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SoftwareInfo, SoftwareService } from '../generated/software';
+import { SoftwareConstantsInfo } from '../generated/software/model/softwareConstantsInfo';
 
 interface IdAndName {
   name: string,
@@ -24,68 +25,49 @@ export class SoftwareDetailsComponent implements OnInit {
   @Input()
   software: SoftwareInfo;
 
-  types: IdAndName[];
-  status: IdAndName[];
-  groups: IdAndName[];
-  roles: IdAndName[];
-  relationTypes: IdAndName[];
-  deployments: IdAndName[];
+  constants: SoftwareConstantsInfo = {};
+
   relations: Relation[];
 
-  selectedType: IdAndName;
-  selectedStatus: IdAndName;
-  selectedRole: IdAndName;
   allsoftware: SoftwareInfo[];
   technologies: String [];
   
 
   constructor(private softwareService: SoftwareService, private route: ActivatedRoute) {
 
-    this.types = [{name: 'Web Application', id:"WEB_APP"}, 
-                  {name: 'Standalone Application', id:"STANDALONE_APP"}]
-
-    this.status = [{name: 'Konzeptphase', id:"CONCEPT"}, 
-                  {name: 'Implementierung', id:"IMPLEMENTATION"}, 
-                  {name: 'Produktiv', id:"IN_PRODUCTION"}]
-
-    this.roles = [{name: 'Product Owner', id:"PRODUCTOWNER"}, 
-                  {name: 'Softwareentwickler', id:"DEVELOPER"}, 
-                  {name: 'Tester', id:"TESTER"}]
-
-    this.relationTypes = [{name: 'wird benutzt von', id:"USED_IN"}, 
-                  {name: 'benutzt', id:"USES"}]
-
-    this.deployments = [{name: 'On Premise', id: 'ON_PREMISE'}, 
-                        {name: 'Datacenter', id: 'DATACENTER'}]
-    this.groups = [{name: 'Shop', id: 'SHOP'}, 
-                   {name: 'InfoSystem', id: 'INFOSYSTEM'}]                    
-
     this.technologies = ['Gradle', 'Java', 'C#'];
 
     
-
-    this.selectedType = this.types[0]
-    this.selectedStatus = this.status[0];
-    this.selectedRole = this.roles[0];
    }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.softwareService.getSoftwareById(params.id).subscribe(
         x => this.software = x,
-        err => console.error('Observer got an error: ' + err),
-        () => console.info('Observer finished'),
+        err => console.error('Call to get software by ID got an error: ' + err),
+        () => console.info('Call to get software by ID finished (' + this.software.type + ")"),
       );
     });
     
-    this.software = {name: 'Component1', id: '12', description: 'Description1', teammembers: [
-      {user: "user1@spica.org", role:"productowner"}, 
-      {user: "user2@spica.org", role:"Developer"} 
-    ], 
-    technologies: ['Gradle', 'Java']}
 
+    this.softwareService.getConstants().subscribe(
+      x => this.constants = x, 
+      err => console.error('Call to get software constants got an error: ' + err),
+      () => console.info('Call to get software constants finished'),
+    )
+
+    
     this.allsoftware = [{name: "Other1"}, {name: "Other2"}];
     this.relations = [{type: 'USES', target: '1'}]
+  }
+
+  save () {
+    console.log(this.software.type)
+    this.softwareService.updateSoftware(this.software.id, this.software).subscribe(
+      x => this.software = x,
+        err => console.error('Call to update software ' + this.software.id + ' by ID got an error: ' + err),
+        () => console.info('Call to update software by ID finished)'),
+      );
   }
 
 }

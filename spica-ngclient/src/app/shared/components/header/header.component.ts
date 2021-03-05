@@ -13,31 +13,38 @@ export class HeaderComponent  {
 
   @Output() toggleSideBarForMe: EventEmitter<any> = new EventEmitter();
 
-  sidebarVisible;
+  sidebarVisible:boolean;
+  
 
 
+  ngOnInit () {
+    
+    
+  }
   constructor(private authenticationService: AuthenticationService, private router: Router) { }
 
-
-  menu () : MenuItem[]  {
-    if (this.isLoggedIn()) {
-       return  [{
-         label: 'Logout', 
-         command: (event) => {
-          return this.handleLogout();
-        }
-       }];
+  userMenuItems () : MenuItem[] {
+  if (this.isLoggedIn()) {
+      return [{label: 'Logout', icon: 'pi pi-fw pi-plus', command: (event) => {this.handleLogout();}}
+             ];
+       
     }
     else {
-      return  [{
-        label: 'Login', 
-        
-        routerLink: "/login"
-      }];
+      return [{label: 'Github', icon: 'pi pi-fw pi-plus', url: 'https://github.com/moley/spica'},  
+              {label: 'Login', icon: 'pi pi-fw pi-plus', command: (event) => {this.stepToLogin();}}
+             ];
+              
     }
+  }
+
+  stepToLogin () {
+    console.log ("Step to login")
+    this.router.navigate(['/login']);
 
   }
 
+
+  
   toggleSideBar() {
     this.toggleSideBarForMe.emit();
     setTimeout(() => {
@@ -48,7 +55,7 @@ export class HeaderComponent  {
   }
 
   handleLogout() {
-    console.log ("Lgout called (" + this.authenticationService.isUserLoggedIn() + ")")
+    console.log ("Logout called (" + this.authenticationService.isUserLoggedIn() + ")")
     this.authenticationService.logout()
     this.router.navigate(['/login']);
   }
@@ -57,4 +64,5 @@ export class HeaderComponent  {
     return this.authenticationService.isUserLoggedIn();
   }
 
+  
 }

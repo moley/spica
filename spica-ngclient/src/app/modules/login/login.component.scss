@@ -1,21 +1,8 @@
-mat-card {
-  max-width: 200px;
-  
-  
+.failed {
+  background-color: red;
 }
 
-.container {
-  text-align: center;
-  justify-content: center;
-}
+.success {
+  background-color: green;
 
-.alert {
-  margin: 100px auto;
-  color: red;
-}
-
-mat-form-field {
-  max-width: 400px;
-  margin: 2em auto;
-  display: block;
 }

@@ -135,10 +135,13 @@ public class SpicaProperties {
     List<KeyValue> values = new ArrayList<KeyValue>();
     for (Object nextKey : new ArrayList(properties.keySet())) {
       String nextKeyAsString = (String) nextKey;
-      if (nextKeyAsString.startsWith(prefix)) {
-        String nextValue = properties.getProperty(nextKeyAsString);
-        String trimmedKey = nextKeyAsString.substring(prefix.length() + 1);
-        values.add(new KeyValue(trimmedKey, nextValue));
+      try {
+        if (nextKeyAsString.startsWith(prefix)) {
+          String nextValue = properties.getProperty(nextKeyAsString);
+          values.add(new KeyValue(nextKeyAsString, nextValue));
+        }
+      } catch (Exception e) {
+        log.error("Error reading key " + nextKeyAsString + ":" + e.getLocalizedMessage(), e);
       }
     }
 
@@ -146,7 +149,18 @@ public class SpicaProperties {
 
   }
 
-  public List<String> getValues (final String prefix) {
+  public KeyValue getKeyValuePair (final String prefix) {
+    if (prefix == null)
+      return null;
+    List<KeyValue> values = getKeyValuePairs(prefix);
+    if (values.size() != 1)
+      throw new IllegalStateException("Not exactly one value found for value '" + prefix + "', but " + values.size());
+
+    return values.get(0);
+  }
+
+
+    public List<String> getValues (final String prefix) {
     List<String> values = new ArrayList<String>();
     for (Object nextKey : new ArrayList(properties.keySet())) {
       String nextKeyAsString = (String) nextKey;

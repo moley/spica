@@ -45,9 +45,11 @@ public class Software extends ObjectWithStatus {
 
   private String type;
 
-  private String status;
+  private String softwaregroup;
 
-  private String statusAdditionalText;
+  private String state;
+
+  private String stateAdditionalText;
 
   private String vcs;
 
@@ -63,8 +65,7 @@ public class Software extends ObjectWithStatus {
 
   private String importedFrom;
 
-  @ElementCollection
-  private List<String> deployments = new ArrayList<>();
+  private String deployment;
 
   private String location;
 

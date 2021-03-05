@@ -31,7 +31,7 @@ public class SoftwareServiceTest {
     SoftwareService softwareService = new SoftwareService();
     softwareService.setSoftwareMapper(new SoftwareMapper());
     softwareService.setSoftwareRepository(softwareRepository);
-    softwareService.setSoftware(Arrays.asList(software1));
+    softwareService.setSoftwareList(Arrays.asList(software1));
 
     Mockito.verify(softwareRepository, Mockito.times(1)).deleteAll();
     Mockito.verify(softwareRepository, Mockito.times(1)).saveAll(Mockito.anyCollection());

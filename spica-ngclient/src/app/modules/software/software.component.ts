@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {TreeTableModule} from 'primeng/treetable';
-import {TreeNode} from 'primeng/api';
+import { TreeNode} from 'primeng/api';
 import { SoftwareService } from '../generated/software/api/software.service';
 import { NodeService } from './nodeservice';
 import { SoftwareInfo } from '../generated/software';
@@ -22,15 +21,15 @@ export class SoftwareComponent implements OnInit {
 
 
   ngOnInit() {
-    this.softwareService.getSoftware().subscribe(
+    this.softwareService.getSoftwareList().subscribe(
       x => this.software = this.nodeService.getTreeNodesFromModel(x),
-      err => console.error('Observer got an error: ' + err),
-      () => console.info('Observer finished'),
+      err => console.error('Call to get all software got an error: ' + err),
+      () => console.info('Call to get all software finished'),
     );
   }
 
   stepToDetails (software: SoftwareInfo) {
-    console.log ("Hello " + software.id)
+    console.log("StepToDetails " + software.id)
     this.router.navigate(['app/software/', software.id]);
 
   }

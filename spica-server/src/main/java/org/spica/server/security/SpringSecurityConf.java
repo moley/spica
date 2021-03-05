@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.spica.commons.SpicaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -51,7 +52,14 @@ public class SpringSecurityConf extends WebSecurityConfigurerAdapter {
   public CorsConfigurationSource corsConfigurationSource() {
     log.info("Configure cors");
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+
+    CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+    corsConfiguration.addAllowedMethod(HttpMethod.GET);
+    corsConfiguration.addAllowedMethod(HttpMethod.HEAD);
+    corsConfiguration.addAllowedMethod(HttpMethod.POST);
+    corsConfiguration.addAllowedMethod(HttpMethod.PUT);
+    corsConfiguration.addAllowedMethod(HttpMethod.DELETE);
+    source.registerCorsConfiguration("/api/**", corsConfiguration);
     return source;
   }
 
@@ -65,7 +73,6 @@ public class SpringSecurityConf extends WebSecurityConfigurerAdapter {
         .antMatchers("/api/**").authenticated()
         .antMatchers("/h2/**").permitAll()
         .and().csrf().ignoringAntMatchers("/h2/**")
-        .and().headers().frameOptions().sameOrigin()
         .and()
         .httpBasic().and().
         logout().logoutSuccessHandler(logoutSuccessHandler()).logoutUrl("/api/logout").invalidateHttpSession(true)

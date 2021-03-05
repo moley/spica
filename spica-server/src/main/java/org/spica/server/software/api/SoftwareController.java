@@ -1,7 +1,6 @@
 package org.spica.server.software.api;
 
 import io.swagger.annotations.ApiParam;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -10,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.spica.commons.KeyValue;
 import org.spica.commons.SpicaProperties;
 import org.spica.server.software.model.IdAndDisplaynameInfo;
+import org.spica.server.software.model.SoftwareConstantsInfo;
 import org.spica.server.software.model.SoftwareInfo;
 import org.spica.server.software.service.SoftwareMapper;
 import org.spica.server.software.service.SoftwareService;
@@ -34,19 +34,54 @@ public class SoftwareController implements SoftwareApi {
 
   private SpicaProperties spicaProperties = new SpicaProperties();
 
-  public ResponseEntity<List<SoftwareInfo>> getSoftware() {
+  @Override
+  public ResponseEntity<List<SoftwareInfo>> getSoftwareList() {
     log.info("call getSoftware");
-    return ResponseEntity.of(Optional.of(softwareService.getSoftware()));
+    return ResponseEntity.of(Optional.of(softwareService.getSoftwareList()));
   }
 
+  @Override
   public ResponseEntity<SoftwareInfo> getSoftwareById(@ApiParam(value = "",required=true) @PathVariable("softwareId") String softwareId) {
     return ResponseEntity.of(Optional.of(softwareService.getSoftwareById(softwareId)));
   }
 
-  public ResponseEntity<Void> setSoftware(@ApiParam(value = "" ,required=true )  @Valid @RequestBody List<SoftwareInfo> softwareInfo) {
+  @Override
+  public ResponseEntity<Void> setSoftwareList(@ApiParam(value = "" ,required=true )  @Valid @RequestBody List<SoftwareInfo> softwareInfo) {
     log.info("call setSoftware with " + softwareInfo.size() + " software items");
-    softwareService.setSoftware(softwareInfo);
+    softwareService.setSoftwareList(softwareInfo);
     return ResponseEntity.ok().build();
+  }
+
+  @Override
+  public ResponseEntity<Void> updateSoftware(@ApiParam(value = "",required=true) @PathVariable("softwareId") String softwareId,@ApiParam(value = "" ,required=true )  @Valid @RequestBody SoftwareInfo softwareInfo) {
+    log.info("call updateSoftware with " + softwareId + "and " + softwareInfo.toString());
+
+    return ResponseEntity.ok().build();
+  }
+
+  @Override
+  public ResponseEntity<SoftwareConstantsInfo> getConstants() {
+    log.info("call getConstants");
+
+    SoftwareConstantsInfo softwareConstantsInfo = new SoftwareConstantsInfo();
+
+    List<KeyValue> keyValuePairsDeployments = spicaProperties.getKeyValuePairs("spica.software.deployment");
+    softwareConstantsInfo.setDeployments(softwareMapper.toIdAndDisplaynameInfos(keyValuePairsDeployments));
+
+    List<KeyValue> keyValuePairsStates = spicaProperties.getKeyValuePairs("spica.software.state");
+    softwareConstantsInfo.setStates(softwareMapper.toIdAndDisplaynameInfos(keyValuePairsStates));
+
+    List<KeyValue> keyValuePairsTypes = spicaProperties.getKeyValuePairs("spica.software.type");
+    softwareConstantsInfo.setTypes(softwareMapper.toIdAndDisplaynameInfos(keyValuePairsTypes));
+
+    List<KeyValue> keyValuePairsRelationTypes = spicaProperties.getKeyValuePairs("spica.software.relationtypes");
+    softwareConstantsInfo.setRelationtypes(softwareMapper.toIdAndDisplaynameInfos(keyValuePairsRelationTypes));
+
+    List<KeyValue> keyValuePairsRelationGroups = spicaProperties.getKeyValuePairs("spica.software.groups");
+    softwareConstantsInfo.setGroups(softwareMapper.toIdAndDisplaynameInfos(keyValuePairsRelationGroups));
+
+    return ResponseEntity.ok(softwareConstantsInfo);
+
   }
 
   @Override public ResponseEntity<List<IdAndDisplaynameInfo>> getDeployments() {

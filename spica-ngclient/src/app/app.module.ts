@@ -32,6 +32,8 @@ import {CalendarModule} from 'primeng/calendar';
 import {CheckboxModule} from 'primeng/checkbox';
 import {TableModule} from 'primeng/table';
 import {PickListModule} from 'primeng/picklist';
+import {PasswordModule} from 'primeng/password';
+
 
 
 import { environment } from '../environments/environment';
@@ -101,6 +103,7 @@ import { NodeService } from './modules/software/nodeservice';
     CheckboxModule, 
     TableModule, 
     PickListModule,
+    PasswordModule
     
 
     

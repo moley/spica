@@ -27,8 +27,8 @@
                 <p-button label="Person">
                 </p-button>
 
-                <p-menu #menu [popup]="true" [model]="menu"></p-menu>
-                <button type="button" pButton icon="pi pi-list" label="OleyMa" (click)="menu.toggle($event)"></button>
+                <p-menu #menu [popup]="true" [model]="userMenuItems()"></p-menu>
+                <button type="button" pButton icon="pi pi-list" label="  {{authenticationService.getLoggedInUserName()}}" (click)="menu.toggle($event)"></button>
                
     </div>
     

@@ -12,8 +12,8 @@ export class AuthenticationService {
 
   USER_NAME_SESSION_ATTRIBUTE_NAME = 'authenticatedUser'
 
-  public username: String = 'spica'
-  public password: String = 'spica';
+  public username
+  public password
 
   constructor(@Inject(BASE_PATH) private basePath: string, private router: Router, private http: HttpClient) {
 
@@ -38,27 +38,20 @@ export class AuthenticationService {
   }
 
   logout() {
+    
     sessionStorage.removeItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME);
-    this.http.get(this.basePath + `/logout`).toPromise().then(response => {
-      this.username = null;
-      this.password = null;
-      this.router.navigate(['/']);
-    });
+    this.router.navigate(['/logout']);
 
     
   }
 
   isUserLoggedIn() {
-    return true //TODO
     let user = sessionStorage.getItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME)
     if (user === null) return false
     return true
   }
 
   getLoggedInUserName() {
-    this.password = "spica"; //TODO
-    this.username = "spica"; //TODO
-    return this.username;
     let user = sessionStorage.getItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME)
     if (user === null) return ''
     return user

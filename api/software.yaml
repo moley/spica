@@ -25,6 +25,20 @@ paths:
                 items:
                   $ref: "#/components/schemas/IdAndDisplaynameInfo"
 
+  /software/constants/list:
+    get:
+      tags:
+        - software
+      operationId: "getConstants"
+      description: "get all constants at once"
+      responses:
+        '200':
+          description: 'infoobject with all constants for software'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SoftwareConstantsInfo"
+
   /software/types/list:
     get:
       tags:
@@ -76,11 +90,33 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SoftwareInfo"
+
+    put:
+      tags:
+        - software
+      operationId: "updateSoftware"
+      description: "update existing software"
+      parameters:
+        - in: path
+          name: softwareId
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SoftwareInfo"
+      responses:
+        '200':
+          description: OK
+
   /software/list:
     get:
       tags:
         - software
-      operationId: "getSoftware"
+      operationId: "getSoftwareList"
       description: "get list of software"
       responses:
         '200':
@@ -94,7 +130,7 @@ paths:
     post:
       tags:
         - software
-      operationId: "setSoftware"
+      operationId: "setSoftwareList"
       description: "set list of software"
       requestBody:
         required: true
@@ -138,6 +174,8 @@ components:
       properties:
         id:
           type: "string"
+        parentId:
+          type: "string"
         name:
           type: "string"
         description:
@@ -145,7 +183,7 @@ components:
         requirement:
           type: "string"
         deployment:
-           $ref: "#/components/schema/IdAndDisplaynameInfo"
+          $ref: "#/components/schema/IdAndDisplaynameInfo"
         location:
           type: "string"
         format:
@@ -153,7 +191,7 @@ components:
         type:
           $ref: "#/components/schema/IdAndDisplaynameInfo"
         group:
-          type: "string"
+          $ref: "#/components/schema/IdAndDisplaynameInfo"
         state:
           $ref: "#/components/schema/IdAndDisplaynameInfo"
         active:
@@ -195,3 +233,32 @@ components:
           $ref: "#/components/schema/SoftwareInfo"
         target:
           $ref: "#/components/schema/SoftwareInfo"
+
+    SoftwareConstantsInfo:
+      type: "object"
+      properties:
+        deployments:
+          type: array
+          items:
+            $ref: "#/components/schema/IdAndDisplaynameInfo"
+        types:
+          type: array
+          items:
+            $ref: "#/components/schema/IdAndDisplaynameInfo"
+        states:
+          type: array
+          items:
+            $ref: "#/components/schema/IdAndDisplaynameInfo"
+        relationtypes:
+          type: array
+          items:
+            $ref: "#/components/schema/IdAndDisplaynameInfo"
+        groups:
+          type: array
+          items:
+            $ref: "#/components/schema/IdAndDisplaynameInfo"
+        roles:
+          type: array
+          items:
+            $ref: "#/components/schema/IdAndDisplaynameInfo"
+

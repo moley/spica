@@ -22,11 +22,11 @@ const routes: Routes = [{
   {
     path: 'app/software',
     component: SoftwareComponent, 
-    //canActivate:[LoginActivate]
+    canActivate:[LoginActivate]
   }, {
     path: 'app/software/:id',
     component: SoftwareDetailsComponent, 
-    //canActivate:[LoginActivate]
+    canActivate:[LoginActivate]
   }]
 }];
 
