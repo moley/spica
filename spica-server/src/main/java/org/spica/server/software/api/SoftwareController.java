@@ -55,7 +55,7 @@ public class SoftwareController implements SoftwareApi {
   @Override
   public ResponseEntity<Void> updateSoftware(@ApiParam(value = "",required=true) @PathVariable("softwareId") String softwareId,@ApiParam(value = "" ,required=true )  @Valid @RequestBody SoftwareInfo softwareInfo) {
     log.info("call updateSoftware with " + softwareId + "and " + softwareInfo.toString());
-
+    softwareService.updateSoftware(softwareId, softwareInfo);
     return ResponseEntity.ok().build();
   }
 
@@ -77,7 +77,7 @@ public class SoftwareController implements SoftwareApi {
     List<KeyValue> keyValuePairsRelationTypes = spicaProperties.getKeyValuePairs("spica.software.relationtypes");
     softwareConstantsInfo.setRelationtypes(softwareMapper.toIdAndDisplaynameInfos(keyValuePairsRelationTypes));
 
-    List<KeyValue> keyValuePairsRelationGroups = spicaProperties.getKeyValuePairs("spica.software.groups");
+    List<KeyValue> keyValuePairsRelationGroups = spicaProperties.getKeyValuePairs("spica.software.group");
     softwareConstantsInfo.setGroups(softwareMapper.toIdAndDisplaynameInfos(keyValuePairsRelationGroups));
 
     return ResponseEntity.ok(softwareConstantsInfo);

@@ -34,6 +34,8 @@ public class DefaultAuthenticationProvider implements AuthenticationProvider {
     }
     else {
       log.info("Check authentication with username " + username + " and password " + maskedPassword + ": FAILED");
+      log.info("- Usernames diff: " + authentication.getName() + "-" + username);
+      log.info("- Passwords diff: " + passwordMask.getMaskedPassword(authentication.getCredentials().toString()) + "-" + passwordMask.getMaskedPassword(password));
       return null;
     }
   }

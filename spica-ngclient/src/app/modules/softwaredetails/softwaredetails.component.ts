@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SoftwareInfo, SoftwareService } from '../generated/software';
 import { SoftwareConstantsInfo } from '../generated/software/model/softwareConstantsInfo';
 
@@ -33,7 +33,7 @@ export class SoftwareDetailsComponent implements OnInit {
   technologies: String [];
   
 
-  constructor(private softwareService: SoftwareService, private route: ActivatedRoute) {
+  constructor(private softwareService: SoftwareService, private router:Router, private route: ActivatedRoute) {
 
     this.technologies = ['Gradle', 'Java', 'C#'];
 
@@ -68,6 +68,11 @@ export class SoftwareDetailsComponent implements OnInit {
         err => console.error('Call to update software ' + this.software.id + ' by ID got an error: ' + err),
         () => console.info('Call to update software by ID finished)'),
       );
+  }
+
+  stepToOverview () {
+    this.router.navigate(['/app/software']);
+
   }
 
 }

@@ -5,8 +5,10 @@ import java.util.List;
 import org.spica.commons.KeyValue;
 import org.spica.commons.SpicaProperties;
 import org.spica.server.software.domain.Software;
+import org.spica.server.software.domain.TeamMember;
 import org.spica.server.software.model.IdAndDisplaynameInfo;
 import org.spica.server.software.model.SoftwareInfo;
+import org.spica.server.software.model.TeamMemberInfo;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -40,9 +42,37 @@ public class SoftwareMapper {
       }
     }
     software.setChildren(children);
+    software.setActive(softwareInfo.getActive());
+    software.setComplexity(softwareInfo.getComplexity());
+    software.setFormat(softwareInfo.getFormat());
+    software.setLocation(softwareInfo.getLocation());
+    software.setMaintainability(softwareInfo.getMaintainability());
+    software.setNeedsAction(softwareInfo.getNeedsAction());
+    software.setNeedsActionDescription(softwareInfo.getNeedsActionDescription());
+    software.setRequirement(softwareInfo.getRequirement());
+    List<TeamMember> teamMembers = new ArrayList<>();
+    for (TeamMemberInfo next: softwareInfo.getTeammembers())
+      teamMembers.add(toTeamMemberEntity(next));
+    software.setTeamMembers(teamMembers);
+
+
 
     return software;
 
+  }
+
+  public TeamMember toTeamMemberEntity (final TeamMemberInfo teamMemberInfo) {
+    TeamMember teamMember = new TeamMember();
+    teamMember.setUser(teamMemberInfo.getUser());
+    teamMember.setRole(teamMemberInfo.getRole());
+    return teamMember;
+  }
+
+  public TeamMemberInfo toTeamMemberInfo (final TeamMember teamMember) {
+    TeamMemberInfo teamMemberInfo = new TeamMemberInfo();
+    teamMemberInfo.setUser(teamMember.getUser());
+    teamMemberInfo.setRole(teamMember.getRole());
+    return teamMemberInfo;
   }
 
   public SoftwareInfo toSoftwareInfo(final Software software) {
@@ -60,9 +90,11 @@ public class SoftwareMapper {
     softwareInfo.setType(toIdAndDisplaynameInfo(spicaProperties.getKeyValuePair(software.getType())));
 
 
-    for (Software children: software.getChildren()) {
-      SoftwareInfo nextChildrenInfo = toSoftwareInfo(children);
-      softwareInfo.addChildrenItem(nextChildrenInfo);
+    if (software.getChildren() != null) {
+      for (Software children : software.getChildren()) {
+        SoftwareInfo nextChildrenInfo = toSoftwareInfo(children);
+        softwareInfo.addChildrenItem(nextChildrenInfo);
+      }
     }
     return softwareInfo;
   }

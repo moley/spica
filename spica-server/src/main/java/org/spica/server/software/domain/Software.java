@@ -1,7 +1,6 @@
 package org.spica.server.software.domain;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,14 +9,8 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,6 +36,7 @@ public class Software extends ObjectWithStatus {
   @ElementCollection
   private Set<String> contacts = new HashSet<>();
 
+
   private String type;
 
   private String softwaregroup;
@@ -54,7 +48,7 @@ public class Software extends ObjectWithStatus {
   private String vcs;
 
   @ElementCollection
-  private Set<String> technologies = new HashSet<>();
+  private List<String> technologies = new ArrayList<>();
 
   private String format;
 
@@ -68,6 +62,24 @@ public class Software extends ObjectWithStatus {
   private String deployment;
 
   private String location;
+
+  private Boolean active;
+
+  private Integer complexity;
+
+  private Integer maintainability;
+
+  private Boolean needsAction;
+
+  private String needsActionDescription;
+
+  private String requirement;
+
+  @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
+  private List<TeamMember> teamMembers;
+
+  private String technicalDebt;
+
 
   public boolean containsTokens (final String filter) {
     String [] tokens = filter.split(" ");

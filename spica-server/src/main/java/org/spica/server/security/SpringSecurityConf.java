@@ -65,18 +65,16 @@ public class SpringSecurityConf extends WebSecurityConfigurerAdapter {
 
 
   @Override
-  protected void configure(HttpSecurity http) throws Exception {
-    http.cors().and().csrf().disable().authorizeRequests()
-        .antMatchers( "/*").permitAll()
+  protected void configure(HttpSecurity httpsecurity) throws Exception {
+    httpsecurity.cors().and().csrf().disable();
+    httpsecurity.headers().frameOptions().disable();
+    httpsecurity.authorizeRequests().antMatchers( "/*").permitAll()
         .antMatchers( "/app/").authenticated()
         .antMatchers( "/app/admin").authenticated()
         .antMatchers("/api/**").authenticated()
-        .antMatchers("/h2/**").permitAll()
-        .and().csrf().ignoringAntMatchers("/h2/**")
-        .and()
-        .httpBasic().and().
-        logout().logoutSuccessHandler(logoutSuccessHandler()).logoutUrl("/api/logout").invalidateHttpSession(true)
-        .deleteCookies("JSESSIONID");
+        .antMatchers("/h2/**").permitAll();
+    httpsecurity.httpBasic();
+    httpsecurity.logout().logoutSuccessHandler(logoutSuccessHandler()).logoutUrl("/api/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID");
   }
 
 

@@ -32,7 +32,7 @@ public class DemoDataCreator {
     log.info("Create demodata software");
 
     SoftwareInfo softwareInfoSpica = new SoftwareInfo().id(UUID.randomUUID().toString()).name("Spica").description("Extensible, project-oriented development and communication platform");
-    softwareInfoSpica = softwareInfoSpica.type(getIdAndDisplaynameInfo("spica.software.type.system")).group(getIdAndDisplaynameInfo("spica.software.groups.development"));
+    softwareInfoSpica = softwareInfoSpica.type(getIdAndDisplaynameInfo("spica.software.type.system")).group(getIdAndDisplaynameInfo("spica.software.group.development"));
     softwareInfoSpica = softwareInfoSpica.state(getIdAndDisplaynameInfo("spica.software.state.worked"));
 
     SoftwareInfo softwareInfoSpicaServer = new SoftwareInfo().id(UUID.randomUUID().toString()).parentId(softwareInfoSpica.getId()).name("Spica-Server").description("Springboot Server, which provides functionality to improve automation and interactions in development teams");
