@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.spica.commons.SpicaProperties;
 import org.spica.server.software.domain.Software;
+import org.spica.server.software.domain.TeamMember;
 import org.spica.server.software.model.IdAndDisplaynameInfo;
 import org.spica.server.software.model.SoftwareInfo;
 import org.spica.server.software.model.TeamMemberInfo;
@@ -113,6 +114,27 @@ public class SoftwareMapperTest {
     software.setState(STATE);
     software.setType(TYPE);
     software.setSoftwaregroup(GROUP);
+    software.setDeployment(spicaProperties.getKeyValuePair(DEPLOYMENT).getKey());
+    software.setParentId(PARENT_ID);
+    software.setDescription(DESCRIPTION);
+    software.setActive(true);
+    Software childSoftware = new Software();
+    childSoftware.setId(ID_PARENT);
+    software.setChildren(Arrays.asList(childSoftware));
+    software.setComplexity(COMPLEXITY);
+    software.setFormat(FORMAT);
+    software.setLocation(LOCATION);
+    software.setMaintainability(MAINTAINABILITY);
+    software.setNeedsAction(true);
+    software.setNeedsActionDescription(NEEDS_ACTION);
+    software.setRequirement(REQUIREMENT);
+    TeamMember teamMember = new TeamMember();
+    teamMember.setUser(TEAMMEMBER_NAME);
+    teamMember.setRole(TEAMMEMBER_ROLE);
+    software.setTeamMembers(Arrays.asList(teamMember));
+    software.setTechnicalDebt(TECHNICAL_DEBT);
+    software.setTechnologies(TECHNOLOGIES);
+    software.setVcs(VCS);
 
     SoftwareInfo softwareInfo = softwareMapper.toSoftwareInfo(software);
 
@@ -121,6 +143,27 @@ public class SoftwareMapperTest {
     Assert.assertEquals(STATE, softwareInfo.getState().getId());
     Assert.assertEquals(TYPE, softwareInfo.getType().getId());
     Assert.assertEquals(GROUP, softwareInfo.getGroup().getId());
+    Assert.assertEquals(DEPLOYMENT, softwareInfo.getDeployment().getId());
+    Assert.assertEquals(PARENT_ID, softwareInfo.getParentId());
+    Assert.assertEquals (DESCRIPTION, softwareInfo.getDescription());
+    Assert.assertTrue(softwareInfo.getActive());
+    Assert.assertEquals (1, softwareInfo.getChildren().size());
+    Assert.assertEquals(ID_PARENT, softwareInfo.getChildren().get(0).getId());
+    Assert.assertEquals (COMPLEXITY, softwareInfo.getComplexity());
+    Assert.assertEquals (FORMAT, softwareInfo.getFormat());
+    Assert.assertEquals(LOCATION, softwareInfo.getLocation());
+    Assert.assertEquals (MAINTAINABILITY, softwareInfo.getMaintainability());
+    Assert.assertTrue(software.getNeedsAction());
+    Assert.assertEquals(NEEDS_ACTION, softwareInfo.getNeedsActionDescription());
+    Assert.assertEquals(REQUIREMENT, softwareInfo.getRequirement());
+    Assert.assertEquals(1, softwareInfo.getTeammembers().size());
+    Assert.assertEquals(TEAMMEMBER_NAME, softwareInfo.getTeammembers().get(0).getUser());
+    Assert.assertEquals(TEAMMEMBER_ROLE, softwareInfo.getTeammembers().get(0).getRole());
+    Assert.assertEquals(TECHNICAL_DEBT, softwareInfo.getTechnicalDebt());
+    Assert.assertEquals(2, softwareInfo.getTechnologies().size());
+    Assert.assertEquals(TECHNOLOGY1, softwareInfo.getTechnologies().get(0));
+    Assert.assertEquals(TECHNOLOGY2, softwareInfo.getTechnologies().get(1));
+    Assert.assertEquals (VCS, softwareInfo.getVcs());
 
 
 

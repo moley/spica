@@ -78,7 +78,7 @@ public class Software extends ObjectWithStatus {
   @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
   private List<TeamMember> teamMembers;
 
-  private String technicalDebt;
+  private Integer technicalDebt;
 
 
   public boolean containsTokens (final String filter) {

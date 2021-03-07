@@ -1,6 +1,7 @@
 package org.spica.server.software.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.spica.commons.KeyValue;
 import org.spica.commons.SpicaProperties;
@@ -51,12 +52,14 @@ public class SoftwareMapper {
     software.setNeedsActionDescription(softwareInfo.getNeedsActionDescription());
     software.setRequirement(softwareInfo.getRequirement());
     List<TeamMember> teamMembers = new ArrayList<>();
-    for (TeamMemberInfo next: softwareInfo.getTeammembers())
-      teamMembers.add(toTeamMemberEntity(next));
+    if (softwareInfo.getTeammembers() != null) {
+      for (TeamMemberInfo next : softwareInfo.getTeammembers())
+        teamMembers.add(toTeamMemberEntity(next));
+    }
     software.setTeamMembers(teamMembers);
-
-
-
+    software.setTechnicalDebt(softwareInfo.getTechnicalDebt());
+    software.setTechnologies(softwareInfo.getTechnologies());
+    software.setVcs(softwareInfo.getVcs());
     return software;
 
   }
@@ -88,7 +91,25 @@ public class SoftwareMapper {
     softwareInfo.setGroup(toIdAndDisplaynameInfo(spicaProperties.getKeyValuePair(software.getSoftwaregroup())));
     softwareInfo.setState(toIdAndDisplaynameInfo(spicaProperties.getKeyValuePair(software.getState())));
     softwareInfo.setType(toIdAndDisplaynameInfo(spicaProperties.getKeyValuePair(software.getType())));
-
+    softwareInfo.setDeployment(toIdAndDisplaynameInfo(spicaProperties.getKeyValuePair(software.getDeployment())));
+    softwareInfo.setActive(software.getActive());
+    softwareInfo.setComplexity(software.getComplexity());
+    softwareInfo.setFormat(software.getFormat());
+    softwareInfo.setLocation(software.getLocation());
+    softwareInfo.setMaintainability(software.getMaintainability());
+    softwareInfo.setNeedsAction(software.getNeedsAction());
+    softwareInfo.setNeedsActionDescription(software.getNeedsActionDescription());
+    softwareInfo.setRequirement(software.getRequirement());
+    if (software.getTeamMembers() != null) {
+      List<TeamMemberInfo> teamMemberInfoCollection = new ArrayList<>();
+      for (TeamMember nextTeammember: software.getTeamMembers()) {
+        teamMemberInfoCollection.add(toTeamMemberInfo(nextTeammember));
+      }
+      softwareInfo.setTeammembers(teamMemberInfoCollection);
+    }
+    softwareInfo.setTechnicalDebt(software.getTechnicalDebt());
+    softwareInfo.setTechnologies(software.getTechnologies());
+    softwareInfo.setVcs(software.getVcs());
 
     if (software.getChildren() != null) {
       for (Software children : software.getChildren()) {
