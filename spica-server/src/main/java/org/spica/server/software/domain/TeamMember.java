@@ -1,6 +1,7 @@
 package org.spica.server.software.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class TeamMember {
+
+  @Id
+  @EqualsAndHashCode.Include
+  private String id;
 
   private String user;
 

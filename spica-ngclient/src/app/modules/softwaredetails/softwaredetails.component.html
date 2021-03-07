@@ -52,12 +52,12 @@
     <p-tabPanel header="PLANNING">
         <div class="p-fluid">
 
-        <div class="p-field p-grid">
+        <!--<div class="p-field p-grid">
             <label for="fieldTargetDate" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Target date</label>
             <div class="p-col-12 p-md-10">
                 <p-calendar [(ngModel)]="value"></p-calendar>
             </div>
-        </div>
+        </div>-->
         <div class="p-field p-grid">
           <label for="fieldDescription" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">State</label>
           <div class="p-col-12 p-md-10">
@@ -65,33 +65,33 @@
           </div>
         </div>
 
-        <div class="p-field p-grid">
+        <!--<div class="p-field p-grid">
             <label for="onlineHelp" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Needs online help</label>
             <div class="p-col-12 p-md-10">
                 <p-checkbox name="onlineHelp"></p-checkbox>
             </div>
-        </div>
+        </div>-->
 
-        <div class="p-field p-grid">
+        <!--<div class="p-field p-grid">
             <label for="monitoring" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Needs monitoring</label>
             <div class="p-col-12 p-md-10">
                 <p-checkbox name="monitoring"></p-checkbox>
             </div>
-        </div>
+        </div>-->
 
-        <div class="p-field p-grid">
+        <!--<div class="p-field p-grid">
             <label for="persistence" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Contains persistence</label>
             <div class="p-col-12 p-md-10">
                 <p-checkbox name="persistence"></p-checkbox>
             </div>
-        </div>
+        </div>-->
 
-        <div class="p-field p-grid">
+        <!--<div class="p-field p-grid">
             <label for="authentication" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Needs authentication</label>
             <div class="p-col-12 p-md-10">
                 <p-checkbox name="authentication"></p-checkbox>
             </div>
-        </div>
+        </div>-->
         </div>
           
         
@@ -146,12 +146,12 @@
             <p-dropdown [options]="constants.deployments"  optionLabel="name"></p-dropdown>
             </div>
           </div>
-          <div class="p-field p-grid">
+          <!--<div class="p-field p-grid">
             <label for="deploymentName" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Deploymentname</label>
             <div class="p-col-12 p-md-10">
             <input id="deploymentName" type="text" pInputText> 
             </div>
-          </div>
+          </div>-->
           <div class="p-field p-grid">
             <label for="location" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Location</label>
             <div class="p-col-12 p-md-10">
@@ -164,12 +164,12 @@
     <p-tabPanel header="DEVELOPMENT">
         <div class="p-fluid">
 
-        <div class="p-field p-grid">
+        <!--<div class="p-field p-grid">
             <label for="fitsArchitecture" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Fits architecture</label>
             <div class="p-col-12 p-md-10">
                 <p-checkbox name="fitsArchitecture"></p-checkbox>
             </div>
-        </div>
+        </div>-->
         <div class="p-field p-grid">
             <label for="architectureExceptions" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Description</label>
             <div class="p-col-12 p-md-10">
@@ -182,28 +182,33 @@
             <input id="vcs" type="text" pInputText> 
             </div>
           </div>
-          <div class="p-field p-grid">
+          <!--<div class="p-field p-grid">
             <label for="buildsystem" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Buildsystem</label>
             <div class="p-col-12 p-md-10">
             <input id="buildsystem" type="text" pInputText> 
             </div>
-          </div>
-          <div class="p-field p-grid">
+          </div>-->
+          <!--<div class="p-field p-grid">
             <label for="bugtracking" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">BugTracking</label>
             <div class="p-col-12 p-md-10">
             <input id="bugtracking" type="text" pInputText> 
             </div>
-          </div>
+          </div>-->
           </div>
     </p-tabPanel>
     <p-tabPanel header="TECHNOLOGY">
-        <p-pickList [source]="technologies" [target]="software.technologies">
-            <ng-template let-technology pTemplate="item">
-                <div>
-                    {{technology}}
-                </div>
-            </ng-template>
-        </p-pickList>
+
+        <div class="p-field p-grid">
+            <div class="p-col-12 p-md-10">
+            <input id="vcs" type="text" [(ngModel)]="newTechnology" pInputText> 
+            </div>
+            <p-button  label="+" (click)="addTechnology()"> 
+            </p-button>
+            
+          </div>
+
+        <p-listbox [options]="software.technologies"></p-listbox> 
+
 
     </p-tabPanel>
     

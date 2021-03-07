@@ -74,7 +74,7 @@ public class SpringSecurityConf extends WebSecurityConfigurerAdapter {
         .antMatchers("/api/**").authenticated()
         .antMatchers("/h2/**").permitAll();
     httpsecurity.httpBasic();
-    httpsecurity.logout().logoutSuccessHandler(logoutSuccessHandler()).logoutUrl("/api/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID");
+    httpsecurity.logout().logoutSuccessHandler(logoutSuccessHandler()).logoutUrl("/api/logout"); //.invalidateHttpSession(true).deleteCookies("JSESSIONID");
   }
 
 

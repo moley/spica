@@ -30,14 +30,11 @@ export class SoftwareDetailsComponent implements OnInit {
   relations: Relation[];
 
   allsoftware: SoftwareInfo[];
-  technologies: String [];
+
+  newTechnology: string;
   
 
   constructor(private softwareService: SoftwareService, private router:Router, private route: ActivatedRoute) {
-
-    this.technologies = ['Gradle', 'Java', 'C#'];
-
-    
    }
 
   ngOnInit() {
@@ -72,6 +69,16 @@ export class SoftwareDetailsComponent implements OnInit {
 
   stepToOverview () {
     this.router.navigate(['/app/software']);
+
+  }
+
+  addTechnology () {
+
+    this.software.technologies.push(this.newTechnology)
+    this.newTechnology = ''
+    console.log("Added : " + this.software.technologies)
+
+  
 
   }
 

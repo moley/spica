@@ -38,9 +38,12 @@ export class AuthenticationService {
   }
 
   logout() {
-    
     sessionStorage.removeItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME);
-    this.router.navigate(['/logout']);
+    this.http.get(this.basePath + `/logout`).toPromise().then(response => {
+      this.username = null;
+      this.password = null;
+      this.router.navigate(['/']);
+    });
 
     
   }

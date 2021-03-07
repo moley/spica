@@ -34,9 +34,12 @@ public class DemoDataCreator {
     SoftwareInfo softwareInfoSpica = new SoftwareInfo().id(UUID.randomUUID().toString()).name("Spica").description("Extensible, project-oriented development and communication platform");
     softwareInfoSpica = softwareInfoSpica.type(getIdAndDisplaynameInfo("spica.software.type.system")).group(getIdAndDisplaynameInfo("spica.software.group.development"));
     softwareInfoSpica = softwareInfoSpica.state(getIdAndDisplaynameInfo("spica.software.state.worked"));
+    softwareInfoSpica = softwareInfoSpica.technologies(Arrays.asList("Java", "Gradle"));
 
     SoftwareInfo softwareInfoSpicaServer = new SoftwareInfo().id(UUID.randomUUID().toString()).parentId(softwareInfoSpica.getId()).name("Spica-Server").description("Springboot Server, which provides functionality to improve automation and interactions in development teams");
+    softwareInfoSpicaServer = softwareInfoSpicaServer.technologies(Arrays.asList("SpringBoot", "REST"));
     SoftwareInfo softwareInfoSpicaCli = new SoftwareInfo().id(UUID.randomUUID().toString()).parentId(softwareInfoSpica.getId()).name("Spica-CLI").description("Commandline Interface providing integration between the console and the spica server");
+    softwareInfoSpicaCli = softwareInfoSpicaCli.technologies(Arrays.asList("ConsoleUI"));
 
     SoftwareInfo softwareInfoSpicaJenkinsIntegration = new SoftwareInfo().id(UUID.randomUUID().toString()).parentId(softwareInfoSpicaCli.getId()).name("Spica Jenkins Integration").description("Provides automation of Jenkins");
     SoftwareInfo softwareInfoSpicaBitbucketIntegration = new SoftwareInfo().id(UUID.randomUUID().toString()).parentId(softwareInfoSpicaCli.getId()).name("Spica Bitbucket Integration").description("Provides automation of Bitbucket");

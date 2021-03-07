@@ -33,6 +33,8 @@ import {CheckboxModule} from 'primeng/checkbox';
 import {TableModule} from 'primeng/table';
 import {PickListModule} from 'primeng/picklist';
 import {PasswordModule} from 'primeng/password';
+import {ListboxModule} from 'primeng/listbox';
+
 
 
 
@@ -103,7 +105,9 @@ import { NodeService } from './modules/software/nodeservice';
     CheckboxModule, 
     TableModule, 
     PickListModule,
-    PasswordModule
+    PasswordModule, 
+    ListboxModule
+
     
 
     
