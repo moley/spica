@@ -74,7 +74,7 @@ export class SoftwareDetailsComponent implements OnInit {
 
   addTechnology () {
 
-    this.software.technologies.push(this.newTechnology)
+    this.software.technologies = [...this.software.technologies, this.newTechnology];
     this.newTechnology = ''
     console.log("Added : " + this.software.technologies)
 

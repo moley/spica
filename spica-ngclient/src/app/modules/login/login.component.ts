@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Password } from 'primeng/password';
 import { AuthenticationService } from './auth.service';
 
 @Component({
@@ -22,6 +23,8 @@ export class LoginComponent implements OnInit {
     private authenticationService: AuthenticationService) {   }
 
   ngOnInit() {
+
+    Password
   }
 
   handleLogin() {

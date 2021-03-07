@@ -73,6 +73,7 @@ public class SpringSecurityConf extends WebSecurityConfigurerAdapter {
         .antMatchers( "/app/admin").authenticated()
         .antMatchers("/api/**").authenticated()
         .antMatchers("/h2/**").permitAll();
+    //httpsecurity.csrf().ignoringAntMatchers("/h2/**");
     httpsecurity.httpBasic();
     httpsecurity.logout().logoutSuccessHandler(logoutSuccessHandler()).logoutUrl("/api/logout"); //.invalidateHttpSession(true).deleteCookies("JSESSIONID");
   }

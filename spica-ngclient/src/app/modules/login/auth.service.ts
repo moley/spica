@@ -10,10 +10,8 @@ import { BASE_PATH } from '../generated/links'; //todo make our own constant
 })
 export class AuthenticationService {
 
-  USER_NAME_SESSION_ATTRIBUTE_NAME = 'authenticatedUser'
-
-  public username
-  public password
+  USER_ATTRIBUTE = 'authenticatedUser'
+  PWD_ATTRIBUTE = 'authenticatedPassword'
 
   constructor(@Inject(BASE_PATH) private basePath: string, private router: Router, private http: HttpClient) {
 
@@ -23,8 +21,6 @@ export class AuthenticationService {
     console.log ("Authenticate user " + username + " via " + this.basePath)
     return this.http.get(this.basePath + `/basicauth`,
       { headers: { authorization: this.createBasicAuthToken(username, password) } }).pipe(map((res) => {
-        this.username = username;
-        this.password = password;
         this.registerSuccessfulLogin(username, password);
       }));
   }
@@ -34,14 +30,14 @@ export class AuthenticationService {
   }
 
   registerSuccessfulLogin(username, password) {
-    sessionStorage.setItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME, username)
+    sessionStorage.setItem(this.USER_ATTRIBUTE, username)
+    sessionStorage.setItem(this.PWD_ATTRIBUTE, password)
   }
 
   logout() {
-    sessionStorage.removeItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME);
+    sessionStorage.removeItem(this.USER_ATTRIBUTE);
+    sessionStorage.removeItem(this.PWD_ATTRIBUTE)
     this.http.get(this.basePath + `/logout`).toPromise().then(response => {
-      this.username = null;
-      this.password = null;
       this.router.navigate(['/']);
     });
 
@@ -49,14 +45,20 @@ export class AuthenticationService {
   }
 
   isUserLoggedIn() {
-    let user = sessionStorage.getItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME)
+    let user = sessionStorage.getItem(this.USER_ATTRIBUTE)
     if (user === null) return false
     return true
   }
 
   getLoggedInUserName() {
-    let user = sessionStorage.getItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME)
+    let user = sessionStorage.getItem(this.USER_ATTRIBUTE)
     if (user === null) return ''
     return user
   }
+
+  getLoggedInPassword () {
+    let pwd = sessionStorage.getItem(this.PWD_ATTRIBUTE)
+    return pwd;
+  }
+  
 }

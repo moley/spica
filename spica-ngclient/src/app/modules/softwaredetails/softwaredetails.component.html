@@ -36,13 +36,13 @@
           <div class="p-field p-grid">
             <label for="fieldType" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Type</label>
             <div class="p-col-12 p-md-10">
-            <p-dropdown id="fieldType" [options]="constants.types" [(ngModel)]="software.type" optionLabel="displayname" ></p-dropdown>
+            <p-dropdown id="fieldType" [options]="constants.types" placeholder="Select..." [(ngModel)]="software.type" optionLabel="displayname" ></p-dropdown>
             </div>
           </div>
           <div class="p-field p-grid">
             <label for="fieldGroup" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Group</label>
             <div class="p-col-12 p-md-10">
-            <p-dropdown id="fieldGroup" [options]="constants.groups" [(ngModel)]="software.group" optionLabel="displayname"></p-dropdown>
+            <p-dropdown id="fieldGroup" [options]="constants.groups" placeholder="Select..." [(ngModel)]="software.group" optionLabel="displayname"></p-dropdown>
             </div>
           </div>
 
@@ -61,7 +61,7 @@
         <div class="p-field p-grid">
           <label for="fieldDescription" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">State</label>
           <div class="p-col-12 p-md-10">
-          <p-dropdown [options]="constants.states" [(ngModel)]="software.state" optionLabel="displayname"></p-dropdown>
+          <p-dropdown [options]="constants.states" placeholder="Select..." [(ngModel)]="software.state" optionLabel="displayname"></p-dropdown>
           </div>
         </div>
 
@@ -109,7 +109,7 @@
             <ng-template pTemplate="body" let-member>
                 <tr>
                     <td>{{member.user}}</td>
-                    <td><p-dropdown [options]="constants.roles"  optionLabel="displayname"></p-dropdown>
+                    <td><p-dropdown [options]="constants.roles" placeholder="Select..." optionLabel="displayname"></p-dropdown>
                     </td>
                 </tr>
             </ng-template>
@@ -129,7 +129,7 @@
             <ng-template pTemplate="body" let-connection>
                 <tr>
                     <td>uses</td>
-                    <td><p-dropdown [options]="allsoftware"  optionLabel="name"></p-dropdown></td>
+                    <td><p-dropdown [options]="allsoftware" placeholder="Select..." optionLabel="name"></p-dropdown></td>
                 </tr>
             </ng-template>
         </p-table>
@@ -143,7 +143,7 @@
         <div class="p-field p-grid">
             <label for="deployments" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Deployment</label>
             <div class="p-col-12 p-md-10">
-            <p-dropdown [options]="constants.deployments"  optionLabel="name"></p-dropdown>
+            <p-dropdown [options]="constants.deployments" placeholder="Select..."  optionLabel="name"></p-dropdown>
             </div>
           </div>
           <!--<div class="p-field p-grid">
@@ -171,13 +171,13 @@
             </div>
         </div>-->
         <div class="p-field p-grid">
-            <label for="architectureExceptions" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Description</label>
+            <label for="architectureExceptions" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Default architecture exceptions</label>
             <div class="p-col-12 p-md-10">
             <textarea id="architectureExceptions" type="text" rows="6" pInputTextarea></textarea>
             </div>
           </div>
           <div class="p-field p-grid">
-            <label for="vcs" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Name</label>
+            <label for="vcs" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Versioncontrolsystem</label>
             <div class="p-col-12 p-md-10">
             <input id="vcs" type="text" pInputText> 
             </div>
