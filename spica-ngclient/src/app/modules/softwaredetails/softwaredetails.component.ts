@@ -59,7 +59,7 @@ export class SoftwareDetailsComponent implements OnInit {
   }
 
   save () {
-    console.log(this.software.type)
+    console.log("save called for " + this.software.id)
     this.softwareService.updateSoftware(this.software.id, this.software).subscribe(
       x => this.software = x,
         err => console.error('Call to update software ' + this.software.id + ' by ID got an error: ' + err),
@@ -68,11 +68,13 @@ export class SoftwareDetailsComponent implements OnInit {
   }
 
   stepToOverview () {
+    console.log("stepToOverview called")
     this.router.navigate(['/app/software']);
 
   }
 
   addTechnology () {
+    console.log("addTechnology called with " + this.newTechnology + "for " + this.software.id)
 
     this.software.technologies = [...this.software.technologies, this.newTechnology];
     this.newTechnology = ''
