@@ -1,12 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SoftwareInfo, SoftwareService } from '../generated/software';
+import { SoftwareInfo, SoftwareService, TeamMemberInfo } from '../generated/software';
 import { SoftwareConstantsInfo } from '../generated/software/model/softwareConstantsInfo';
+import { IdAndDisplaynameInfo } from '../generated/software/model/idAndDisplaynameInfo';
 
-interface IdAndName {
-  name: string,
-  id: string
-}
 
 interface Relation {
   type: string,
@@ -14,12 +11,12 @@ interface Relation {
 }
 
 
+
 @Component({
   selector: 'app-softwaredetails',
   templateUrl: './softwaredetails.component.html',
   styleUrls: ['./softwaredetails.component.scss']
 })
-
 export class SoftwareDetailsComponent implements OnInit {
 
   @Input()
@@ -31,7 +28,6 @@ export class SoftwareDetailsComponent implements OnInit {
 
   allsoftware: SoftwareInfo[];
 
-  newTechnology: string;
   
 
   constructor(private softwareService: SoftwareService, private router:Router, private route: ActivatedRoute) {
@@ -62,7 +58,7 @@ export class SoftwareDetailsComponent implements OnInit {
     console.log("save called for " + this.software.id)
     this.softwareService.updateSoftware(this.software.id, this.software).subscribe(
       x => this.software = x,
-        err => console.error('Call to update software ' + this.software.id + ' by ID got an error: ' + err),
+        err => console.error('Call to update software ' + this.software.id + ' by ID got an error: ' + JSON.stringify(err)),
         () => console.info('Call to update software by ID finished)'),
       );
   }
@@ -74,14 +70,40 @@ export class SoftwareDetailsComponent implements OnInit {
   }
 
   addTechnology () {
-    console.log("addTechnology called with " + this.newTechnology + "for " + this.software.id)
+    console.log("addTechnology called")
 
-    this.software.technologies = [...this.software.technologies, this.newTechnology];
-    this.newTechnology = ''
+    
+    var newTechObject: IdAndDisplaynameInfo = {};
+
+    this.software.technologies = [...this.software.technologies, newTechObject ];
     console.log("Added : " + this.software.technologies)
-
+  }
   
+  removeTechnology (technology: IdAndDisplaynameInfo) {
+    console.log("removetechnology called with selected technology " + JSON.stringify(technology));
+    this.software.technologies = this.software.technologies.filter(obj => obj !== technology)
+  }
 
+  removeRelation (relation: Relation) {
+    console.log ("removeRelation called with selected relation " + JSON.stringify(relation))
+    this.relations = this.relations.filter(obj => obj !== relation)
+  }
+
+  removeContact (contact: TeamMemberInfo) {
+    console.log ("removeContact called with selected contact " + JSON.stringify(contact))
+    this.software.teammembers = this.software.teammembers.filter(obj => obj !== contact)
+  }
+
+  addContact () {
+    console.log ("addContact called")
+    var newTeamMember: TeamMemberInfo = {}
+    this.software.teammembers = [...this.software.teammembers, newTeamMember];
+  }
+
+  addRelation () {
+    console.log ("addRelation called")
+    var newRelation: Relation = {type: 'uses', target: null}
+    this.relations = [...this.relations, newRelation];
   }
 
 }

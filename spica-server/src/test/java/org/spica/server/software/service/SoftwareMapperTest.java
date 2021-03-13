@@ -40,11 +40,13 @@ public class SoftwareMapperTest {
   private final String TECHNOLOGY2 = "Java";
   private final List<String> TECHNOLOGIES = Arrays.asList(TECHNOLOGY1, TECHNOLOGY2);
   private final String VCS = "VCS";
+  private final String ARCHITECTURE_EXCEPTIONS = "ARCHITECTURE_EXCEPTIONS";
 
 
 
 
   private SpicaProperties spicaProperties = new SpicaProperties();
+
 
   @Test
   public void toSoftwareEntity () {
@@ -68,10 +70,13 @@ public class SoftwareMapperTest {
     softwareInfo.setNeedsAction(true);
     softwareInfo.setNeedsActionDescription(NEEDS_ACTION);
     softwareInfo.setRequirement(REQUIREMENT);
-    softwareInfo.setTeammembers(Arrays.asList(new TeamMemberInfo().user(TEAMMEMBER_NAME).role(TEAMMEMBER_ROLE)));
+    softwareInfo.setTeammembers(Arrays.asList(new TeamMemberInfo().user(TEAMMEMBER_NAME).role(new IdAndDisplaynameInfo().displayname(TEAMMEMBER_ROLE).id(TEAMMEMBER_ROLE))));
     softwareInfo.setTechnicalDebt(TECHNICAL_DEBT);
-    softwareInfo.setTechnologies(TECHNOLOGIES);
+    softwareInfo.setTechnologies(Arrays.asList(new IdAndDisplaynameInfo().displayname(TECHNOLOGY1).id(TECHNOLOGY1),
+                                               new IdAndDisplaynameInfo().displayname(TECHNOLOGY2).id(TECHNOLOGY2)));
     softwareInfo.setVcs(VCS);
+    softwareInfo.setFitsArchitecture(Boolean.TRUE);
+    softwareInfo.setArchitectureExceptions(ARCHITECTURE_EXCEPTIONS);
 
     Software software = softwareMapper.toSoftwareEntity(softwareInfo);
 
@@ -94,6 +99,7 @@ public class SoftwareMapperTest {
     Assert.assertEquals(NEEDS_ACTION, software.getNeedsActionDescription());
     Assert.assertEquals(REQUIREMENT, software.getRequirement());
     Assert.assertEquals(1, software.getTeamMembers().size());
+    Assert.assertNotNull (software.getTeamMembers().get(0).getId());
     Assert.assertEquals(TEAMMEMBER_NAME, software.getTeamMembers().get(0).getUser());
     Assert.assertEquals(TEAMMEMBER_ROLE, software.getTeamMembers().get(0).getRole());
     Assert.assertEquals(TECHNICAL_DEBT, software.getTechnicalDebt());
@@ -101,9 +107,8 @@ public class SoftwareMapperTest {
     Assert.assertEquals(TECHNOLOGY1, software.getTechnologies().get(0));
     Assert.assertEquals(TECHNOLOGY2, software.getTechnologies().get(1));
     Assert.assertEquals (VCS, software.getVcs());
-
-
-
+    Assert.assertTrue (software.getFitsArchitecture());
+    Assert.assertEquals (ARCHITECTURE_EXCEPTIONS, software.getArchitectureExceptions());
   }
 
   @Test
@@ -135,6 +140,8 @@ public class SoftwareMapperTest {
     software.setTechnicalDebt(TECHNICAL_DEBT);
     software.setTechnologies(TECHNOLOGIES);
     software.setVcs(VCS);
+    software.setFitsArchitecture(true);
+    software.setArchitectureExceptions(ARCHITECTURE_EXCEPTIONS);
 
     SoftwareInfo softwareInfo = softwareMapper.toSoftwareInfo(software);
 
@@ -158,15 +165,14 @@ public class SoftwareMapperTest {
     Assert.assertEquals(REQUIREMENT, softwareInfo.getRequirement());
     Assert.assertEquals(1, softwareInfo.getTeammembers().size());
     Assert.assertEquals(TEAMMEMBER_NAME, softwareInfo.getTeammembers().get(0).getUser());
-    Assert.assertEquals(TEAMMEMBER_ROLE, softwareInfo.getTeammembers().get(0).getRole());
+    Assert.assertEquals(TEAMMEMBER_ROLE, softwareInfo.getTeammembers().get(0).getRole().getId());
     Assert.assertEquals(TECHNICAL_DEBT, softwareInfo.getTechnicalDebt());
     Assert.assertEquals(2, softwareInfo.getTechnologies().size());
-    Assert.assertEquals(TECHNOLOGY1, softwareInfo.getTechnologies().get(0));
-    Assert.assertEquals(TECHNOLOGY2, softwareInfo.getTechnologies().get(1));
+    Assert.assertEquals(TECHNOLOGY1, softwareInfo.getTechnologies().get(0).getId());
+    Assert.assertEquals(TECHNOLOGY2, softwareInfo.getTechnologies().get(1).getDisplayname());
     Assert.assertEquals (VCS, softwareInfo.getVcs());
-
-
-
+    Assert.assertTrue (softwareInfo.getFitsArchitecture());
+    Assert.assertEquals (ARCHITECTURE_EXCEPTIONS, softwareInfo.getArchitectureExceptions());
   }
 
   @Test

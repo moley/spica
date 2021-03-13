@@ -164,10 +164,12 @@ components:
     TeamMemberInfo:
       type: "object"
       properties:
+        id:
+          type: "string"
         user:
           type: "string"
         role:
-          type: "string"
+          $ref: "#/components/schema/IdAndDisplaynameInfo"
 
     SoftwareInfo:
       type: "object"
@@ -194,6 +196,8 @@ components:
           $ref: "#/components/schema/IdAndDisplaynameInfo"
         state:
           $ref: "#/components/schema/IdAndDisplaynameInfo"
+        stateAdditionalText:
+          type: "string"
         active:
           type: "boolean"
         needsAction:
@@ -206,6 +210,31 @@ components:
           type: "integer"
         maintainability:
           type: "integer"
+        fitsArchitecture:
+          type: "boolean"
+        architectureExceptions:
+          type: "string"
+        buildsystem:
+          type: "string"
+        bugtracking:
+          type: "string"
+        targetDate:
+          type: "string"
+          format: date
+          example: "2019-05-17"
+
+        needsOnlineHelp:
+          type: "boolean"
+        needsMonitoring:
+          type: "boolean"
+        withPersistence:
+          type: "boolean"
+        withUi:
+          type: "boolean"
+        withAuthentication:
+          type: "boolean"
+        deploymentName:
+          type: "string"
 
 
         teammembers:
@@ -218,7 +247,7 @@ components:
         technologies:
           type: array
           items:
-            type: "string"
+            $ref: "#/components/schema/IdAndDisplaynameInfo"
         children:
           type: array
           items:
@@ -227,6 +256,8 @@ components:
     RelationInfo:
       type: "object"
       properties:
+        id:
+          type: "string"
         relationtype:
           type: "string"
         source:
@@ -261,4 +292,3 @@ components:
           type: array
           items:
             $ref: "#/components/schema/IdAndDisplaynameInfo"
-

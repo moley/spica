@@ -23,23 +23,28 @@ public class DemoDataCreator {
 
   private SpicaProperties spicaProperties = new SpicaProperties();
 
-  private IdAndDisplaynameInfo getIdAndDisplaynameInfo (final String key) {
+  private IdAndDisplaynameInfo getIdAndDisplaynameInfoFromConfiguration(final String key) {
     KeyValue keyValuePair = spicaProperties.getKeyValuePair(key);
     return softwareMapper.toIdAndDisplaynameInfo(keyValuePair);
+  }
+
+  private IdAndDisplaynameInfo getIdAndDisplaynameInfoFromString (final String string) {
+    return new IdAndDisplaynameInfo().displayname(string).id(string);
   }
 
   public void createSoftware () {
     log.info("Create demodata software");
 
     SoftwareInfo softwareInfoSpica = new SoftwareInfo().id(UUID.randomUUID().toString()).name("Spica").description("Extensible, project-oriented development and communication platform");
-    softwareInfoSpica = softwareInfoSpica.type(getIdAndDisplaynameInfo("spica.software.type.system")).group(getIdAndDisplaynameInfo("spica.software.group.development"));
-    softwareInfoSpica = softwareInfoSpica.state(getIdAndDisplaynameInfo("spica.software.state.worked"));
-    softwareInfoSpica = softwareInfoSpica.technologies(Arrays.asList("Java", "Gradle"));
+    softwareInfoSpica = softwareInfoSpica.type(getIdAndDisplaynameInfoFromConfiguration("spica.software.type.system")).group(
+        getIdAndDisplaynameInfoFromConfiguration("spica.software.group.development"));
+    softwareInfoSpica = softwareInfoSpica.state(getIdAndDisplaynameInfoFromConfiguration("spica.software.state.worked"));
+    softwareInfoSpica = softwareInfoSpica.technologies(Arrays.asList(getIdAndDisplaynameInfoFromString("Java"), getIdAndDisplaynameInfoFromString("Gradle")));
 
     SoftwareInfo softwareInfoSpicaServer = new SoftwareInfo().id(UUID.randomUUID().toString()).parentId(softwareInfoSpica.getId()).name("Spica-Server").description("Springboot Server, which provides functionality to improve automation and interactions in development teams");
-    softwareInfoSpicaServer = softwareInfoSpicaServer.technologies(Arrays.asList("SpringBoot", "REST"));
+    softwareInfoSpicaServer = softwareInfoSpicaServer.technologies(Arrays.asList(getIdAndDisplaynameInfoFromString("SpringBoot"), getIdAndDisplaynameInfoFromString("REST")));
     SoftwareInfo softwareInfoSpicaCli = new SoftwareInfo().id(UUID.randomUUID().toString()).parentId(softwareInfoSpica.getId()).name("Spica-CLI").description("Commandline Interface providing integration between the console and the spica server");
-    softwareInfoSpicaCli = softwareInfoSpicaCli.technologies(Arrays.asList("ConsoleUI"));
+    softwareInfoSpicaCli = softwareInfoSpicaCli.technologies(Arrays.asList(getIdAndDisplaynameInfoFromString("ConsoleUI")));
 
     SoftwareInfo softwareInfoSpicaJenkinsIntegration = new SoftwareInfo().id(UUID.randomUUID().toString()).parentId(softwareInfoSpicaCli.getId()).name("Spica Jenkins Integration").description("Provides automation of Jenkins");
     SoftwareInfo softwareInfoSpicaBitbucketIntegration = new SoftwareInfo().id(UUID.randomUUID().toString()).parentId(softwareInfoSpicaCli.getId()).name("Spica Bitbucket Integration").description("Provides automation of Bitbucket");

@@ -75,6 +75,11 @@ public class Software extends ObjectWithStatus {
 
   private String requirement;
 
+  private Boolean fitsArchitecture;
+
+  private String architectureExceptions;
+
+
   @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
   private List<TeamMember> teamMembers;
 

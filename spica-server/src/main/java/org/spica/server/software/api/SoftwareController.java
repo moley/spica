@@ -80,6 +80,9 @@ public class SoftwareController implements SoftwareApi {
     List<KeyValue> keyValuePairsRelationGroups = spicaProperties.getKeyValuePairs("spica.software.group");
     softwareConstantsInfo.setGroups(softwareMapper.toIdAndDisplaynameInfos(keyValuePairsRelationGroups));
 
+    List<KeyValue> keyValuePairsRelationRoles = spicaProperties.getKeyValuePairs("spica.software.role");
+    softwareConstantsInfo.setRoles(softwareMapper.toIdAndDisplaynameInfos(keyValuePairsRelationRoles));
+
     return ResponseEntity.ok(softwareConstantsInfo);
 
   }

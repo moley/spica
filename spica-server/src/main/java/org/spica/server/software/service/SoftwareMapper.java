@@ -1,8 +1,8 @@
 package org.spica.server.software.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import org.spica.commons.KeyValue;
 import org.spica.commons.SpicaProperties;
 import org.spica.server.software.domain.Software;
@@ -22,7 +22,7 @@ public class SoftwareMapper {
     if (softwareInfo.getId() == null)
       throw new IllegalStateException("Software " + softwareInfo.toString() + " does not defined an ID");
 
-    software.setId(softwareInfo.getId());
+    software.setId(softwareInfo.getId() != null ? softwareInfo.getId() : UUID.randomUUID().toString());
     software.setName(softwareInfo.getName());
     software.setDescription(softwareInfo.getDescription());
     software.setParentId(softwareInfo.getParentId());
@@ -55,26 +55,36 @@ public class SoftwareMapper {
     if (softwareInfo.getTeammembers() != null) {
       for (TeamMemberInfo next : softwareInfo.getTeammembers())
         teamMembers.add(toTeamMemberEntity(next));
+      software.setTeamMembers(teamMembers);
     }
-    software.setTeamMembers(teamMembers);
+
     software.setTechnicalDebt(softwareInfo.getTechnicalDebt());
-    software.setTechnologies(softwareInfo.getTechnologies());
+    List<String> technologies = new ArrayList<>();
+    if (softwareInfo.getTechnologies() != null) {
+      for (IdAndDisplaynameInfo next: softwareInfo.getTechnologies()) {
+        technologies.add(next.getId());
+      }
+      software.setTechnologies(technologies);
+    }
     software.setVcs(softwareInfo.getVcs());
+    software.setFitsArchitecture(softwareInfo.getFitsArchitecture());
+    software.setArchitectureExceptions(softwareInfo.getArchitectureExceptions());
     return software;
 
   }
 
   public TeamMember toTeamMemberEntity (final TeamMemberInfo teamMemberInfo) {
     TeamMember teamMember = new TeamMember();
+    teamMember.setId(teamMemberInfo.getId() != null ? teamMemberInfo.getId() : UUID.randomUUID().toString());
     teamMember.setUser(teamMemberInfo.getUser());
-    teamMember.setRole(teamMemberInfo.getRole());
+    teamMember.setRole(teamMemberInfo.getRole() != null ? teamMemberInfo.getRole().getId() : null);
     return teamMember;
   }
 
   public TeamMemberInfo toTeamMemberInfo (final TeamMember teamMember) {
     TeamMemberInfo teamMemberInfo = new TeamMemberInfo();
     teamMemberInfo.setUser(teamMember.getUser());
-    teamMemberInfo.setRole(teamMember.getRole());
+    teamMemberInfo.setRole(toIdAndDisplaynameInfo(spicaProperties.getKeyValuePair(teamMember.getRole())));
     return teamMemberInfo;
   }
 
@@ -108,7 +118,14 @@ public class SoftwareMapper {
       softwareInfo.setTeammembers(teamMemberInfoCollection);
     }
     softwareInfo.setTechnicalDebt(software.getTechnicalDebt());
-    softwareInfo.setTechnologies(software.getTechnologies());
+    if (software.getTechnologies() != null) {
+      List<IdAndDisplaynameInfo> technologyInfos = new ArrayList<>();
+      for (String next: software.getTechnologies()) {
+        technologyInfos.add(new IdAndDisplaynameInfo().displayname(next).id(next));
+      }
+      softwareInfo.setTechnologies(technologyInfos);
+
+    }
     softwareInfo.setVcs(software.getVcs());
 
     if (software.getChildren() != null) {
@@ -117,6 +134,9 @@ public class SoftwareMapper {
         softwareInfo.addChildrenItem(nextChildrenInfo);
       }
     }
+
+    softwareInfo.setFitsArchitecture(software.getFitsArchitecture());
+    softwareInfo.setArchitectureExceptions(software.getArchitectureExceptions());
     return softwareInfo;
   }
 
