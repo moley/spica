@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.UUID;
 import org.spica.commons.KeyValue;
 import org.spica.commons.SpicaProperties;
+import org.spica.server.software.domain.Relation;
 import org.spica.server.software.domain.Software;
 import org.spica.server.software.domain.TeamMember;
 import org.spica.server.software.model.IdAndDisplaynameInfo;
+import org.spica.server.software.model.RelationInfo;
 import org.spica.server.software.model.SoftwareInfo;
 import org.spica.server.software.model.TeamMemberInfo;
 import org.springframework.stereotype.Service;
@@ -18,11 +20,12 @@ public class SoftwareMapper {
   private SpicaProperties spicaProperties = new SpicaProperties();
 
   public Software toSoftwareEntity(final SoftwareInfo softwareInfo) {
-    Software software = new Software();
-    if (softwareInfo.getId() == null)
-      throw new IllegalStateException("Software " + softwareInfo.toString() + " does not defined an ID");
+    if (softwareInfo == null)
+      throw new IllegalArgumentException("Parameter softwareInfo must not be null");
 
+    Software software = new Software();
     software.setId(softwareInfo.getId() != null ? softwareInfo.getId() : UUID.randomUUID().toString());
+
     software.setName(softwareInfo.getName());
     software.setDescription(softwareInfo.getDescription());
     software.setParentId(softwareInfo.getParentId());
@@ -83,9 +86,26 @@ public class SoftwareMapper {
 
   public TeamMemberInfo toTeamMemberInfo (final TeamMember teamMember) {
     TeamMemberInfo teamMemberInfo = new TeamMemberInfo();
+    teamMemberInfo.setId(teamMember.getId() != null ? teamMember.getId(): UUID.randomUUID().toString());
     teamMemberInfo.setUser(teamMember.getUser());
     teamMemberInfo.setRole(toIdAndDisplaynameInfo(spicaProperties.getKeyValuePair(teamMember.getRole())));
     return teamMemberInfo;
+  }
+
+  public Relation toRelationEntity (final RelationInfo relationInfo) {
+    Relation relation = new Relation();
+    relation.setId(relationInfo.getId() != null ? relationInfo.getId() : UUID.randomUUID().toString());
+    relation.setSource(toSoftwareEntity(relationInfo.getSource()));
+    relation.setTarget(toSoftwareEntity(relationInfo.getTarget()));
+    return relation;
+  }
+
+  public RelationInfo toRelationInfo (final Relation relation) {
+    RelationInfo relationInfo = new RelationInfo();
+    relationInfo.setId(relation.getId() != null ? relation.getId(): UUID.randomUUID().toString());
+    relationInfo.setSource(toSoftwareInfo(relation.getSource()));
+    relationInfo.setTarget(toSoftwareInfo(relation.getTarget()));
+    return relationInfo;
   }
 
   public SoftwareInfo toSoftwareInfo(final Software software) {
@@ -95,7 +115,7 @@ public class SoftwareMapper {
     SoftwareInfo softwareInfo = new SoftwareInfo();
     softwareInfo.setDescription(software.getDescription());
     softwareInfo.setName(software.getName());
-    softwareInfo.setId(software.getId());
+    softwareInfo.setId(software.getId() != null ? software.getId() : UUID.randomUUID().toString());
     softwareInfo.setParentId(software.getParentId());
     softwareInfo.setDeployment(toIdAndDisplaynameInfo(spicaProperties.getKeyValuePair(software.getDeployment())));
     softwareInfo.setGroup(toIdAndDisplaynameInfo(spicaProperties.getKeyValuePair(software.getSoftwaregroup())));

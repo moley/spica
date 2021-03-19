@@ -17,12 +17,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Relationship extends ObjectWithStatus {
+public class Relation extends ObjectWithStatus {
 
   @Id
   @EqualsAndHashCode.Include
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+  private String id;
 
   @OneToOne
   private Software source;

@@ -3,12 +3,14 @@ package org.spica.server.software.api;
 import io.swagger.annotations.ApiParam;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.spica.commons.KeyValue;
 import org.spica.commons.SpicaProperties;
 import org.spica.server.software.model.IdAndDisplaynameInfo;
+import org.spica.server.software.model.RelationInfo;
 import org.spica.server.software.model.SoftwareConstantsInfo;
 import org.spica.server.software.model.SoftwareInfo;
 import org.spica.server.software.service.SoftwareMapper;
@@ -36,14 +38,27 @@ public class SoftwareController implements SoftwareApi {
 
   @Override
   public ResponseEntity<List<SoftwareInfo>> getSoftwareList() {
-    log.info("call getSoftware");
-    return ResponseEntity.of(Optional.of(softwareService.getSoftwareList()));
+    log.info("call getSoftwareList");
+    return ResponseEntity.of(Optional.of(softwareService.getSoftwareTree()));
+  }
+
+  @Override
+  public ResponseEntity<List<SoftwareInfo>> getOtherSoftwareList(@ApiParam(value = "",required=true) @PathVariable("meId") String meId) {
+    log.info("call getOtherSoftwareList");
+
+    List<SoftwareInfo> allSoftware = softwareService.getSoftwareList();
+    List<SoftwareInfo> filteredSoftware = allSoftware.stream().filter(line -> ! line.getId().equals(meId)).collect(Collectors.toList());
+
+    return ResponseEntity.of(Optional.of(filteredSoftware));
+
   }
 
   @Override
   public ResponseEntity<SoftwareInfo> getSoftwareById(@ApiParam(value = "",required=true) @PathVariable("softwareId") String softwareId) {
     return ResponseEntity.of(Optional.of(softwareService.getSoftwareById(softwareId)));
   }
+
+
 
   @Override
   public ResponseEntity<Void> setSoftwareList(@ApiParam(value = "" ,required=true )  @Valid @RequestBody List<SoftwareInfo> softwareInfo) {
@@ -85,6 +100,17 @@ public class SoftwareController implements SoftwareApi {
 
     return ResponseEntity.ok(softwareConstantsInfo);
 
+  }
+
+  @Override public ResponseEntity<List<RelationInfo>> getRelationsBySoftware(@ApiParam(value = "",required=true) @PathVariable("softwareId") String softwareId) {
+    List<RelationInfo> relationsBySoftwareId = softwareService.getRelationsBySoftwareId(softwareId);
+    return ResponseEntity.ok(relationsBySoftwareId);
+  }
+
+  @Override public ResponseEntity<Void> updateRelations(@ApiParam(value = "" ,required=true )  @Valid @RequestBody List<RelationInfo> relationInfo) {
+    log.info("Update relations with " + relationInfo);
+    softwareService.updateRelations(relationInfo);
+    return ResponseEntity.ok().build();
   }
 
   @Override public ResponseEntity<List<IdAndDisplaynameInfo>> getDeployments() {

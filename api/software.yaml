@@ -25,6 +25,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/IdAndDisplaynameInfo"
 
+
   /software/constants/list:
     get:
       tags:
@@ -112,6 +113,28 @@ paths:
         '200':
           description: OK
 
+  /software/others/list/{meId}:
+    get:
+      tags:
+        - software
+      operationId: "getOtherSoftwareList"
+      description: "get list of other software"
+      parameters:
+        - in: path
+          name: meId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'list of other software items'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SoftwareInfo"
+
   /software/list:
     get:
       tags:
@@ -144,6 +167,46 @@ paths:
       responses:
         '200':
           description: 'Null response'
+
+  /software/relations/{softwareId}:
+    get:
+      tags:
+        - software
+      operationId: "getRelationsBySoftware"
+      description: "get relations by software"
+      parameters:
+        - in: path
+          name: softwareId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: software
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RelationInfo"
+
+  /software/relations:
+    put:
+      tags:
+        - software
+      operationId: "updateRelations"
+      description: "update existing relations"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/RelationInfo"
+      responses:
+        '200':
+          description: OK
 
 components:
   securitySchemes:

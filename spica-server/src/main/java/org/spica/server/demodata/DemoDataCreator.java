@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.spica.commons.KeyValue;
 import org.spica.commons.SpicaProperties;
 import org.spica.server.software.model.IdAndDisplaynameInfo;
+import org.spica.server.software.model.RelationInfo;
 import org.spica.server.software.model.SoftwareInfo;
 import org.spica.server.software.service.SoftwareMapper;
 import org.spica.server.software.service.SoftwareService;
@@ -41,9 +42,9 @@ public class DemoDataCreator {
     softwareInfoSpica = softwareInfoSpica.state(getIdAndDisplaynameInfoFromConfiguration("spica.software.state.worked"));
     softwareInfoSpica = softwareInfoSpica.technologies(Arrays.asList(getIdAndDisplaynameInfoFromString("Java"), getIdAndDisplaynameInfoFromString("Gradle")));
 
-    SoftwareInfo softwareInfoSpicaServer = new SoftwareInfo().id(UUID.randomUUID().toString()).parentId(softwareInfoSpica.getId()).name("Spica-Server").description("Springboot Server, which provides functionality to improve automation and interactions in development teams");
+    SoftwareInfo softwareInfoSpicaServer = new SoftwareInfo().parentId(softwareInfoSpica.getId()).id(UUID.randomUUID().toString()).name("Spica-Server").description("Springboot Server, which provides functionality to improve automation and interactions in development teams");
     softwareInfoSpicaServer = softwareInfoSpicaServer.technologies(Arrays.asList(getIdAndDisplaynameInfoFromString("SpringBoot"), getIdAndDisplaynameInfoFromString("REST")));
-    SoftwareInfo softwareInfoSpicaCli = new SoftwareInfo().id(UUID.randomUUID().toString()).parentId(softwareInfoSpica.getId()).name("Spica-CLI").description("Commandline Interface providing integration between the console and the spica server");
+    SoftwareInfo softwareInfoSpicaCli = new SoftwareInfo().parentId(softwareInfoSpica.getId()).id(UUID.randomUUID().toString()).name("Spica-CLI").description("Commandline Interface providing integration between the console and the spica server");
     softwareInfoSpicaCli = softwareInfoSpicaCli.technologies(Arrays.asList(getIdAndDisplaynameInfoFromString("ConsoleUI")));
 
     SoftwareInfo softwareInfoSpicaJenkinsIntegration = new SoftwareInfo().id(UUID.randomUUID().toString()).parentId(softwareInfoSpicaCli.getId()).name("Spica Jenkins Integration").description("Provides automation of Jenkins");
@@ -63,8 +64,14 @@ public class DemoDataCreator {
     softwareInfoSpica.addChildrenItem(softwareInfoSpicaServer);
     softwareInfoSpica.addChildrenItem(softwareInfoSpicaCli);
 
-
     softwareService.setSoftwareList(Arrays.asList(softwareInfoSpica, softwareInfoJenkins, softwareInfoBitbucket, softwareInfoXmpp, softwareInfoMail));
+
+    RelationInfo spicaJenkinsRelation = new RelationInfo().id(UUID.randomUUID().toString()).source(softwareInfoSpicaJenkinsIntegration).target(softwareInfoJenkins);
+    RelationInfo spicaBitbucketRelation = new RelationInfo().id(UUID.randomUUID().toString()).source(softwareInfoSpicaBitbucketIntegration).target(softwareInfoBitbucket);
+    RelationInfo spicaXMPPServerRelation = new RelationInfo().id(UUID.randomUUID().toString()).source(softwareInfoSpicaXMPPIntegration).target(softwareInfoXmpp);
+    RelationInfo spicaMailServerRelation = new RelationInfo().id(UUID.randomUUID().toString()).source(softwareInfoSpicaMailIntegration).target(softwareInfoMail);
+    softwareService.setRelationList(Arrays.asList(spicaBitbucketRelation, spicaJenkinsRelation, spicaXMPPServerRelation, spicaMailServerRelation));
+
 
   }
 
