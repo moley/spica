@@ -97,7 +97,7 @@ public class SoftwareMapperTest {
     softwareInfo.setWithUi(true);
     softwareInfo.setWithSecurity(true);
     softwareInfo.setDeploymentName(DEPLOYMENT_NAME);
-    softwareInfo.setTargetDate("2012-10-12");
+    softwareInfo.setTargetDate("12.10.2012");
 
 
     Software software = softwareMapper.toSoftwareEntity(softwareInfo);
@@ -247,7 +247,7 @@ public class SoftwareMapperTest {
     Assert.assertTrue (softwareInfo.getWithSecurity());
     Assert.assertTrue (softwareInfo.getWithUi());
     Assert.assertEquals (DEPLOYMENT_NAME, softwareInfo.getDeploymentName());
-    Assert.assertEquals ("2020-12-10", softwareInfo.getTargetDate());
+    Assert.assertEquals ("10.12.2020", softwareInfo.getTargetDate());
 
 
   }

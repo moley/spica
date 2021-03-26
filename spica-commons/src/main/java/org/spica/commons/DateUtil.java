@@ -46,6 +46,14 @@ public class DateUtil {
         return localDate.format(formatter);
     }
 
+    public String getDateAsStringLongFormat(LocalDate localDate) {
+        if (localDate == null)
+            return "";
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
+        return localDate.format(formatter);
+    }
+
     /**
      * gets date from string
      *
@@ -79,7 +87,7 @@ public class DateUtil {
         else if (trimmed.length() == 10) {
             String day = dateAsString.substring(0, 2);
             String month = dateAsString.substring(3, 5);
-            String year = dateAsString.substring(6, 9);
+            String year = dateAsString.substring(6, 10);
             return LocalDate.of(Integer.valueOf(year).intValue(), Integer.valueOf(month).intValue(), Integer.valueOf(day).intValue());
 
         }

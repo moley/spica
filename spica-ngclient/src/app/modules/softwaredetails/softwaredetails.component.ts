@@ -35,7 +35,7 @@ export class SoftwareDetailsComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.softwareService.getSoftwareById(params.id).subscribe(
         x => {this.software = x;
-          console.log (this.software.targetDate)
+          console.log ("TargetDate: " + this.software.targetDate)
           this.image = this.sanitizer.bypassSecurityTrustUrl(this.imageType + this.software.screenshot);
          },
         err => console.error('Call to get software by ID recieved an error: ' + err),
@@ -68,8 +68,6 @@ export class SoftwareDetailsComponent implements OnInit {
   }
 
   save () {
-    console.log("save called for " + this.software.id)
-    console.log("date: " + this.software.targetDate)
     this.softwareService.updateSoftware(this.software.id, this.software).subscribe(
               x => {},
         err => console.error('Call to update software ' + this.software.id + ' by ID got an error: ' + JSON.stringify(err) + "-" + this.software?.id + "-"),

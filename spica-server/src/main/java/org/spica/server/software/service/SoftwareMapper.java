@@ -4,6 +4,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.spica.commons.DateUtil;
 import org.spica.commons.KeyValue;
 import org.spica.commons.SpicaProperties;
@@ -17,6 +18,7 @@ import org.spica.server.software.model.SoftwareInfo;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class SoftwareMapper {
 
   private SpicaProperties spicaProperties = new SpicaProperties();
@@ -166,7 +168,8 @@ public class SoftwareMapper {
     softwareInfo.setArchitectureExceptions(software.getArchitectureExceptions());
     softwareInfo.setChangeFrequency(software.getChangeFrequency());
     if (software.getTargetDate() != null)
-      softwareInfo.setTargetDate(dateUtil.getDateAsString(software.getTargetDate()));
+      softwareInfo.setTargetDate(dateUtil.getDateAsStringLongFormat(software.getTargetDate()));
+
     softwareInfo.setWithOnlineHelp(software.getWithOnlineHelp());
     softwareInfo.setWithPersistence(software.getWithPersistence());
     softwareInfo.setWithUi(software.getWithUi());
