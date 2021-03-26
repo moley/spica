@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {RelationInfo, SoftwareInfo, SoftwareService, TeamMemberInfo} from '../generated/software';
+import {RelationInfo, SoftwareInfo, SoftwareService, ContactInfo} from '../generated/software';
 import { SoftwareConstantsInfo } from '../generated/software/model/softwareConstantsInfo';
 import { IdAndDisplaynameInfo } from '../generated/software/model/idAndDisplaynameInfo';
+import {DomSanitizer} from "@angular/platform-browser";
 
 
 
@@ -22,13 +23,21 @@ export class SoftwareDetailsComponent implements OnInit {
 
   allsoftware: SoftwareInfo[];
 
-  constructor(private softwareService: SoftwareService, private router:Router, private route: ActivatedRoute) {
+  image;
+
+  private readonly imageType : string = 'data:image/PNG;base64,';
+
+
+  constructor(private softwareService: SoftwareService, private router:Router, private route: ActivatedRoute, private sanitizer: DomSanitizer) {
    }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.softwareService.getSoftwareById(params.id).subscribe(
-        x => this.software = x,
+        x => {this.software = x;
+          console.log (this.software.targetDate)
+          this.image = this.sanitizer.bypassSecurityTrustUrl(this.imageType + this.software.screenshot);
+         },
         err => console.error('Call to get software by ID recieved an error: ' + err),
         () => console.info('Call to get software by ID finished (' + params.id + ") -> " + this.software?.id)
       );
@@ -45,6 +54,8 @@ export class SoftwareDetailsComponent implements OnInit {
         () => console.info('Call to get relations of software finished (' + params.id + ") -> " + this.relations?.length)
       );
 
+
+
     });
 
 
@@ -58,6 +69,7 @@ export class SoftwareDetailsComponent implements OnInit {
 
   save () {
     console.log("save called for " + this.software.id)
+    console.log("date: " + this.software.targetDate)
     this.softwareService.updateSoftware(this.software.id, this.software).subscribe(
               x => {},
         err => console.error('Call to update software ' + this.software.id + ' by ID got an error: ' + JSON.stringify(err) + "-" + this.software?.id + "-"),
@@ -98,21 +110,34 @@ export class SoftwareDetailsComponent implements OnInit {
     this.relations = this.relations.filter(obj => obj !== relation)
   }
 
-  removeContact (contact: TeamMemberInfo) {
-    console.log ("removeContact called with selected contact " + JSON.stringify(contact))
-    this.software.teammembers = this.software.teammembers.filter(obj => obj !== contact)
-  }
 
-  addContact () {
-    console.log ("addContact called")
-    var newTeamMember: TeamMemberInfo = {}
-    this.software.teammembers = [...this.software.teammembers, newTeamMember];
-  }
 
   addRelation () {
     console.log ("addRelation called")
     var newRelation: RelationInfo = {source: this.software, target: null}
     this.relations = [...this.relations, newRelation];
+  }
+
+  removeContactUser (contact: ContactInfo) {
+    console.log ("removeContact user called with selected contact " + JSON.stringify(contact))
+    this.software.contactsUser = this.software.contactsUser.filter(obj => obj !== contact)
+  }
+
+  addContactUser () {
+    console.log ("addContact user called")
+    var newTeamMember: ContactInfo = {}
+    this.software.contactsUser = [...this.software.contactsUser, newTeamMember];
+  }
+
+  removeContactTeam (contact: ContactInfo) {
+    console.log ("removeContact team called with selected contact " + JSON.stringify(contact))
+    this.software.contactsTeam = this.software.contactsTeam.filter(obj => obj !== contact)
+  }
+
+  addContactTeam () {
+    console.log ("addContact team called")
+    var newTeamMember: ContactInfo = {}
+    this.software.contactsTeam = [...this.software.contactsTeam, newTeamMember];
   }
 
 }

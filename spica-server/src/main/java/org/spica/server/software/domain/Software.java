@@ -1,6 +1,8 @@
 package org.spica.server.software.domain;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.spica.server.commons.Idable;
 
 @Getter
 @Setter
@@ -23,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Software extends ObjectWithStatus {
+public class Software implements Idable {
 
   @Id
   @EqualsAndHashCode.Include
@@ -32,10 +35,6 @@ public class Software extends ObjectWithStatus {
   private String name;
   @Column(length = 10000)
   private String description;
-
-  @ElementCollection
-  private Set<String> contacts = new HashSet<>();
-
 
   private String type;
 
@@ -81,9 +80,32 @@ public class Software extends ObjectWithStatus {
 
 
   @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
-  private List<TeamMember> teamMembers;
+  private List<Contact> contactsUser;
+
+  @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
+  private List<Contact> contactsTeam;
 
   private Integer technicalDebt;
+
+  private Integer changeFrequency;
+
+  private String buildsystem;
+
+  private String bugtracking;
+
+  private LocalDate targetDate;
+
+  private Boolean withOnlineHelp;
+
+  private Boolean withMonitoring;
+
+  private Boolean withPersistence;
+
+  private Boolean withSecurity;
+
+  private Boolean withUi;
+
+  private String deploymentName;
 
 
   public boolean containsTokens (final String filter) {

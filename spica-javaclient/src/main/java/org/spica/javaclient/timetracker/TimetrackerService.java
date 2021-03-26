@@ -2,7 +2,7 @@ package org.spica.javaclient.timetracker;
 
 import org.spica.javaclient.model.*;
 import org.spica.javaclient.services.ModelCacheService;
-import org.spica.javaclient.utils.DateUtil;
+import org.spica.commons.DateUtil;
 
 import java.time.LocalDateTime;
 import java.util.*;

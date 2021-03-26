@@ -21,7 +21,7 @@ import org.spica.javaclient.event.EventDetailsBuilder;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.model.TaskInfo;
-import org.spica.javaclient.utils.DateUtil;
+import org.spica.commons.DateUtil;
 import org.spica.javaclient.utils.LogUtil;
 import org.spica.javaclient.utils.RenderUtil;
 

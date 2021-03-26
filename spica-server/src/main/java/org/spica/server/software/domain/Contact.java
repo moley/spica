@@ -14,13 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class TeamMember {
+public class Contact {
 
   @Id
   @EqualsAndHashCode.Include
   private String id;
 
-  private String user;
+  private String contactId;
 
   private String role;
 }

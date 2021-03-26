@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import lombok.extern.slf4j.Slf4j;
 import org.spica.fx.Consts;
@@ -17,7 +15,7 @@ import org.spica.javaclient.model.MessageType;
 import org.spica.javaclient.model.MessagecontainerInfo;
 import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.UserInfo;
-import org.spica.javaclient.utils.DateUtil;
+import org.spica.commons.DateUtil;
 
 @Slf4j
 public class MessageContainerInfoCellFactory extends ListCell<MessagecontainerInfo> {

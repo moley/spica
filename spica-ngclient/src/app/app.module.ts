@@ -34,8 +34,7 @@ import {TableModule} from 'primeng/table';
 import {PickListModule} from 'primeng/picklist';
 import {PasswordModule} from 'primeng/password';
 import {ListboxModule} from 'primeng/listbox';
-
-
+import {InputNumberModule} from "primeng/inputnumber";
 
 
 import { environment } from '../environments/environment';
@@ -61,57 +60,56 @@ import { NodeService } from './modules/software/nodeservice';
 
 @NgModule({
   declarations: [
-    AppComponent, 
+    AppComponent,
     DefaultComponent,
-    LoginComponent, 
+    LoginComponent,
     HeaderComponent,
     FooterComponent,
     LogoutComponent,
     SoftwareComponent,
     SoftwareDetailsComponent
   ],
-  imports: [
-    CommunicationApiModule,
-    DashboardApiModule,
-    LinksApiModule,
-    ProjectApiModule,
-    SoftwareApiModule,
-    TimesApiModule,
-    UserApiModule,
+    imports: [
+        CommunicationApiModule,
+        DashboardApiModule,
+        LinksApiModule,
+        ProjectApiModule,
+        SoftwareApiModule,
+        TimesApiModule,
+        UserApiModule,
 
-    HttpClientModule,
-    FormsModule,
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    
-    CommonModule,
-    RouterModule,
-    SharedModule,
-    FlexLayoutModule, 
-    FormsModule, 
-    ReactiveFormsModule,
+        HttpClientModule,
+        FormsModule,
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
 
-    ToolbarModule, 
-    MenuModule,
-    SidebarModule, 
-    ButtonModule, 
-    TreeTableModule, 
-    TabViewModule, 
-    InputTextModule,
-    InputTextareaModule,
-    DropdownModule, 
-    CalendarModule,
-    CheckboxModule, 
-    TableModule, 
-    PickListModule,
-    PasswordModule, 
-    ListboxModule
+        CommonModule,
+        RouterModule,
+        SharedModule,
+        FlexLayoutModule,
+        FormsModule,
+        ReactiveFormsModule,
 
-    
+        ToolbarModule,
+        MenuModule,
+        SidebarModule,
+        ButtonModule,
+        TreeTableModule,
+        TabViewModule,
+        InputTextModule,
+        InputTextareaModule,
+        DropdownModule,
+        CalendarModule,
+        CheckboxModule,
+        TableModule,
+        PickListModule,
+        PasswordModule,
+        ListboxModule,
+        InputNumberModule
 
-    
-  ],
+
+    ],
   providers: [
       {
         provide: HTTP_INTERCEPTORS,
@@ -140,12 +138,12 @@ import { NodeService } from './modules/software/nodeservice';
         useValue: environment.API_BASE_PATH
       },
 
-      LoginActivate, 
+      LoginActivate,
       NodeService
     ],
   bootstrap: [AppComponent]
 })
-export class AppModule { 
-  
+export class AppModule {
+
 
 }

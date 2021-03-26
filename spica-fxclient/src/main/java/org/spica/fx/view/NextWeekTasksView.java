@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.spica.javaclient.model.TaskInfo;
-import org.spica.javaclient.utils.DateUtil;
+import org.spica.commons.DateUtil;
 
 @Slf4j
 public class NextWeekTasksView extends AbstractTaskView {

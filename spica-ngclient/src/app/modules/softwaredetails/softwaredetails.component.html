@@ -3,8 +3,7 @@
 <div class="main">
 <div class="p-grid">
     <div class="p-col"><h1>Software: {{software.name}}</h1></div>
-    <div class="p-col"><img src="https://www.jenkins.io/images/post-images/jenkins-is-the-way/jenkins-is-the-way.png"
-        height="80px" alt="Italian Trulli"></div>
+    <div class="p-col"><img height="100px" [src]="image" ></div>
     <div class="p-col"><div fxFlex fxLayout="row" fxFlexOffset="20" fxLayoutAlign="end">
         <p-button  class="buttonpanel" label="Software" (click)="stepToOverview()">
         </p-button>
@@ -51,12 +50,31 @@
     <p-tabPanel header="PLANNING">
         <div class="p-fluid">
 
-        <!--<div class="p-field p-grid">
+        <div class="p-field p-grid">
+            <label for="developmentActive" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Active development</label>
+            <div class="p-col-12 p-md-10">
+                <p-checkbox id="developmentActive" name="developmentActive" [(ngModel)]="software.active" [binary]="true"></p-checkbox>
+            </div>
+        </div>
+          <div class="p-field p-grid">
+            <label for="actionNecessary" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Action necessary</label>
+            <div class="p-col-12 p-md-10">
+              <p-checkbox id="actionNecessary" name="actionNecessary" [(ngModel)]="software.needsAction" [binary]="true"></p-checkbox>
+            </div>
+          </div>
+          <div class="p-field p-grid">
+            <label for="actionDescription" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Action description</label>
+            <div class="p-col-12 p-md-10">
+              <textarea id="actionDescription" [(ngModel)]="software.needsActionDescription" type="text" rows="6" pInputTextarea></textarea>
+
+            </div>
+          </div>
+          <div class="p-field p-grid">
             <label for="fieldTargetDate" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Target date</label>
             <div class="p-col-12 p-md-10">
-                <p-calendar [(ngModel)]="value"></p-calendar>
+                <p-calendar id="fieldTargetDate" dataType="string" [showWeek]="true" [numberOfMonths]="3" dateFormat="dd.mm.yy" [(ngModel)]="software.targetDate" showButtonBar="true"></p-calendar>
             </div>
-        </div>-->
+          </div>
         <div class="p-field p-grid">
           <label for="fieldDescription" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">State</label>
           <div class="p-col-12 p-md-10">
@@ -64,33 +82,7 @@
           </div>
         </div>
 
-        <!--<div class="p-field p-grid">
-            <label for="onlineHelp" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Needs online help</label>
-            <div class="p-col-12 p-md-10">
-                <p-checkbox name="onlineHelp"></p-checkbox>
-            </div>
-        </div>-->
 
-        <!--<div class="p-field p-grid">
-            <label for="monitoring" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Needs monitoring</label>
-            <div class="p-col-12 p-md-10">
-                <p-checkbox name="monitoring"></p-checkbox>
-            </div>
-        </div>-->
-
-        <!--<div class="p-field p-grid">
-            <label for="persistence" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Contains persistence</label>
-            <div class="p-col-12 p-md-10">
-                <p-checkbox name="persistence"></p-checkbox>
-            </div>
-        </div>-->
-
-        <!--<div class="p-field p-grid">
-            <label for="authentication" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Needs authentication</label>
-            <div class="p-col-12 p-md-10">
-                <p-checkbox name="authentication"></p-checkbox>
-            </div>
-        </div>-->
         </div>
 
 
@@ -100,7 +92,7 @@
 
             <div class="p-grid">
                 <div class="p-col-12">
-                    <p-table [value]="software.teammembers">
+                    <p-table [value]="software.contactsUser">
                         <ng-template pTemplate="header">
                             <tr>
                                 <th>User</th>
@@ -113,7 +105,7 @@
                                 <td pEditableColumn>
                                             <p-cellEditor>
                                                 <ng-template pTemplate="input">
-                                                    <input pInputText type="text" [(ngModel)]="member.user">
+                                                    <input pInputText type="text" [(ngModel)]="member.contactId">
                                                 </ng-template>
                                                 <ng-template pTemplate="output">
                                                     {{member.user}}
@@ -124,7 +116,7 @@
                                 </td>
                                 <div class="p-col-1">
                                 <td>
-                                    <p-button  class="buttonpanel" label="-" (click)="removeContact(member)">
+                                    <p-button  class="buttonpanel" label="-" (click)="removeContactUser(member)">
                                     </p-button>
                                 </td>
                                 </div>
@@ -135,9 +127,49 @@
 
 
                     <div class="p-col-2">
-                        <p-button  class="buttonpanel" label="+" (click)="addContact()">
+                        <p-button  class="buttonpanel" label="+" (click)="addContactUser()">
                         </p-button>
                     </div>
+
+
+                  <p-table [value]="software.contactsTeam">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th>Team</th>
+                        <th>Role</th>
+                        <th>Remove</th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-member>
+                      <tr>
+                        <td pEditableColumn>
+                          <p-cellEditor>
+                            <ng-template pTemplate="input">
+                              <input pInputText type="text" [(ngModel)]="member.contactId">
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                              {{member.user}}
+                            </ng-template>
+                          </p-cellEditor>
+                        </td>
+                        <td><p-dropdown [options]="constants.roles" [(ngModel)]="member.role" placeholder="Select..." optionLabel="displayname"></p-dropdown>
+                        </td>
+                        <div class="p-col-1">
+                          <td>
+                            <p-button  class="buttonpanel" label="-" (click)="removeContactTeam(member)">
+                            </p-button>
+                          </td>
+                        </div>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+
+
+
+                  <div class="p-col-2">
+                    <p-button  class="buttonpanel" label="+" (click)="addContactTeam()">
+                    </p-button>
+                  </div>
                 </div>
             </div>
         </div>
@@ -150,11 +182,12 @@
 
         <div class="p-grid">
             <div class="p-col-12">
-                <p-table [value]="relations" selectionMode="single" [(selection)]="selectedRelation">
+                <p-table [value]="relations" selectionMode="single">
                     <ng-template pTemplate="header">
                         <tr>
                             <th>Type</th>
                             <th>Target</th>
+                            <th>State</th>
                             <th>Remove</th>
                         </tr>
                     </ng-template>
@@ -162,6 +195,7 @@
                         <tr>
                             <td>uses</td>
                             <td><p-dropdown [options]="allsoftware" [(ngModel)]="relation.target" placeholder="Select..." optionLabel="name"></p-dropdown></td>
+                           <td><p-dropdown [options]="constants.states" placeholder="Select..." [(ngModel)]="relation.state" optionLabel="displayname"></p-dropdown></td>
                             <div class="p-col-1">
                             <td><p-button  class="buttonpanel" label="-" (click)="removeRelation(relation)"> </p-button></td>
                         </div>
@@ -185,15 +219,15 @@
         <div class="p-field p-grid">
             <label for="deployments" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Deployment</label>
             <div class="p-col-12 p-md-10">
-            <p-dropdown [options]="constants.deployments" [(ngModel)]="software.deployment" placeholder="Select..."  optionLabel="displayname"></p-dropdown>
+            <p-dropdown id="deployments" [options]="constants.deployments" [(ngModel)]="software.deployment" placeholder="Select..."  optionLabel="displayname"></p-dropdown>
             </div>
           </div>
-          <!--<div class="p-field p-grid">
+          <div class="p-field p-grid">
             <label for="deploymentName" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Deploymentname</label>
             <div class="p-col-12 p-md-10">
-            <input id="deploymentName" type="text" pInputText>
+            <input id="deploymentName" type="text" [(ngModel)]="software.deploymentName" pInputText>
             </div>
-          </div>-->
+          </div>
           <div class="p-field p-grid">
             <label for="location" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Location</label>
             <div class="p-col-12 p-md-10">
@@ -203,39 +237,115 @@
           </div>
 
     </p-tabPanel>
-    <p-tabPanel header="DEVELOPMENT">
-        <div class="p-fluid">
+    <p-tabPanel header="ARCHITECTURE">
+      <div class="p-fluid">
 
-        <!--<div class="p-field p-grid">
-            <label for="fitsArchitecture" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Fits architecture</label>
-            <div class="p-col-12 p-md-10">
-                <p-checkbox name="fitsArchitecture"></p-checkbox>
-            </div>
-        </div>-->
         <div class="p-field p-grid">
-            <label for="architectureExceptions" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Default architecture exceptions</label>
-            <div class="p-col-12 p-md-10">
-            <textarea id="architectureExceptions" [(ngModel)]="software.architectureExceptions" type="text" rows="6" pInputTextarea></textarea>
-            </div>
+          <label for="fitsArchitecture" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Fits architecture</label>
+          <div class="p-col-12 p-md-10">
+            <p-checkbox id="fitsArchitecture" name="fitsArchitecture" [(ngModel)]="software.fitsArchitecture" [binary]="true"></p-checkbox>
           </div>
-          <div class="p-field p-grid">
+        </div>
+        <div class="p-field p-grid">
+          <label for="architectureExceptions" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Default architecture exceptions</label>
+          <div class="p-col-12 p-md-10">
+            <textarea id="architectureExceptions" [(ngModel)]="software.architectureExceptions" type="text" rows="6" pInputTextarea></textarea>
+          </div>
+        </div>
+        <div class="p-field p-grid">
+          <label for="technicalDebt" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Technical Debt</label>
+          <div class="p-col-12 p-md-10">
+            <p-inputNumber id="technicalDebt"  [(ngModel)]="software.technicalDebt"  mode="decimal" [showButtons]="true" [min]="0" [max]="5"></p-inputNumber>
+          </div>
+        </div>
+
+        <div class="p-field p-grid">
+          <label for="changeFrequency" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Change Frequency</label>
+          <div class="p-col-12 p-md-10">
+            <p-inputNumber id="changeFrequency" [(ngModel)]="software.changeFrequency"  mode="decimal" [showButtons]="true" [min]="0" [max]="5"></p-inputNumber>
+          </div>
+        </div>
+
+        <div class="p-field p-grid">
+          <label for="complexity" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Complexity</label>
+          <div class="p-col-12 p-md-10">
+            <p-inputNumber id="complexity" [(ngModel)]="software.complexity"  mode="decimal" [showButtons]="true" [min]="0" [max]="5"></p-inputNumber>
+          </div>
+        </div>
+
+        <div class="p-field p-grid">
+          <label for="maintainability" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Maintainability</label>
+          <div class="p-col-12 p-md-10">
+            <p-inputNumber id="maintainability" [(ngModel)]="software.maintainability"  mode="decimal" [showButtons]="true" [min]="0" [max]="5"></p-inputNumber>
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="DEVELOPMENT">
+      <div class="p-fluid">
+
+      <div class="p-field p-grid">
             <label for="vcs" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Versioncontrolsystem</label>
             <div class="p-col-12 p-md-10">
             <input id="vcs" type="text" [(ngModel)]="software.vcs" pInputText>
             </div>
           </div>
-          <!--<div class="p-field p-grid">
+          <div class="p-field p-grid">
+            <label for="format" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Format</label>
+            <div class="p-col-12 p-md-10">
+            <input id="format" type="text" [(ngModel)]="software.format" pInputText>
+            </div>
+          </div>
+          <div class="p-field p-grid">
             <label for="buildsystem" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Buildsystem</label>
             <div class="p-col-12 p-md-10">
-            <input id="buildsystem" type="text" pInputText>
+            <input id="buildsystem" type="text" [(ngModel)]="software.buildsystem" pInputText>
             </div>
-          </div>-->
-          <!--<div class="p-field p-grid">
-            <label for="bugtracking" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">BugTracking</label>
+          </div>
+          <div class="p-field p-grid">
+            <label for="bugtracking" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Bug Tracking</label>
             <div class="p-col-12 p-md-10">
-            <input id="bugtracking" type="text" pInputText>
+            <input id="bugtracking" type="text" [(ngModel)]="software.bugtracking" pInputText>
             </div>
-          </div>-->
+          </div>
+
+        <div class="p-field p-grid">
+           <label for="onlineHelp" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Online help</label>
+           <div class="p-col-12 p-md-10">
+               <p-checkbox id="onlineHelp" name="onlineHelp" [(ngModel)]="software.withOnlineHelp" [binary]="true"></p-checkbox>
+           </div>
+       </div>
+
+        <div class="p-field p-grid">
+            <label for="monitoring" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Monitoring</label>
+            <div class="p-col-12 p-md-10">
+                <p-checkbox id="monitoring" name="monitoring" [(ngModel)]="software.withMonitoring" [binary]="true"></p-checkbox>
+            </div>
+        </div>
+
+        <div class="p-field p-grid">
+            <label for="persistence" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Persistence</label>
+            <div class="p-col-12 p-md-10">
+                <p-checkbox id="persistence" name="persistence" [(ngModel)]="software.withPersistence" [binary]="true"></p-checkbox>
+            </div>
+        </div>
+
+        <div class="p-field p-grid">
+            <label for="security" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Security</label>
+            <div class="p-col-12 p-md-10">
+                <p-checkbox id="security" name="security" [(ngModel)]="software.withSecurity" [binary]="true"></p-checkbox>
+            </div>
+        </div>
+
+        <div class="p-field p-grid">
+          <label for="ui" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Ui</label>
+          <div class="p-col-12 p-md-10">
+            <p-checkbox id="ui" name="ui" [(ngModel)]="software.withUi" [binary]="true"></p-checkbox>
+          </div>
+        </div>
+
+
+
           </div>
     </p-tabPanel>
     <p-tabPanel header="TECHNOLOGY">

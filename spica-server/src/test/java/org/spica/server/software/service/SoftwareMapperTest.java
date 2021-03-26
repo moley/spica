@@ -1,17 +1,19 @@
 package org.spica.server.software.service;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
 import org.spica.commons.SpicaProperties;
+import org.spica.server.software.domain.Contact;
 import org.spica.server.software.domain.Software;
-import org.spica.server.software.domain.TeamMember;
+import org.spica.server.software.model.ContactInfo;
 import org.spica.server.software.model.IdAndDisplaynameInfo;
 import org.spica.server.software.model.SoftwareInfo;
-import org.spica.server.software.model.TeamMemberInfo;
 
 @Slf4j
 public class SoftwareMapperTest {
@@ -33,14 +35,20 @@ public class SoftwareMapperTest {
   private final Integer MAINTAINABILITY = 2;
   private final String NEEDS_ACTION = "NEEDS_ACTION";
   private final String REQUIREMENT = "REQUIREMENT";
-  private final String TEAMMEMBER_NAME = "TEAMMEMBER_NAME";
-  private final String TEAMMEMBER_ROLE = "spica.software.role.developer";
+  private final String BUGTRACKING = "BUGTRACKING";
+  private final String BUILDSYSTEM = "BUILDSYSTEM";
+  private final String CONTACT_USER_NAME = "CONTACT_USER_NAME";
+  private final String CONTACT_USER_ROLE = "spica.software.role.productowner";
+  private final String CONTACT_TEAM_NAME = "CONTACT_TEAM_NAME";
+  private final String CONTACT_TEAM_ROLE = "spica.software.role.developer";
   private final Integer TECHNICAL_DEBT = 3;
+  private final Integer CHANGE_FREQUENCY = 2;
   private final String TECHNOLOGY1 = "Gradle";
   private final String TECHNOLOGY2 = "Java";
   private final List<String> TECHNOLOGIES = Arrays.asList(TECHNOLOGY1, TECHNOLOGY2);
   private final String VCS = "VCS";
   private final String ARCHITECTURE_EXCEPTIONS = "ARCHITECTURE_EXCEPTIONS";
+  private final String DEPLOYMENT_NAME = "DEPLOYMENT_NAME";
 
 
 
@@ -70,13 +78,27 @@ public class SoftwareMapperTest {
     softwareInfo.setNeedsAction(true);
     softwareInfo.setNeedsActionDescription(NEEDS_ACTION);
     softwareInfo.setRequirement(REQUIREMENT);
-    softwareInfo.setTeammembers(Arrays.asList(new TeamMemberInfo().user(TEAMMEMBER_NAME).role(new IdAndDisplaynameInfo().displayname(TEAMMEMBER_ROLE).id(TEAMMEMBER_ROLE))));
+    softwareInfo.setContactsUser(Arrays.asList(new ContactInfo().contactId(CONTACT_USER_NAME).role(new IdAndDisplaynameInfo().displayname(
+        CONTACT_USER_ROLE).id(CONTACT_USER_ROLE))));
+    softwareInfo.setContactsTeam(Arrays.asList(new ContactInfo().contactId(CONTACT_TEAM_NAME).role(new IdAndDisplaynameInfo().displayname(
+        CONTACT_TEAM_ROLE).id(CONTACT_TEAM_ROLE))));
     softwareInfo.setTechnicalDebt(TECHNICAL_DEBT);
     softwareInfo.setTechnologies(Arrays.asList(new IdAndDisplaynameInfo().displayname(TECHNOLOGY1).id(TECHNOLOGY1),
                                                new IdAndDisplaynameInfo().displayname(TECHNOLOGY2).id(TECHNOLOGY2)));
     softwareInfo.setVcs(VCS);
     softwareInfo.setFitsArchitecture(Boolean.TRUE);
     softwareInfo.setArchitectureExceptions(ARCHITECTURE_EXCEPTIONS);
+    softwareInfo.setBugtracking(BUGTRACKING);
+    softwareInfo.setBuildsystem(BUILDSYSTEM);
+    softwareInfo.setChangeFrequency(CHANGE_FREQUENCY);
+    softwareInfo.setWithMonitoring(true);
+    softwareInfo.setWithOnlineHelp(true);
+    softwareInfo.setWithPersistence(true);
+    softwareInfo.setWithUi(true);
+    softwareInfo.setWithSecurity(true);
+    softwareInfo.setDeploymentName(DEPLOYMENT_NAME);
+    softwareInfo.setTargetDate("2012-10-12");
+
 
     Software software = softwareMapper.toSoftwareEntity(softwareInfo);
 
@@ -98,10 +120,17 @@ public class SoftwareMapperTest {
     Assert.assertTrue(software.getNeedsAction());
     Assert.assertEquals(NEEDS_ACTION, software.getNeedsActionDescription());
     Assert.assertEquals(REQUIREMENT, software.getRequirement());
-    Assert.assertEquals(1, software.getTeamMembers().size());
-    Assert.assertNotNull (software.getTeamMembers().get(0).getId());
-    Assert.assertEquals(TEAMMEMBER_NAME, software.getTeamMembers().get(0).getUser());
-    Assert.assertEquals(TEAMMEMBER_ROLE, software.getTeamMembers().get(0).getRole());
+
+    Assert.assertEquals(1, software.getContactsTeam().size());
+    Assert.assertNotNull (software.getContactsTeam().get(0).getId());
+    Assert.assertEquals(CONTACT_TEAM_NAME, software.getContactsTeam().get(0).getContactId());
+    Assert.assertEquals(CONTACT_TEAM_ROLE, software.getContactsTeam().get(0).getRole());
+
+    Assert.assertEquals(1, software.getContactsUser().size());
+    Assert.assertNotNull (software.getContactsUser().get(0).getId());
+    Assert.assertEquals(CONTACT_USER_NAME, software.getContactsUser().get(0).getContactId());
+    Assert.assertEquals(CONTACT_USER_ROLE, software.getContactsUser().get(0).getRole());
+
     Assert.assertEquals(TECHNICAL_DEBT, software.getTechnicalDebt());
     Assert.assertEquals(2, software.getTechnologies().size());
     Assert.assertEquals(TECHNOLOGY1, software.getTechnologies().get(0));
@@ -109,6 +138,18 @@ public class SoftwareMapperTest {
     Assert.assertEquals (VCS, software.getVcs());
     Assert.assertTrue (software.getFitsArchitecture());
     Assert.assertEquals (ARCHITECTURE_EXCEPTIONS, software.getArchitectureExceptions());
+    Assert.assertEquals(BUGTRACKING, software.getBugtracking());
+    Assert.assertEquals(BUILDSYSTEM, software.getBuildsystem());
+    Assert.assertEquals (CHANGE_FREQUENCY, software.getChangeFrequency());
+
+    Assert.assertTrue (software.getWithMonitoring());
+    Assert.assertTrue (software.getWithPersistence());
+    Assert.assertTrue (software.getWithOnlineHelp());
+    Assert.assertTrue (software.getWithSecurity());
+    Assert.assertTrue (software.getWithUi());
+
+    Assert.assertEquals(DEPLOYMENT_NAME, software.getDeploymentName());
+    Assert.assertEquals ("2012-10-12", software.getTargetDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
   }
 
   @Test
@@ -133,15 +174,33 @@ public class SoftwareMapperTest {
     software.setNeedsAction(true);
     software.setNeedsActionDescription(NEEDS_ACTION);
     software.setRequirement(REQUIREMENT);
-    TeamMember teamMember = new TeamMember();
-    teamMember.setUser(TEAMMEMBER_NAME);
-    teamMember.setRole(TEAMMEMBER_ROLE);
-    software.setTeamMembers(Arrays.asList(teamMember));
+
+    Contact contactTeam = new Contact();
+    contactTeam.setContactId(CONTACT_TEAM_NAME);
+    contactTeam.setRole(CONTACT_TEAM_ROLE);
+    software.setContactsTeam(Arrays.asList(contactTeam));
+
+    Contact contactUser = new Contact();
+    contactUser.setContactId(CONTACT_USER_NAME);
+    contactUser.setRole(CONTACT_USER_ROLE);
+    software.setContactsUser(Arrays.asList(contactUser));
+
     software.setTechnicalDebt(TECHNICAL_DEBT);
     software.setTechnologies(TECHNOLOGIES);
     software.setVcs(VCS);
     software.setFitsArchitecture(true);
     software.setArchitectureExceptions(ARCHITECTURE_EXCEPTIONS);
+    software.setBuildsystem(BUILDSYSTEM);
+    software.setBugtracking(BUGTRACKING);
+
+    software.setChangeFrequency(CHANGE_FREQUENCY);
+    software.setWithMonitoring(true);
+    software.setWithOnlineHelp(true);
+    software.setWithPersistence(true);
+    software.setWithUi(true);
+    software.setWithSecurity(true);
+    software.setDeploymentName(DEPLOYMENT_NAME);
+    software.setTargetDate(LocalDate.of(2020, 12, 10));
 
     SoftwareInfo softwareInfo = softwareMapper.toSoftwareInfo(software);
 
@@ -163,9 +222,15 @@ public class SoftwareMapperTest {
     Assert.assertTrue(software.getNeedsAction());
     Assert.assertEquals(NEEDS_ACTION, softwareInfo.getNeedsActionDescription());
     Assert.assertEquals(REQUIREMENT, softwareInfo.getRequirement());
-    Assert.assertEquals(1, softwareInfo.getTeammembers().size());
-    Assert.assertEquals(TEAMMEMBER_NAME, softwareInfo.getTeammembers().get(0).getUser());
-    Assert.assertEquals(TEAMMEMBER_ROLE, softwareInfo.getTeammembers().get(0).getRole().getId());
+
+    Assert.assertEquals(1, softwareInfo.getContactsTeam().size());
+    Assert.assertEquals(CONTACT_TEAM_NAME, softwareInfo.getContactsTeam().get(0).getContactId());
+    Assert.assertEquals(CONTACT_TEAM_ROLE, softwareInfo.getContactsTeam().get(0).getRole().getId());
+
+    Assert.assertEquals(1, softwareInfo.getContactsUser().size());
+    Assert.assertEquals(CONTACT_USER_NAME, softwareInfo.getContactsUser().get(0).getContactId());
+    Assert.assertEquals(CONTACT_USER_ROLE, softwareInfo.getContactsUser().get(0).getRole().getId());
+
     Assert.assertEquals(TECHNICAL_DEBT, softwareInfo.getTechnicalDebt());
     Assert.assertEquals(2, softwareInfo.getTechnologies().size());
     Assert.assertEquals(TECHNOLOGY1, softwareInfo.getTechnologies().get(0).getId());
@@ -173,6 +238,18 @@ public class SoftwareMapperTest {
     Assert.assertEquals (VCS, softwareInfo.getVcs());
     Assert.assertTrue (softwareInfo.getFitsArchitecture());
     Assert.assertEquals (ARCHITECTURE_EXCEPTIONS, softwareInfo.getArchitectureExceptions());
+    Assert.assertEquals (BUGTRACKING, softwareInfo.getBugtracking());
+    Assert.assertEquals (BUILDSYSTEM, softwareInfo.getBuildsystem());
+    Assert.assertEquals (CHANGE_FREQUENCY, softwareInfo.getChangeFrequency());
+    Assert.assertTrue (softwareInfo.getWithMonitoring());
+    Assert.assertTrue (softwareInfo.getWithPersistence());
+    Assert.assertTrue (softwareInfo.getWithOnlineHelp());
+    Assert.assertTrue (softwareInfo.getWithSecurity());
+    Assert.assertTrue (softwareInfo.getWithUi());
+    Assert.assertEquals (DEPLOYMENT_NAME, softwareInfo.getDeploymentName());
+    Assert.assertEquals ("2020-12-10", softwareInfo.getTargetDate());
+
+
   }
 
   @Test

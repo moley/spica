@@ -224,12 +224,12 @@ components:
         displayname:
           type: "string"
 
-    TeamMemberInfo:
+    ContactInfo:
       type: "object"
       properties:
         id:
           type: "string"
-        user:
+        contactId:
           type: "string"
         role:
           $ref: "#/components/schema/IdAndDisplaynameInfo"
@@ -273,6 +273,8 @@ components:
           type: "integer"
         maintainability:
           type: "integer"
+        changeFrequency:
+          type: "integer"
         fitsArchitecture:
           type: "boolean"
         architectureExceptions:
@@ -283,27 +285,32 @@ components:
           type: "string"
         targetDate:
           type: "string"
-          format: date
-          example: "2019-05-17"
 
-        needsOnlineHelp:
+        withOnlineHelp:
           type: "boolean"
-        needsMonitoring:
+        withMonitoring:
           type: "boolean"
         withPersistence:
           type: "boolean"
         withUi:
           type: "boolean"
-        withAuthentication:
+        withSecurity:
           type: "boolean"
         deploymentName:
           type: "string"
 
+        screenshot:
+          type: "string"
 
-        teammembers:
+        contactsUser:
           type: array
           items:
-            $ref: "#/components/schema/TeamMemberInfo"
+            $ref: "#/components/schema/ContactInfo"
+
+        contactsTeam:
+          type: array
+          items:
+            $ref: "#/components/schema/ContactInfo"
 
         vcs:
           type: "string"
@@ -323,6 +330,8 @@ components:
           type: "string"
         relationtype:
           type: "string"
+        state:
+          $ref: "#/components/schema/IdAndDisplaynameInfo"
         source:
           $ref: "#/components/schema/SoftwareInfo"
         target:

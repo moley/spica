@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.AbstractAction;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.ActionGroup;
@@ -17,7 +15,7 @@ import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParamGroup;
 import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.params.TextInputParam;
-import org.spica.javaclient.utils.DateUtil;
+import org.spica.commons.DateUtil;
 
 @Slf4j
 public class CloseBookingAction extends AbstractAction {

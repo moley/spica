@@ -1,14 +1,12 @@
 package org.spica.javaclient.actions.booking;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.*;
 import org.spica.javaclient.model.Model;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.model.EventInfo;
-import org.spica.javaclient.utils.DateUtil;
+import org.spica.commons.DateUtil;
 
 import java.time.LocalDate;
 

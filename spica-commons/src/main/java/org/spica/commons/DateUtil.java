@@ -1,4 +1,4 @@
-package org.spica.javaclient.utils;
+package org.spica.commons;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -76,8 +76,15 @@ public class DateUtil {
 
             return LocalDate.of(today.getYear(), Integer.valueOf(month).intValue(), Integer.valueOf(day).intValue());
         }
+        else if (trimmed.length() == 10) {
+            String day = dateAsString.substring(0, 2);
+            String month = dateAsString.substring(3, 5);
+            String year = dateAsString.substring(6, 9);
+            return LocalDate.of(Integer.valueOf(year).intValue(), Integer.valueOf(month).intValue(), Integer.valueOf(day).intValue());
 
-        throw new IllegalStateException("Invalid date " + dateAsString + ", Please use date in format DDMM or DD.MM");
+        }
+
+        throw new IllegalStateException("Invalid date " + dateAsString + ", Please use date in format DDMM or DD.MM or DD.MM.YYYY");
 
     }
 

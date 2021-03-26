@@ -1,10 +1,14 @@
 package org.spica.server.software.service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.spica.commons.filestore.FilestoreItem;
+import org.spica.commons.filestore.FilestoreService;
 import org.spica.server.software.db.RelationRepository;
 import org.spica.server.software.db.SoftwareRepository;
 import org.spica.server.software.domain.Relation;
@@ -27,6 +31,8 @@ public class SoftwareService {
 
   @Autowired
   private SoftwareMapper softwareMapper;
+
+  private FilestoreService filestoreService = new FilestoreService();
 
   public List<SoftwareInfo> getSoftwareTree() {
     List<SoftwareInfo> infos = new ArrayList<>();
@@ -55,7 +61,12 @@ public class SoftwareService {
     if (software == null)
       throw new IllegalArgumentException("No software found for ID " + id);
 
-    return softwareMapper.toSoftwareInfo(software);
+    SoftwareInfo softwareInfo = softwareMapper.toSoftwareInfo(software);
+
+    FilestoreItem filestoreItem = filestoreService.objectItem(softwareInfo, FilestoreService.CONTEXT_SCREENSHOT);
+    softwareInfo.setScreenshot(filestoreItem.getByteArrayBase64());
+
+    return softwareInfo;
   }
 
   public void setSoftwareList(final List<SoftwareInfo> software) {

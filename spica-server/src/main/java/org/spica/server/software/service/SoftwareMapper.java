@@ -1,23 +1,27 @@
 package org.spica.server.software.service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import org.spica.commons.DateUtil;
 import org.spica.commons.KeyValue;
 import org.spica.commons.SpicaProperties;
+import org.spica.server.software.domain.Contact;
 import org.spica.server.software.domain.Relation;
 import org.spica.server.software.domain.Software;
-import org.spica.server.software.domain.TeamMember;
+import org.spica.server.software.model.ContactInfo;
 import org.spica.server.software.model.IdAndDisplaynameInfo;
 import org.spica.server.software.model.RelationInfo;
 import org.spica.server.software.model.SoftwareInfo;
-import org.spica.server.software.model.TeamMemberInfo;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SoftwareMapper {
 
   private SpicaProperties spicaProperties = new SpicaProperties();
+
+  private DateUtil dateUtil = new DateUtil();
 
   public Software toSoftwareEntity(final SoftwareInfo softwareInfo) {
     if (softwareInfo == null)
@@ -54,11 +58,22 @@ public class SoftwareMapper {
     software.setNeedsAction(softwareInfo.getNeedsAction());
     software.setNeedsActionDescription(softwareInfo.getNeedsActionDescription());
     software.setRequirement(softwareInfo.getRequirement());
-    List<TeamMember> teamMembers = new ArrayList<>();
-    if (softwareInfo.getTeammembers() != null) {
-      for (TeamMemberInfo next : softwareInfo.getTeammembers())
-        teamMembers.add(toTeamMemberEntity(next));
-      software.setTeamMembers(teamMembers);
+    software.setBugtracking(softwareInfo.getBugtracking());
+    software.setBuildsystem(softwareInfo.getBuildsystem());
+    if (softwareInfo.getContactsTeam() != null) {
+      List<Contact> contactsTeam = new ArrayList<>();
+
+      for (ContactInfo next : softwareInfo.getContactsTeam())
+        contactsTeam.add(toContactEntity(next));
+      software.setContactsTeam(contactsTeam);
+    }
+
+    if (softwareInfo.getContactsUser() != null) {
+      List<Contact> contactsUser = new ArrayList<>();
+
+      for (ContactInfo next : softwareInfo.getContactsUser())
+        contactsUser.add(toContactEntity(next));
+      software.setContactsUser(contactsUser);
     }
 
     software.setTechnicalDebt(softwareInfo.getTechnicalDebt());
@@ -72,41 +87,23 @@ public class SoftwareMapper {
     software.setVcs(softwareInfo.getVcs());
     software.setFitsArchitecture(softwareInfo.getFitsArchitecture());
     software.setArchitectureExceptions(softwareInfo.getArchitectureExceptions());
+    software.setChangeFrequency(softwareInfo.getChangeFrequency());
+    if (softwareInfo.getTargetDate() != null)
+      software.setTargetDate(dateUtil.getDate(softwareInfo.getTargetDate()));
+
+    software.setWithOnlineHelp(softwareInfo.getWithOnlineHelp());
+    software.setWithPersistence(softwareInfo.getWithPersistence());
+    software.setWithUi(softwareInfo.getWithUi());
+    software.setWithMonitoring(softwareInfo.getWithMonitoring());
+    software.setWithSecurity(softwareInfo.getWithSecurity());
+    software.setDeploymentName(softwareInfo.getDeploymentName());
+
+
     return software;
 
   }
 
-  public TeamMember toTeamMemberEntity (final TeamMemberInfo teamMemberInfo) {
-    TeamMember teamMember = new TeamMember();
-    teamMember.setId(teamMemberInfo.getId() != null ? teamMemberInfo.getId() : UUID.randomUUID().toString());
-    teamMember.setUser(teamMemberInfo.getUser());
-    teamMember.setRole(teamMemberInfo.getRole() != null ? teamMemberInfo.getRole().getId() : null);
-    return teamMember;
-  }
 
-  public TeamMemberInfo toTeamMemberInfo (final TeamMember teamMember) {
-    TeamMemberInfo teamMemberInfo = new TeamMemberInfo();
-    teamMemberInfo.setId(teamMember.getId() != null ? teamMember.getId(): UUID.randomUUID().toString());
-    teamMemberInfo.setUser(teamMember.getUser());
-    teamMemberInfo.setRole(toIdAndDisplaynameInfo(spicaProperties.getKeyValuePair(teamMember.getRole())));
-    return teamMemberInfo;
-  }
-
-  public Relation toRelationEntity (final RelationInfo relationInfo) {
-    Relation relation = new Relation();
-    relation.setId(relationInfo.getId() != null ? relationInfo.getId() : UUID.randomUUID().toString());
-    relation.setSource(toSoftwareEntity(relationInfo.getSource()));
-    relation.setTarget(toSoftwareEntity(relationInfo.getTarget()));
-    return relation;
-  }
-
-  public RelationInfo toRelationInfo (final Relation relation) {
-    RelationInfo relationInfo = new RelationInfo();
-    relationInfo.setId(relation.getId() != null ? relation.getId(): UUID.randomUUID().toString());
-    relationInfo.setSource(toSoftwareInfo(relation.getSource()));
-    relationInfo.setTarget(toSoftwareInfo(relation.getTarget()));
-    return relationInfo;
-  }
 
   public SoftwareInfo toSoftwareInfo(final Software software) {
     if (software == null)
@@ -130,12 +127,22 @@ public class SoftwareMapper {
     softwareInfo.setNeedsAction(software.getNeedsAction());
     softwareInfo.setNeedsActionDescription(software.getNeedsActionDescription());
     softwareInfo.setRequirement(software.getRequirement());
-    if (software.getTeamMembers() != null) {
-      List<TeamMemberInfo> teamMemberInfoCollection = new ArrayList<>();
-      for (TeamMember nextTeammember: software.getTeamMembers()) {
-        teamMemberInfoCollection.add(toTeamMemberInfo(nextTeammember));
+    softwareInfo.setBuildsystem(software.getBuildsystem());
+    softwareInfo.setBugtracking(software.getBugtracking());
+    if (software.getContactsUser() != null) {
+      List<ContactInfo> contactsUser = new ArrayList<>();
+      for (Contact nextTeammember: software.getContactsUser()) {
+        contactsUser.add(toContactInfo(nextTeammember));
       }
-      softwareInfo.setTeammembers(teamMemberInfoCollection);
+      softwareInfo.setContactsUser(contactsUser);
+    }
+
+    if (software.getContactsTeam() != null) {
+      List<ContactInfo> contactsTeams = new ArrayList<>();
+      for (Contact nextTeammember: software.getContactsTeam()) {
+        contactsTeams.add(toContactInfo(nextTeammember));
+      }
+      softwareInfo.setContactsTeam(contactsTeams);
     }
     softwareInfo.setTechnicalDebt(software.getTechnicalDebt());
     if (software.getTechnologies() != null) {
@@ -157,7 +164,54 @@ public class SoftwareMapper {
 
     softwareInfo.setFitsArchitecture(software.getFitsArchitecture());
     softwareInfo.setArchitectureExceptions(software.getArchitectureExceptions());
+    softwareInfo.setChangeFrequency(software.getChangeFrequency());
+    if (software.getTargetDate() != null)
+      softwareInfo.setTargetDate(dateUtil.getDateAsString(software.getTargetDate()));
+    softwareInfo.setWithOnlineHelp(software.getWithOnlineHelp());
+    softwareInfo.setWithPersistence(software.getWithPersistence());
+    softwareInfo.setWithUi(software.getWithUi());
+    softwareInfo.setWithMonitoring(software.getWithMonitoring());
+    softwareInfo.setWithSecurity(software.getWithSecurity());
+    softwareInfo.setDeploymentName(software.getDeploymentName());
     return softwareInfo;
+  }
+
+  public Contact toContactEntity(final ContactInfo contactInfo) {
+    Contact contact = new Contact();
+    contact.setId(contactInfo.getId() != null ? contactInfo.getId() : UUID.randomUUID().toString());
+    contact.setContactId(contactInfo.getContactId());
+    contact.setRole(contactInfo.getRole() != null ? contactInfo.getRole().getId() : null);
+    return contact;
+  }
+
+  public ContactInfo toContactInfo (final Contact contact) {
+    ContactInfo teamMemberInfo = new ContactInfo();
+    teamMemberInfo.setId(contact.getId() != null ? contact.getId(): UUID.randomUUID().toString());
+    teamMemberInfo.setContactId(contact.getContactId());
+    teamMemberInfo.setRole(toIdAndDisplaynameInfo(spicaProperties.getKeyValuePair(contact.getRole())));
+    return teamMemberInfo;
+  }
+
+  public Relation toRelationEntity (final RelationInfo relationInfo) {
+    Relation relation = new Relation();
+    relation.setId(relationInfo.getId() != null ? relationInfo.getId() : UUID.randomUUID().toString());
+
+    relation.setSource(toSoftwareEntity(relationInfo.getSource()));
+    relation.setTarget(toSoftwareEntity(relationInfo.getTarget()));
+    if (relationInfo.getState() != null)
+      relation.setState(relationInfo.getState().getId());
+
+    return relation;
+  }
+
+  public RelationInfo toRelationInfo (final Relation relation) {
+    RelationInfo relationInfo = new RelationInfo();
+    relationInfo.setId(relation.getId() != null ? relation.getId(): UUID.randomUUID().toString());
+    relationInfo.setSource(toSoftwareInfo(relation.getSource()));
+    relationInfo.setTarget(toSoftwareInfo(relation.getTarget()));
+    relationInfo.setState(toIdAndDisplaynameInfo(spicaProperties.getKeyValuePair(relation.getState())));
+
+    return relationInfo;
   }
 
   public List<IdAndDisplaynameInfo> toIdAndDisplaynameInfos (final List<KeyValue> keyValues) {

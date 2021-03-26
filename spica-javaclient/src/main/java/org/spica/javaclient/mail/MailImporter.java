@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.spica.commons.DashboardItemType;
+import org.spica.commons.filestore.FilestoreItem;
 import org.spica.commons.filestore.FilestoreService;
 import org.spica.commons.mail.Attachment;
 import org.spica.commons.mail.Mail;
@@ -74,10 +75,10 @@ import org.spica.javaclient.model.UserInfo;
       for (Attachment attachment : nextMail.getAttachmentList()) {
         String completeFilename = "mailattachment_" + nextMail.getId() + "_" + attachment.getFilename().replaceAll(" ", "_");
 
-        File file = filestoreService.file(completeFilename);
+        FilestoreItem file = filestoreService.file(completeFilename);
         log.info("Add attachment to " + file.getAbsolutePath());
         if (!file.exists()) {
-          FileOutputStream fos = new FileOutputStream(file);
+          FileOutputStream fos = new FileOutputStream(file.getFile());
           IOUtils.copy(attachment.getInputStream(), fos);
         }
 
