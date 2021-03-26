@@ -42,9 +42,7 @@ public class DateUtilTest {
     @Test
     public void longFormatToDate () {
         String asString = dateUtil.getDateAsString(LocalDate.of(2021, 05, 30));
-        Assert.assertEquals ("30.05.2021")
-
-        30.05.2021
+        Assert.assertEquals ("30.05.2021", asString);
 
     }
 
