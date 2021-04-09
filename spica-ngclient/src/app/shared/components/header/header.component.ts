@@ -14,26 +14,31 @@ export class HeaderComponent  {
   @Output() toggleSideBarForMe: EventEmitter<any> = new EventEmitter();
 
   sidebarVisible:boolean;
-  
+
+  authenticationService: AuthenticationService
+
 
 
   ngOnInit () {
-    
-    
+
+
   }
-  constructor(private authenticationService: AuthenticationService, private router: Router) { }
+  constructor(authenticationService: AuthenticationService, private router: Router) {
+    this.authenticationService = authenticationService;
+  }
+
 
   userMenuItems () : MenuItem[] {
   if (this.isLoggedIn()) {
       return [{label: 'Logout', icon: 'pi pi-fw pi-plus', command: (event) => {this.handleLogout();}}
              ];
-       
+
     }
     else {
-      return [{label: 'Github', icon: 'pi pi-fw pi-plus', url: 'https://github.com/moley/spica'},  
+      return [{label: 'Github', icon: 'pi pi-fw pi-plus', url: 'https://github.com/moley/spica'},
               {label: 'Login', icon: 'pi pi-fw pi-plus', command: (event) => {this.stepToLogin();}}
              ];
-              
+
     }
   }
 
@@ -44,7 +49,7 @@ export class HeaderComponent  {
   }
 
 
-  
+
   toggleSideBar() {
     this.toggleSideBarForMe.emit();
     setTimeout(() => {
@@ -64,5 +69,5 @@ export class HeaderComponent  {
     return this.authenticationService.isUserLoggedIn();
   }
 
-  
+
 }

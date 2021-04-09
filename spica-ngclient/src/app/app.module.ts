@@ -86,7 +86,6 @@ import { NodeService } from './modules/software/nodeservice';
 
         CommonModule,
         RouterModule,
-        SharedModule,
         FlexLayoutModule,
         FormsModule,
         ReactiveFormsModule,

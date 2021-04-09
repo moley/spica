@@ -206,8 +206,12 @@ public class SoftwareMapper {
     relation.setId(relationInfo.getId() != null ? relationInfo.getId() : UUID.randomUUID().toString());
 
     relation.setRelationtype(relationInfo.getRelationtype());
-    relation.setSource(toSoftwareEntity(relationInfo.getSource()));
-    relation.setTarget(toSoftwareEntity(relationInfo.getTarget()));
+    if (relationInfo.getSource() != null)
+      relation.setSource(toSoftwareEntity(relationInfo.getSource()));
+
+    if (relationInfo.getTarget() != null)
+      relation.setTarget(toSoftwareEntity(relationInfo.getTarget()));
+
     if (relationInfo.getState() != null)
       relation.setState(relationInfo.getState().getId());
 
@@ -217,9 +221,11 @@ public class SoftwareMapper {
   public RelationInfo toRelationInfo (final Relation relation) {
     RelationInfo relationInfo = new RelationInfo();
     relationInfo.setId(relation.getId() != null ? relation.getId(): UUID.randomUUID().toString());
-    relationInfo.setSource(toSoftwareInfo(relation.getSource()));
+    if (relation.getSource() != null)
+      relationInfo.setSource(toSoftwareInfo(relation.getSource()));
     relationInfo.setRelationtype(relation.getRelationtype());
-    relationInfo.setTarget(toSoftwareInfo(relation.getTarget()));
+    if (relation.getTarget() != null)
+      relationInfo.setTarget(toSoftwareInfo(relation.getTarget()));
     relationInfo.setState(toIdAndDisplaynameInfo(spicaProperties.getKeyValuePair(relation.getState())));
 
     return relationInfo;
