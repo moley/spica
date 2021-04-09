@@ -43,7 +43,7 @@ public class SoftwareControllerTest {
   }
 
   @BeforeEach
-  public void setUp() throws IOException {
+  public void setUp() {
     mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
   }
 
