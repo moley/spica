@@ -70,7 +70,7 @@ public class SoftwareService {
   }
 
   public void setSoftwareList(final List<SoftwareInfo> software) {
-    softwareRepository.deleteAll();
+    softwareRepository.deleteAll(softwareRepository.findByParentIdIsNull());
 
     List<Software> savedSoftware = new ArrayList<>();
     for (SoftwareInfo next: software) {

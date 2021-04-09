@@ -207,6 +207,22 @@ paths:
       responses:
         '200':
           description: OK
+    post:
+      tags:
+        - software
+      operationId: "setRelations"
+      description: "set existing relations"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/RelationInfo"
+      responses:
+        '200':
+          description: OK
 
   /software/metrics:
     get:

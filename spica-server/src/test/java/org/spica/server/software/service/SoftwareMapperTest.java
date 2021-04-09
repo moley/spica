@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.spica.commons.SpicaProperties;
 import org.spica.server.software.domain.Contact;
@@ -55,6 +56,13 @@ public class SoftwareMapperTest {
 
   private SpicaProperties spicaProperties = new SpicaProperties();
 
+
+  @Test
+  public void toSoftwareEntityInvalidDeployment () {
+    SoftwareInfo softwareInfo = new SoftwareInfo();
+    softwareInfo.setDeployment(new IdAndDisplaynameInfo().displayname("something").id("something"));
+    Assertions.assertThrows(IllegalArgumentException.class, () -> softwareMapper.toSoftwareEntity(softwareInfo));
+  }
 
   @Test
   public void toSoftwareEntity () {

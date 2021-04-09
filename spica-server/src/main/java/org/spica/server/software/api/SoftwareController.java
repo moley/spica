@@ -119,6 +119,12 @@ public class SoftwareController implements SoftwareApi {
     return ResponseEntity.ok().build();
   }
 
+  @Override public ResponseEntity<Void> setRelations(@ApiParam(value = "" ,required=true )  @Valid @RequestBody List<RelationInfo> relationInfo) {
+    log.info("Set relations with " + relationInfo);
+    softwareService.setRelationList(relationInfo);
+    return ResponseEntity.ok().build();
+  }
+
   @Override public ResponseEntity<List<IdAndDisplaynameInfo>> getDeployments() {
     log.info("call getDeployments");
     List<KeyValue> keyValuePairs = spicaProperties.getKeyValuePairs("spica.software.deployment");

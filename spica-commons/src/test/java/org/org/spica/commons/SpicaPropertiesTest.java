@@ -23,6 +23,50 @@ public class SpicaPropertiesTest {
 
 
   @Test
+  public void overlappingKeys () {
+    SpicaProperties spicaProperties = new SpicaProperties();
+    spicaProperties.setProperty("type.bla", "Type1");
+    spicaProperties.setProperty("type.blafasel", "Type2");
+
+    Assert.assertEquals ("Type1", spicaProperties.getValue("type.bla"));
+    Assert.assertEquals ("Type2", spicaProperties.getValue("type.blafasel"));
+
+  }
+
+  @Test
+  public void values () {
+    SpicaProperties spicaProperties = new SpicaProperties();
+    spicaProperties.setProperty("type.bla", "Type1");
+    spicaProperties.setProperty("type.blafasel", "Type1");
+
+    List<String> type = spicaProperties.getValues("type");
+    Assert.assertEquals (2, type.size());
+
+  }
+
+  @Test
+  public void overlappingKeysKeyValuepairs () {
+    SpicaProperties spicaProperties = new SpicaProperties();
+    spicaProperties.setProperty("type.bla", "Type1");
+    spicaProperties.setProperty("type.blafasel", "Type2");
+
+    Assert.assertEquals ("Type1", spicaProperties.getKeyValuePair("type.bla").getValue());
+    Assert.assertEquals ("Type2", spicaProperties.getKeyValuePair("type.blafasel").getValue());
+
+  }
+
+  @Test
+  public void valuesKeyValuepairs () {
+    SpicaProperties spicaProperties = new SpicaProperties();
+    spicaProperties.setProperty("type.bla", "Type1");
+    spicaProperties.setProperty("type.blafasel", "Type1");
+
+    List<KeyValue> type = spicaProperties.getKeyValuePairs("type");
+    Assert.assertEquals (2, type.size());
+
+  }
+
+  @Test
   public void getKeyValuePairs () {
     SpicaProperties spicaProperties = new SpicaProperties();
     List<KeyValue> keyValuePairs = spicaProperties.getKeyValuePairs("spica.software.deployment");

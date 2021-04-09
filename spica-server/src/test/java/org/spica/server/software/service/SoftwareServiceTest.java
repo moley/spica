@@ -33,7 +33,7 @@ public class SoftwareServiceTest {
     softwareService.setSoftwareRepository(softwareRepository);
     softwareService.setSoftwareList(Arrays.asList(software1));
 
-    Mockito.verify(softwareRepository, Mockito.times(1)).deleteAll();
+    Mockito.verify(softwareRepository, Mockito.times(1)).deleteAll(Mockito.anyCollection());
     Mockito.verify(softwareRepository, Mockito.times(1)).saveAll(Mockito.anyCollection());
 
   }

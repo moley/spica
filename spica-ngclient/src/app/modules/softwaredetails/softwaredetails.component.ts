@@ -112,7 +112,7 @@ export class SoftwareDetailsComponent implements OnInit {
 
   addRelation () {
     console.log ("addRelation called")
-    var newRelation: RelationInfo = {source: this.software, target: null}
+    var newRelation: RelationInfo = {source: this.software, target: null, relationtype: "used by"}
     this.relations = [...this.relations, newRelation];
   }
 

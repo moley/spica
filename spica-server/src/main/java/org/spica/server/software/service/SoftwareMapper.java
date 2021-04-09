@@ -24,6 +24,13 @@ public class SoftwareMapper {
 
   private DateUtils dateUtils = new DateUtils();
 
+  private String toString (final IdAndDisplaynameInfo info) {
+    String value = spicaProperties.getValue(info.getId());
+    if (value == null)
+      throw new IllegalArgumentException("ID " + info.getId() + " not found in custom properties");
+    return info.getId();
+  }
+
   public Software toSoftwareEntity(final SoftwareInfo softwareInfo) {
     if (softwareInfo == null)
       throw new IllegalArgumentException("Parameter softwareInfo must not be null");
@@ -35,13 +42,13 @@ public class SoftwareMapper {
     software.setDescription(softwareInfo.getDescription());
     software.setParentId(softwareInfo.getParentId());
     if (softwareInfo.getDeployment() != null)
-      software.setDeployment(softwareInfo.getDeployment().getId());
+      software.setDeployment(toString(softwareInfo.getDeployment()));
     if (softwareInfo.getGroup() != null)
-      software.setSoftwaregroup(softwareInfo.getGroup().getId());
+      software.setSoftwaregroup(toString(softwareInfo.getGroup()));
     if (softwareInfo.getState() != null)
-      software.setState(softwareInfo.getState().getId());
+      software.setState(toString(softwareInfo.getState()));
     if (softwareInfo.getType() != null)
-      software.setType(softwareInfo.getType().getId());
+      software.setType(toString(softwareInfo.getType()));
 
     List<Software> children = new ArrayList<>();
     if (softwareInfo.getChildren() != null) {
@@ -198,6 +205,7 @@ public class SoftwareMapper {
     Relation relation = new Relation();
     relation.setId(relationInfo.getId() != null ? relationInfo.getId() : UUID.randomUUID().toString());
 
+    relation.setRelationtype(relationInfo.getRelationtype());
     relation.setSource(toSoftwareEntity(relationInfo.getSource()));
     relation.setTarget(toSoftwareEntity(relationInfo.getTarget()));
     if (relationInfo.getState() != null)
@@ -210,6 +218,7 @@ public class SoftwareMapper {
     RelationInfo relationInfo = new RelationInfo();
     relationInfo.setId(relation.getId() != null ? relation.getId(): UUID.randomUUID().toString());
     relationInfo.setSource(toSoftwareInfo(relation.getSource()));
+    relationInfo.setRelationtype(relation.getRelationtype());
     relationInfo.setTarget(toSoftwareInfo(relation.getTarget()));
     relationInfo.setState(toIdAndDisplaynameInfo(spicaProperties.getKeyValuePair(relation.getState())));
 

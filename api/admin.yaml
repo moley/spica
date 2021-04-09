@@ -41,3 +41,18 @@ paths:
         '200':
           description: 'saving custom properties succeeded'
 
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+
+  schemas:
+
+    DummyInfo:
+      description: "Was added because a api file without modelelements leed to an builderror in typescript generator"
+      type: "object"
+      properties:
+        id:
+          type: "string"

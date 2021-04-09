@@ -108,7 +108,7 @@
                                                     <input pInputText type="text" [(ngModel)]="member.contactId">
                                                 </ng-template>
                                                 <ng-template pTemplate="output">
-                                                    {{member.user}}
+                                                    {{member.contactId}}
                                                 </ng-template>
                                             </p-cellEditor>
                                 </td>
@@ -148,7 +148,7 @@
                               <input pInputText type="text" [(ngModel)]="member.contactId">
                             </ng-template>
                             <ng-template pTemplate="output">
-                              {{member.user}}
+                              {{member.contactId}}
                             </ng-template>
                           </p-cellEditor>
                         </td>
@@ -193,7 +193,7 @@
                     </ng-template>
                     <ng-template pTemplate="body" let-relation>
                         <tr>
-                            <td>uses</td>
+                            <td>is used by</td>
                             <td><p-dropdown [options]="allsoftware" [(ngModel)]="relation.target" placeholder="Select..." optionLabel="name"></p-dropdown></td>
                            <td><p-dropdown [options]="constants.states" placeholder="Select..." [(ngModel)]="relation.state" optionLabel="displayname"></p-dropdown></td>
                             <div class="p-col-1">

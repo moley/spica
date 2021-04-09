@@ -28,6 +28,8 @@ public class Relation implements Idable {
   @OneToOne
   private Software target;
 
+  private String relationtype;
+
   private String state;
 
 }
