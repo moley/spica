@@ -9,11 +9,14 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.spica.commons.KeyValue;
 import org.spica.commons.SpicaProperties;
+import org.spica.server.software.domain.SoftwareMetricsParam;
 import org.spica.server.software.model.IdAndDisplaynameInfo;
 import org.spica.server.software.model.RelationInfo;
 import org.spica.server.software.model.SoftwareConstantsInfo;
 import org.spica.server.software.model.SoftwareInfo;
+import org.spica.server.software.model.SoftwareMetricsInfo;
 import org.spica.server.software.service.SoftwareMapper;
+import org.spica.server.software.service.SoftwareMetricsService;
 import org.spica.server.software.service.SoftwareService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +36,9 @@ public class SoftwareController implements SoftwareApi {
 
   @Autowired
   private SoftwareMapper softwareMapper;
+
+  @Autowired
+  private SoftwareMetricsService softwareMetricsService;
 
   private SpicaProperties spicaProperties = new SpicaProperties();
 
@@ -129,5 +135,12 @@ public class SoftwareController implements SoftwareApi {
     log.info("call getTypes");
     List<KeyValue> keyValuePairs = spicaProperties.getKeyValuePairs("spica.software.type");
     return ResponseEntity.ok(softwareMapper.toIdAndDisplaynameInfos(keyValuePairs));
+  }
+
+  @Override public ResponseEntity<SoftwareMetricsInfo> getSoftwareMetrics() {
+    log.info("call getSoftwareMetrics");
+    SoftwareMetricsParam param = new SoftwareMetricsParam();
+    SoftwareMetricsInfo softwareMetricsInfo = softwareMetricsService.getMetricsInfo(param);
+    return ResponseEntity.ok(softwareMetricsInfo);
   }
 }

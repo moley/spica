@@ -15,7 +15,7 @@ import org.spica.javaclient.model.MessageType;
 import org.spica.javaclient.model.MessagecontainerInfo;
 import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.UserInfo;
-import org.spica.commons.DateUtil;
+import org.spica.commons.DateUtils;
 
 @Slf4j
 public class MessageContainerInfoCellFactory extends ListCell<MessagecontainerInfo> {
@@ -25,7 +25,7 @@ public class MessageContainerInfoCellFactory extends ListCell<MessagecontainerIn
     this.model = model;
   }
 
-  private DateUtil dateUtil = new DateUtil();
+  private DateUtils dateUtils = new DateUtils();
 
   @Override protected void updateItem(MessagecontainerInfo item, boolean empty) {
     super.updateItem(item, empty);
@@ -85,7 +85,7 @@ public class MessageContainerInfoCellFactory extends ListCell<MessagecontainerIn
         else
           log.error("Message " + firstMessage.getId() + " does not have a type");
 
-        lblDate.setText(dateUtil.getDateAndTimeAsString(lastMessage.getCreationtime()));
+        lblDate.setText(dateUtils.getDateAndTimeAsString(lastMessage.getCreationtime()));
       }
 
       lblType.setGraphic(icon);

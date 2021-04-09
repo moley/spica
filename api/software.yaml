@@ -208,6 +208,20 @@ paths:
         '200':
           description: OK
 
+  /software/metrics:
+    get:
+      tags:
+        - software
+      operationId: "getSoftwareMetrics"
+      description: "get software metrics"
+      responses:
+        '200':
+          description: software
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SoftwareMetricsInfo"
+
 components:
   securitySchemes:
     BasicAuth:
@@ -248,7 +262,7 @@ components:
         requirement:
           type: "string"
         deployment:
-          $ref: "#/components/schema/IdAndDisplaynameInfo"
+            $ref: "#/components/schema/IdAndDisplaynameInfo"
         location:
           type: "string"
         format:
@@ -364,3 +378,36 @@ components:
           type: array
           items:
             $ref: "#/components/schema/IdAndDisplaynameInfo"
+
+    SoftwareMetricsInfo:
+      type: "object"
+      properties:
+        history:
+          $ref: "#/components/schema/Diagram"
+
+    Diagram:
+      type: "object"
+      properties:
+        labels:
+          type: array
+          items:
+            type: "string"
+        datasets:
+          type: array
+          items:
+            $ref: "#/components/schema/LineDataSet"
+
+
+    LineDataSet:
+      type: "object"
+      properties:
+        label:
+          type: "string"
+        data:
+          type: array
+          items:
+            type: "number"
+        color:
+          type: "string"
+
+

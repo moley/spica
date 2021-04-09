@@ -1,5 +1,6 @@
 package org.spica.server.software.scheduler;
 
+import java.time.LocalDate;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.spica.server.software.db.SoftwareMetricsRepository;
@@ -40,7 +41,7 @@ public class SoftwareMetricsScheduler {
     log.info("Writing metrics for software started");
 
     SoftwareMetricsProvider softwareMetricsProvider = new SoftwareMetricsProvider();
-    SoftwareMetrics softwareMetrics = softwareMetricsProvider.create(softwareRepository.findByParentIdIsNull());
+    SoftwareMetrics softwareMetrics = softwareMetricsProvider.create(softwareRepository.findByParentIdIsNull(), LocalDate.now());
 
     softwareMetricsRepository.save(softwareMetrics);
 

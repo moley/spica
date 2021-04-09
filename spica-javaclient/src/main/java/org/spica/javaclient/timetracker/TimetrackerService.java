@@ -2,14 +2,14 @@ package org.spica.javaclient.timetracker;
 
 import org.spica.javaclient.model.*;
 import org.spica.javaclient.services.ModelCacheService;
-import org.spica.commons.DateUtil;
+import org.spica.commons.DateUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 public class TimetrackerService {
 
-    private DateUtil dateUtil = new DateUtil();
+    private DateUtils dateUtils = new DateUtils();
 
     private ModelCacheService modelCacheService;
 
@@ -35,10 +35,10 @@ public class TimetrackerService {
     public String togglePause () {
         if (isPause()) {
             stopPause();
-            return "Pause is stopped at " + dateUtil.getDateAndTimeAsString(LocalDateTime.now());
+            return "Pause is stopped at " + dateUtils.getDateAndTimeAsString(LocalDateTime.now());
         } else {
             startPause();
-            return "Pause is started at " + dateUtil.getDateAndTimeAsString(LocalDateTime.now());
+            return "Pause is started at " + dateUtils.getDateAndTimeAsString(LocalDateTime.now());
         }
     }
 
@@ -120,7 +120,7 @@ public class TimetrackerService {
             //If new event is before first event and no end time is defined then set start time of first event as end time of new event
             if (newStartedEvent.getStop() == null) {
                 newStartedEvent.setStop(eventInfoAfter.getStart());
-                output.add("Limit the new booking to " + dateUtil.getDateAsString(eventInfoAfter.getStart()));
+                output.add("Limit the new booking to " + dateUtils.getDateAsString(eventInfoAfter.getStart()));
             }
         }
 
@@ -130,7 +130,7 @@ public class TimetrackerService {
             //If new event ends after the next event starts, then adapt the next event to start when new event ends
             if (eventInfoAfter.getStart().isBefore(newStartedEvent.getStop())) {
                 eventInfoAfter.setStart(newStartedEvent.getStop());
-                output.add("New event ends after start of first event of the day, limit first event to " + dateUtil.getTimeAsString(newStartedEvent.getStop()));
+                output.add("New event ends after start of first event of the day, limit first event to " + dateUtils.getTimeAsString(newStartedEvent.getStop()));
             }
         }
 
@@ -150,10 +150,11 @@ public class TimetrackerService {
         //If there is a event before then limit this to the start of the new one
         if (eventInfoBefore != null) {
             eventInfoBefore.setStop(timetrackerCreationParam.getFromAsLocalDateTime());
-            output.add("Limit last event of the day to start of new event (" + dateUtil.getTimeAsString(eventInfoBefore.getStop()) + ")");
+            output.add("Limit last event of the day to start of new event (" + dateUtils.getTimeAsString(eventInfoBefore.getStop()) + ")");
         }
 
-        output.add("Create event " + newStartedEvent.getId() + " from " + dateUtil.getTimeAsString(newStartedEvent.getStart()) + " to " + dateUtil.getTimeAsString(newStartedEvent.getStop()));
+        output.add("Create event " + newStartedEvent.getId() + " from " + dateUtils.getTimeAsString(newStartedEvent.getStart()) + " to " + dateUtils
+            .getTimeAsString(newStartedEvent.getStop()));
         model.getEventInfosReal().add(newStartedEvent);
 
         Collections.sort(model.getEventInfosReal(), new Comparator<EventInfo>() {

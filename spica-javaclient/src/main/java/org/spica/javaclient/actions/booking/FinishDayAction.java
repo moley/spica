@@ -16,13 +16,13 @@ import org.spica.javaclient.params.ConfirmInputParam;
 import org.spica.javaclient.params.InputParamGroup;
 import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.timetracker.TimetrackerService;
-import org.spica.commons.DateUtil;
+import org.spica.commons.DateUtils;
 
 @Slf4j
 public class FinishDayAction extends AbstractAction {
 
 
-    private DateUtil dateUtil = new DateUtil();
+    private DateUtils dateUtils = new DateUtils();
 
     public final static String DISPLAY_NAME = "Finish day";
     public final static String KEY_CONFIRM_LATER = "CONFIRM_LATER";
@@ -49,13 +49,13 @@ public class FinishDayAction extends AbstractAction {
             else {
                 LocalDateTime stopTime = LocalDateTime.now();
                 if (! commandLineArguments.isEmpty()) {
-                    LocalTime localTime = dateUtil.getTime(commandLineArguments.getSingleMainArgument());
+                    LocalTime localTime = dateUtils.getTime(commandLineArguments.getSingleMainArgument());
                     stopTime = LocalDateTime.of(LocalDate.now(), localTime);
                 }
                 TimetrackerService timetrackerService = new TimetrackerService();
                 timetrackerService.setModelCacheService(actionContext.getServices().getModelCacheService());
                 timetrackerService.finishDay(stopTime);
-                outputOk("Finished day at " + dateUtil.getTimeAsString(stopTime));
+                outputOk("Finished day at " + dateUtils.getTimeAsString(stopTime));
             }
         }
 
@@ -89,7 +89,7 @@ public class FinishDayAction extends AbstractAction {
         if (lastOpenEventDate.isBefore(LocalDate.now())) {
             InputParamGroup lastOpenBookingNotFromToday = new InputParamGroup();
             inputParams.getInputParamGroups().add(lastOpenBookingNotFromToday);
-            String day = dateUtil.getDateAsString(lastOpenEventDate);
+            String day = dateUtils.getDateAsString(lastOpenEventDate);
             ConfirmInputParam confirmInputParam = new ConfirmInputParam(KEY_CONFIRM_LATER, "An open event was found from " + day + ". Do you want to finish this day?", "Y");
             InputParamGroup inputParamGroupTopic = new InputParamGroup();
             inputParamGroupTopic.getInputParams().add(confirmInputParam);

@@ -4,12 +4,12 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.spica.javaclient.model.TaskInfo;
-import org.spica.commons.DateUtil;
+import org.spica.commons.DateUtils;
 
 @Slf4j
 public class WeekTasksView extends AbstractTaskView {
 
-  private DateUtil dateUtil = new DateUtil();
+  private DateUtils dateUtils = new DateUtils();
 
 
   @Override public String getName() {
@@ -24,8 +24,8 @@ public class WeekTasksView extends AbstractTaskView {
 
       if (next.getTaskState() == null || ! next.getTaskState().equals(TaskInfo.TaskStateEnum.FINISHED)) {
         if (next.getPlannedDate() != null) {
-          int weekOfYearNext = dateUtil.getDayOfWeek(next.getPlannedDate());
-          int weekOfToday = dateUtil.getDayOfWeek(LocalDate.now());
+          int weekOfYearNext = dateUtils.getDayOfWeek(next.getPlannedDate());
+          int weekOfToday = dateUtils.getDayOfWeek(LocalDate.now());
           if (weekOfYearNext == weekOfToday)
             getTaskInfos().add(next);
         }

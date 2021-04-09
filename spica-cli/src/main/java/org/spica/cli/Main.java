@@ -21,7 +21,7 @@ import org.spica.javaclient.event.EventDetailsBuilder;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.model.TaskInfo;
-import org.spica.commons.DateUtil;
+import org.spica.commons.DateUtils;
 import org.spica.javaclient.utils.LogUtil;
 import org.spica.javaclient.utils.RenderUtil;
 
@@ -32,7 +32,7 @@ public class Main {
 
     log.info("Started cli application with parameters " + Arrays.asList(args));
 
-    DateUtil dateUtil = new DateUtil();
+    DateUtils dateUtils = new DateUtils();
 
     System.err.close();
     System.setErr(System.out); //to avoid reflection warnings
@@ -94,16 +94,16 @@ public class Main {
         task = eventInfo.getEventType().getValue();
       }
 
-      since = " ( since " + dateUtil.getTimeAsString(eventInfo.getStart()) + " )";
+      since = " ( since " + dateUtils.getTimeAsString(eventInfo.getStart()) + " )";
     }
 
     //System.out.println (LogUtil.clearScreen());
 
-    System.out.println("Current time:         " + LogUtil.cyan(dateUtil.getTimeAsString(LocalDateTime.now())));
+    System.out.println("Current time:         " + LogUtil.cyan(dateUtils.getTimeAsString(LocalDateTime.now())));
     System.out.println("Working since:        " + LogUtil
-        .cyan(firstTaskOfDay != null ? dateUtil.getTimeAsString(firstTaskOfDay.getStart()) : ""));
-    System.out.println("Cumulated work time:  " + LogUtil.cyan(dateUtil.getDuration(eventDetails.getDurationWork())));
-    System.out.println("Cumulated pause time: " + LogUtil.cyan(dateUtil.getDuration(eventDetails.getDurationPause())));
+        .cyan(firstTaskOfDay != null ? dateUtils.getTimeAsString(firstTaskOfDay.getStart()) : ""));
+    System.out.println("Cumulated work time:  " + LogUtil.cyan(dateUtils.getDuration(eventDetails.getDurationWork())));
+    System.out.println("Cumulated pause time: " + LogUtil.cyan(dateUtils.getDuration(eventDetails.getDurationPause())));
     System.out.println("Current task:         " + LogUtil.cyan(task) + since);
 
     List<EventInfo> oldUnfinishedEvents = actionContext.getModel().findOldOpenEvents();

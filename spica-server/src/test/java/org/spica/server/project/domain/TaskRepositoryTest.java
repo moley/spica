@@ -9,6 +9,7 @@ import org.spica.server.project.service.JiraTaskAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 @ExtendWith(value = {SpringExtension.class})
 @DataJpaTest
 @AutoConfigurationPackage
+@ComponentScan("org.spica.server")
 public class TaskRepositoryTest {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(TaskRepositoryTest.class);

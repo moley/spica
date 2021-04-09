@@ -194,7 +194,7 @@ import org.spica.fx.controllers.Pages;
           MultiResolutionImage multiResolutionImage = (MultiResolutionImage) clipTf
               .getTransferData(DataFlavor.imageFlavor);
           BufferedImage toolkitImage = (BufferedImage) multiResolutionImage.getResolutionVariants().get(0);
-          File imageFile = filestoreService.file("Clipboard" + UUID.randomUUID() + ".png");
+          File imageFile = filestoreService.file("Clipboard" + UUID.randomUUID() + ".png").getFile();
           LOGGER.info("Saving image to file " + imageFile.getAbsolutePath());
           ImageIO.write(toolkitImage, "png", imageFile);
           ClipboardItem clipboardItem = new ClipboardItem();

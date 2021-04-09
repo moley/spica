@@ -15,12 +15,12 @@ import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParamGroup;
 import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.params.TextInputParam;
-import org.spica.commons.DateUtil;
+import org.spica.commons.DateUtils;
 
 @Slf4j
 public class CloseBookingAction extends AbstractAction {
 
-  private DateUtil dateUtil = new DateUtil();
+  private DateUtils dateUtils = new DateUtils();
 
   public final static String KEY_STOPTIME = "stoptime";
   public final static String KEY_STOPOLD = "stopold";
@@ -40,7 +40,7 @@ public class CloseBookingAction extends AbstractAction {
     //Handle old closed
     int index = 0;
     for (EventInfo next : actionContext.getModel().findOldOpenEvents()) {
-      LocalTime stopTime = dateUtil.getTime(inputParams.getInputValueAsString(KEY_STOPOLD + "_" + index));
+      LocalTime stopTime = dateUtils.getTime(inputParams.getInputValueAsString(KEY_STOPOLD + "_" + index));
       outputOk("Stopping old booking (" + next.getId() + " - " + next.getName() + ") started at " + next
           .getStart() + " at " + stopTime);
       LocalDateTime stopDateTime = LocalDateTime.of(next.getStart().toLocalDate(), stopTime);
@@ -60,10 +60,10 @@ public class CloseBookingAction extends AbstractAction {
 
       String newClosingValue = inputParams.getInputValueAsString(KEY_STOPTIME);
       if (newClosingValue != null) {
-        LocalTime stopTime = dateUtil.getTime(newClosingValue);
+        LocalTime stopTime = dateUtils.getTime(newClosingValue);
 
         LocalDateTime stopDateTime = LocalDateTime.of(eventInfoRealById.getStart().toLocalDate(), stopTime);
-        outputOk("Saved booking " + eventInfoRealById.getId() + " with stop time " + dateUtil.getDateAndTimeAsString(stopDateTime));
+        outputOk("Saved booking " + eventInfoRealById.getId() + " with stop time " + dateUtils.getDateAndTimeAsString(stopDateTime));
         eventInfoRealById.setStop(stopDateTime);
 
         actionContext.saveModel(getClass().getName());

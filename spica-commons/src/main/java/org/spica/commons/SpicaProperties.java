@@ -2,6 +2,7 @@ package org.spica.commons;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class SpicaProperties {
   private static Properties customPropertiesFromFile = new Properties();
 
   public final static String FILENAME_SPICA_PROPERTIES = "spica.properties";
+  public final static String FILENAME_SPICA_CUSTOM_PROPERTIES = "spica-custom.properties";
 
   private static File customSpicaPath;
 
@@ -36,7 +38,7 @@ public class SpicaProperties {
 
         logProperties(properties, "defaults");
 
-        Collection<File> customPropertiesFiles = getCustomPropertiesFile();
+        Collection<File> customPropertiesFiles = getPropertiesFilesFromFileSystem();
         for (File next: customPropertiesFiles) {
           Properties customProperties = new Properties();
           customProperties.load(new FileInputStream(next));
@@ -54,19 +56,66 @@ public class SpicaProperties {
     }
   }
 
-  public Collection<File> getCustomPropertiesFile () {
+  public Collection<File> getPropertiesFilesFromFileSystem() {
     List<File> files = new ArrayList<>();
 
+    //global default spica properties
     File globalPropertiesFile = new File (getGlobalSpicaHome(), FILENAME_SPICA_PROPERTIES).getAbsoluteFile();
     if (globalPropertiesFile.exists())
       files.add(globalPropertiesFile);
 
-    //local configs overwrite global configs
-    File localPropertiesFile = new File (".spica", FILENAME_SPICA_PROPERTIES).getAbsoluteFile();
+    //local default configs overwrite global configs
+    File localPropertiesFile = new File (getSpicaHome(), FILENAME_SPICA_PROPERTIES).getAbsoluteFile();
     if (localPropertiesFile.exists())
       files.add(localPropertiesFile);
 
+    //local custom configs overwrite local default configs
+    File globalCustomPropertiesFile = getCustomPropertiesFile().getAbsoluteFile();
+    if (globalCustomPropertiesFile.exists())
+      files.add(globalCustomPropertiesFile);
+
+
     return files;
+  }
+
+  public void saveCustomProperties(final Properties saveProperties) {
+    for (String key: saveProperties.stringPropertyNames()) {
+      String value = saveProperties.getProperty(key);
+      setProperty(key, value);
+    }
+
+    File globalCustomPropertiesFile = getCustomPropertiesFile().getAbsoluteFile();
+    globalCustomPropertiesFile.getParentFile().mkdirs();
+    try {
+      if (!globalCustomPropertiesFile.exists())
+        globalCustomPropertiesFile.createNewFile();
+
+      Properties properties = new Properties();
+      properties.load(new FileInputStream(globalCustomPropertiesFile));
+      properties.putAll(saveProperties);
+      properties.store(new FileOutputStream(globalCustomPropertiesFile), "Saved from spica, do not change");
+    } catch (IOException e) {
+      throw new IllegalStateException("Cannot save properties " + saveProperties + " in " + globalCustomPropertiesFile.getAbsolutePath() + e.getLocalizedMessage(),e);
+    }
+
+  }
+
+  public File getCustomPropertiesFile () {
+    return new File (getSpicaHome(), FILENAME_SPICA_CUSTOM_PROPERTIES).getAbsoluteFile();
+  }
+
+  public Properties getCustomProperties () {
+    File globalCustomPropertiesFile = getCustomPropertiesFile();
+    if (! globalCustomPropertiesFile.exists())
+      return new Properties();
+
+    try {
+      Properties properties = new Properties();
+      properties.load(new FileInputStream(globalCustomPropertiesFile));
+      return properties;
+    } catch (IOException e) {
+      throw new IllegalStateException("Cannot get custom properties in " + globalCustomPropertiesFile.getAbsolutePath() + "-" +  e.getLocalizedMessage(),e);
+    }
   }
 
   public void setProperty (final String key, String value) {

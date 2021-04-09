@@ -1,16 +1,23 @@
 package org.spica.server.demodata;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
 import org.spica.commons.KeyValue;
 import org.spica.commons.SpicaProperties;
-import org.spica.commons.filestore.FilestoreItem;
 import org.spica.commons.filestore.FilestoreService;
+import org.spica.server.software.db.SoftwareMetricsRepository;
+import org.spica.server.software.db.SoftwareRepository;
+import org.spica.server.software.domain.Software;
+import org.spica.server.software.domain.SoftwareMetrics;
 import org.spica.server.software.model.IdAndDisplaynameInfo;
 import org.spica.server.software.model.RelationInfo;
 import org.spica.server.software.model.SoftwareInfo;
 import org.spica.server.software.service.SoftwareMapper;
+import org.spica.server.software.service.SoftwareMetricsProvider;
 import org.spica.server.software.service.SoftwareService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,11 +31,19 @@ public class DemoDataCreator {
 
   private SoftwareMapper softwareMapper = new SoftwareMapper();
 
-  private SpicaProperties spicaProperties = new SpicaProperties();
 
   private FilestoreService filestoreService = new FilestoreService();
 
-  private IdAndDisplaynameInfo getIdAndDisplaynameInfoFromConfiguration(final String key) {
+  private SoftwareMetricsProvider softwareMetricsProvider = new SoftwareMetricsProvider();
+
+  @Autowired
+  private SoftwareMetricsRepository softwareMetricsRepository;
+
+  @Autowired
+  private SoftwareRepository softwareRepository;
+
+  private IdAndDisplaynameInfo getIdAndDisplaynameInfoFromConfiguration(final SpicaProperties spicaProperties, final String key) {
+
     KeyValue keyValuePair = spicaProperties.getKeyValuePair(key);
     return softwareMapper.toIdAndDisplaynameInfo(keyValuePair);
   }
@@ -40,10 +55,12 @@ public class DemoDataCreator {
   public void createSoftware () {
     log.info("Create demodata software");
 
+    SpicaProperties spicaProperties = new SpicaProperties();
+
     SoftwareInfo softwareInfoSpica = new SoftwareInfo().id("SPICA").name("Spica").description("Extensible, project-oriented development and communication platform");
-    softwareInfoSpica = softwareInfoSpica.type(getIdAndDisplaynameInfoFromConfiguration("spica.software.type.system")).group(
-        getIdAndDisplaynameInfoFromConfiguration("spica.software.group.development"));
-    softwareInfoSpica = softwareInfoSpica.state(getIdAndDisplaynameInfoFromConfiguration("spica.software.state.worked"));
+    softwareInfoSpica = softwareInfoSpica.type(getIdAndDisplaynameInfoFromConfiguration(spicaProperties, "spica.software.type.system")).group(
+        getIdAndDisplaynameInfoFromConfiguration(spicaProperties, "spica.software.group.development"));
+    softwareInfoSpica = softwareInfoSpica.state(getIdAndDisplaynameInfoFromConfiguration(spicaProperties, "spica.software.state.worked"));
     softwareInfoSpica = softwareInfoSpica.technologies(Arrays.asList(getIdAndDisplaynameInfoFromString("Java"), getIdAndDisplaynameInfoFromString("Gradle")));
 
     SoftwareInfo softwareInfoSpicaServer = new SoftwareInfo().parentId(softwareInfoSpica.getId()).id("SPICASERVER").name("Spica-Server").description("Springboot Server, which provides functionality to improve automation and interactions in development teams");
@@ -89,6 +106,25 @@ public class DemoDataCreator {
     filestoreService.saveObjectItem(softwareInfoBitbucket, FilestoreService.CONTEXT_SCREENSHOT, bitbucketIcon);
     filestoreService.saveObjectItem(softwareInfoMail, FilestoreService.CONTEXT_SCREENSHOT, mailIcon);
     filestoreService.saveObjectItem(softwareInfoXmpp, FilestoreService.CONTEXT_SCREENSHOT, xmppIcon);
+
+    //old metrics
+    Collection<Software> softwareInfoList = softwareRepository.findByParentIdIsNull();
+
+    LocalDate localDate = LocalDate.now();
+    do {
+
+      log.info("Software: " + softwareInfoList.size());
+
+      softwareMetricsProvider.create(softwareInfoList,localDate);
+      localDate = localDate.minus(1, ChronoUnit.MONTHS);
+      SoftwareMetrics softwareMetrics = softwareMetricsProvider.create(softwareInfoList, localDate);
+      softwareMetricsRepository.save(softwareMetrics);
+      softwareInfoList.remove(softwareInfoList.iterator().next());
+
+    }  while (softwareInfoList.size() > 0);
+
+
+
   }
 
   public void create() {

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.spica.SpicaServerApplication;
 import org.spica.commons.SpicaProperties;
+import org.spica.server.demodata.DemoDataCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -31,15 +32,13 @@ public class SoftwareControllerTest {
   protected WebApplicationContext context;
 
   @BeforeAll
-  public static void beforeClass () throws IOException {
-    System.out.println (System.getProperty("java.version"));
+  public static void beforeClass (@Autowired DemoDataCreator demoDataCreator) throws IOException {
     SpicaProperties.close();
-    System.setProperty("demodata", "true");
+    demoDataCreator.createSoftware();
   }
 
   @AfterAll
   public static void afterClass () {
-    System.clearProperty("demodata");
     SpicaProperties.close();
   }
 

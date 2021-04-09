@@ -18,7 +18,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableJpaRepositories
 @EnableScheduling
 @Configuration
-@ComponentScan
 @Slf4j
 @Data
 public class SpicaServerApplication {

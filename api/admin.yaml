@@ -1,0 +1,43 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: "spica rest admin component"
+  description: "Rest API for the admin component of spica"
+servers:
+  - url: http://localhost:8765/api
+security:
+  - BasicAuth
+
+paths:
+  /admin/customproperties:
+    get:
+      tags:
+        - admin
+      operationId: "getCustomProperties"
+      description: "get list of customproperties"
+      responses:
+        '200':
+          description: 'list of custom properties'
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+    put:
+      tags:
+        - admin
+      operationId: "setCustomProperties"
+      description: "sets the custom properties"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+      responses:
+        '200':
+          description: 'saving custom properties succeeded'
+

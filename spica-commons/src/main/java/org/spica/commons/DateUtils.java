@@ -6,7 +6,7 @@ import java.time.temporal.TemporalAccessor;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
 
-public class DateUtil {
+public class DateUtils {
 
     public int getDayOfWeek (LocalDate localDate) {
         WeekFields weekFields = WeekFields.of(Locale.getDefault());

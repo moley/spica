@@ -25,7 +25,7 @@ import org.spica.javaclient.params.SelectInputParam;
 import org.spica.javaclient.params.TextInputParam;
 import org.spica.javaclient.timetracker.TimetrackerCreationParam;
 import org.spica.javaclient.timetracker.TimetrackerService;
-import org.spica.commons.DateUtil;
+import org.spica.commons.DateUtils;
 import org.spica.javaclient.utils.RenderUtil;
 
 @Slf4j
@@ -41,7 +41,7 @@ public class CreateBookingAction extends AbstractAction {
     public final static String KEY_TEXT = "text";
     public final static String KEY_FOREIGN_USER = "user";
 
-    private DateUtil dateUtil = new DateUtil();
+    private DateUtils dateUtils = new DateUtils();
 
     @Override public String getDisplayname() {
         return "Create booking";
@@ -55,10 +55,10 @@ public class CreateBookingAction extends AbstractAction {
     @Override
     public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
 
-        LocalDate date = dateUtil.getDate(inputParams.getInputValueAsString(KEY_DAY));
+        LocalDate date = dateUtils.getDate(inputParams.getInputValueAsString(KEY_DAY));
 
-        LocalTime fromTime = dateUtil.getTime(inputParams.getInputValueAsString(KEY_FROM));
-        LocalTime untilTime = inputParams.isAvailable(KEY_UNTIL) ? dateUtil.getTime(inputParams.getInputValueAsString(KEY_UNTIL)): null;
+        LocalTime fromTime = dateUtils.getTime(inputParams.getInputValueAsString(KEY_FROM));
+        LocalTime untilTime = inputParams.isAvailable(KEY_UNTIL) ? dateUtils.getTime(inputParams.getInputValueAsString(KEY_UNTIL)): null;
 
         EventType eventType = EventType.fromValue(inputParams.getInputValueAsString(KEY_TYPE));
         UserInfo userInfo = inputParams.getInputValue(KEY_FOREIGN_USER, UserInfo.class);

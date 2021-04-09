@@ -1,11 +1,10 @@
 package org.spica.server.software.service;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
-import org.spica.commons.DateUtil;
+import org.spica.commons.DateUtils;
 import org.spica.commons.KeyValue;
 import org.spica.commons.SpicaProperties;
 import org.spica.server.software.domain.Contact;
@@ -23,7 +22,7 @@ public class SoftwareMapper {
 
   private SpicaProperties spicaProperties = new SpicaProperties();
 
-  private DateUtil dateUtil = new DateUtil();
+  private DateUtils dateUtils = new DateUtils();
 
   public Software toSoftwareEntity(final SoftwareInfo softwareInfo) {
     if (softwareInfo == null)
@@ -91,7 +90,7 @@ public class SoftwareMapper {
     software.setArchitectureExceptions(softwareInfo.getArchitectureExceptions());
     software.setChangeFrequency(softwareInfo.getChangeFrequency());
     if (softwareInfo.getTargetDate() != null)
-      software.setTargetDate(dateUtil.getDate(softwareInfo.getTargetDate()));
+      software.setTargetDate(dateUtils.getDate(softwareInfo.getTargetDate()));
 
     software.setWithOnlineHelp(softwareInfo.getWithOnlineHelp());
     software.setWithPersistence(softwareInfo.getWithPersistence());
@@ -168,7 +167,7 @@ public class SoftwareMapper {
     softwareInfo.setArchitectureExceptions(software.getArchitectureExceptions());
     softwareInfo.setChangeFrequency(software.getChangeFrequency());
     if (software.getTargetDate() != null)
-      softwareInfo.setTargetDate(dateUtil.getDateAsStringLongFormat(software.getTargetDate()));
+      softwareInfo.setTargetDate(dateUtils.getDateAsStringLongFormat(software.getTargetDate()));
 
     softwareInfo.setWithOnlineHelp(software.getWithOnlineHelp());
     softwareInfo.setWithPersistence(software.getWithPersistence());
@@ -224,6 +223,8 @@ public class SoftwareMapper {
     }
     return infos;
   }
+
+
 
   public IdAndDisplaynameInfo toIdAndDisplaynameInfo (KeyValue keyValues) {
     if (keyValues == null)

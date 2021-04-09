@@ -339,7 +339,7 @@ public class MainController extends AbstractController  {
         String fileId = "filetransfer_" + (userInfo != null ? userInfo.getUsername() : "unknown") + "_" + request.getFileName();
         messageInfo.addDocumentsItem(fileId);
 
-        File fileInFileStore = filestoreService.file(fileId);
+        File fileInFileStore = filestoreService.file(fileId).getFile();
         log.info("Recieve file " + fileInFileStore.getAbsolutePath());
 
         try {

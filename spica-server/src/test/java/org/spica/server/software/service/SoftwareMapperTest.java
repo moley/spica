@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.spica.commons.SpicaProperties;
 import org.spica.server.software.domain.Contact;
 import org.spica.server.software.domain.Software;

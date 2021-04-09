@@ -6,14 +6,14 @@ import org.spica.javaclient.model.Model;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.model.EventInfo;
-import org.spica.commons.DateUtil;
+import org.spica.commons.DateUtils;
 
 import java.time.LocalDate;
 
 @Slf4j
 public class ListBookingsAction extends AbstractAction {
 
-    private DateUtil dateUtil = new DateUtil();
+    private DateUtils dateUtils = new DateUtils();
 
     @Override public String getDisplayname() {
         return "List booking";
@@ -68,7 +68,7 @@ public class ListBookingsAction extends AbstractAction {
 
             }
             else if (optionalFirstArgument.length() == 4 || optionalFirstArgument.length() == 5) {
-                LocalDate concreteDate = dateUtil.getDate(optionalFirstArgument);
+                LocalDate concreteDate = dateUtils.getDate(optionalFirstArgument);
                 from = concreteDate;
                 until = concreteDate;
             }
@@ -77,7 +77,7 @@ public class ListBookingsAction extends AbstractAction {
 
 
         }
-        outputDefault("Bookings from " + dateUtil.getDateAsString(from) + " until " + dateUtil.getDateAsString(until) + ":\n\n");
+        outputDefault("Bookings from " + dateUtils.getDateAsString(from) + " until " + dateUtils.getDateAsString(until) + ":\n\n");
         Model model = actionContext.getModel();
         for (EventInfo next: model.getEventInfosReal()) {
 
@@ -87,9 +87,9 @@ public class ListBookingsAction extends AbstractAction {
             if (next.getStart().toLocalDate().isAfter(until))
                 continue;
 
-            String startAsString = dateUtil.getTimeAsString(next.getStart());
-            String stopAsString = dateUtil.getTimeAsString(next.getStop());
-            String dayAsString = dateUtil.getDateAsString(next.getStart());
+            String startAsString = dateUtils.getTimeAsString(next.getStart());
+            String stopAsString = dateUtils.getTimeAsString(next.getStop());
+            String dayAsString = dateUtils.getDateAsString(next.getStart());
             String nameNotNull = next.getName() != null ? next.getName() : "";
             String eventToken = String.format("     %-15s%-10s%-10s %-10s %-90s (%s)", dayAsString, startAsString, stopAsString, next.getEventType().name(), nameNotNull, next.getId());
             outputDefault(eventToken);
