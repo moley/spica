@@ -31,7 +31,7 @@ services:
       - default
 
   spica:
-    image: markusoley/spica:0.12
+    image: markusoley/spica:0.15
     container_name: spica
     restart: unless-stopped
     environment: 
@@ -41,6 +41,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=spica
       - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
       - SPRING_JPA_HIBERNATE_DDL-AUTO=update
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQL10Dialect
     depends_on:
       postgres:
         condition: service_healthy
