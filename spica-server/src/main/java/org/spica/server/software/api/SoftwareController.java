@@ -15,7 +15,9 @@ import org.spica.server.software.model.RelationInfo;
 import org.spica.server.software.model.SoftwareConstantsInfo;
 import org.spica.server.software.model.SoftwareInfo;
 import org.spica.server.software.model.SoftwareMetricsInfo;
+import org.spica.server.software.model.SoftwareMetricsParamInfo;
 import org.spica.server.software.service.SoftwareMapper;
+import org.spica.server.software.service.SoftwareMetricsProvider;
 import org.spica.server.software.service.SoftwareMetricsService;
 import org.spica.server.software.service.SoftwareService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,10 +145,22 @@ public class SoftwareController implements SoftwareApi {
     return ResponseEntity.ok(softwareMapper.toIdAndDisplaynameInfos(keyValuePairs));
   }
 
-  @Override public ResponseEntity<SoftwareMetricsInfo> getSoftwareMetrics() {
+  @Override public ResponseEntity<SoftwareMetricsInfo> getSoftwareMetrics(@ApiParam(value = "" ,required=true )  @Valid @RequestBody List<SoftwareMetricsParamInfo> softwareMetricsParamInfo) {
     log.info("call getSoftwareMetrics");
     SoftwareMetricsParam param = new SoftwareMetricsParam();
     SoftwareMetricsInfo softwareMetricsInfo = softwareMetricsService.getMetricsInfo(param);
     return ResponseEntity.ok(softwareMetricsInfo);
   }
+
+  @Override public ResponseEntity<SoftwareMetricsParamInfo> getSoftwareMetricsParam() {
+    log.info("call getSoftwareMetricsParam");
+    SoftwareMetricsProvider provider = new SoftwareMetricsProvider();
+    List<IdAndDisplaynameInfo> idAndDisplaynameInfos = softwareMapper.toIdAndDisplaynameInfosFromMetricsExtractors(provider.getMetricsExtractors());
+
+    SoftwareMetricsParamInfo param = new SoftwareMetricsParamInfo();
+    param.setAllTypes(idAndDisplaynameInfos);
+    return ResponseEntity.ok(param);
+
+  }
+
 }

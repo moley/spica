@@ -8,6 +8,7 @@ import org.spica.commons.DateUtils;
 import org.spica.commons.KeyValue;
 import org.spica.commons.SpicaProperties;
 import org.spica.server.software.domain.Contact;
+import org.spica.server.software.domain.MetricsExtractor;
 import org.spica.server.software.domain.Relation;
 import org.spica.server.software.domain.Software;
 import org.spica.server.software.model.ContactInfo;
@@ -236,6 +237,15 @@ public class SoftwareMapper {
     for (KeyValue next: keyValues) {
       infos.add(toIdAndDisplaynameInfo(next));
     }
+    return infos;
+  }
+
+  public List<IdAndDisplaynameInfo> toIdAndDisplaynameInfosFromMetricsExtractors (final List<MetricsExtractor> extractors) {
+    List<IdAndDisplaynameInfo> infos = new ArrayList<>();
+    for (MetricsExtractor next: extractors) {
+      infos.add(new IdAndDisplaynameInfo().id(next.getId()).displayname(next.toString()));
+    }
+
     return infos;
   }
 

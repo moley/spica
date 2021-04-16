@@ -4,8 +4,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
+import lombok.Getter;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.spica.commons.PropertiesUtils;
 
+@Getter
 public class MetricsExtractor {
 
   private HashMap<String, BigDecimal> extractedProperties = new HashMap<String, BigDecimal>();
@@ -18,7 +22,6 @@ public class MetricsExtractor {
 
   private String id;
 
-
   public MetricsExtractor(final String id, final String field, final MetricType metricType) {
     this.id = id;
     this.field = field;
@@ -27,6 +30,10 @@ public class MetricsExtractor {
       this.average = true;
       this.metricType = MetricType.SUM;
     }
+  }
+
+  public String toString () {
+    return metricType.getDescription().replace("'%s'", field);
   }
 
   public void extract (final Software software) {

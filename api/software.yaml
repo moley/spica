@@ -230,6 +230,14 @@ paths:
         - software
       operationId: "getSoftwareMetrics"
       description: "get software metrics"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/SoftwareMetricsParamInfo"
       responses:
         '200':
           description: software
@@ -237,6 +245,20 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SoftwareMetricsInfo"
+
+  /software/metrics/param:
+    get:
+      tags:
+        - software
+      operationId: "getSoftwareMetricsParam"
+      description: "get software metrics param"
+      responses:
+        '200':
+          description: software
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SoftwareMetricsParamInfo"
 
 components:
   securitySchemes:
@@ -394,6 +416,16 @@ components:
           type: array
           items:
             $ref: "#/components/schema/IdAndDisplaynameInfo"
+
+    SoftwareMetricsParamInfo:
+      type: "object"
+      properties:
+        allTypes:
+          type: array
+          items:
+            $ref: "#/components/schema/IdAndDisplaynameInfo"
+        selectedType:
+          $ref: "#/components/schema/IdAndDisplaynameInfo"
 
     SoftwareMetricsInfo:
       type: "object"

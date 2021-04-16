@@ -6,6 +6,13 @@ import org.junit.jupiter.api.Test;
 
 public class MetricsExtractorTest {
 
+
+  @Test
+  public void description () {
+    MetricsExtractor metricsExtractor = new MetricsExtractor("groupByField","field",MetricType.COUNT_GROUPED);
+    Assert.assertEquals ("Group entities by field", metricsExtractor.toString());
+  }
+
   @Test
   public void extractSetCountNotNull () {
 

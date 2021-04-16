@@ -19,15 +19,21 @@ public class SoftwareMetricsProvider {
   private PropertiesUtils propertiesUtils = new PropertiesUtils();
 
 
-
-  public SoftwareMetrics create (final Collection<Software> softwareFlat, final LocalDate localDate) {
-
+  public List<MetricsExtractor> getMetricsExtractors () {
     List<MetricsExtractor> metricsExtractors = new ArrayList<>();
 
     metricsExtractors.add(new MetricsExtractor("groupByType", "type", MetricType.COUNT_GROUPED));
     metricsExtractors.add(new MetricsExtractor("groupBySoftwareGroup", "softwaregroup", MetricType.COUNT_GROUPED));
     metricsExtractors.add(new MetricsExtractor("groupByState", "state", MetricType.COUNT_GROUPED));
     metricsExtractors.add(new MetricsExtractor("groupByDeployment", "deployment", MetricType.COUNT_GROUPED));
+
+    return metricsExtractors;
+
+  }
+
+  public SoftwareMetrics create (final Collection<Software> softwareFlat, final LocalDate localDate) {
+
+    List<MetricsExtractor> metricsExtractors = getMetricsExtractors();
 
     Properties properties = new Properties();
     for (Software next: softwareFlat) {
