@@ -204,8 +204,10 @@ import lombok.extern.slf4j.Slf4j;
     if (prefix == null)
       return null;
     List<KeyValue> values = getKeyValuePairs(prefix);
-    if (values.size() != 1)
+    if (values.size() != 1) {
+      log.info("Found values:"+ values);
       throw new IllegalStateException("Not exactly one value found for value '" + prefix + "', but " + values.size());
+    }
 
     return values.get(0);
   }

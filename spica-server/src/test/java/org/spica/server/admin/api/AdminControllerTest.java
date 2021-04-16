@@ -19,6 +19,7 @@ import org.spica.commons.SpicaProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -30,7 +31,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { SpicaServerApplication.class })
+@SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @Slf4j
 public class AdminControllerTest {
 
@@ -41,6 +43,9 @@ public class AdminControllerTest {
 
   @BeforeAll
   public static void beforeClass () throws IOException {
+    SpicaProperties spicaProperties = new SpicaProperties();
+    spicaProperties.getCustomPropertiesFile().delete();
+
     SpicaProperties.close();
   }
 

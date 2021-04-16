@@ -27,7 +27,7 @@ public class SoftwareMetricsProviderTest {
     SoftwareMetricsProvider softwareMetricsProvider = new SoftwareMetricsProvider();
     SoftwareMetrics softwareMetrics = softwareMetricsProvider.create(Arrays.asList(software1, software2, software3), LocalDate.now());
     Assert.assertEquals (3, softwareMetrics.getTotalNumber());
-    Assert.assertEquals(LocalDate.now(), softwareMetrics.getDate());
+    Assert.assertEquals(LocalDate.now(), softwareMetrics.getCreationdate());
 
     String metrics = softwareMetrics.getMetrics();
 

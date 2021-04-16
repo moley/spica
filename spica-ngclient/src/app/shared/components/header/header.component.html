@@ -1,27 +1,28 @@
 
 <p-toolbar>
     <p-sidebar  [(visible)]="sidebarVisible" position="left">
-        <h2>Model</h2>
 
         <div>
-            <p-button routerLink="/app/dashboard" type="button" (click)="sidebarVisible = false" label="Dashboard" styleClass="p-button-success"></p-button>
+          <h3>General</h3>
+          <p-button routerLink="/app/dashboard" type="button" (click)="sidebarVisible = false" label="Dashboard" styleClass="p-button-success"></p-button>
         </div>
         <div>
-            <p-button routerLink="/app/software" type="button" (click)="sidebarVisible = false" label="Software" styleClass="p-button-success"></p-button>
+            <h3>Software</h3>
+            <div><p-button routerLink="/app/software" type="button" (click)="sidebarVisible = false" label="Model" styleClass="p-button-success"></p-button></div>
+            <div><p-button routerLink="/app/software/metrics" type="button" (click)="sidebarVisible = false" label="Metrics" styleClass="p-button-success"></p-button></div>
         </div>
-
     </p-sidebar>
     <p-button type="text" (click)="sidebarVisible = true" icon="pi pi-bars"></p-button>
 
-    
+
     <h2 style="border-left: 10px;"><span>SPICA</span></h2>
 
     <div class="flexExpand"></div>
     <div fxFlex fxLayout="row" fxFlexOffset="20" fxLayoutAlign="end">
-                <p-button  label="Settings" fxLayoutAlign="flex-end"> 
+                <p-button  label="Settings" fxLayoutAlign="flex-end">
                 </p-button>
 
-                <p-button label="Help"> 
+                <p-button label="Help">
                 </p-button>
 
                 <p-button label="Person">
@@ -29,9 +30,9 @@
 
                 <p-menu #menu [popup]="true" [model]="userMenuItems()"></p-menu>
                 <button type="button" pButton icon="pi pi-list" label="  {{authenticationService.getLoggedInUserName()}}" (click)="menu.toggle($event)"></button>
-               
+
     </div>
-    
+
 </p-toolbar>
 
 

@@ -1,8 +1,10 @@
 package org.spica.server.software.domain;
 
 import java.time.LocalDate;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,8 +23,9 @@ public class SoftwareMetrics {
   @EqualsAndHashCode.Include
   private String id;
 
-  private LocalDate date;
+  private LocalDate creationdate;
 
+  @Column (length = 10000)
   private String metrics;
 
   private int totalNumber; //number of software entities

@@ -31,10 +31,12 @@ public class SoftwareControllerTest {
   @Autowired
   protected WebApplicationContext context;
 
+  @Autowired
+  protected DemoDataCreator demoDataCreator;
+
   @BeforeAll
-  public static void beforeClass (@Autowired DemoDataCreator demoDataCreator) throws IOException {
+  public static void beforeClass () throws IOException {
     SpicaProperties.close();
-    demoDataCreator.createSoftware();
   }
 
   @AfterAll
@@ -49,6 +51,7 @@ public class SoftwareControllerTest {
 
   @Test
   public void getSoftware () throws Exception {
+    demoDataCreator.create();
     mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     ResultActions resultActions = mockMvc.perform(get("/api/software/list")).andExpect(status().isOk());
     String result = resultActions.andReturn().getResponse().getContentAsString();

@@ -10,9 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.spica.commons.filestore.FilestoreItem;
 import org.spica.commons.filestore.FilestoreService;
 import org.spica.server.software.db.RelationRepository;
+import org.spica.server.software.db.SoftwareMetricsRepository;
 import org.spica.server.software.db.SoftwareRepository;
 import org.spica.server.software.domain.Relation;
 import org.spica.server.software.domain.Software;
+import org.spica.server.software.domain.SoftwareMetrics;
 import org.spica.server.software.model.RelationInfo;
 import org.spica.server.software.model.SoftwareInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ public class SoftwareService {
 
   @Autowired
   private RelationRepository relationRepository;
+
 
   @Autowired
   private SoftwareMapper softwareMapper;
@@ -80,6 +83,7 @@ public class SoftwareService {
     softwareRepository.saveAll(savedSoftware);
 
   }
+
 
   public void updateSoftware (final String id, final SoftwareInfo updatedSoftwareInfo) {
     Software updatedSoftware = softwareMapper.toSoftwareEntity(updatedSoftwareInfo);

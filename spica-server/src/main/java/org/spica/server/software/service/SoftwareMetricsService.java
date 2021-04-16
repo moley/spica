@@ -41,9 +41,9 @@ public class SoftwareMetricsService {
     HashMap<String, LineDataSet> lineDataSets = new HashMap<>();
 
     //get all keys
-    for (SoftwareMetrics next: softwareMetricsRepository.findAll()) {
+    for (SoftwareMetrics next: softwareMetricsRepository.findByOrderByCreationdateAsc()) {
       String metrics = next.getMetrics();
-      diagram.addLabelsItem(dateUtils.getDateAsString(next.getDate()));
+      diagram.addLabelsItem(dateUtils.getDateAsString(next.getCreationdate()));
       Properties properties = propertiesUtils.convert2Properties(metrics);
       propsPerMetrics.put(next, properties);
       availableKeys.addAll(properties.stringPropertyNames());
@@ -57,7 +57,7 @@ public class SoftwareMetricsService {
     }
 
     //group all properties to datasets
-    for (SoftwareMetrics next: softwareMetricsRepository.findAll()) {
+    for (SoftwareMetrics next: softwareMetricsRepository.findByOrderByCreationdateAsc()) {
 
       Properties currentProps = propsPerMetrics.get(next);
 
@@ -78,9 +78,12 @@ public class SoftwareMetricsService {
     SoftwareMetricsInfo softwareMetricsInfo = new SoftwareMetricsInfo();
     softwareMetricsInfo.setHistory(diagram);
 
-    if (true)
-      throw new IllegalStateException("TODO: Sort be date");
-
     return softwareMetricsInfo;
   }
+
+  public void setSoftwareMetrics (final List<SoftwareMetrics> softwareMetrics) {
+    softwareMetricsRepository.deleteAll();
+    softwareMetricsRepository.saveAll(softwareMetrics);
+  }
+
 }
