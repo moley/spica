@@ -145,7 +145,7 @@ public class SoftwareController implements SoftwareApi {
     return ResponseEntity.ok(softwareMapper.toIdAndDisplaynameInfos(keyValuePairs));
   }
 
-  @Override public ResponseEntity<SoftwareMetricsInfo> getSoftwareMetrics(@ApiParam(value = "" ,required=true )  @Valid @RequestBody List<SoftwareMetricsParamInfo> softwareMetricsParamInfo) {
+  @Override public ResponseEntity<SoftwareMetricsInfo> getSoftwareMetrics(@ApiParam(value = "" ,required=true )  @Valid @RequestBody SoftwareMetricsParamInfo softwareMetricsParamInfo) {
     log.info("call getSoftwareMetrics");
     SoftwareMetricsParam param = new SoftwareMetricsParam();
     SoftwareMetricsInfo softwareMetricsInfo = softwareMetricsService.getMetricsInfo(param);

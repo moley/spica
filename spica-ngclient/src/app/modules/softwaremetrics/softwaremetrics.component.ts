@@ -39,7 +39,8 @@ export class SoftwaremetricsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.softwareService.getSoftwareMetrics().subscribe(
+    var softwaremetricsParamInfo = {};
+    this.softwareService.getSoftwareMetrics(softwaremetricsParamInfo).subscribe(
       x => {
         this.softwaremetrics = x;
         console.log("TargetDate: " + this.softwaremetrics.history.labels)
