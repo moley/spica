@@ -73,14 +73,14 @@ public class TimetrackerCreationParam {
         if (eventType == null)
             throw new IllegalArgumentException("Parameter eventType must be set");
 
-        if (topicInfo != null && ! eventType.equals(EventType.TOPIC))
+        if (topicInfo != null && ! eventType.equals(EventType.TASK))
             throw new IllegalArgumentException("Taskinfo must not be set on event type " + eventType.getValue());
 
         if (messageInfo != null && ! eventType.equals(EventType.MESSAGE))
             throw new IllegalArgumentException("MessageInfo must not be set on event type " + eventType.getValue());
 
 
-        if (topicInfo == null && eventType.equals(EventType.TOPIC))
+        if (topicInfo == null && eventType.equals(EventType.TASK))
             throw new IllegalArgumentException("TaskInfo must be set on event type " + eventType.getValue());
 
         if (messageInfo == null && eventType.equals(EventType.MESSAGE))

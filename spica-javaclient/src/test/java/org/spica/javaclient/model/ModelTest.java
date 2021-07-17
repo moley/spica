@@ -136,7 +136,7 @@ public class ModelTest {
   }
 
   @Test public void findEventBefore() {
-    EventInfo event1 = new EventInfo().eventType(EventType.TOPIC)
+    EventInfo event1 = new EventInfo().eventType(EventType.TASK)
         .start(LocalDateTime.of(today.getYear(), today.getMonth(), today.getDayOfMonth(), 8, 0));
     Model model = new Model();
     model.getEventInfosReal().add(event1);
@@ -150,7 +150,7 @@ public class ModelTest {
   }
 
   @Test public void findEventAfter() {
-    EventInfo event1 = new EventInfo().eventType(EventType.TOPIC)
+    EventInfo event1 = new EventInfo().eventType(EventType.TASK)
         .start(LocalDateTime.of(today.getYear(), today.getMonth(), today.getDayOfMonth(), 8, 0));
     Model model = new Model();
     model.getEventInfosReal().add(event1);

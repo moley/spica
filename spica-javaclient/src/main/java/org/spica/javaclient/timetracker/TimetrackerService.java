@@ -1,11 +1,19 @@
 package org.spica.javaclient.timetracker;
 
-import org.spica.javaclient.model.*;
-import org.spica.javaclient.services.ModelCacheService;
-import org.spica.commons.DateUtils;
-
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
+import org.spica.commons.DateUtils;
+import org.spica.javaclient.model.EventInfo;
+import org.spica.javaclient.model.EventType;
+import org.spica.javaclient.model.MessageInfo;
+import org.spica.javaclient.model.Model;
+import org.spica.javaclient.model.TaskInfo;
+import org.spica.javaclient.model.UserInfo;
+import org.spica.javaclient.services.ModelCacheService;
 
 public class TimetrackerService {
 
@@ -47,8 +55,6 @@ public class TimetrackerService {
         if (eventInfo != null) {
             eventInfo.setStop(stopTime != null ? stopTime: LocalDateTime.now());
         }
-
-        modelCacheService.closeEventDashboardsWhenEventIsClosed();
     }
 
     public void stopPause () {
@@ -101,7 +107,7 @@ public class TimetrackerService {
             newStartedEvent.setName("Telephone call"); //TODO With
         }
 
-        if (timetrackerCreationParam.getEventType().equals(EventType.TOPIC)) {
+        if (timetrackerCreationParam.getEventType().equals(EventType.TASK)) {
             newStartedEvent.setReferenceId(timetrackerCreationParam.getTaskInfo().getId());
             newStartedEvent.setName(timetrackerCreationParam.getTaskInfo().getName());
         }
@@ -170,9 +176,6 @@ public class TimetrackerService {
             }
         });
 
-        modelCacheService.closeEventDashboardsWhenEventIsClosed();
-
-
         return output;
 
     }
@@ -183,7 +186,7 @@ public class TimetrackerService {
         EventInfo newStartedEvent = new EventInfo();
         newStartedEvent.setId(UUID.randomUUID().toString());
         newStartedEvent.setStart(LocalDateTime.now());
-        newStartedEvent.setEventType(EventType.TOPIC);
+        newStartedEvent.setEventType(EventType.TASK);
         newStartedEvent.setName(topicInfo.getName());
         newStartedEvent.setReferenceId(topicInfo.getId());
         model.getEventInfosReal().add(newStartedEvent);
@@ -223,9 +226,6 @@ public class TimetrackerService {
         if (restartPreviousWork)
           restartLastRealEvent(model, EventType.MESSAGE);
 
-        modelCacheService.closeEventDashboardsWhenEventIsClosed();
-
-
     }
 
     public void finishDay(LocalDateTime localDateTime) {
@@ -244,8 +244,6 @@ public class TimetrackerService {
     public LocalDateTime finishEvent(EventInfo eventInfo) {
         LocalDateTime now = LocalDateTime.now();
         eventInfo.setStop(now);
-
-        modelCacheService.closeEventDashboardsWhenEventIsClosed();
 
         return now;
     }

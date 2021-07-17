@@ -1,25 +1,20 @@
 package org.spica.javaclient.mail;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.UUID;
 import javax.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.spica.commons.DashboardItemType;
 import org.spica.commons.filestore.FilestoreItem;
 import org.spica.commons.filestore.FilestoreService;
 import org.spica.commons.mail.Attachment;
 import org.spica.commons.mail.Mail;
 import org.spica.commons.mail.MailAdapter;
 import org.spica.javaclient.exceptions.NotFoundException;
-import org.spica.javaclient.model.DashboardItemInfo;
 import org.spica.javaclient.model.MessageInfo;
 import org.spica.javaclient.model.MessageType;
 import org.spica.javaclient.model.MessagecontainerInfo;
@@ -57,18 +52,6 @@ import org.spica.javaclient.model.UserInfo;
         messageInfo.setCreationtime(nextMail.getCreationDateAsLocalDateTime());
         messagecontainerInfo.getMessage().add(messageInfo);
         modelChanged = true;
-
-        DashboardItemInfo dashboardItemInfo = model.findDashboardItemInfo(DashboardItemType.MAIL, messageInfo.getId());
-        if (dashboardItemInfo == null) {
-          dashboardItemInfo = new DashboardItemInfo();
-          dashboardItemInfo.setId(UUID.randomUUID().toString());
-          dashboardItemInfo.setCreated(messageInfo.getCreationtime());
-          dashboardItemInfo.setOpen(Boolean.TRUE);
-          dashboardItemInfo.setItemType(DashboardItemType.MAIL.toString());
-          dashboardItemInfo.setItemReference(messageInfo.getId());
-          dashboardItemInfo.setDescription(messagecontainerInfo.getTopic());
-          model.getDashboardItemInfos().add(dashboardItemInfo);
-        }
 
       }
 
@@ -110,16 +93,6 @@ import org.spica.javaclient.model.UserInfo;
 
     }
 
-    //close open mails if not imported anymore
-    for (DashboardItemInfo nextDashboardItem : model.getDashboardItemInfos()) {
-      if (nextDashboardItem.getItemType().equals(DashboardItemType.MAIL.name())) {
-        Boolean open = ids.contains(nextDashboardItem.getItemReference());
-        if (!open.equals(nextDashboardItem.getOpen())) {
-          nextDashboardItem.setOpen(open);
-          modelChanged = true;
-        }
-      }
-    }
     return modelChanged;
   }
 

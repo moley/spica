@@ -4,7 +4,6 @@ import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -12,8 +11,6 @@ import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlRootElement;
-import lombok.Data;
-import org.spica.commons.DashboardItemType;
 import org.spica.javaclient.exceptions.NotFoundException;
 import org.spica.javaclient.model.MessagecontainerInfo.MessagecontainerStateEnum;
 
@@ -27,8 +24,6 @@ public class Model {
   public final static String DEFAULTTASK_WORK = "Work";
 
   private UserInfo me;
-
-  private List<DashboardItemInfo> dashboardItemInfos = new ArrayList<>();
 
   private List<SkillInfo> userSkills = new ArrayList<>();
 
@@ -496,7 +491,7 @@ public class Model {
    */
   public TaskInfo getCurrentTask () {
     EventInfo eventInfo = findLastOpenEventFromToday();
-    if (eventInfo != null && eventInfo.getEventType().equals(EventType.TOPIC)) {
+    if (eventInfo != null && eventInfo.getEventType().equals(EventType.TASK)) {
       return findTaskInfoById(eventInfo.getReferenceId());
     }
     return null;
@@ -691,40 +686,6 @@ public class Model {
     this.userSkills = userSkills;
   }
 
-  /**
-   * getter
-   * @return all dashboard items
-   */
-  public List<DashboardItemInfo> getDashboardItemInfos() {
-    return dashboardItemInfos;
-  }
-
-  /**
-   * find dashboard item by type and reference
-   *
-   * @param dashboardItemType   type
-   * @param referenceId  reference id
-   * @return dashboarditem
-   */
-  public DashboardItemInfo findDashboardItemInfo (final DashboardItemType dashboardItemType, final String referenceId) {
-
-    for (DashboardItemInfo next: dashboardItemInfos) {
-      if (next.getItemReference().equals(referenceId) && next.getItemType().equals(dashboardItemType.name())) {
-        return next;
-      }
-    }
-    return null;
-  }
-
-  /**
-   * setter dasboarditems
-   *
-   * <b>ATTENTION! Overrids current data</b>
-   * @param dashboardItemInfos dashboardItems
-   */
-  public void setDashboardItemInfos(List<DashboardItemInfo> dashboardItemInfos) {
-    this.dashboardItemInfos = dashboardItemInfos;
-  }
 
   /**
    * get other tasks (excludes the currently selected one)

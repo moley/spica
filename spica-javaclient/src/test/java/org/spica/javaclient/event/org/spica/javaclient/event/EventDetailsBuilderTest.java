@@ -20,7 +20,7 @@ public class EventDetailsBuilderTest {
     @Test
     public void details () {
         Model model = new Model();
-        model.getEventInfosReal().add(createEvent(LocalTime.of(8,0), LocalTime.of(9,0), EventType.TOPIC));
+        model.getEventInfosReal().add(createEvent(LocalTime.of(8,0), LocalTime.of(9,0), EventType.TASK));
         model.getEventInfosReal().add(createEvent(LocalTime.of(9,0), LocalTime.of(10,0), EventType.PAUSE));
         model.getEventInfosReal().add(createEvent(LocalTime.of(10,0), LocalTime.of(10,30), EventType.MESSAGE));
         EventDetailsBuilder eventDetailsBuilder = new EventDetailsBuilder();

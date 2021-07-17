@@ -40,7 +40,7 @@ public class ListLinksAction extends AbstractAction {
 
     Model model = actionContext.getModel();
     EventInfo eventInfo = actionContext.getModel().findLastOpenEventFromToday();
-    TaskInfo topicInfo = (eventInfo != null && eventInfo.getEventType().equals(EventType.TOPIC)) ?
+    TaskInfo topicInfo = (eventInfo != null && eventInfo.getEventType().equals(EventType.TASK)) ?
         actionContext.getModel().findTaskInfoById(eventInfo.getReferenceId()) :
         null;
     File currentPath = new File("").getAbsoluteFile();

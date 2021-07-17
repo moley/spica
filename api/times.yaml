@@ -91,6 +91,7 @@ components:
     EventType:
       type: string
       enum:
-        - topic
+        - task
         - message
         - pause
+        - meeting

@@ -29,6 +29,7 @@ public class TimetrackerCreationParamTest {
         });
     }
 
+    @Test
     public void eventTypeIsNull () {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
 
@@ -39,12 +40,13 @@ public class TimetrackerCreationParamTest {
 
     }
 
+    @Test
     public void topicNoTaskInfo () {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
             timetrackerCreationParam.setDate(LocalDate.now());
             timetrackerCreationParam.setFrom(LocalTime.now());
-            timetrackerCreationParam.setEventType(EventType.TOPIC);
+            timetrackerCreationParam.setEventType(EventType.TASK);
             timetrackerCreationParam.validate();
         });
 
@@ -55,7 +57,7 @@ public class TimetrackerCreationParamTest {
         TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
         timetrackerCreationParam.setDate(LocalDate.now());
         timetrackerCreationParam.setFrom(LocalTime.now());
-        timetrackerCreationParam.setEventType(EventType.TOPIC);
+        timetrackerCreationParam.setEventType(EventType.TASK);
         timetrackerCreationParam.setTaskInfo(new TaskInfo());
         timetrackerCreationParam.validate();
     }
@@ -67,7 +69,7 @@ public class TimetrackerCreationParamTest {
             TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
             timetrackerCreationParam.setDate(LocalDate.now());
             timetrackerCreationParam.setFrom(LocalTime.now());
-            timetrackerCreationParam.setEventType(EventType.TOPIC);
+            timetrackerCreationParam.setEventType(EventType.TASK);
             timetrackerCreationParam.setTaskInfo(new TaskInfo());
             timetrackerCreationParam.setMessageInfo(new MessageInfo());
             timetrackerCreationParam.validate();

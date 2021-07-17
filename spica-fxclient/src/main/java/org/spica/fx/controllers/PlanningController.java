@@ -10,22 +10,23 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import org.spica.javaclient.model.EventInfo;
 
 public class PlanningController extends AbstractController {
 
   @FXML private CalendarView calPlanning;
 
+  private Calendar booking = new Calendar("Booking");
+
   @FXML
   public void initialize () {
 
-    Calendar planning = new Calendar("Planning");
-    Calendar booking = new Calendar("Booking");
 
-    planning.setStyle(Calendar.Style.STYLE1);
+
     booking.setStyle(Calendar.Style.STYLE2);
 
     CalendarSource myCalendarSource = new CalendarSource("My Calendars");
-    myCalendarSource.getCalendars().setAll(planning, booking);
+    myCalendarSource.getCalendars().setAll(booking);
     calPlanning.setShowPrintButton(false);
     calPlanning.setShowAddCalendarButton(false);
     calPlanning.setShowSourceTray(false);
@@ -33,25 +34,8 @@ public class PlanningController extends AbstractController {
     calPlanning.setTransitionsEnabled(true);
     calPlanning.setShowSearchField(false);
 
-    Entry entry1 = new Entry();
-    entry1.setTitle("Make jenkins great again");
-    entry1.setInterval(LocalDateTime.now().minus(2, ChronoUnit.HOURS), LocalDateTime.now());
 
-    Entry entry2 = new Entry();
-    entry2.setTitle("Make gradle great again");
-    entry2.setInterval(LocalDateTime.now(), LocalDateTime.now().plus(2, ChronoUnit.HOURS));
 
-    planning.addEntries(entry1, entry2);
-
-    Entry entry11 = new Entry();
-    entry11.setTitle("Doing something different");
-    entry11.setInterval(LocalDateTime.now().minus(3, ChronoUnit.HOURS), LocalDateTime.now());
-
-    Entry entry21 = new Entry();
-    entry21.setTitle("Make nothing");
-    entry21.setInterval(LocalDateTime.now(), LocalDateTime.now().plus(1, ChronoUnit.HOURS));
-
-    booking.addEntries(entry11, entry21);
 
 
     calPlanning.getCalendarSources().addAll(myCalendarSource);
@@ -87,6 +71,15 @@ public class PlanningController extends AbstractController {
 
   @Override public void refreshData() {
     getMainController().refreshData();
+
+    booking.clear();
+
+    for (EventInfo nextEvent: getModel().getEventInfosReal()) {
+      Entry entry = new Entry();
+      entry.setTitle(nextEvent.getName());
+      entry.setInterval(nextEvent.getStart(),nextEvent.getStop());
+      booking.addEntry(entry);
+    }
 
   }
 }

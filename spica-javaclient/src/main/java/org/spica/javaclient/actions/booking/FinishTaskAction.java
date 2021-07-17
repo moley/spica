@@ -35,7 +35,7 @@ public class FinishTaskAction extends AbstractAction {
 
     EventInfo eventInfo = model.findLastOpenEventFromToday();
     log.info("Found event " + eventInfo);
-    if (eventInfo != null && eventInfo.getEventType().equals(EventType.TOPIC)) {
+    if (eventInfo != null && eventInfo.getEventType().equals(EventType.TASK)) {
       log.info("Reference ID: " + eventInfo.getReferenceId());
       if (eventInfo.getReferenceId() != null) {
         //TODO

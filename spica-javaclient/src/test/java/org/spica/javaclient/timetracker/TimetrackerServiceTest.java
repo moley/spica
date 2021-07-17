@@ -51,7 +51,7 @@ public class TimetrackerServiceTest {
         timetrackerCreationParam.setDate(LocalDate.now());
         timetrackerCreationParam.setFrom(from);
         timetrackerCreationParam.setUntil(until);
-        timetrackerCreationParam.setEventType(EventType.TOPIC);
+        timetrackerCreationParam.setEventType(EventType.TASK);
         timetrackerCreationParam.setTaskInfo(new TaskInfo().name("New event"));
         return timetrackerCreationParam;
     }
@@ -64,7 +64,7 @@ public class TimetrackerServiceTest {
         timetrackerCreationParam.setDate(from.toLocalDate());
         timetrackerCreationParam.setFrom(from.toLocalTime());
         timetrackerCreationParam.setUntil(until.toLocalTime());
-        timetrackerCreationParam.setEventType(EventType.TOPIC);
+        timetrackerCreationParam.setEventType(EventType.TASK);
         timetrackerCreationParam.setTaskInfo(new TaskInfo().name("New event"));
         return timetrackerCreationParam;
     }

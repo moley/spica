@@ -36,7 +36,7 @@ public class SearchJiraAction extends AbstractAction {
         SpicaProperties spicaProperties = actionContext.getProperties();
         EventInfo eventInfo = model.findLastOpenEventFromToday();
         LOGGER.info("Found event " + eventInfo);
-        if (eventInfo != null && eventInfo.getEventType().equals(EventType.TOPIC)) {
+        if (eventInfo != null && eventInfo.getEventType().equals(EventType.TASK)) {
             LOGGER.info("Reference ID: " + eventInfo.getReferenceId());
             if (eventInfo.getReferenceId() != null) {
                 TaskInfo newValue = model.findTaskInfoById(eventInfo.getReferenceId());

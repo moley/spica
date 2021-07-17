@@ -16,10 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spica.commons.DashboardItemType;
 import org.spica.commons.SpicaProperties;
-import org.spica.javaclient.model.DashboardItemInfo;
-import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.ProjectInfo;
 import org.spica.javaclient.model.TaskInfo;
@@ -50,7 +47,10 @@ public class ModelCacheService implements Serializable{
 
   public File getConfigFile (){
     if (configFile == null) {
-      configFile = new File(spicaHome, "config.xml");
+
+      configFile = new File (".spica/config.xml");
+      if (! configFile.exists())
+        configFile = new File(spicaHome, "config.xml");
       LOGGER.info("configFile = " + configFile.getAbsolutePath());
     }
 
@@ -61,28 +61,8 @@ public class ModelCacheService implements Serializable{
 
   public void migrateOnDemand () {
     Model model = load();
-    for (EventInfo nextEvent: model.getEventInfosReal()) {
-
-      //create an event on dashboard if does not exist yet
-      if (model.findDashboardItemInfo(DashboardItemType.EVENT, nextEvent.getId()) == null) {
-        DashboardItemInfo dashboardItemInfo = new DashboardItemInfo();
-        dashboardItemInfo.setId(UUID.randomUUID().toString());
-        dashboardItemInfo.setCreated(nextEvent.getStart());
-        dashboardItemInfo.setDescription(nextEvent.getName());
-        dashboardItemInfo.setItemReference(nextEvent.getId());
-        dashboardItemInfo.setItemType(DashboardItemType.EVENT.name());
-        model.getDashboardItemInfos().add(dashboardItemInfo);
-      }
-    }
 
 
-
-
-
-    for (TaskInfo nextTaskInfo: model.getTaskInfos()) {
-      if (nextTaskInfo.getId() == null)
-        nextTaskInfo.setId(UUID.randomUUID().toString());
-    }
 
     //TODO move to server
     if (model.getProjectInfos() == null) {
@@ -122,29 +102,17 @@ public class ModelCacheService implements Serializable{
     //model.getDashboardItemInfos().removeAll(dashboardItemInfos);
     //model.getMessagecontainerInfos().clear();
 
-    closeEventDashboardsWhenEventIsClosed();
     forceId();
   }
 
   public void forceId () {
     Model model = load();
-    for (DashboardItemInfo nextDashboardItem : model.getDashboardItemInfos()) {
-      if (nextDashboardItem.getId() == null)
-        nextDashboardItem.setId(UUID.randomUUID().toString());
-    }
-  }
-
-  public void closeEventDashboardsWhenEventIsClosed () {
-    Model model = load();
-    for (DashboardItemInfo nextDashboardItem: model.getDashboardItemInfos()) {
-      if (nextDashboardItem.getItemType().equals(DashboardItemType.EVENT.name())) {
-        EventInfo eventInfoRealById = model.findEventInfoRealById(nextDashboardItem.getItemReference());
-        nextDashboardItem.setOpen(eventInfoRealById.getStop() == null);
-      }
+    for (TaskInfo nextTaskInfo: model.getTaskInfos()) {
+      if (nextTaskInfo.getId() == null)
+        nextTaskInfo.setId(UUID.randomUUID().toString());
     }
 
   }
-
 
   public Model load() {
     if (currentConfiguration != null)

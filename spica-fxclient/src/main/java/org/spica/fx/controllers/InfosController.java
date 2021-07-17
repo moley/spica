@@ -30,13 +30,13 @@ import org.spica.javaclient.model.MessageType;
 import org.spica.javaclient.model.MessagecontainerInfo;
 import org.spica.javaclient.model.UserInfo;
 
-@Slf4j @Data public class MessagesController extends AbstractController {
+@Slf4j @Data public class InfosController extends AbstractController {
 
   public ButtonBar btbActions;
   @FXML private ListView<MessagecontainerInfo> lviMessages;
   @FXML private TextField txtSearch;
 
-  private MessagesControllerModel viewModel = new MessagesControllerModel();
+  private InfosControllerModel viewModel = new InfosControllerModel();
 
   @FXML public void initialize() {
 
@@ -62,22 +62,11 @@ import org.spica.javaclient.model.UserInfo;
       }
     });
 
-    lviMessages.setOnMouseClicked(event -> {
-      if (event.getClickCount() == 2) {
-        editExistingMessage(lviMessages.getSelectionModel().getSelectedItem());
-        stepToPane(Pages.MESSAGEDIALOG);
-      }
-
-    });
     Bindings.bindBidirectional(txtSearch.textProperty(), viewModel.getSearchProperty());
 
     txtSearch.setOnKeyReleased(event -> {
       log.info("KeyRelaesed on txtSearch: " + event.getText());
 
-      if (event.getCode().equals(KeyCode.ENTER)) {
-        editNewMessage();
-        stepToPane(Pages.MESSAGEDIALOG);
-      }
       if (event.getText().equalsIgnoreCase("#")) {
 
         MaskLoader<SearchboxController> maskLoader = new MaskLoader<>();

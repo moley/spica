@@ -84,7 +84,7 @@ public class Main {
     if (eventInfo != null) {
       if (eventInfo.getEventType().equals(EventType.PAUSE)) {
         task = "Pause";
-      } else if (eventInfo.getEventType().equals(EventType.TOPIC)) {
+      } else if (eventInfo.getEventType().equals(EventType.TASK)) {
         TaskInfo topicInfoById = actionContext.getModel().findTaskInfoById(eventInfo.getReferenceId());
         RenderUtil renderUtil = new RenderUtil();
         task = renderUtil.getTask(topicInfoById);

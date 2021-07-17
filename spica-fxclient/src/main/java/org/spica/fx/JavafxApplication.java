@@ -171,11 +171,10 @@ import org.spica.fx.controllers.Pages;
 
     stage.setScene(scene);
 
-    showMask(Pages.DASHBOARD, false);
+    showMask(Pages.DIARY, false); //TODO step to DASHBOARD by default as soon as exists
 
     screenManager.layoutEdged(stage, false);
-    LOGGER
-        .info("Stage layouted " + stage.getX() + "-" + stage.getY() + "-" + stage.getWidth() + "-" + stage.getHeight());
+    LOGGER.info("Stage layouted " + stage.getX() + "-" + stage.getY() + "-" + stage.getWidth() + "-" + stage.getHeight());
 
   }
 

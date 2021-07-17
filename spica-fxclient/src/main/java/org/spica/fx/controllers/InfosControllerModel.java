@@ -8,7 +8,7 @@ import lombok.Data;
 import org.spica.javaclient.model.MessagecontainerInfo;
 
 @Data
-public class MessagesControllerModel {
+public class InfosControllerModel {
 
   private ObservableList<MessagecontainerInfo> messageContainers = FXCollections.observableArrayList( );
 

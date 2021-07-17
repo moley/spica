@@ -42,7 +42,6 @@ import org.spica.fx.Mask;
 import org.spica.fx.MaskLoader;
 import org.spica.fx.ScreenManager;
 import org.spica.fx.clipboard.ClipboardItem;
-import org.spica.javaclient.ApiException;
 import org.spica.javaclient.Configuration;
 import org.spica.javaclient.StandaloneActionContext;
 import org.spica.javaclient.exceptions.NotFoundException;
@@ -228,14 +227,14 @@ public class MainController extends AbstractController  {
 
     Timer autoImportMailsTimer = new Timer();
 
-    AutoImportMailsTask autoImportMailsTask = new AutoImportMailsTask(getActionContext(), () -> Platform.runLater(
+    /**AutoImportMailsTask autoImportMailsTask = new AutoImportMailsTask(getActionContext(), () -> Platform.runLater(
         () -> {
-          Mask<MessagesController> mask = getMask(Pages.MESSAGES);
-          MessagesController messagesController = mask.getController();
+          Mask<InfosController> mask = getMask(Pages.MESSAGES);
+          InfosController messagesController = mask.getController();
           showMessageNotifications();
           messagesController.refreshData();
         }));
-    autoImportMailsTimer.scheduleAtFixedRate(autoImportMailsTask, 0, 60000);
+    autoImportMailsTimer.scheduleAtFixedRate(autoImportMailsTask, 0, 60000);**/
 
 
     log.info("Register clipboard");
@@ -297,9 +296,9 @@ public class MainController extends AbstractController  {
         getModel().sortMessages();
         saveModel("Added new chatmessage to existing chat from " + from.toString());
 
-        Platform.runLater(() -> {
-          Mask<MessagesController> mask = getMask(Pages.MESSAGES);
-          MessagesController messagesController = mask.getController();
+        /**Platform.runLater(() -> {
+          Mask<InfosController> mask = getMask(Pages.MESSAGES);
+          InfosController messagesController = mask.getController();
           messagesController.refreshData();
 
           showMessageNotifications();
@@ -308,7 +307,7 @@ public class MainController extends AbstractController  {
           MessageDetailController controller = detailMask.getController();
           controller.refreshData();
 
-        });
+        });**/
 
       }, request -> {
         System.out.println ("recieved a file transfer request " + request.getDescription() + "-" + request.getFileName() + " from " + request.getRequestor().toString());
@@ -356,9 +355,9 @@ public class MainController extends AbstractController  {
         getModel().sortMessages();
         saveModel("Added new chatmessage to existing chat from " + from);
 
-        Platform.runLater(() -> {
-          Mask<MessagesController> mask = getMask(Pages.MESSAGES);
-          MessagesController messagesController = mask.getController();
+        /**Platform.runLater(() -> {
+          Mask<InfosController> mask = getMask(Pages.MESSAGES);
+          InfosController messagesController = mask.getController();
           messagesController.refreshData();
 
           showMessageNotifications();
@@ -367,7 +366,7 @@ public class MainController extends AbstractController  {
           MessageDetailController controller = detailMask.getController();
           controller.refreshData();
 
-        });
+        });**/
 
     });
     } catch (Exception e) {
@@ -377,7 +376,7 @@ public class MainController extends AbstractController  {
     btnState.textProperty().bindBidirectional(getApplicationContext().presencePropertyProperty());
     btnState.textProperty().setValue(UserPresence.ONLINE.name());
 
-    stepToPane(Pages.DASHBOARD, false);
+    stepToPane(Pages.DIARY, false); //TODO step to dashboard, if exists
 
   }
 
@@ -395,11 +394,11 @@ public class MainController extends AbstractController  {
   @Override public void refreshData() {
     int numberOfUnreadMessages = getModel().findUnreadMessages ().size();
 
-    MainMenuEntry mainMenuEntry = menuEntries.get(Pages.MESSAGES);
+    /**MainMenuEntry mainMenuEntry = menuEntries.get(Pages.MESSAGES);
     JFXBadge jfxBadge = mainMenuEntry.getJfxBadge();
     jfxBadge.setEnabled(numberOfUnreadMessages > 0);
     jfxBadge.setText(String.valueOf(numberOfUnreadMessages));
-    jfxBadge.refreshBadge();
+    jfxBadge.refreshBadge();**/
 
   }
 }

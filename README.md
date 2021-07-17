@@ -6,15 +6,13 @@
 
 ## What is spica
 Spica is an extensible, **project-oriented** development and communication platform. 
-We set our focus on the efficency of the development process. The **use cases** are:
+We set our focus on the efficency of the development process, in detail:
 
 * Handle todos and tasks  
-* Improve communication
 * Improve navigation to external systems (jenkins, stash, bitbucket...)
 * Improve booking of tasks 
 * Ease working with multi module projects
 * Automate routine tasks 
-
 
 # Development
 

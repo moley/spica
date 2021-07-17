@@ -92,6 +92,13 @@ task createDmg(type: Exec) {
 
 }
 
+task createDemoData(type: JavaExec) {
+    classpath = sourceSets.test.runtimeClasspath
+
+    mainClass = 'org.spica.fx.demodata.DemoDataCreator'
+
+}
+
 task installLocal(type: Copy) {
     def localCliInstallationPath = '/Applications/SpicaFX.app/Contents/app/'
     from file('build/dmgInput')

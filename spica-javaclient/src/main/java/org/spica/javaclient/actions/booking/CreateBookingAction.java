@@ -136,7 +136,7 @@ public class CreateBookingAction extends AbstractAction {
                 return renderUtil.getTask(topicInfo);
             }
         });
-        InputParamGroup inputParamGroupTask = new InputParamGroup("Task", inputParams -> inputParams.getInputValueAsString(KEY_TYPE).equalsIgnoreCase(EventType.TOPIC.getValue()));
+        InputParamGroup inputParamGroupTask = new InputParamGroup("Task", inputParams -> inputParams.getInputValueAsString(KEY_TYPE).equalsIgnoreCase(EventType.TASK.getValue()));
         inputParamGroupTask.getInputParams().add(topicSearch);
 
         //Message parameters

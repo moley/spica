@@ -81,7 +81,6 @@ public class StandaloneActionContext implements ActionContext {
       getModel().getUserInfos().addAll(users);
     } catch (ApiException e) {
       log.error("Exception when reading users: " + e.getCode() + ":" + e.getResponseBody() + ":" + e.getLocalizedMessage(), e);
-      throw new IllegalStateException(e);
     }
 
     String usermail = getProperties().getValueNotNull("spica.cli.usermail");
@@ -89,7 +88,7 @@ public class StandaloneActionContext implements ActionContext {
     if (meUser == null) {
       String message = "User with mail adress " + usermail + " not found, can not detect me. Configure a valid user in property 'spica.cli.usermail'";
       log.error(message);
-      System.exit(1); //TODO message
+      //TODO message
 
     }
 
@@ -107,7 +106,10 @@ public class StandaloneActionContext implements ActionContext {
     }
 
     try {
-      getModel().setUserSkills(getApi().getUserApi().getUserSkills(getModel().getMe().getId()));
+      if (getModel().getMe() != null)
+        getModel().setUserSkills(getApi().getUserApi().getUserSkills(getModel().getMe().getId()));
+      else
+        log.error("Could not refresh user skills for me, because me not set");
     } catch (ApiException e) {
       log.info("Exception when reading userskills of me: " + e.getLocalizedMessage(), e);
     }

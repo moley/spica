@@ -6,7 +6,6 @@ import {AppComponent} from './app.component';
 import {DefaultComponent} from './layouts/default/default.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ApiModule as CommunicationApiModule} from '../app/modules/generated/communication/api.module';
-import {ApiModule as DashboardApiModule} from '../app/modules/generated/dashboard/api.module';
 import {ApiModule as LinksApiModule} from '../app/modules/generated/links/api.module';
 import {ApiModule as ProjectApiModule} from '../app/modules/generated/project/api.module';
 import {ApiModule as SoftwareApiModule} from '../app/modules/generated/software/api.module';
@@ -40,7 +39,6 @@ import {ChartModule} from "primeng/chart";
 
 import {environment} from '../environments/environment';
 import {BASE_PATH as COMMUNICATION_BASE_PATH} from './modules/generated/communication';
-import {BASE_PATH as DASHBOARD_BASE_PATH} from './modules/generated/dashboard';
 import {BASE_PATH as LINKS_BASE_PATH} from './modules/generated/links';
 import {BASE_PATH as PROJECT_BASE_PATH} from './modules/generated/project';
 import {BASE_PATH as SOFTWARE_BASE_PATH} from './modules/generated/software';
@@ -73,7 +71,6 @@ import {DashboardComponent} from "./modules/dashboard/dashboard.component";
   ],
   imports: [
     CommunicationApiModule,
-    DashboardApiModule,
     LinksApiModule,
     ProjectApiModule,
     SoftwareApiModule,
@@ -119,10 +116,6 @@ import {DashboardComponent} from "./modules/dashboard/dashboard.component";
     },
     {
       provide: COMMUNICATION_BASE_PATH,
-      useValue: environment.API_BASE_PATH
-    },
-    {
-      provide: DASHBOARD_BASE_PATH,
       useValue: environment.API_BASE_PATH
     },
     {
