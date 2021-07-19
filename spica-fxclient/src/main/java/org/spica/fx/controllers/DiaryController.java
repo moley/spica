@@ -1,18 +1,27 @@
 package org.spica.fx.controllers;
 
 import com.calendarfx.model.Calendar;
+import com.calendarfx.model.CalendarEvent;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.CalendarView;
+import com.calendarfx.view.page.DayPage;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
+import lombok.extern.slf4j.Slf4j;
 import org.spica.javaclient.model.EventInfo;
 
-public class PlanningController extends AbstractController {
+@Slf4j
+public class DiaryController extends AbstractController {
 
   @FXML private CalendarView calPlanning;
 
@@ -24,6 +33,14 @@ public class PlanningController extends AbstractController {
 
 
     booking.setStyle(Calendar.Style.STYLE2);
+    booking.addEventHandler(new EventHandler<CalendarEvent>() {
+      @Override public void handle(CalendarEvent event) {
+        log.info("Event " + event.getEventType() + "-"+event.getEntry());
+
+        return;
+
+      }
+    });
 
     CalendarSource myCalendarSource = new CalendarSource("My Calendars");
     myCalendarSource.getCalendars().setAll(booking);
@@ -33,6 +50,12 @@ public class PlanningController extends AbstractController {
     calPlanning.setShowSourceTrayButton(false);
     calPlanning.setTransitionsEnabled(true);
     calPlanning.setShowSearchField(false);
+    calPlanning.getDayPage().getAgendaView().setVisible(false);
+    calPlanning.getDayPage().getDetailedDayView().setVisible(false);
+    calPlanning.getDayPage().getYearMonthView().setVisible(false);
+    calPlanning.getDayPage().setDayPageLayout(DayPage.DayPageLayout.DAY_ONLY);
+
+
 
 
 
@@ -69,6 +92,7 @@ public class PlanningController extends AbstractController {
 
   }
 
+
   @Override public void refreshData() {
     getMainController().refreshData();
 
@@ -78,6 +102,7 @@ public class PlanningController extends AbstractController {
       Entry entry = new Entry();
       entry.setTitle(nextEvent.getName());
       entry.setInterval(nextEvent.getStart(),nextEvent.getStop());
+      entry.setId(nextEvent.getId());
       booking.addEntry(entry);
     }
 

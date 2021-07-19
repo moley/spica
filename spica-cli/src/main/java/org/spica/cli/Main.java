@@ -82,17 +82,22 @@ public class Main {
     String task = LogUtil.cyan("No current task found for today");
     String since = "";
     if (eventInfo != null) {
-      if (eventInfo.getEventType().equals(EventType.PAUSE)) {
-        task = "Pause";
-      } else if (eventInfo.getEventType().equals(EventType.TASK)) {
-        TaskInfo topicInfoById = actionContext.getModel().findTaskInfoById(eventInfo.getReferenceId());
-        RenderUtil renderUtil = new RenderUtil();
-        task = renderUtil.getTask(topicInfoById);
-      } else if (eventInfo.getEventType().equals(EventType.MESSAGE)) {
-        task = "Message " + eventInfo.getName();
-      } else {
-        task = eventInfo.getEventType().getValue();
+
+      if (eventInfo.getEventType() != null) {
+        if (eventInfo.getEventType().equals(EventType.PAUSE)) {
+          task = "Pause";
+        } else if (eventInfo.getEventType().equals(EventType.TASK)) {
+          TaskInfo topicInfoById = actionContext.getModel().findTaskInfoById(eventInfo.getReferenceId());
+          RenderUtil renderUtil = new RenderUtil();
+          task = renderUtil.getTask(topicInfoById);
+        } else if (eventInfo.getEventType().equals(EventType.MESSAGE)) {
+          task = "Message " + eventInfo.getName();
+        } else {
+          task = eventInfo.getEventType().getValue();
+        }
       }
+      else
+        task = "Invalid tasktype (" + eventInfo.getId() +  ")";
 
       since = " ( since " + dateUtils.getTimeAsString(eventInfo.getStart()) + " )";
     }

@@ -6,19 +6,19 @@ public enum Pages {
 
   //MESSAGES ("infos", "Informations", "fa-envelope", true),
 
-  //TASKS ("tasks", "Tasks", "fa-tasks", true),
-  //TASKDETAIL ("taskdetails", "Task Details", "fa-tasks", false),
+  TASKS ("tasks", "Tasks", "fa-tasks", true),
+  TASKDETAIL ("taskdetails", "Task Details", "fa-tasks", false),
 
-  //PROJECTS ("projects", "Projects", "fa-building", true),
-  //PROJECTDETAIL ("projectdetails", "Project Details", "fa-building", false),
+  PROJECTS ("projects", "Projects", "fa-building", true),
+  PROJECTDETAIL ("projectdetails", "Project Details", "fa-building", false),
 
-  DIARY("diary", "Diary", "fa-calendar", true);
+  DIARY("diary", "Diary", "fa-calendar", true),
 
   //FILESTORE ("filestore", "FileStore", "fa-file", true),
 
   //SEARCHBOX ("searchbox", "SearchDialog", "fa-building", false),
 
-  //USERS ("users", "Users", "fa-user", true);
+  USERS ("users", "Users", "fa-user", true);
 
 
   private String filename;

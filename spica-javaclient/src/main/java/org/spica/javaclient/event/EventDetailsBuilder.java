@@ -22,7 +22,7 @@ public class EventDetailsBuilder {
             LocalDateTime start = next.getStart();
             LocalDateTime stop = next.getStop() != null ? next.getStop() : LocalDateTime.now();
 
-            if (next.getEventType().equals(EventType.PAUSE)) {
+            if (next.getEventType() != null && next.getEventType().equals(EventType.PAUSE)) {
                 durationPause = durationPause.plus(Duration.between(start, stop));
             }
             else {

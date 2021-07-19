@@ -30,7 +30,7 @@ dependencies {
     runtime 'javax.websocket:javax.websocket-api:1.1'
     runtime 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.9'
 
-    compile 'com.calendarfx:view:11.8.3'
+    compile 'com.calendarfx:view:11.10.1'
     compile 'org.jsoup:jsoup:1.13.1'
 
     testCompile 'org.mockito:mockito-core:2.28.2'
