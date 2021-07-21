@@ -5,6 +5,7 @@ import com.calendarfx.model.CalendarEvent;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.CalendarView;
+import com.calendarfx.view.DateControl;
 import com.calendarfx.view.page.DayPage;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
+import javafx.util.Callback;
 import lombok.extern.slf4j.Slf4j;
 import org.spica.javaclient.model.EventInfo;
 
@@ -25,25 +27,44 @@ public class DiaryController extends AbstractController {
 
   @FXML private CalendarView calPlanning;
 
-  private Calendar booking = new Calendar("Booking");
+  private Calendar booking;
 
   @FXML
   public void initialize () {
 
+    Calendar calendar = new Calendar("Booking");
 
-
+    CalendarSource myCalendarSource = new CalendarSource("My Calendars");
+    myCalendarSource.getCalendars().setAll(calendar);
+    booking = myCalendarSource.getCalendars().get(0);
     booking.setStyle(Calendar.Style.STYLE2);
     booking.addEventHandler(new EventHandler<CalendarEvent>() {
       @Override public void handle(CalendarEvent event) {
-        log.info("Event " + event.getEventType() + "-"+event.getEntry());
+        log.info("Event " + event.getEventType() + "-"+event.getEntry() + "-" + event.isEntryAdded() + "-" + event.isEntryRemoved());
+
+        if (event.getEventType().equals(CalendarEvent.ENTRY_INTERVAL_CHANGED)) {
+          log.info("- Interval changed");
+        }
+
+        if (event.getEventType().equals(CalendarEvent.ENTRY_CALENDAR_CHANGED)) {
+          if (event.isEntryAdded())
+            log.info("- Entry added");
+          if (event.isEntryRemoved())
+            log.info("- Entry removed");
+        }
+
+        if (event.getEventType().equals(CalendarEvent.ENTRY_USER_OBJECT_CHANGED)) {
+          log.info("- Entry User Object changed");
+
+        }
 
         return;
 
       }
     });
 
-    CalendarSource myCalendarSource = new CalendarSource("My Calendars");
-    myCalendarSource.getCalendars().setAll(booking);
+
+
     calPlanning.setShowPrintButton(false);
     calPlanning.setShowAddCalendarButton(false);
     calPlanning.setShowSourceTray(false);
@@ -55,13 +76,7 @@ public class DiaryController extends AbstractController {
     calPlanning.getDayPage().getYearMonthView().setVisible(false);
     calPlanning.getDayPage().setDayPageLayout(DayPage.DayPageLayout.DAY_ONLY);
 
-
-
-
-
-
-
-    calPlanning.getCalendarSources().addAll(myCalendarSource);
+    calPlanning.getCalendarSources().setAll(myCalendarSource);
 
     calPlanning.setRequestedTime(LocalTime.now());
 
