@@ -1,4 +1,4 @@
-package org.spica.javaclient.actions.booking;
+package org.spica.javaclient.actions.events;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,7 +15,7 @@ import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.ConfirmInputParam;
 import org.spica.javaclient.params.InputParamGroup;
 import org.spica.javaclient.params.InputParams;
-import org.spica.javaclient.timetracker.TimetrackerService;
+import org.spica.javaclient.events.EventService;
 import org.spica.commons.DateUtils;
 
 @Slf4j
@@ -52,9 +52,8 @@ public class FinishDayAction extends AbstractAction {
                     LocalTime localTime = dateUtils.getTime(commandLineArguments.getSingleMainArgument());
                     stopTime = LocalDateTime.of(LocalDate.now(), localTime);
                 }
-                TimetrackerService timetrackerService = new TimetrackerService();
-                timetrackerService.setModelCacheService(actionContext.getServices().getModelCacheService());
-                timetrackerService.finishDay(stopTime);
+                EventService eventService = actionContext.getServices().getEventService();
+                eventService.finishDay(stopTime);
                 outputOk("Finished day at " + dateUtils.getTimeAsString(stopTime));
             }
         }

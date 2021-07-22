@@ -8,6 +8,7 @@ import org.spica.fx.ApplicationContext;
 import org.spica.fx.Mask;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.model.Model;
+import org.spica.javaclient.services.Services;
 
 @Slf4j
 public abstract class AbstractController {
@@ -67,6 +68,9 @@ public abstract class AbstractController {
 
   public Model getModel () {
     return actionContext != null ? actionContext.getModel(): null;
+  }
+  public Services getServices () {
+    return actionContext != null ? actionContext.getServices(): null;
   }
 
   public void saveModel (final String lastAction) {

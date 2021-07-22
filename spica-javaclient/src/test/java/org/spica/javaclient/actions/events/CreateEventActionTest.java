@@ -1,17 +1,16 @@
-package org.spica.javaclient.actions.booking;
+package org.spica.javaclient.actions.events;
 
 import java.time.LocalDate;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.spica.ModelBasedTest;
-import org.spica.javaclient.StandaloneActionContext;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
 
-public class CreateBookingActionTest extends ModelBasedTest {
+public class CreateEventActionTest extends ModelBasedTest {
 
   @Test
   public void createBookingForToDay () {
@@ -21,12 +20,12 @@ public class CreateBookingActionTest extends ModelBasedTest {
 
     Assert.assertTrue(actionContext.getModel().getEventInfosReal().isEmpty());
 
-    CreateBookingAction createBookingAction = new CreateBookingAction();
+    CreateEventAction createEventAction = new CreateEventAction();
 
-    InputParams inputParams = createBookingAction.getInputParams(actionContext, commandLineArguments);
-    inputParams.getInputParam(CreateBookingAction.KEY_TYPE).setValue(EventType.PAUSE.name());
+    InputParams inputParams = createEventAction.getInputParams(actionContext, commandLineArguments);
+    inputParams.getInputParam(CreateEventAction.KEY_TYPE).setValue(EventType.PAUSE.name());
 
-    createBookingAction.execute(actionContext, inputParams, commandLineArguments);
+    createEventAction.execute(actionContext, inputParams, commandLineArguments);
 
     Assert.assertFalse(actionContext.getModel().getEventInfosReal().isEmpty());
 
@@ -44,13 +43,13 @@ public class CreateBookingActionTest extends ModelBasedTest {
 
     Assert.assertTrue(actionContext.getModel().getEventInfosReal().isEmpty());
 
-    CreateBookingAction createBookingAction = new CreateBookingAction();
+    CreateEventAction createEventAction = new CreateEventAction();
 
-    InputParams inputParams = createBookingAction.getInputParams(actionContext, commandLineArguments);
-    inputParams.getInputParam(CreateBookingAction.KEY_DAY).setValue("1208");
-    inputParams.getInputParam(CreateBookingAction.KEY_TYPE).setValue(EventType.PAUSE.name());
+    InputParams inputParams = createEventAction.getInputParams(actionContext, commandLineArguments);
+    inputParams.getInputParam(CreateEventAction.KEY_DAY).setValue("1208");
+    inputParams.getInputParam(CreateEventAction.KEY_TYPE).setValue(EventType.PAUSE.name());
 
-    createBookingAction.execute(actionContext, inputParams, commandLineArguments);
+    createEventAction.execute(actionContext, inputParams, commandLineArguments);
 
     Assert.assertFalse(actionContext.getModel().getEventInfosReal().isEmpty());
 

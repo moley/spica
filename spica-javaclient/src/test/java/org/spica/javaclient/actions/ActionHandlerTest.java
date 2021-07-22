@@ -3,7 +3,7 @@ package org.spica.javaclient.actions;
 import java.util.Collection;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
-import org.spica.javaclient.actions.booking.CreateBookingAction;
+import org.spica.javaclient.actions.events.CreateEventAction;
 import org.spica.javaclient.actions.tasks.ListTasksAction;
 
 public class ActionHandlerTest {
@@ -29,12 +29,12 @@ public class ActionHandlerTest {
 
   @Test public void getHelp() {
     ActionHandler actionHandler = new ActionHandler();
-    CreateBookingAction createBookingAction = new CreateBookingAction();
+    CreateEventAction createEventAction = new CreateEventAction();
     Collection<String> helpStrings = actionHandler.getHelp(ActionGroup.BOOKING);
     String asString = String.join("\n", helpStrings);
     Assert.assertTrue("Shortform of action not found (" + asString + ")",
-        asString.contains(createBookingAction.getCommand().getCommand()));
-    Assert.assertTrue("Description of action not found", asString.contains(createBookingAction.getDescription()));
+        asString.contains(createEventAction.getCommand().getCommand()));
+    Assert.assertTrue("Description of action not found", asString.contains(createEventAction.getDescription()));
 
   }
 }

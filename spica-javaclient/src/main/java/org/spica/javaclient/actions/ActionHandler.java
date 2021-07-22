@@ -10,15 +10,15 @@ import org.apache.commons.cli.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spica.javaclient.actions.auto.ExecuteScriptAction;
-import org.spica.javaclient.actions.booking.CloseBookingAction;
-import org.spica.javaclient.actions.booking.CreateBookingAction;
-import org.spica.javaclient.actions.booking.FinishDayAction;
-import org.spica.javaclient.actions.booking.FinishTaskAction;
-import org.spica.javaclient.actions.booking.ListBookingsAction;
-import org.spica.javaclient.actions.booking.RemoveBookingAction;
-import org.spica.javaclient.actions.booking.StartOrStopPauseAction;
-import org.spica.javaclient.actions.booking.StartPhonecallAction;
-import org.spica.javaclient.actions.booking.StartTaskAction;
+import org.spica.javaclient.actions.events.CloseEventAction;
+import org.spica.javaclient.actions.events.CreateEventAction;
+import org.spica.javaclient.actions.events.FinishDayAction;
+import org.spica.javaclient.actions.events.FinishTaskAction;
+import org.spica.javaclient.actions.events.ListEventsAction;
+import org.spica.javaclient.actions.events.RemoveEventAction;
+import org.spica.javaclient.actions.events.StartOrStopPauseAction;
+import org.spica.javaclient.actions.events.StartPhonecallAction;
+import org.spica.javaclient.actions.events.StartTaskAction;
 import org.spica.javaclient.actions.configuration.ImportUsersAction;
 import org.spica.javaclient.actions.configuration.ShowStatusAction;
 import org.spica.javaclient.actions.gradle.ExecuteParallelAction;
@@ -75,15 +75,15 @@ public class ActionHandler {
     registeredActions.add(new ImportLogfilesAction());
 
     //booking
-    registeredActions.add(new CreateBookingAction());
+    registeredActions.add(new CreateEventAction());
     registeredActions.add(new StartTaskAction());
     registeredActions.add(new StartOrStopPauseAction());
     registeredActions.add(new FinishTaskAction());
     registeredActions.add(new StartPhonecallAction());
-    registeredActions.add(new ListBookingsAction());
-    registeredActions.add(new CloseBookingAction());
+    registeredActions.add(new ListEventsAction());
+    registeredActions.add(new CloseEventAction());
     registeredActions.add(new FinishDayAction());
-    registeredActions.add(new RemoveBookingAction());
+    registeredActions.add(new RemoveEventAction());
 
     //tasks
     registeredActions.add(new CreateTaskAction());

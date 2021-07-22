@@ -1,4 +1,4 @@
-package org.spica.javaclient.actions.booking;
+package org.spica.javaclient.actions.events;
 
 import lombok.extern.slf4j.Slf4j;
 import org.spica.javaclient.actions.*;
@@ -11,7 +11,7 @@ import org.spica.commons.DateUtils;
 import java.time.LocalDate;
 
 @Slf4j
-public class ListBookingsAction extends AbstractAction {
+public class ListEventsAction extends AbstractAction {
 
     private DateUtils dateUtils = new DateUtils();
 

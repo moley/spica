@@ -1,4 +1,4 @@
-package org.spica.javaclient.event;
+package org.spica.javaclient.events;
 
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;

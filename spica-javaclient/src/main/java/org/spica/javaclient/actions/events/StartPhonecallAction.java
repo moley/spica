@@ -1,4 +1,4 @@
-package org.spica.javaclient.actions.booking;
+package org.spica.javaclient.actions.events;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -23,7 +23,7 @@ import org.spica.javaclient.params.InputParams;
 import org.spica.javaclient.params.Renderer;
 import org.spica.javaclient.params.SearchInputParam;
 import org.spica.javaclient.params.TextInputParam;
-import org.spica.javaclient.timetracker.TimetrackerService;
+import org.spica.javaclient.events.EventService;
 import org.spica.javaclient.utils.RenderUtil;
 
 public class StartPhonecallAction extends AbstractAction {
@@ -48,7 +48,7 @@ public class StartPhonecallAction extends AbstractAction {
     @Override
     public ActionResult execute(ActionContext actionContext, InputParams inputParams, CommandLineArguments commandLineArguments) {
         inputParams.setEndTime(LocalDateTime.now());
-        TimetrackerService timetrackerService = new TimetrackerService();
+        EventService eventService = actionContext.getServices().getEventService();
 
         UserInfo selectedUser = (UserInfo) inputParams.getInputValue(KEY_FOREIGN_USER);
         String message = inputParams.getInputValueAsString(KEY_MESSAGE);
@@ -67,10 +67,8 @@ public class StartPhonecallAction extends AbstractAction {
         Model model = actionContext.getModel();
         model.getMessagecontainerInfos().add(messagecontainerInfo);
 
-        timetrackerService.setModelCacheService(actionContext.getServices().getModelCacheService());
-        timetrackerService.finishTelephoneCall(messageInfo, selectedUser, continuePreviousWork);
+        eventService.finishTelephoneCall(messageInfo, selectedUser, continuePreviousWork);
 
-        actionContext.saveModel(getClass().getName());
         outputOk("Saved phonecall with " + renderUtil.getUser(selectedUser) + " with message " + message);
         if (continuePreviousWork)
             outputOk("Previous work is continued");
@@ -92,9 +90,9 @@ public class StartPhonecallAction extends AbstractAction {
     @Override
     public InputParams getInputParams(ActionContext actionContext, CommandLineArguments commandLineArguments) {
 
-        TimetrackerService timetrackerService = new TimetrackerService();
-        timetrackerService.setModelCacheService(actionContext.getServices().getModelCacheService());
-        timetrackerService.startTelephoneCall();
+        EventService eventService = new EventService();
+        eventService.setModelCacheService(actionContext.getServices().getModelCacheService());
+        eventService.startTelephoneCall();
         actionContext.saveModel(getClass().getName() + "beforeParam");
 
         List<UserInfo> userInfoList = actionContext.getModel().getUserInfos();

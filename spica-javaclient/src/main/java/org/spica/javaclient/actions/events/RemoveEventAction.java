@@ -1,4 +1,4 @@
-package org.spica.javaclient.actions.booking;
+package org.spica.javaclient.actions.events;
 
 import lombok.extern.slf4j.Slf4j;
 import org.spica.javaclient.actions.AbstractAction;
@@ -10,9 +10,10 @@ import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.Model;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
+import org.spica.javaclient.events.EventService;
 
 @Slf4j
-public class RemoveBookingAction extends AbstractAction {
+public class RemoveEventAction extends AbstractAction {
 
 
     @Override public String getDisplayname() {
@@ -35,11 +36,11 @@ public class RemoveBookingAction extends AbstractAction {
         if (eventInfoRealById == null)
             throw new IllegalStateException("No event with id " + id + " found");
 
-        model.getEventInfosReal().remove(eventInfoRealById);
+        EventService eventService = actionContext.getServices().getEventService();
+        eventService.removeEvent (eventInfoRealById);
 
         outputOk("Removed booking with id " + eventInfoRealById.getId());
 
-        actionContext.saveModel(getClass().getName());
 
         return null;
 

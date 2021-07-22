@@ -1,22 +1,17 @@
-package org.spica.javaclient.actions.booking;
+package org.spica.javaclient.actions.events;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.spica.commons.SpicaProperties;
 import org.spica.javaclient.actions.AbstractAction;
 import org.spica.javaclient.actions.ActionContext;
 import org.spica.javaclient.actions.ActionGroup;
 import org.spica.javaclient.actions.ActionResult;
 import org.spica.javaclient.actions.Command;
-import org.spica.javaclient.api.TaskApi;
 import org.spica.javaclient.model.EventInfo;
 import org.spica.javaclient.model.EventType;
 import org.spica.javaclient.model.Model;
-import org.spica.javaclient.model.TaskInfo;
 import org.spica.javaclient.params.CommandLineArguments;
 import org.spica.javaclient.params.InputParams;
-import org.spica.javaclient.timetracker.TimetrackerService;
+import org.spica.javaclient.events.EventService;
 
 @Slf4j
 public class FinishTaskAction extends AbstractAction {
@@ -42,13 +37,10 @@ public class FinishTaskAction extends AbstractAction {
 
       }
 
-      TimetrackerService timetrackerService = new TimetrackerService();
-      timetrackerService.setModelCacheService(actionContext.getServices().getModelCacheService());
-      timetrackerService.finishEvent(eventInfo);
+      EventService eventService = actionContext.getServices().getEventService();
+      eventService.finishEvent(eventInfo);
 
       outputDefault("Finished topic " + eventInfo.getName());
-
-      actionContext.saveModel(getClass().getName());
 
     }
 

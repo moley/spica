@@ -10,6 +10,7 @@ import org.spica.commons.services.mail.MailService;
 import org.spica.commons.services.remote.SshService;
 import org.spica.commons.xmpp.XMPPAdapter;
 import org.spica.javaclient.mail.MailImporter;
+import org.spica.javaclient.events.EventService;
 
 @Data
 public class Services {
@@ -38,6 +39,12 @@ public class Services {
   private MailService mailService = new MailService();
 
   private SshService sshService = new SshService();
+
+  /**
+   * time tracker service
+   */
+  private EventService eventService = new EventService();
+
 
 
   /**
@@ -71,6 +78,7 @@ public class Services {
 
   public Services() {
     modelCacheService.migrateOnDemand();
+    eventService.setModelCacheService(modelCacheService);
   }
 
 

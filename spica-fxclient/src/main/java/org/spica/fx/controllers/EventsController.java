@@ -5,25 +5,19 @@ import com.calendarfx.model.CalendarEvent;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.CalendarView;
-import com.calendarfx.view.DateControl;
 import com.calendarfx.view.page.DayPage;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
-import javafx.util.Callback;
 import lombok.extern.slf4j.Slf4j;
+import org.spica.javaclient.events.EventParam;
+import org.spica.javaclient.events.EventService;
 import org.spica.javaclient.model.EventInfo;
 
 @Slf4j
-public class DiaryController extends AbstractController {
+public class EventsController extends AbstractController {
 
   @FXML private CalendarView calPlanning;
 
@@ -40,15 +34,29 @@ public class DiaryController extends AbstractController {
     booking.setStyle(Calendar.Style.STYLE2);
     booking.addEventHandler(new EventHandler<CalendarEvent>() {
       @Override public void handle(CalendarEvent event) {
+
+        EventService eventService = getServices().getEventService();
+        Entry entry = event.getEntry();
+        EventParam eventParam = new EventParam();
+        eventParam.setTopic(entry.getTitle());
+        eventParam.setFrom(entry.getStartTime());
+        eventParam.setUntil(entry.getEndTime());
+        eventParam.setDate(LocalDate.from(entry.getStartAsLocalDateTime()));
+
         log.info("Event " + event.getEventType() + "-"+event.getEntry() + "-" + event.isEntryAdded() + "-" + event.isEntryRemoved());
 
         if (event.getEventType().equals(CalendarEvent.ENTRY_INTERVAL_CHANGED)) {
           log.info("- Interval changed");
+          eventService.updateEvent(entry.getId(), eventParam );
         }
 
         if (event.getEventType().equals(CalendarEvent.ENTRY_CALENDAR_CHANGED)) {
-          if (event.isEntryAdded())
+          if (event.isEntryAdded()) {
             log.info("- Entry added");
+
+
+          }
+
           if (event.isEntryRemoved())
             log.info("- Entry removed");
         }

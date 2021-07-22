@@ -1,4 +1,4 @@
-package org.spica.javaclient.timetracker;
+package org.spica.javaclient.events;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,16 +15,16 @@ import org.spica.javaclient.model.Model;
 import org.spica.javaclient.model.TaskInfo;
 import org.spica.javaclient.services.ModelCacheService;
 
-public class TimetrackerServiceTest {
+public class EventServiceTest {
 
-    private TimetrackerService timetrackerService = new TimetrackerService();
+    private EventService eventService = new EventService();
     private ModelCacheService modelCacheService = new ModelCacheService();
 
 
     @BeforeEach
     public void before () {
         modelCacheService.save(new Model(), "create new model");
-        timetrackerService.setModelCacheService(modelCacheService);
+        eventService.setModelCacheService(modelCacheService);
 
     }
 
@@ -46,27 +46,27 @@ public class TimetrackerServiceTest {
         return eventInfo;
     }
 
-    private TimetrackerCreationParam createCreationParam (final LocalTime from, final LocalTime until) {
-        TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
-        timetrackerCreationParam.setDate(LocalDate.now());
-        timetrackerCreationParam.setFrom(from);
-        timetrackerCreationParam.setUntil(until);
-        timetrackerCreationParam.setEventType(EventType.TASK);
-        timetrackerCreationParam.setTaskInfo(new TaskInfo().name("New event"));
-        return timetrackerCreationParam;
+    private EventParam createCreationParam (final LocalTime from, final LocalTime until) {
+        EventParam eventParam = new EventParam();
+        eventParam.setDate(LocalDate.now());
+        eventParam.setFrom(from);
+        eventParam.setUntil(until);
+        eventParam.setEventType(EventType.TASK);
+        eventParam.setTaskInfo(new TaskInfo().name("New event"));
+        return eventParam;
     }
 
-    private TimetrackerCreationParam createCreationParam (final LocalDateTime from, final LocalDateTime until) {
+    private EventParam createCreationParam (final LocalDateTime from, final LocalDateTime until) {
         if (! from.toLocalDate().equals(until.toLocalDate()))
             throw new IllegalStateException("From and until do not match the same date");
 
-        TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
-        timetrackerCreationParam.setDate(from.toLocalDate());
-        timetrackerCreationParam.setFrom(from.toLocalTime());
-        timetrackerCreationParam.setUntil(until.toLocalTime());
-        timetrackerCreationParam.setEventType(EventType.TASK);
-        timetrackerCreationParam.setTaskInfo(new TaskInfo().name("New event"));
-        return timetrackerCreationParam;
+        EventParam eventParam = new EventParam();
+        eventParam.setDate(from.toLocalDate());
+        eventParam.setFrom(from.toLocalTime());
+        eventParam.setUntil(until.toLocalTime());
+        eventParam.setEventType(EventType.TASK);
+        eventParam.setTaskInfo(new TaskInfo().name("New event"));
+        return eventParam;
     }
 
     @Test
@@ -77,7 +77,7 @@ public class TimetrackerServiceTest {
         model.getEventInfosReal().add(createEvent(LocalTime.of(8,0), LocalTime.of(9,0)));
 
         //->09:00 - 10:00
-        timetrackerService.createEvent(createCreationParam(LocalTime.of(9,0), LocalTime.of(10,0)));
+        eventService.createEvent(createCreationParam(LocalTime.of(9,0), LocalTime.of(10,0)));
 
         //Check
         //08:00 - 09:00
@@ -95,7 +95,7 @@ public class TimetrackerServiceTest {
         model.getEventInfosReal().add(createEvent(LocalTime.of(9,0), null));
 
         //->08:00 - 09:00
-        timetrackerService.createEvent(createCreationParam(LocalTime.of(8,0), LocalTime.of(9,0)));
+        eventService.createEvent(createCreationParam(LocalTime.of(8,0), LocalTime.of(9,0)));
 
         System.out.println (model.getEventInfosRealToday());
 
@@ -117,7 +117,7 @@ public class TimetrackerServiceTest {
         model.getEventInfosReal().add(createEvent(LocalTime.of(8,0), null));
 
         //->09:00 - 10:00
-        timetrackerService.createEvent(createCreationParam(LocalTime.of(9,0), LocalTime.of(10,0)));
+        eventService.createEvent(createCreationParam(LocalTime.of(9,0), LocalTime.of(10,0)));
 
         //Check
         //08:00 - 09:00
@@ -137,7 +137,7 @@ public class TimetrackerServiceTest {
 
 
         //->08:00 -
-        timetrackerService.createEvent(createCreationParam(LocalTime.of(8,0), null));
+        eventService.createEvent(createCreationParam(LocalTime.of(8,0), null));
 
         //08:00 - 09:00
         //09:00 - 10:00
@@ -157,7 +157,8 @@ public class TimetrackerServiceTest {
         model.getEventInfosReal().add(createEvent(LocalDateTime.of(2020, 10, 13, 9,0), LocalDateTime.of(2020, 10, 13, 10,0)));
 
         //->12.10. 08:00 - 08:30
-        timetrackerService.createEvent(createCreationParam(LocalDateTime.of(2020, 10, 12, 8,0), LocalDateTime.of(2020, 10, 12, 8,30)));
+        eventService
+            .createEvent(createCreationParam(LocalDateTime.of(2020, 10, 12, 8,0), LocalDateTime.of(2020, 10, 12, 8,30)));
 
     }
 
@@ -172,7 +173,7 @@ public class TimetrackerServiceTest {
         model.getEventInfosReal().add(createEvent(LocalDateTime.of(today, LocalTime.of(9,0)), null));
 
         //->12.10. 08:00 - 08:30
-        timetrackerService.createEvent(createCreationParam(LocalDateTime.of(yesterday, LocalTime.of(8,0)), LocalDateTime.of(yesterday, LocalTime.of(8,30))));
+        eventService.createEvent(createCreationParam(LocalDateTime.of(yesterday, LocalTime.of(8,0)), LocalDateTime.of(yesterday, LocalTime.of(8,30))));
 
     }
 
@@ -184,7 +185,7 @@ public class TimetrackerServiceTest {
         model.getEventInfosReal().add(createEvent(LocalTime.of(9,0), LocalTime.of(10,0)));
 
         //->08:00 - 08:30
-        timetrackerService.createEvent(createCreationParam(LocalTime.of(8,0), LocalTime.of(8,30)));
+        eventService.createEvent(createCreationParam(LocalTime.of(8,0), LocalTime.of(8,30)));
     }
 
     @Test
@@ -196,7 +197,7 @@ public class TimetrackerServiceTest {
             model.getEventInfosReal().add(createEvent(LocalTime.of(9, 0), LocalTime.of(10, 0)));
 
             //->08:00 - 11:30
-            timetrackerService.createEvent(createCreationParam(LocalTime.of(8, 0), LocalTime.of(11, 0)));
+            eventService.createEvent(createCreationParam(LocalTime.of(8, 0), LocalTime.of(11, 0)));
 
             //->Error Overlapping
         });
@@ -212,7 +213,7 @@ public class TimetrackerServiceTest {
 
 
         //->08:30 - 09:00
-        timetrackerService.createEvent(createCreationParam(LocalTime.of(8,30), LocalTime.of(9,0)));
+        eventService.createEvent(createCreationParam(LocalTime.of(8,30), LocalTime.of(9,0)));
 
 
         //08:00 - 08:30
@@ -235,7 +236,7 @@ public class TimetrackerServiceTest {
         model.getEventInfosReal().add(createEvent(LocalTime.of(9,0), LocalTime.of(10,0)));
 
         //->08:30 - 09:30
-        timetrackerService.createEvent(createCreationParam(LocalTime.of(8,30), LocalTime.of(9,30)));
+        eventService.createEvent(createCreationParam(LocalTime.of(8,30), LocalTime.of(9,30)));
 
         //08:00 - 08:30
         //08:30 - 09:30
@@ -262,7 +263,7 @@ public class TimetrackerServiceTest {
         model.getEventInfosReal().add(createEvent(LocalTime.of(10,0), LocalTime.of(11,0)));
 
         //->08:30 - 09:30
-        timetrackerService.createEvent(createCreationParam(LocalTime.of(8,30), LocalTime.of(10,30)));
+        eventService.createEvent(createCreationParam(LocalTime.of(8,30), LocalTime.of(10,30)));
         });
     }
 }

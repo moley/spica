@@ -1,4 +1,4 @@
-package org.spica.javaclient.event;
+package org.spica.javaclient.events;
 
 import java.time.Duration;
 

@@ -1,4 +1,4 @@
-package org.spica.javaclient.actions.booking;
+package org.spica.javaclient.actions.events;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -18,7 +18,7 @@ import org.spica.javaclient.params.TextInputParam;
 import org.spica.commons.DateUtils;
 
 @Slf4j
-public class CloseBookingAction extends AbstractAction {
+public class CloseEventAction extends AbstractAction {
 
   private DateUtils dateUtils = new DateUtils();
 
@@ -37,6 +37,7 @@ public class CloseBookingAction extends AbstractAction {
       CommandLineArguments commandLineArguments) {
     Model model = actionContext.getModel();
 
+    //TODO move to TimtrackerService
     //Handle old closed
     int index = 0;
     for (EventInfo next : actionContext.getModel().findOldOpenEvents()) {

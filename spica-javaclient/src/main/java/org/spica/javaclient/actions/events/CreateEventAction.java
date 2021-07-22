@@ -1,4 +1,4 @@
-package org.spica.javaclient.actions.booking;
+package org.spica.javaclient.actions.events;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -23,13 +23,13 @@ import org.spica.javaclient.params.Renderer;
 import org.spica.javaclient.params.SearchInputParam;
 import org.spica.javaclient.params.SelectInputParam;
 import org.spica.javaclient.params.TextInputParam;
-import org.spica.javaclient.timetracker.TimetrackerCreationParam;
-import org.spica.javaclient.timetracker.TimetrackerService;
+import org.spica.javaclient.events.EventParam;
+import org.spica.javaclient.events.EventService;
 import org.spica.commons.DateUtils;
 import org.spica.javaclient.utils.RenderUtil;
 
 @Slf4j
-public class CreateBookingAction extends AbstractAction {
+public class CreateEventAction extends AbstractAction {
 
     public final static String KEY_DAY = "day";
     public final static String KEY_FROM = "from";
@@ -67,14 +67,14 @@ public class CreateBookingAction extends AbstractAction {
 
         outputDefault("Create booking for " + date + "(" + fromTime + " until " + untilTime + ")");
 
-        TimetrackerCreationParam timetrackerCreationParam = new TimetrackerCreationParam();
-        timetrackerCreationParam.setFrom( fromTime);
-        timetrackerCreationParam.setUntil(untilTime);
-        timetrackerCreationParam.setDate(date);
-        timetrackerCreationParam.setEventType(EventType.fromValue(inputParams.getInputValueAsString(KEY_TYPE)));
-        timetrackerCreationParam.setTaskInfo(inputParams.getInputValue(KEY_TOPIC, TaskInfo.class));
-        TimetrackerService timetrackerService = new TimetrackerService();
-        timetrackerService.setModelCacheService(actionContext.getServices().getModelCacheService());
+        EventParam eventParam = new EventParam();
+        eventParam.setFrom( fromTime);
+        eventParam.setUntil(untilTime);
+        eventParam.setDate(date);
+        eventParam.setEventType(EventType.fromValue(inputParams.getInputValueAsString(KEY_TYPE)));
+        eventParam.setTaskInfo(inputParams.getInputValue(KEY_TOPIC, TaskInfo.class));
+        EventService eventService = actionContext.getServices().getEventService();
+
 
         if (eventType.equals(EventType.MESSAGE)) {
             if (text != null && ! eventType.equals(EventType.MESSAGE))
@@ -86,13 +86,11 @@ public class CreateBookingAction extends AbstractAction {
             messageInfo.setMessage(text);
             messageInfo.setType(MessageType.PHONECALL);
             messageInfo.setId(UUID.randomUUID().toString());
-            timetrackerCreationParam.setMessageInfo(messageInfo);
+            eventParam.setMessageInfo(messageInfo);
         }
 
-        List<String> output = timetrackerService.createEvent(timetrackerCreationParam);
+        List<String> output = eventService.createEvent(eventParam);
         outputDefault(String.join("\n", output));
-
-        actionContext.saveModel(getClass().getName());
         return null;
     }
 

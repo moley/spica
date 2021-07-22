@@ -1,4 +1,4 @@
-package org.spica.javaclient.timetracker;
+package org.spica.javaclient.events;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,7 +15,11 @@ import org.spica.javaclient.model.TaskInfo;
 import org.spica.javaclient.model.UserInfo;
 import org.spica.javaclient.services.ModelCacheService;
 
-public class TimetrackerService {
+/**
+ * This services does a lot of timetracking things.
+ * Also saves the model at the end with a dedicated save notice
+ */
+public class EventService {
 
     private DateUtils dateUtils = new DateUtils();
 
@@ -38,6 +42,20 @@ public class TimetrackerService {
         pauseEvent.setStart(LocalDateTime.now());
         pauseEvent.setEventType(EventType.PAUSE);
         getModelCache().getEventInfosReal().add(pauseEvent);
+    }
+
+    public void updateEvent(final String id, final EventParam eventParam) {
+
+        EventInfo eventInfo = getModelCache().findEventInfoRealById(id);
+        if (eventInfo == null)
+            throw new IllegalStateException("No event found with id " + id);
+        eventInfo.setName(eventParam.getTopic());
+
+        eventInfo.setStart(LocalDateTime.of(eventParam.getDate(), eventParam.getFrom()));
+        eventInfo.setStop(LocalDateTime.of(eventParam.getDate(), eventParam.getUntil()));
+
+        modelCacheService.save(getModelCache(), "Updated booking " + id + " with (" + eventInfo.getName() + ", " + eventInfo.getStart() + ", " + eventInfo.getStop());
+
     }
 
     public String togglePause () {
@@ -88,37 +106,37 @@ public class TimetrackerService {
 
     }
 
-    public List<String> createEvent (TimetrackerCreationParam timetrackerCreationParam) {
+    public List<String> createEvent (EventParam eventParam) {
         List<String> output = new ArrayList<String>();
-        if (timetrackerCreationParam == null)
+        if (eventParam == null)
             throw new IllegalArgumentException("Param timetrackerCreationParam must not be null");
 
-        timetrackerCreationParam.validate();
+        eventParam.validate();
 
         Model model = getModelCache();
         EventInfo newStartedEvent = new EventInfo();
         newStartedEvent.setId(UUID.randomUUID().toString());
-        newStartedEvent.setStart(timetrackerCreationParam.getFromAsLocalDateTime());
-        newStartedEvent.setStop(timetrackerCreationParam.getUntilAsLocalDateTime());
-        newStartedEvent.setEventType(timetrackerCreationParam.getEventType());
+        newStartedEvent.setStart(eventParam.getFromAsLocalDateTime());
+        newStartedEvent.setStop(eventParam.getUntilAsLocalDateTime());
+        newStartedEvent.setEventType(eventParam.getEventType());
 
-        if (timetrackerCreationParam.getEventType().equals(EventType.MESSAGE)) {
-            newStartedEvent.setReferenceId(timetrackerCreationParam.getMessageInfo().getId());
+        if (eventParam.getEventType().equals(EventType.MESSAGE)) {
+            newStartedEvent.setReferenceId(eventParam.getMessageInfo().getId());
             newStartedEvent.setName("Telephone call"); //TODO With
         }
 
-        if (timetrackerCreationParam.getEventType().equals(EventType.TASK)) {
-            newStartedEvent.setReferenceId(timetrackerCreationParam.getTaskInfo().getId());
-            newStartedEvent.setName(timetrackerCreationParam.getTaskInfo().getName());
+        if (eventParam.getEventType().equals(EventType.TASK)) {
+            newStartedEvent.setReferenceId(eventParam.getTaskInfo().getId());
+            newStartedEvent.setName(eventParam.getTaskInfo().getName());
         }
 
 
 
-        if (timetrackerCreationParam.getUntil() == null && timetrackerCreationParam.getFrom() == null)
+        if (eventParam.getUntil() == null && eventParam.getFrom() == null)
             throw new IllegalArgumentException("No period defined (until and from are null");
 
-        EventInfo eventInfoBefore = model.findEventBefore(timetrackerCreationParam.getFromAsLocalDateTime());
-        EventInfo eventInfoAfter = model.findEventAfter(timetrackerCreationParam.getFromAsLocalDateTime());
+        EventInfo eventInfoBefore = model.findEventBefore(eventParam.getFromAsLocalDateTime());
+        EventInfo eventInfoAfter = model.findEventAfter(eventParam.getFromAsLocalDateTime());
 
 
         if (eventInfoBefore == null && eventInfoAfter != null) {
@@ -155,7 +173,7 @@ public class TimetrackerService {
 
         //If there is a event before then limit this to the start of the new one
         if (eventInfoBefore != null) {
-            eventInfoBefore.setStop(timetrackerCreationParam.getFromAsLocalDateTime());
+            eventInfoBefore.setStop(eventParam.getFromAsLocalDateTime());
             output.add("Limit last event of the day to start of new event (" + dateUtils.getTimeAsString(eventInfoBefore.getStop()) + ")");
         }
 
@@ -246,5 +264,12 @@ public class TimetrackerService {
         eventInfo.setStop(now);
 
         return now;
+    }
+
+    public void removeEvent(EventInfo eventInfo) {
+        if (eventInfo == null)
+            throw new IllegalArgumentException("Argument event must not be null");
+        getModelCache().getEventInfosReal().remove(eventInfo);
+        modelCacheService.save(getModelCache(), "Removed event " + eventInfo.getId());
     }
 }
